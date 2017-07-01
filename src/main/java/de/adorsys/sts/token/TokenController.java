@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.adorsys.envutils.EnvProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -291,6 +292,8 @@ public class TokenController {
 	}	
 	
 	private String getIssuer() {
+		String issuerUrl = EnvProperties.getEnvOrSysProp("AUTH_SERVER_ISS_URL", true);
+		if(StringUtils.isNotBlank(issuerUrl)) return issuerUrl;
 		return StringUtils.substringBeforeLast(servletRequest.getRequestURL().toString(), servletRequest.getRequestURI());
 	}
 
