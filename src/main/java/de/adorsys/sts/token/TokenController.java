@@ -12,6 +12,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -59,25 +61,25 @@ public class TokenController {
     private HttpServletRequest servletRequest;
 
 
-	@GetMapping(consumes={MediaType.APPLICATION_FORM_URLENCODED_VALUE}, produces={MediaType.APPLICATION_JSON_VALUE})
-	@ApiOperation(value = "Create Token", notes = "Create an access or refresh token given a valide subject token.")
+	@GetMapping(path="token-exchange", consumes={MediaType.APPLICATION_FORM_URLENCODED_VALUE}, produces={MediaType.APPLICATION_JSON_VALUE})
+	@ApiOperation(value = "Exchange Token", notes = "Create an access or refresh token given a valide subject token.")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Ok", response = TokenResponse.class),
 			@ApiResponse(code = 400, message = "Bad request", responseHeaders = @ResponseHeader(name = "error", description = "invalid request")) })
-	public ResponseEntity<Object> token(
+	public ResponseEntity<Object> tokenExchange(
 			@ApiParam(name="grant_type", value="Indicates that a token exchange is being performed.", 
 		required=true, allowMultiple=false, example="urn:ietf:params:oauth:grant-type:token-exchange", defaultValue="urn:ietf:params:oauth:grant-type:token-exchange") @RequestParam("grant_type") String grant_type, 
 
 			@ApiParam(name="resource", value="Indicates the physical location of the target service or resource where the client intends to use the requested security token.  This enables the authorization server to apply policy as appropriate for the target, such as determining the type and content of the token to be issued or if and how the token is to be encrypted.", 
-		required=false, allowMultiple=true, example="http://localhost:8080/multibanking-service") @RequestParam("resource") String[] resources, 
+		required=false, allowMultiple=true, example="http://localhost:8080/multibanking-service") @RequestParam(name="resource", required=false) String[] resources, 
 
 			@ApiParam(name="audience", value="The logical name of the target service where the client intends to use the requested security token.  This serves a purpose similar to the resource parameter, but with the client providing a logical name rather than a physical location.", 
-		required=false, allowMultiple=true, example="http://localhost:8080/multibanking-service") @RequestParam("audience") String[] audiences, 
+		required=false, allowMultiple=true, example="http://localhost:8080/multibanking-service") @RequestParam(name="audience", required=false) String[] audiences, 
 
 			@ApiParam(name="scope", value="A list of space-delimited, case-sensitive strings that allow the client to specify the desired scope of the requested security token in the context of the service or resource where the token will be used.", 
-		required=false, allowMultiple=false, example="user banking") @RequestParam("scope") String scope, 
+		required=false, allowMultiple=false, example="user banking") @RequestParam(name="scope", required=false) String scope, 
 
 			@ApiParam(name="requested_token_type", value="An identifier for the type of the requested security token.  If the requested type is unspecified, the issued token type is at the discretion of the authorization server and may be dictated by knowledge of the requirements of the service or resource indicated by the resource or audience parameter. This can be urn:ietf:params:oauth:token-type:jwt or urn:ietf:params:oauth:token-type:saml.", 
-		required=false, allowMultiple=false, example="urn:ietf:params:oauth:token-type:jwt", defaultValue="urn:ietf:params:oauth:token-type:jwt") @RequestParam("requested_token_type") String requested_token_type, 
+		required=false, allowMultiple=false, example="urn:ietf:params:oauth:token-type:jwt", defaultValue="urn:ietf:params:oauth:token-type:jwt") @RequestParam(name="requested_token_type", required=false) String requested_token_type, 
 
 			@ApiParam(name="subject_token", value="A security token that represents the identity of the party on behalf of whom the request is being made.  Typically, the subject of this token will be the subject of the security token issued in response to this request.", 
 		required=true, allowMultiple=false, example="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNYXhNdXN0ZXJtYW4iLCJyb2xlIjoiVVNFUiIsImV4cCI6MTQ5NTM5MTAxM30.mN9eFMnEuYgh_KCULI8Gpm1X49wWaA67Ps1M7EFV0BQ") @RequestParam("subject_token") String subject_token, 
@@ -86,10 +88,10 @@ public class TokenController {
 		required=true, allowMultiple=false, example="urn:ietf:params:oauth:token-type:jwt", defaultValue="urn:ietf:params:oauth:token-type:jwt") @RequestParam("subject_token_type") String subject_token_type, 
 
 			@ApiParam(name="actor_token", value="A security token that represents the identity of the acting party.  Typically this will be the party that is authorized to use the requested security token and act on behalf of the subject.", 
-		required=false, allowMultiple=false, example="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNYXhNdXN0ZXJtYW4iLCJyb2xlIjoiVVNFUiIsImV4cCI6MTQ5NTM5MTAxM30.mN9eFMnEuYgh_KCULI8Gpm1X49wWaA67Ps1M7EFV0BQ") @RequestParam("actor_token") String actor_token, 
+		required=false, allowMultiple=false, example="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNYXhNdXN0ZXJtYW4iLCJyb2xlIjoiVVNFUiIsImV4cCI6MTQ5NTM5MTAxM30.mN9eFMnEuYgh_KCULI8Gpm1X49wWaA67Ps1M7EFV0BQ") @RequestParam(name="actor_token", required=false) String actor_token, 
 
 			@ApiParam(name="actor_token_type", value="An identifier for the type of the requested security token.  If the requested type is unspecified, the issued token type is at the discretion of the authorization server and may be dictated by knowledge of the requirements of the service or resource indicated by the resource or audience parameter. This can be urn:ietf:params:oauth:token-type:jwt or urn:ietf:params:oauth:token-type:saml. This can be urn:ietf:params:oauth:token-type:access_token or urn:ietf:params:oauth:token-type:refresh_token.", 
-		required=true, allowMultiple=false, example="urn:ietf:params:oauth:token-type:jwt") @RequestParam("actor_token_type") String actor_token_type) 
+		required=true, allowMultiple=false, example="urn:ietf:params:oauth:token-type:jwt") @RequestParam(name="actor_token_type", required=false) String actor_token_type) 
 	{
 		// Validate input parameters.
 		if(!StringUtils.equals("urn:ietf:params:oauth:grant-type:token-exchange", grant_type)){
@@ -186,7 +188,7 @@ public class TokenController {
 		JWSAlgorithm jwsAlgo = KeyConverter.getJWSAlgo(randomKey);	
 
 		JWSHeader jwsHeader = new JWSHeader.Builder(jwsAlgo)
-				.customParam("typ", "JWT")
+				.type(JOSEObjectType.JWT)
 				.keyID(randomKey.jwk.getKeyID())
 				.build();
 		
@@ -218,6 +220,76 @@ public class TokenController {
 		return ResponseEntity.ok(tokenResponse);
 	}
 
+	@GetMapping(path="password-grant", consumes={MediaType.APPLICATION_FORM_URLENCODED_VALUE}, produces={MediaType.APPLICATION_JSON_VALUE})
+	@ApiOperation(value = "Password Grant", notes = "Implements the oauth2 Pasword grant type. Works only if server is configured to accept password grant")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Ok", response = TokenResponse.class),
+			@ApiResponse(code = 400, message = "Bad request", responseHeaders = @ResponseHeader(name = "error", description = "invalid request")) })
+	public ResponseEntity<Object> passwordGrant(
+			@ApiParam(name="grant_type", value="Indicates that a token exchange is being performed.", 
+		required=true, allowMultiple=false, example="password", defaultValue="password") @RequestParam("grant_type") String grant_type, 
+
+			@ApiParam(name="audience", value="The logical name of the target service where the client intends to use the requested security token.", 
+		required=false, allowMultiple=false, example="http://localhost:8080/multibanking-service") @RequestParam(name="audience", required=false) String audience, 
+
+			@ApiParam(name="scope", value="A list of space-delimited, case-sensitive strings that allow the client to specify the desired scope of the requested security token in the context of the service or resource where the token will be used.", 
+		required=false, allowMultiple=false, example="user banking") @RequestParam(name="scope", required=false) String scope, 
+
+			@ApiParam(name="username", value="The resource owner username..", 
+		required=true, allowMultiple=false, example="max.musterman") @RequestParam("username") String username, 
+
+			@ApiParam(name="password", value="The resource owner password.", 
+		required=true, allowMultiple=false, example="SamplePassword") @RequestParam("password") String password) 
+	{
+		// Validate input parameters.
+		if(!StringUtils.equals("password", grant_type)){
+			return invalidParam("Request parameter grant_type is missing or does not carry the value password. See https://tools.ietf.org/html/rfc6749#section-4.3.1");
+		}
+
+		if(StringUtils.isBlank(username)){
+			return missingParam(username);
+		}
+
+		if(StringUtils.isBlank(password)){
+			return missingParam(password);
+		}
+
+		Builder claimSetBuilder = new JWTClaimsSet.Builder();
+		claimSetBuilder = claimSetBuilder.subject(username)
+					.expirationTime(DateUtils.addMinutes(new Date(), 5))
+					.issuer(getIssuer())
+					.issueTime(new Date())
+					.jwtID(UUID.randomUUID().toString())
+					.notBeforeTime(new Date())
+					.claim("typ", "Bearer")
+					.claim("role", "USER");
+
+		JWTClaimsSet jwtClaimsSet = claimSetBuilder.build();
+		
+		KeyAndJwk randomKey = keyManager.getKeyMap().randomSignKey();
+		JWSAlgorithm jwsAlgo = KeyConverter.getJWSAlgo(randomKey);	
+
+		JWSHeader jwsHeader = new JWSHeader.Builder(jwsAlgo)
+				.type(JOSEObjectType.JWT)
+				.keyID(randomKey.jwk.getKeyID())
+				.build();
+		
+        SignedJWT signedJWT = new SignedJWT(jwsHeader,jwtClaimsSet);
+        try {
+			signedJWT.sign(KeyConverter.findSigner(randomKey));
+        } catch (JOSEException e) {
+            throw new IllegalStateException(e);
+        }
+
+        TokenResponse tokenResponse = new TokenResponse();
+        tokenResponse.setAccess_token(signedJWT.serialize());
+        tokenResponse.setIssued_token_type(TokenResponse.ISSUED_TOKEN_TYPE_ACCESS_TOKEN);
+        tokenResponse.setToken_type(TokenResponse.TOKEN_TYPE_BEARER);
+        int expires_in = (int) ((jwtClaimsSet.getExpirationTime().getTime() - new Date().getTime())/1000);
+		tokenResponse.setExpires_in(expires_in);
+		
+		return ResponseEntity.ok(tokenResponse);
+	}	
+	
 	private String getIssuer() {
 		return StringUtils.substringBeforeLast(servletRequest.getRequestURL().toString(), servletRequest.getRequestURI());
 	}

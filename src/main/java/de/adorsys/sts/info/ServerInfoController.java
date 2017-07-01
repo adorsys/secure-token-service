@@ -34,6 +34,7 @@ public class ServerInfoController {
 		serverInfoResponse.setJwks_url(urlBase + "/pop");
 		serverInfoResponse.setAdmin_url(urlBase + "/admin");
 		serverInfoResponse.setToken_exchange(urlBase + "/token");
+		serverInfoResponse.setApi_docs_url(urlBase + "/api-docs/index.html");
 		return ResponseEntity.ok(serverInfoResponse);
 	}
 

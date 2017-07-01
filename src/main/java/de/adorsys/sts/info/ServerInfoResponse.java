@@ -12,6 +12,9 @@ public class ServerInfoResponse {
 	private String token_exchange;
 	@ApiModelProperty(value = "Returns the admin endpoint")
 	private String admin_url;
+	@ApiModelProperty(value = "The api docs url")
+	private String api_docs_url;
+	
 	public String getJwks_url() {
 		return jwks_url;
 	}
@@ -29,6 +32,12 @@ public class ServerInfoResponse {
 	}
 	public void setAdmin_url(String admin_url) {
 		this.admin_url = admin_url;
+	}
+	public String getApi_docs_url() {
+		return api_docs_url;
+	}
+	public void setApi_docs_url(String api_docs_url) {
+		this.api_docs_url = api_docs_url;
 	}
 	
 }
