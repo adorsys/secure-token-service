@@ -21,7 +21,7 @@ public class STSPersistenceConfig {
     @PostConstruct
     public void initBean() {
     	String baseDir = EnvProperties.getEnvOrSysProp("SERVER_PERSISTENCE_DIR", "./target/secure-token-service");
-    	FsBlobStoreFactory fsBlobStoreFactory = new FsBlobStoreFactory(baseDir);
+    	fsBlobStoreFactory = new FsBlobStoreFactory(baseDir);
     	keystorePersistence = new KeystorePersistence(fsBlobStoreFactory);
     	containerPersistence = new ContainerPersistence(fsBlobStoreFactory);
     	objectPersistence = new DirectKeyObjectPersistence(fsBlobStoreFactory);

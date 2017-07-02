@@ -6,7 +6,9 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description="Carries the response of a token request", value="TokenResponse" )
 public class TokenResponse  {
 	public static final String TOKEN_EXCHANGE_GRANT_TYPE="urn:ietf:params:oauth:grant-type:token-exchange";
-	public static final String ISSUED_TOKEN_TYPE_ACCESS_TOKEN="urn:ietf:params:oauth:grant-type:token-exchange";
+	public static final String PASSWORD_GRANT_TYPE="password";
+	public static final String ISSUED_TOKEN_TYPE_ACCESS_TOKEN="urn:ietf:params:oauth:token-type:access_token";
+	public static final String ISSUED_TOKEN_TYPE_REFRESH_TOKEN="urn:ietf:params:oauth:grant-type:refresh_token";
 	public static final String TOKEN_TYPE_BEARER = "Bearer";
 
 	@ApiModelProperty(value = "The security token issued by the authorization server in response to the token exchange request.", required=true, example="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNYXhNdXN0ZXJtYW4iLCJyb2xlIjoiVVNFUiIsImV4cCI6MTQ5NTM5MTAxM30.mN9eFMnEuYgh_KCULI8Gpm1X49wWaA67Ps1M7EFV0BQ")

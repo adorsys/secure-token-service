@@ -7,11 +7,24 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.adorsys.encobject.domain.KeyCredentials;
+import org.adorsys.encobject.service.BlobStoreContextFactory;
+import org.adorsys.encobject.service.EncObjectService;
+import org.adorsys.encobject.service.KeystoreNotFoundException;
+import org.adorsys.encobject.userdata.ObjectPersistenceAdapter;
+import org.adorsys.encobject.userdata.UserDataNamingPolicy;
 import org.adorsys.envutils.EnvProperties;
+import org.adorsys.jjwk.selector.JWEEncryptedSelector;
+import org.adorsys.jjwk.selector.KeyExtractionException;
+import org.adorsys.jjwk.selector.UnsupportedEncAlgorithmException;
+import org.adorsys.jjwk.selector.UnsupportedKeyLengthException;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +36,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JOSEObjectType;
+import com.nimbusds.jose.JWEAlgorithm;
+import com.nimbusds.jose.JWEEncrypter;
+import com.nimbusds.jose.JWEHeader;
+import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.Payload;
+import com.nimbusds.jose.RemoteKeySourceException;
+import com.nimbusds.jose.jwk.ECKey;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKMatcher;
+import com.nimbusds.jose.jwk.JWKSelector;
+import com.nimbusds.jose.jwk.KeyUse;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.RemoteJWKSet;
+import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.JWTClaimsSet.Builder;
 import com.nimbusds.jwt.SignedJWT;
@@ -35,6 +63,12 @@ import de.adorsys.sts.config.TokenResource;
 import de.adorsys.sts.keystore.KeyConverter;
 import de.adorsys.sts.keystore.ServerKeyManager;
 import de.adorsys.sts.keystore.ServerKeyMap.KeyAndJwk;
+import de.adorsys.sts.persistence.FsBlobStoreFactory;
+import de.adorsys.sts.rserver.ResourceServerInfo;
+import de.adorsys.sts.rserver.ResourceServerManager;
+import de.adorsys.sts.user.DefaultObjectMapper;
+import de.adorsys.sts.user.UserCredentials;
+import de.adorsys.sts.user.UserDataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -221,6 +255,15 @@ public class TokenController {
 		return ResponseEntity.ok(tokenResponse);
 	}
 
+	private static UserDataNamingPolicy namingPolicy = new UserDataNamingPolicy("STS");
+	private static DefaultObjectMapper objectMapper = new DefaultObjectMapper();
+	@Autowired
+	private BlobStoreContextFactory blobStoreFactory;
+    private static final String CREDENTIAL_TYPE = "custom_secret";
+    @Autowired
+    private ResourceServerManager resourceServerManager;
+    private static JWKSelector encKeySelector = new JWKSelector(new JWKMatcher.Builder().keyUse(KeyUse.ENCRYPTION).build());
+	
 	@GetMapping(path="password-grant", consumes={MediaType.APPLICATION_FORM_URLENCODED_VALUE}, produces={MediaType.APPLICATION_JSON_VALUE})
 	@ApiOperation(value = "Password Grant", notes = "Implements the oauth2 Pasword grant type. Works only if server is configured to accept password grant")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Ok", response = TokenResponse.class),
@@ -229,8 +272,11 @@ public class TokenController {
 			@ApiParam(name="grant_type", value="Indicates that a token exchange is being performed.", 
 		required=true, allowMultiple=false, example="password", defaultValue="password") @RequestParam("grant_type") String grant_type, 
 
-			@ApiParam(name="audience", value="The logical name of the target service where the client intends to use the requested security token.", 
-		required=false, allowMultiple=false, example="http://localhost:8080/multibanking-service") @RequestParam(name="audience", required=false) String audience, 
+			@ApiParam(name="resource", value="Indicates the physical location of the target service or resource where the client intends to use the requested security token.  This enables the authorization server to apply policy as appropriate for the target, such as determining the type and content of the token to be issued or if and how the token is to be encrypted.", 
+		required=false, allowMultiple=true, example="http://localhost:8080/multibanking-service") @RequestParam(name="resource", required=false) String[] resources, 
+
+			@ApiParam(name="audience", value="The logical name of the target service where the client intends to use the requested security token.  This serves a purpose similar to the resource parameter, but with the client providing a logical name rather than a physical location.", 
+		required=false, allowMultiple=true, example="http://localhost:8080/multibanking-service") @RequestParam(name="audience", required=false) String[] audiences, 
 
 			@ApiParam(name="scope", value="A list of space-delimited, case-sensitive strings that allow the client to specify the desired scope of the requested security token in the context of the service or resource where the token will be used.", 
 		required=false, allowMultiple=false, example="user banking") @RequestParam(name="scope", required=false) String scope, 
@@ -253,6 +299,80 @@ public class TokenController {
 		if(StringUtils.isBlank(password)){
 			return missingParam(password);
 		}
+		
+		EncObjectService encObjectService = new EncObjectService(blobStoreFactory);
+		KeyCredentials keyCredentials = namingPolicy.newKeyCredntials(username, password);
+		ObjectPersistenceAdapter objectPersistenceAdapter = new ObjectPersistenceAdapter(encObjectService, keyCredentials, objectMapper);
+		// Check if we have this user in the storage. If so user the record, if not create one.
+		UserDataService userDataService = new UserDataService(namingPolicy, objectPersistenceAdapter);
+		if(!userDataService.hasAccount()){
+			try {
+				userDataService.addAccount();
+			} catch (KeystoreNotFoundException e) {
+				throw new IllegalStateException();
+			}
+		}
+		UserCredentials userCredentials = userDataService.loadUserCredentials();
+		
+		// If Resources are set, we can get or create the corresponding user secrets and have them included in the token.
+		Map<String, String>  resourceCredentials = new HashMap<>();
+		if(resources!=null && resources.length>0){
+			boolean store = false;
+			for (String resourceServer : resources) {
+				String credentialForResourceServer = userCredentials.getCredentialForResourceServer(resourceServer);
+				if(credentialForResourceServer==null){
+					// create one
+					credentialForResourceServer = RandomStringUtils.randomGraph(16);
+					userCredentials.setCredentialForResourceServer(resourceServer, credentialForResourceServer);
+					store = true;
+				}
+				resourceCredentials.put(resourceServer, credentialForResourceServer);
+			}
+			if(store){
+				userDataService.storeUserCredentials(userCredentials);
+			}
+		}
+		Set<Entry<String,String>> entrySet = resourceCredentials.entrySet();
+		Map<String, String> customSecrets = new HashMap<>();
+		for (Entry<String, String> resourceCredential : entrySet) {
+			ResourceServerInfo resourceServer = resourceServerManager.getResourceServer(resourceCredential.getKey());
+			if(resourceServer==null){
+				// Log warning.
+				continue;
+			}
+			RemoteJWKSet<SecurityContext> jwkSource = resourceServer.getJWKSource();
+			List<JWK> keys;
+			try {
+				keys = jwkSource.get(encKeySelector, null);
+			} catch (RemoteKeySourceException e) {
+				// TODO. Log Warn
+				e.printStackTrace();
+				continue;
+			}
+			if(keys==null ||  keys.isEmpty()) continue;
+			JWK jwk = keys.iterator().next();
+			JWEEncrypter jweEncrypter;
+			try {
+				jweEncrypter = JWEEncryptedSelector.geEncrypter(jwk, null, null);
+			} catch (UnsupportedEncAlgorithmException | KeyExtractionException | UnsupportedKeyLengthException e) {
+				// TODO log.warn
+				e.printStackTrace();
+				continue;
+			}
+			Payload payload = new Payload(resourceCredential.getValue());
+			// JWE encrypt secret.
+			JWEObject jweObj;
+			try {
+				jweObj = new JWEObject(getHeader(jwk), payload);
+				jweObj.encrypt(jweEncrypter);
+			} catch (JOSEException e) {
+				// TODO log.warn
+				e.printStackTrace();
+				continue;
+			}
+			String serializedCredential = jweObj.serialize();
+			customSecrets.put(resourceCredential.getKey(), serializedCredential);
+		}
 
 		Builder claimSetBuilder = new JWTClaimsSet.Builder();
 		claimSetBuilder = claimSetBuilder.subject(username)
@@ -263,6 +383,10 @@ public class TokenController {
 					.notBeforeTime(new Date())
 					.claim("typ", "Bearer")
 					.claim("role", "USER");
+
+		if(!customSecrets.isEmpty()){
+			claimSetBuilder.claim(CREDENTIAL_TYPE, customSecrets);
+		}
 
 		JWTClaimsSet jwtClaimsSet = claimSetBuilder.build();
 		
@@ -329,4 +453,15 @@ public class TokenController {
 		resultMap.put(ERROR_DESCRIPTION_FIELD, Collections.singletonList(message));
 		return ResponseEntity.badRequest().body(CollectionUtils.toMultiValueMap(resultMap));
 	}
+
+	private JWEHeader getHeader(JWK jwk) throws JOSEException {
+        if (jwk instanceof RSAKey) {
+            return new JWEHeader(JWEAlgorithm.RSA_OAEP, EncryptionMethod.A128GCM);
+        } else if (jwk instanceof ECKey) {
+            return new JWEHeader(JWEAlgorithm.ECDH_ES_A128KW, EncryptionMethod.A192GCM);
+        }
+        return null;
+    }
+	
+	
 }
