@@ -1,7 +1,9 @@
 package de.adorsys.sts.rserver;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,6 +11,8 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description="Holds a list of resource servers", value="ResourceServers" )
 public class ResourceServers {
 	
+	public static final String AUNDIENCE = "aundience";
+	public static final String ENDPOINT = "endpoint";
 	@ApiModelProperty(value = "Holds the list of resource servers", required=true)
 	private List<ResourceServer> servers = new ArrayList<>();
 
@@ -18,5 +22,16 @@ public class ResourceServers {
 
 	public void setServers(List<ResourceServer> servers) {
 		this.servers = servers;
+	}
+	
+	Map<String, Map<String, ResourceServer>> toMultiMap(){
+		Map<String, Map<String, ResourceServer>> result = new HashMap<>();
+		result.put(ENDPOINT, new HashMap<>());
+		result.put(AUNDIENCE, new HashMap<>());
+		for (ResourceServer resourceServer : servers) {
+			result.get(ENDPOINT).put(resourceServer.getEndpointUrl(), resourceServer);
+			result.get(AUNDIENCE).put(resourceServer.getAudience(), resourceServer);
+		}
+		return result;
 	}
 }

@@ -29,8 +29,9 @@ public class UserDataService {
 			throw new KeystoreNotFoundException("User " + objectPersistenceAdapter.getKeyCredentials().getKeyid() + " already have an account.");
 		}
 		objectPersistenceAdapter.initStore();
-		ObjectHandle handleForUserMainRecord = namingPolicy.handleForUserMainRecord(objectPersistenceAdapter.getKeyCredentials());
-		objectPersistenceAdapter.store(handleForUserMainRecord, new UserCredentials());
+		UserCredentials userCredentials = new UserCredentials();
+		userCredentials.setUsername(objectPersistenceAdapter.getKeyCredentials().getHandle().getContainer());
+		storeUserCredentials(userCredentials);
 	}
 
 	/**

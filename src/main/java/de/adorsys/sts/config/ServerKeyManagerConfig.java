@@ -48,6 +48,7 @@ import de.adorsys.sts.keystore.KeyStoreUtils;
 import de.adorsys.sts.keystore.ServerKeyManager;
 import de.adorsys.sts.keystore.ServerKeysHolder;
 import de.adorsys.sts.keystore.SingleKeyUsageSelfSignedCertBuilder;
+import de.adorsys.sts.props.STSPropertiesConstants;
 
 
 @Configuration
@@ -74,7 +75,7 @@ public class ServerKeyManagerConfig {
     public void initServerKeyManager() {
     	
     	
-        String serverKeystoreContainer = EnvProperties.getEnvOrSysProp("SERVER_KEYSTORE_CONTAINER", "secure-token-service-keystore");
+        String serverKeystoreContainer = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYSTORE_CONTAINER, "adsts-container");
         if(!containerPersistence.containerExists(serverKeystoreContainer)){
         	try {
 				containerPersistence.creteContainer(serverKeystoreContainer);
@@ -82,15 +83,15 @@ public class ServerKeyManagerConfig {
 				throw new IllegalStateException(e);
 			}
         }
-        String serverKeystoreName = EnvProperties.getEnvOrSysProp("SERVER_KEYSTORE_NAME", "secure-token-service-keystore");
-        String serverKeyPairName = EnvProperties.getEnvOrSysProp("SERVER_KEYPAIR_NAME", "Adorsys Security Token Service");
-        String serverKeyPairAliasPrefix = EnvProperties.getEnvOrSysProp("SERVER_KEYALIAS_PREFIX", "adsts-");
+        String serverKeystoreName = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYSTORE_NAME, "adsts-keystore");
+        String serverKeyPairName = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYPAIR_NAME, "Adorsys Security Token Service");
+        String serverKeyPairAliasPrefix = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYALIAS_PREFIX, "adsts-");
 
-        String serverKeystorePassword = EnvProperties.getEnvOrSysProp("KEYSTORE_PASSWORD", true);
+        String serverKeystorePassword = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.KEYSTORE_PASSWORD, true);
         if (StringUtils.isBlank(serverKeystorePassword))
             throw new IllegalStateException("Missing environment property KEYSTORE_PASSWORD");
         
-        String resetKeystore = EnvProperties.getEnvOrSysProp("RESET_KEYSTORE", true);
+        String resetKeystore = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.RESET_KEYSTORE, true);
         KeyStore keyStore;
         char[] keystorePassword = serverKeystorePassword.toCharArray();
         char[] keyPairPassword = serverKeystorePassword.toCharArray();
@@ -125,13 +126,13 @@ public class ServerKeyManagerConfig {
     
     private KeyStore createKeystore(String serverKeystoreName, CallbackHandler storePassHandler, String serverKeyPairName, String serverKeyPairAliasPrefix, CallbackHandler keyPassHandler, ObjectHandle handle){
     	KeyStore keyStore;
-        String signKeyCountStr = EnvProperties.getEnvOrSysProp("SERVER_SIGN_KEY_COUNT", "5");
+        String signKeyCountStr = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_SIGN_KEY_COUNT, "5");
         int signKeyCount = Integer.parseInt(signKeyCountStr);
         
-        String encKeyCountStr = EnvProperties.getEnvOrSysProp("SERVER_ENCRYPT_KEY_COUNT", "5");
+        String encKeyCountStr = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_ENCRYPT_KEY_COUNT, "5");
         int encKeyCount = Integer.parseInt(encKeyCountStr);
 
-        String secretKeyCountStr = EnvProperties.getEnvOrSysProp("SERVER_SECRET_KEY_COUNT", "5");
+        String secretKeyCountStr = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_SECRET_KEY_COUNT, "5");
         int secKeyCount = Integer.parseInt(secretKeyCountStr);
 
         keyStore = newKeystore(signKeyCount, encKeyCount, secKeyCount, serverKeystoreName, keyPassHandler, serverKeyPairName, serverKeyPairAliasPrefix);
@@ -149,7 +150,7 @@ public class ServerKeyManagerConfig {
     private KeyStore newKeystore(int numberOfSignKeypairs, int numberOfEncKeypairs, int numberOfSecretKeys, String serverKeystoreName, CallbackHandler storePassHandler, String serverKeyPairName, String serverKeyPairAliasPrefix) {
         try {
         	// UBER
-        	String keystoreType = EnvProperties.getEnvOrSysProp("SERVER_KEYSTORE_TYPE", "UBER");// JKS
+        	String keystoreType = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYSTORE_TYPE, "UBER");// UBER
             KeystoreBuilder keystoreBuilder = new KeystoreBuilder().withStoreType(keystoreType);
             for (int i = 0; i < numberOfSignKeypairs; i++) {
                 keystoreBuilder = keystoreBuilder.withKeyEntry(newKeyPair(serverKeyPairName,
@@ -176,9 +177,9 @@ public class ServerKeyManagerConfig {
     }
 
     private KeyPairData newKeyPair(String userName, String alias, CallbackHandler keyPassHandler, int[] keyUsages) {
-    	String keyAlgo = EnvProperties.getEnvOrSysProp("SERVER_KEYSTORE_KEYPAIR_ALGO", "RSA");// RSA
-    	String keySizeStr = EnvProperties.getEnvOrSysProp("SERVER_KEYSTORE_KEYPAIR_SIZE", "2048");// 1024
-    	String serverSigAlgo = EnvProperties.getEnvOrSysProp("SERVER_KEYSTORE_RSA_SIGN_ALGO", "SHA256withRSA"); // SHA1withRSA
+    	String keyAlgo = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYSTORE_KEYPAIR_ALGO, "RSA");// RSA
+    	String keySizeStr = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYSTORE_KEYPAIR_SIZE, "2048");// 2048
+    	String serverSigAlgo = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYSTORE_RSA_SIGN_ALGO, "SHA256withRSA"); // SHA1withRSA
     	int keySize = Integer.parseInt(keySizeStr);
         KeyPair keyPair = new KeyPairBuilder().withKeyAlg(keyAlgo).withKeyLength(keySize).build();
         X500Name dn = new X500NameBuilder(BCStyle.INSTANCE).addRDN(BCStyle.CN, userName).build();
@@ -193,8 +194,8 @@ public class ServerKeyManagerConfig {
     }
     
 	public static SecretKeyData newSecretKey(String alias, CallbackHandler secretKeyPassHandler){
-    	String secretKeyAlgo = EnvProperties.getEnvOrSysProp("SERVER_KEYSTORE_SECRET_KEY_ALGO", "AES");// AES
-    	String secretKeySizeStr = EnvProperties.getEnvOrSysProp("SERVER_KEYSTORE_SECRET_KEY_SIZE", "256");// 256
+    	String secretKeyAlgo = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYSTORE_SECRET_KEY_ALGO, "AES");// AES
+    	String secretKeySizeStr = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYSTORE_SECRET_KEY_SIZE, "256");// 256
     	int keySize = Integer.parseInt(secretKeySizeStr);
 		SecretKey secretKey = new SecretKeyBuilder().withKeyAlg(secretKeyAlgo).withKeyLength(keySize).build();	
 		return new SecretKeyData(secretKey, alias, secretKeyPassHandler);

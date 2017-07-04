@@ -18,17 +18,14 @@ public class ResourceServerInfo {
 	public static final String jwks_url_key = "jwks_url";
 	public static final String pop_key = "pop_url";
 	
-	/**
-	 * The metadata URL.
-	 */
-	private final URL metadataURL;
-
 	private RemoteJWKSet<SecurityContext> jwkSource;
 	
 	private final ResourceRetriever resourceRetriever;
 
-	public ResourceServerInfo(final ResourceRetriever resourceRetriever, final URL metadataURL, final URL jwksURL) {
-		if (metadataURL == null && jwksURL==null) {
+	private ResourceServer resourceServer;
+	
+	public ResourceServerInfo(final ResourceRetriever resourceRetriever, final ResourceServer resourceServer) {
+		if (resourceServer.getEndpointUrl() == null && resourceServer.getJwksUrl()==null) {
 			throw new IllegalArgumentException("Either meta data URL or jwks_url must not be null");
 		}
 		if (resourceRetriever == null) {
@@ -36,9 +33,13 @@ public class ResourceServerInfo {
 		}
 		
 		this.resourceRetriever = resourceRetriever;
-		this.metadataURL = metadataURL;
-		if(jwksURL!=null){
-			jwkSource = new RemoteJWKSet<>(jwksURL, resourceRetriever);
+		this.resourceServer = resourceServer;
+		if(resourceServer.getJwksUrl()!=null){
+			try {
+				jwkSource = new RemoteJWKSet<>(new URL(resourceServer.getJwksUrl()), resourceRetriever);
+			} catch (MalformedURLException e) {
+				throw new IllegalStateException(e);
+			}
 		}
 	}
 
@@ -49,7 +50,7 @@ public class ResourceServerInfo {
 
 		Resource res;
 		try {
-			res = resourceRetriever.retrieveResource(metadataURL);
+			res = resourceRetriever.retrieveResource(new URL(resourceServer.getEndpointUrl()));
 		} catch (IOException e) {
 			throw new IllegalStateException("Couldn't retrieve remote metadata: " + e.getMessage(), e);
 		}
@@ -68,11 +69,12 @@ public class ResourceServerInfo {
 		// we can test if the object is already a jwks, in which case it will be used.
 		try {
 			JWKSet.parse(res.getContent());
-			jwkSource = new RemoteJWKSet<>(metadataURL, resourceRetriever);
+			jwkSource = new RemoteJWKSet<>(new URL(resourceServer.getEndpointUrl()), resourceRetriever);
 		} catch (java.text.ParseException e) {
 			// ignore.
+		} catch (MalformedURLException e) {
+			throw new IllegalStateException(e);
 		}
-		
 		
 		throw new IllegalStateException("No jwks url or pop_url provided for this server");
 		

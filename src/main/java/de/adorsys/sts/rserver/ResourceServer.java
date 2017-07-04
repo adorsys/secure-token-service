@@ -26,6 +26,10 @@ public class ResourceServer {
 			required=false, example="multibanking-service")	
 	private String clientId;
 
+	@ApiModelProperty(value = "The audience of this server in the realm of the exchange server", 
+			required=false, example="multibanking-service")	
+	private String audience;
+
 	public String getEndpointUrl() {
 		return endpointUrl;
 	}
@@ -64,5 +68,13 @@ public class ResourceServer {
 
 	public void setClientId(String clientId) {
 		this.clientId = clientId;
+	}
+
+	public String getAudience() {
+		return audience;
+	}
+
+	public void setAudience(String audience) {
+		this.audience = audience;
 	}
 }

@@ -11,6 +11,8 @@ import java.util.Map;
  */
 public class UserCredentials {
 	
+	private String username;
+	
 	// Map of credentials per resource server.
 	private Map<String, String> credentialForResourceServerMap = new HashMap<>();
 
@@ -34,6 +36,12 @@ public class UserCredentials {
 	public void setCredentialForResourceServerMap(Map<String, String> credentialForResourceServerMap) {
 		this.credentialForResourceServerMap = credentialForResourceServerMap;
 	}
-	
-	
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
 }

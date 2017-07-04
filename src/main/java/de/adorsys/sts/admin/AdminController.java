@@ -27,7 +27,7 @@ public class AdminController {
 	private ResourceServerManager resourceServerManager;
 
     @GetMapping(path="/resourceServer", produces={MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value = "Returns the list of resource servers", response=ResourceServers.class, notes = "Fetches and returns resource server descryptions.")
+    @ApiOperation(value = "Returns the list of resource servers", response=ResourceServers.class, notes = "Fetches and returns resource server descriptions.")
     @ApiResponses(value = { @ApiResponse (code = 200, message = "Ok")})
 	public ResponseEntity<ResourceServers> loadResourceServers(){
     	ResourceServers servers = resourceServerManager.loadResourceServers();
@@ -35,7 +35,7 @@ public class AdminController {
 	}
 	
     @PostMapping(path="/resourceServer", produces={MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value = "Returns the list of resource servers", response=ResourceServers.class, notes = "Fetches and returns resource server descryptions.")
+    @ApiOperation(value = "Returns the list of resource servers", response=ResourceServers.class, notes = "Fetches and returns resource server descriptions.")
     @ApiResponses(value = { @ApiResponse (code = 200, message = "Ok")})
 	public ResponseEntity<Object> addResourceServers(ResourceServers resourceServers){
     	try {

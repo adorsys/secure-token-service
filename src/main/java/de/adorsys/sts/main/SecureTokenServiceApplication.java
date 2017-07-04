@@ -21,12 +21,13 @@ import de.adorsys.sts.config.WebSecurityConfig;
 import de.adorsys.sts.info.ServerInfoController;
 import de.adorsys.sts.persistence.STSPersistenceConfig;
 import de.adorsys.sts.pop.PoPController;
+import de.adorsys.sts.props.STSPropertiesConstants;
 import de.adorsys.sts.rserver.ResourceServerManager;
-import de.adorsys.sts.token.TokenController;
+import de.adorsys.sts.token.PasswordGrantController;
 import de.adorsys.sts.token.TokenService;
 
 @SpringBootApplication
-@ComponentScan(basePackageClasses = { TokenController.class, SwaggerConfig.class, WebSecurityConfig.class,
+@ComponentScan(basePackageClasses = { PasswordGrantController.class, SwaggerConfig.class, WebSecurityConfig.class,
 		ServerKeyManagerConfig.class, TokenService.class, STSPersistenceConfig.class, ServerInfoController.class,
 		PoPController.class, AdminController.class, ResourceServerManager.class })
 public class SecureTokenServiceApplication {
@@ -34,11 +35,11 @@ public class SecureTokenServiceApplication {
 	public static void main(String[] args) throws UnknownHostException {
 		turnOffEncPolicy();
 
-		String keystorePassword = EnvProperties.getEnvOrSysProp("KEYSTORE_PASSWORD", true);
+		String keystorePassword = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.KEYSTORE_PASSWORD, true);
 		if (StringUtils.isBlank(keystorePassword)) {
 			keystorePassword = RandomStringUtils.randomAlphanumeric(16);
-			System.setProperty("KEYSTORE_PASSWORD", keystorePassword);
-			System.setProperty("RESET_KEYSTORE", "true");
+			System.setProperty(STSPropertiesConstants.KEYSTORE_PASSWORD, keystorePassword);
+			System.setProperty(STSPropertiesConstants.RESET_KEYSTORE, "true");
 			LoggerFactory.getLogger(SecureTokenServiceApplication.class)
 					.info("Newly generated Keystore Password: " + keystorePassword);
 		}

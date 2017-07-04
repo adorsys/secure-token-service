@@ -1,8 +1,6 @@
 package de.adorsys.sts.rserver;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -26,8 +24,6 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbusds.jose.util.DefaultResourceRetriever;
-import com.nimbusds.jose.util.ResourceRetriever;
 
 import de.adorsys.sts.keystore.ServerKeyManager;
 import de.adorsys.sts.keystore.ServerKeyMap.KeyAndJwk;
@@ -57,38 +53,18 @@ public class ResourceServerManager {
 	
     @Autowired
     private ServerKeyManager keyManager;
-    	
-	/**
-	 * The default HTTP connect timeout for JWK set retrieval, in
-	 * milliseconds. Set to 250 milliseconds.
-	 */
-	public static final int DEFAULT_HTTP_CONNECT_TIMEOUT = 250;
 
-
-	/**
-	 * The default HTTP read timeout for JWK set retrieval, in
-	 * milliseconds. Set to 250 milliseconds.
-	 */
-	public static final int DEFAULT_HTTP_READ_TIMEOUT = 250;
-
-
-	/**
-	 * The default HTTP entity size limit for JWK set retrieval, in bytes.
-	 * Set to 50 KBytes.
-	 */
-	public static final int DEFAULT_HTTP_SIZE_LIMIT = 50 * 1024;
-	
-	// Todo put this is a fifo map
-	private Map<String, ResourceServerInfo> resourceServerMap = new HashMap<>();
-	
 	private String containerName;
     private static final String RESOURCE_SERVERS_FILE_NAME = "resource_servers";
     
     private ObjectMapper objectMapper = new ObjectMapper();
+    
+    private ResourceServers resourceServers;
+    private Map<String, Map<String, ResourceServer>> resourceServersMultiMap;
 	
 	@PostConstruct
 	public void postConstruct(){
-        containerName = EnvProperties.getEnvOrSysProp("SERVER_KEYSTORE_CONTAINER", "secure-token-service-resourceservers");
+        containerName = EnvProperties.getEnvOrSysProp("SERVER_KEYSTORE_CONTAINER", "sts-resourceservers");
         if(!containerPersistence.containerExists(containerName)){
         	try {
 				containerPersistence.creteContainer(containerName);
@@ -96,49 +72,10 @@ public class ResourceServerManager {
 				throw new IllegalStateException(e);
 			}
         }
-		
-	}
-	
-	public ResourceServerInfo addResouceServer(URL metadataURL){
-		if(metadataURL==null) return null;
-		
-		String key = metadataURL.toString();
-		if(resourceServerMap.containsKey(key)) return resourceServerMap.get(key);
-
-		// Create one
-		ResourceServerInfo resourceServer = makeResourceServerInfo(metadataURL, null);
-		resourceServerMap.put(key, resourceServer);
-		return resourceServer;
+        resourceServers = loadResourceServers();
+        resourceServersMultiMap = resourceServers.toMultiMap();
 	}
 
-	public ResourceServerInfo addResouceServer(URL metadataURL, URL jwksURL){
-		if(metadataURL==null) return null;
-		
-		String key = metadataURL.toString();
-		if(resourceServerMap.containsKey(key)) return resourceServerMap.get(key);
-		
-		// Create one
-		ResourceServerInfo resourceServer = makeResourceServerInfo(metadataURL, jwksURL);
-		resourceServerMap.put(key, resourceServer);
-		return resourceServer;
-	}
-	
-	private ResourceServerInfo makeResourceServerInfo(URL metadataURL, URL jwksURL){
-		ResourceRetriever resourceRetriever=new DefaultResourceRetriever(DEFAULT_HTTP_CONNECT_TIMEOUT, DEFAULT_HTTP_READ_TIMEOUT, DEFAULT_HTTP_SIZE_LIMIT);
-		return new ResourceServerInfo(resourceRetriever, metadataURL, jwksURL);
-	}
-	
-	public ResourceServerInfo getResourceServerInfo(URL metadataURL){
-		if(metadataURL==null) return null;
-		String key = metadataURL.toString();
-		return resourceServerMap.get(key);
-	}
-		
-	public ResourceServerInfo getResourceServer(String metadataURL){
-		if(metadataURL==null) return null;
-		return resourceServerMap.get(metadataURL);
-	}
-	
 	public ResourceServers loadResourceServers(){
 		ResourceServers resourceServers = new ResourceServers();
 		ObjectHandle handle = new ObjectHandle(containerName, RESOURCE_SERVERS_FILE_NAME);
@@ -159,6 +96,11 @@ public class ResourceServerManager {
 		return resourceServers;
 	}
 	
+	public Map<String, Map<String, ResourceServer>> getResourceServersMultiMap() {
+		return resourceServersMultiMap;
+	}
+
+
 	public ResourceServers addResourceServers(ResourceServers resourceServersIn) throws ResourceServerException{
 		List<ResourceServer> serversIn = resourceServersIn.getServers();
 		ResourceServers resourceServers = loadResourceServers();
@@ -216,8 +158,9 @@ public class ResourceServerManager {
 				throw new IllegalStateException(e);
 			}
 		}
+		this.resourceServers = resourceServers;
+        this.resourceServersMultiMap = resourceServers.toMultiMap();
 		return resourceServers;
-		
 	}
 
 }
