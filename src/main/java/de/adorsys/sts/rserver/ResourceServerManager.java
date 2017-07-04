@@ -3,12 +3,12 @@ package de.adorsys.sts.rserver;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 
 import org.adorsys.encobject.domain.ContentMetaInfo;
 import org.adorsys.encobject.domain.ObjectHandle;
+import org.adorsys.encobject.filesystem.FsPersistenceFactory;
 import org.adorsys.encobject.params.EncryptionParams;
 import org.adorsys.encobject.service.ContainerExistsException;
 import org.adorsys.encobject.service.ContainerPersistence;
@@ -18,16 +18,14 @@ import org.adorsys.encobject.service.WrongKeyCredentialException;
 import org.adorsys.envutils.EnvProperties;
 import org.adorsys.jjwk.selector.UnsupportedEncAlgorithmException;
 import org.adorsys.jjwk.selector.UnsupportedKeyLengthException;
+import org.adorsys.jjwk.serverkey.KeyAndJwk;
+import org.adorsys.jjwk.serverkey.ServerKeyManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import de.adorsys.sts.keystore.ServerKeyManager;
-import de.adorsys.sts.keystore.ServerKeyMap.KeyAndJwk;
-import de.adorsys.sts.persistence.DirectKeyObjectPersistence;
 
 /**
  * Provide standard management routines for endpoints.
@@ -45,12 +43,11 @@ import de.adorsys.sts.persistence.DirectKeyObjectPersistence;
 @Service
 public class ResourceServerManager {
 	
-	@Autowired
-	private DirectKeyObjectPersistence objectPersistence;	
+	private static final String RESOURCE_SERVER_CONTAINER = "RESOURCE_SERVER_CONTAINER";
 
 	@Autowired
-	private ContainerPersistence containerPersistence;
-	
+	private FsPersistenceFactory persFactory;
+
     @Autowired
     private ServerKeyManager keyManager;
 
@@ -61,10 +58,13 @@ public class ResourceServerManager {
     
     private ResourceServers resourceServers;
     private Map<String, Map<String, ResourceServer>> resourceServersMultiMap;
+    
 	
 	@PostConstruct
 	public void postConstruct(){
-        containerName = EnvProperties.getEnvOrSysProp("SERVER_KEYSTORE_CONTAINER", "sts-resourceservers");
+        containerName = EnvProperties.getEnvOrSysProp(RESOURCE_SERVER_CONTAINER, "sts-rservers");
+    	ContainerPersistence containerPersistence = persFactory.getContainerPersistence();
+
         if(!containerPersistence.containerExists(containerName)){
         	try {
 				containerPersistence.creteContainer(containerName);
@@ -81,7 +81,7 @@ public class ResourceServerManager {
 		ObjectHandle handle = new ObjectHandle(containerName, RESOURCE_SERVERS_FILE_NAME);
 		byte[] resourceServersByte = null;
 		try {
-			resourceServersByte = objectPersistence.loadObject(handle, keyManager);
+			resourceServersByte = persFactory.getServerObjectPersistence().loadObject(handle, keyManager);
 		} catch (ObjectNotFoundException e) {
 			// No list stored sofar
 			return resourceServers;
@@ -112,28 +112,23 @@ public class ResourceServerManager {
 		ResourceServerErrors errors = new ResourceServerErrors();
 		List<ResourceServer> serversList = resourceServers.getServers();
 		for (ResourceServer resourceServer : serversIn) {
-			if(resourceServer.getClientId()==null) resourceServer.setClientId(UUID.randomUUID().toString());
-			
-			if(resourceServer.getEndpointUrl()==null){
-				ResourceServerError resourceServerError = new ResourceServerError("missing end point url", resourceServer);
+			if(StringUtils.isBlank(resourceServer.getAudience())){
+				ResourceServerError resourceServerError = new ResourceServerError("missing audience", resourceServer);
 				errors.getErros().add(resourceServerError);
 				continue;
 			}
 
-			ResourceServerError resourceServerError = null;
+			ResourceServer serverToReplace = null;
 			for (ResourceServer server : serversList) {
-				if(StringUtils.equals(resourceServer.getClientId(), server.getClientId())){
-					resourceServerError = new ResourceServerError("Server with client_id " + resourceServer.getClientId() + " exists", resourceServer);
-					break;
-				}
-				if(StringUtils.equals(resourceServer.getEndpointUrl(), server.getEndpointUrl())){
-					resourceServerError = new ResourceServerError("Server with endpoint url " + resourceServer.getEndpointUrl() + " exists", resourceServer);
+				if(resourceServer.equals(server)) continue;
+				if(StringUtils.equals(resourceServer.getAudience(), server.getAudience())){
+					serverToReplace = server;
 					break;
 				}
 			}
-			if(resourceServerError!=null){
-				errors.getErros().add(resourceServerError);
-				continue;
+			if(serverToReplace!=null){
+				int indexOf = serversList.indexOf(serverToReplace);
+				serversList.set(indexOf, resourceServer);
 			}
 		}
 		if(!errors.getErros().isEmpty()){
@@ -153,7 +148,7 @@ public class ResourceServerManager {
 			EncryptionParams encParams = null;
 			KeyAndJwk randomSecretKey = keyManager.getKeyMap().randomSecretKey();
 			try {
-				objectPersistence.storeObject(data, metaIno, handle, keyManager, randomSecretKey.jwk.getKeyID(), encParams);
+				persFactory.getServerObjectPersistence().storeObject(data, metaIno, handle, keyManager, randomSecretKey.jwk.getKeyID(), encParams);
 			} catch (UnsupportedEncAlgorithmException | UnsupportedKeyLengthException | UnknownContainerException e) {
 				throw new IllegalStateException(e);
 			}

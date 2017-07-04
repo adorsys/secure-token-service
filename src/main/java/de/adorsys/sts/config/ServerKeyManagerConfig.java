@@ -13,9 +13,9 @@ import javax.crypto.SecretKey;
 import javax.security.auth.callback.CallbackHandler;
 
 import org.adorsys.encobject.domain.ObjectHandle;
+import org.adorsys.encobject.filesystem.FsPersistenceFactory;
 import org.adorsys.encobject.service.ContainerExistsException;
 import org.adorsys.encobject.service.ContainerPersistence;
-import org.adorsys.encobject.service.KeystorePersistence;
 import org.adorsys.encobject.service.MissingKeyAlgorithmException;
 import org.adorsys.encobject.service.MissingKeystoreAlgorithmException;
 import org.adorsys.encobject.service.MissingKeystoreProviderException;
@@ -23,6 +23,12 @@ import org.adorsys.encobject.service.ObjectNotFoundException;
 import org.adorsys.encobject.service.UnknownContainerException;
 import org.adorsys.encobject.service.WrongKeystoreCredentialException;
 import org.adorsys.envutils.EnvProperties;
+import org.adorsys.jjwk.serverkey.KeyConverter;
+import org.adorsys.jjwk.serverkey.KeyStoreUtils;
+import org.adorsys.jjwk.serverkey.ServerKeyManager;
+import org.adorsys.jjwk.serverkey.ServerKeyPropertiesConstants;
+import org.adorsys.jjwk.serverkey.ServerKeysHolder;
+import org.adorsys.jjwk.serverkey.SingleKeyUsageSelfSignedCertBuilder;
 import org.adorsys.jkeygen.keypair.KeyPairBuilder;
 import org.adorsys.jkeygen.keypair.SelfSignedKeyPairData;
 import org.adorsys.jkeygen.keystore.KeyPairData;
@@ -43,22 +49,12 @@ import org.springframework.context.annotation.Configuration;
 
 import com.nimbusds.jose.jwk.JWKSet;
 
-import de.adorsys.sts.keystore.KeyConverter;
-import de.adorsys.sts.keystore.KeyStoreUtils;
-import de.adorsys.sts.keystore.ServerKeyManager;
-import de.adorsys.sts.keystore.ServerKeysHolder;
-import de.adorsys.sts.keystore.SingleKeyUsageSelfSignedCertBuilder;
-import de.adorsys.sts.props.STSPropertiesConstants;
-
 
 @Configuration
 public class ServerKeyManagerConfig {
 
 	@Autowired
-    private KeystorePersistence keystorePersistence;
-	
-	@Autowired
-	private ContainerPersistence containerPersistence;
+	private FsPersistenceFactory persFactory;
 
     private ServerKeyManager serverKeyManager;
     
@@ -74,8 +70,8 @@ public class ServerKeyManagerConfig {
     @PostConstruct
     public void initServerKeyManager() {
     	
-    	
-        String serverKeystoreContainer = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYSTORE_CONTAINER, "adsts-container");
+    	ContainerPersistence containerPersistence = persFactory.getContainerPersistence();
+        String serverKeystoreContainer = EnvProperties.getEnvOrSysProp(ServerKeyPropertiesConstants.SERVER_KEYSTORE_CONTAINER, "adsts-container");
         if(!containerPersistence.containerExists(serverKeystoreContainer)){
         	try {
 				containerPersistence.creteContainer(serverKeystoreContainer);
@@ -83,15 +79,15 @@ public class ServerKeyManagerConfig {
 				throw new IllegalStateException(e);
 			}
         }
-        String serverKeystoreName = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYSTORE_NAME, "adsts-keystore");
-        String serverKeyPairName = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYPAIR_NAME, "Adorsys Security Token Service");
-        String serverKeyPairAliasPrefix = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYALIAS_PREFIX, "adsts-");
+        String serverKeystoreName = EnvProperties.getEnvOrSysProp(ServerKeyPropertiesConstants.SERVER_KEYSTORE_NAME, "adsts-keystore");
+        String serverKeyPairName = EnvProperties.getEnvOrSysProp(ServerKeyPropertiesConstants.SERVER_KEYPAIR_NAME, "Adorsys Security Token Service");
+        String serverKeyPairAliasPrefix = EnvProperties.getEnvOrSysProp(ServerKeyPropertiesConstants.SERVER_KEYALIAS_PREFIX, "adsts-");
 
-        String serverKeystorePassword = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.KEYSTORE_PASSWORD, true);
+        String serverKeystorePassword = EnvProperties.getEnvOrSysProp(ServerKeyPropertiesConstants.KEYSTORE_PASSWORD, true);
         if (StringUtils.isBlank(serverKeystorePassword))
             throw new IllegalStateException("Missing environment property KEYSTORE_PASSWORD");
         
-        String resetKeystore = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.RESET_KEYSTORE, true);
+        String resetKeystore = EnvProperties.getEnvOrSysProp(ServerKeyPropertiesConstants.RESET_KEYSTORE, true);
         KeyStore keyStore;
         char[] keystorePassword = serverKeystorePassword.toCharArray();
         char[] keyPairPassword = serverKeystorePassword.toCharArray();
@@ -104,7 +100,7 @@ public class ServerKeyManagerConfig {
         	keyStore = createKeystore(serverKeystoreName, storePassHandler, serverKeyPairName, serverKeyPairAliasPrefix, keyPassHandler, handle);
         } else {
             try {
-                keyStore = keystorePersistence.loadKeystore(handle, storePassHandler);
+                keyStore = persFactory.getKeystorePersistence().loadKeystore(handle, storePassHandler);
             } catch (ObjectNotFoundException e) {
             	keyStore = createKeystore(serverKeystoreName, storePassHandler, serverKeyPairName, serverKeyPairAliasPrefix, keyPassHandler, handle);
             } catch (CertificateException | WrongKeystoreCredentialException
@@ -126,18 +122,18 @@ public class ServerKeyManagerConfig {
     
     private KeyStore createKeystore(String serverKeystoreName, CallbackHandler storePassHandler, String serverKeyPairName, String serverKeyPairAliasPrefix, CallbackHandler keyPassHandler, ObjectHandle handle){
     	KeyStore keyStore;
-        String signKeyCountStr = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_SIGN_KEY_COUNT, "5");
+        String signKeyCountStr = EnvProperties.getEnvOrSysProp(ServerKeyPropertiesConstants.SERVER_SIGN_KEY_COUNT, "5");
         int signKeyCount = Integer.parseInt(signKeyCountStr);
         
-        String encKeyCountStr = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_ENCRYPT_KEY_COUNT, "5");
+        String encKeyCountStr = EnvProperties.getEnvOrSysProp(ServerKeyPropertiesConstants.SERVER_ENCRYPT_KEY_COUNT, "5");
         int encKeyCount = Integer.parseInt(encKeyCountStr);
 
-        String secretKeyCountStr = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_SECRET_KEY_COUNT, "5");
+        String secretKeyCountStr = EnvProperties.getEnvOrSysProp(ServerKeyPropertiesConstants.SERVER_SECRET_KEY_COUNT, "5");
         int secKeyCount = Integer.parseInt(secretKeyCountStr);
 
         keyStore = newKeystore(signKeyCount, encKeyCount, secKeyCount, serverKeystoreName, keyPassHandler, serverKeyPairName, serverKeyPairAliasPrefix);
         try {
-			keystorePersistence.saveKeyStore(keyStore, storePassHandler, handle);
+        	persFactory.getKeystorePersistence().saveKeyStore(keyStore, storePassHandler, handle);
 		} catch (NoSuchAlgorithmException | CertificateException | UnknownContainerException e) {
             throw new IllegalStateException(e);
 		}    	
@@ -150,7 +146,7 @@ public class ServerKeyManagerConfig {
     private KeyStore newKeystore(int numberOfSignKeypairs, int numberOfEncKeypairs, int numberOfSecretKeys, String serverKeystoreName, CallbackHandler storePassHandler, String serverKeyPairName, String serverKeyPairAliasPrefix) {
         try {
         	// UBER
-        	String keystoreType = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYSTORE_TYPE, "UBER");// UBER
+        	String keystoreType = EnvProperties.getEnvOrSysProp(ServerKeyPropertiesConstants.SERVER_KEYSTORE_TYPE, "UBER");// UBER
             KeystoreBuilder keystoreBuilder = new KeystoreBuilder().withStoreType(keystoreType);
             for (int i = 0; i < numberOfSignKeypairs; i++) {
                 keystoreBuilder = keystoreBuilder.withKeyEntry(newKeyPair(serverKeyPairName,
@@ -177,9 +173,9 @@ public class ServerKeyManagerConfig {
     }
 
     private KeyPairData newKeyPair(String userName, String alias, CallbackHandler keyPassHandler, int[] keyUsages) {
-    	String keyAlgo = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYSTORE_KEYPAIR_ALGO, "RSA");// RSA
-    	String keySizeStr = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYSTORE_KEYPAIR_SIZE, "2048");// 2048
-    	String serverSigAlgo = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYSTORE_RSA_SIGN_ALGO, "SHA256withRSA"); // SHA1withRSA
+    	String keyAlgo = EnvProperties.getEnvOrSysProp(ServerKeyPropertiesConstants.SERVER_KEYSTORE_KEYPAIR_ALGO, "RSA");// RSA
+    	String keySizeStr = EnvProperties.getEnvOrSysProp(ServerKeyPropertiesConstants.SERVER_KEYSTORE_KEYPAIR_SIZE, "2048");// 2048
+    	String serverSigAlgo = EnvProperties.getEnvOrSysProp(ServerKeyPropertiesConstants.SERVER_KEYSTORE_RSA_SIGN_ALGO, "SHA256withRSA"); // SHA1withRSA
     	int keySize = Integer.parseInt(keySizeStr);
         KeyPair keyPair = new KeyPairBuilder().withKeyAlg(keyAlgo).withKeyLength(keySize).build();
         X500Name dn = new X500NameBuilder(BCStyle.INSTANCE).addRDN(BCStyle.CN, userName).build();
@@ -194,8 +190,8 @@ public class ServerKeyManagerConfig {
     }
     
 	public static SecretKeyData newSecretKey(String alias, CallbackHandler secretKeyPassHandler){
-    	String secretKeyAlgo = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYSTORE_SECRET_KEY_ALGO, "AES");// AES
-    	String secretKeySizeStr = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.SERVER_KEYSTORE_SECRET_KEY_SIZE, "256");// 256
+    	String secretKeyAlgo = EnvProperties.getEnvOrSysProp(ServerKeyPropertiesConstants.SERVER_KEYSTORE_SECRET_KEY_ALGO, "AES");// AES
+    	String secretKeySizeStr = EnvProperties.getEnvOrSysProp(ServerKeyPropertiesConstants.SERVER_KEYSTORE_SECRET_KEY_SIZE, "256");// 256
     	int keySize = Integer.parseInt(secretKeySizeStr);
 		SecretKey secretKey = new SecretKeyBuilder().withKeyAlg(secretKeyAlgo).withKeyLength(keySize).build();	
 		return new SecretKeyData(secretKey, alias, secretKeyPassHandler);
@@ -205,10 +201,4 @@ public class ServerKeyManagerConfig {
     public ServerKeyManager getServerKeyManager() {
         return serverKeyManager;
     }
-
-    @Bean
-    public KeystorePersistence getKeystorePersistence() {
-        return keystorePersistence;
-    }
-    
 }

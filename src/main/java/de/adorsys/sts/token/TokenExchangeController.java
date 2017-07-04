@@ -8,6 +8,9 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.adorsys.jjwk.serverkey.KeyAndJwk;
+import org.adorsys.jjwk.serverkey.KeyConverter;
+import org.adorsys.jjwk.serverkey.ServerKeyManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -26,9 +29,6 @@ import com.nimbusds.jwt.JWTClaimsSet.Builder;
 import com.nimbusds.jwt.SignedJWT;
 
 import de.adorsys.sts.config.TokenResource;
-import de.adorsys.sts.keystore.KeyConverter;
-import de.adorsys.sts.keystore.ServerKeyManager;
-import de.adorsys.sts.keystore.ServerKeyMap.KeyAndJwk;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

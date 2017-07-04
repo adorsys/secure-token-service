@@ -77,4 +77,58 @@ public class ResourceServer {
 	public void setAudience(String audience) {
 		this.audience = audience;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((audience == null) ? 0 : audience.hashCode());
+		result = prime * result + ((clientId == null) ? 0 : clientId.hashCode());
+		result = prime * result + ((endpointUrl == null) ? 0 : endpointUrl.hashCode());
+		result = prime * result + (idpServer ? 1231 : 1237);
+		result = prime * result + ((jwksUrl == null) ? 0 : jwksUrl.hashCode());
+		result = prime * result + ((userSecretClaimName == null) ? 0 : userSecretClaimName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ResourceServer other = (ResourceServer) obj;
+		if (audience == null) {
+			if (other.audience != null)
+				return false;
+		} else if (!audience.equals(other.audience))
+			return false;
+		if (clientId == null) {
+			if (other.clientId != null)
+				return false;
+		} else if (!clientId.equals(other.clientId))
+			return false;
+		if (endpointUrl == null) {
+			if (other.endpointUrl != null)
+				return false;
+		} else if (!endpointUrl.equals(other.endpointUrl))
+			return false;
+		if (idpServer != other.idpServer)
+			return false;
+		if (jwksUrl == null) {
+			if (other.jwksUrl != null)
+				return false;
+		} else if (!jwksUrl.equals(other.jwksUrl))
+			return false;
+		if (userSecretClaimName == null) {
+			if (other.userSecretClaimName != null)
+				return false;
+		} else if (!userSecretClaimName.equals(other.userSecretClaimName))
+			return false;
+		return true;
+	}
+	
+	
 }

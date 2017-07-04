@@ -1,45 +1,34 @@
-package de.adorsys.sts.main;
+package de.adorsys.sts;
 
 import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.security.Security;
 
 import org.adorsys.envutils.EnvProperties;
+import org.adorsys.jjwk.serverkey.ServerKeyPropertiesConstants;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
-import de.adorsys.sts.admin.AdminController;
-import de.adorsys.sts.config.ServerKeyManagerConfig;
-import de.adorsys.sts.config.SwaggerConfig;
-import de.adorsys.sts.config.WebSecurityConfig;
-import de.adorsys.sts.info.ServerInfoController;
-import de.adorsys.sts.persistence.STSPersistenceConfig;
-import de.adorsys.sts.pop.PoPController;
-import de.adorsys.sts.props.STSPropertiesConstants;
-import de.adorsys.sts.rserver.ResourceServerManager;
-import de.adorsys.sts.token.PasswordGrantController;
-import de.adorsys.sts.token.TokenService;
-
 @SpringBootApplication
-@ComponentScan(basePackageClasses = { PasswordGrantController.class, SwaggerConfig.class, WebSecurityConfig.class,
-		ServerKeyManagerConfig.class, TokenService.class, STSPersistenceConfig.class, ServerInfoController.class,
-		PoPController.class, AdminController.class, ResourceServerManager.class })
 public class SecureTokenServiceApplication {
 
 	public static void main(String[] args) throws UnknownHostException {
 		turnOffEncPolicy();
+		
+		Security.addProvider(new BouncyCastleProvider());
 
-		String keystorePassword = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.KEYSTORE_PASSWORD, true);
+		String keystorePassword = EnvProperties.getEnvOrSysProp(ServerKeyPropertiesConstants.KEYSTORE_PASSWORD, true);
 		if (StringUtils.isBlank(keystorePassword)) {
 			keystorePassword = RandomStringUtils.randomAlphanumeric(16);
-			System.setProperty(STSPropertiesConstants.KEYSTORE_PASSWORD, keystorePassword);
-			System.setProperty(STSPropertiesConstants.RESET_KEYSTORE, "true");
+			System.setProperty(ServerKeyPropertiesConstants.KEYSTORE_PASSWORD, keystorePassword);
+			System.setProperty(ServerKeyPropertiesConstants.RESET_KEYSTORE, "true");
 			LoggerFactory.getLogger(SecureTokenServiceApplication.class)
 					.info("Newly generated Keystore Password: " + keystorePassword);
 		}
@@ -59,7 +48,7 @@ public class SecureTokenServiceApplication {
 						env.getProperty("server.port", "8080"), env.getActiveProfiles());
 
 	}
-
+	
 	public static void turnOffEncPolicy() {
 		// Warning: do not do this for productive code. Download and install the
 		// jce unlimited strength policy file

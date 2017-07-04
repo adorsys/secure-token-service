@@ -7,11 +7,13 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.adorsys.encobject.domain.KeyCredentials;
-import org.adorsys.encobject.service.BlobStoreContextFactory;
-import org.adorsys.encobject.service.EncObjectService;
+import org.adorsys.encobject.filesystem.FsPersistenceFactory;
 import org.adorsys.encobject.service.KeystoreNotFoundException;
 import org.adorsys.encobject.userdata.ObjectPersistenceAdapter;
 import org.adorsys.encobject.userdata.UserDataNamingPolicy;
+import org.adorsys.jjwk.serverkey.KeyAndJwk;
+import org.adorsys.jjwk.serverkey.KeyConverter;
+import org.adorsys.jjwk.serverkey.ServerKeyManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +33,8 @@ import com.nimbusds.jwt.JWTClaimsSet.Builder;
 import com.nimbusds.jwt.SignedJWT;
 
 import de.adorsys.sts.config.TokenResource;
-import de.adorsys.sts.keystore.KeyConverter;
-import de.adorsys.sts.keystore.ServerKeyManager;
-import de.adorsys.sts.keystore.ServerKeyMap.KeyAndJwk;
 import de.adorsys.sts.user.DefaultObjectMapper;
+import de.adorsys.sts.user.UserCredentials;
 import de.adorsys.sts.user.UserDataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -54,14 +54,16 @@ public class PasswordGrantController {
 
     @Autowired
     private HttpServletRequest servletRequest;
+    
+    @Autowired
+    private FsPersistenceFactory persFactory;
+
+	@Autowired
+	private ResourceServerProcessor resourceServerProcessor = new ResourceServerProcessor();
 
 	private static UserDataNamingPolicy namingPolicy = new UserDataNamingPolicy("STS");
 	private static DefaultObjectMapper objectMapper = new DefaultObjectMapper();
 
-	@Autowired
-	private BlobStoreContextFactory blobStoreFactory;
-	@Autowired
-	private ResourceServerProcessor resourceServerProcessor = new ResourceServerProcessor();
 	
 	@GetMapping(path="", consumes={MediaType.APPLICATION_FORM_URLENCODED_VALUE}, produces={MediaType.APPLICATION_JSON_VALUE})
 	@ApiOperation(value = "Password Grant", notes = "Implements the oauth2 Pasword grant type. Works only if server is configured to accept password grant")
@@ -99,9 +101,8 @@ public class PasswordGrantController {
 			return ResponseUtils.missingParam(password);
 		}
 		
-		EncObjectService encObjectService = new EncObjectService(blobStoreFactory);
 		KeyCredentials keyCredentials = namingPolicy.newKeyCredntials(username, password);
-		ObjectPersistenceAdapter objectPersistenceAdapter = new ObjectPersistenceAdapter(encObjectService, keyCredentials, objectMapper);
+		ObjectPersistenceAdapter objectPersistenceAdapter = new ObjectPersistenceAdapter(persFactory.getEncObjectService(), keyCredentials, objectMapper);
 		// Check if we have this user in the storage. If so user the record, if not create one.
 		UserDataService userDataService = new UserDataService(namingPolicy, objectPersistenceAdapter);
 		if(!userDataService.hasAccount()){
@@ -110,7 +111,9 @@ public class PasswordGrantController {
 			} catch (KeystoreNotFoundException e) {
 				throw new IllegalStateException();
 			}
-		}
+		} 
+		// Check access
+		UserCredentials loadUserCredentials = userDataService.loadUserCredentials();
 		
 		Builder claimSetBuilder = new JWTClaimsSet.Builder();
 		claimSetBuilder = claimSetBuilder.subject(username)

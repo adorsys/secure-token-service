@@ -70,16 +70,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return SecurityContextHolder.getContext().getAuthentication();
 
     }
-
-//	UserDataNamingPolicy userDataNamingPolicy = new UserDataNamingPolicy("STS");
-//	
-//	@Bean
-//    @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST,proxyMode = ScopedProxyMode.TARGET_CLASS)
-//	public ObjectPersistenceAdapter persistenceAdapter(){
-//		String subject = getPrincipal().getName();
-//		KeyCredentials keyCredentials = userDataNamingPolicy.newKeyCredntials(subject, );
-//		BlobStoreContextFactory blobStoreContextFactory = new FileSystemBlobStoreContextFactory(keyCredentials.getHandle().getContainer());
-//		EncObjectService encObjectService = new EncObjectService(blobStoreContextFactory);
-//		return new ObjectPersistenceAdapter(encObjectService, keyCredentials);
-//	}
 }

@@ -9,6 +9,7 @@ import org.adorsys.jjwk.selector.KeyExtractionException;
 import org.adorsys.jjwk.selector.UnsupportedEncAlgorithmException;
 import org.adorsys.jjwk.selector.UnsupportedKeyLengthException;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -98,6 +99,7 @@ public class ResourceServerProcessor {
 
 		// Encrypt credentials for token
 		for (ResourceServerAndSecret resourceServerAndSecret : resurceServers) {
+			if(StringUtils.isBlank(resourceServerAndSecret.getResourceServer().getUserSecretClaimName())) continue;
 			ResourceServerInfo serverInfo = new ResourceServerInfo(resourceRetriever, resourceServerAndSecret.getResourceServer());
 			RemoteJWKSet<SecurityContext> jwkSource = serverInfo.getJWKSource();
 			List<JWK> keys;
