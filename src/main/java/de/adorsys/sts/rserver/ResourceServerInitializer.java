@@ -5,13 +5,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import de.adorsys.sts.props.STSPropertiesConstants;
 
 @Component
+@Order(value=ResourceServerInitializer.ORDER)
 public class ResourceServerInitializer implements ApplicationRunner {
-	
+	public static final int ORDER =  1;
 	@Autowired
 	private ResourceServerManager resourceServerManager;
 

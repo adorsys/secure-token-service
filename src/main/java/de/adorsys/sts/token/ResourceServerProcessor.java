@@ -138,12 +138,15 @@ public class ResourceServerProcessor {
 	}
 
 	private JWEHeader getHeader(JWK jwk) throws JOSEException {
+		JWEHeader header = null;
         if (jwk instanceof RSAKey) {
-            return new JWEHeader(JWEAlgorithm.RSA_OAEP, EncryptionMethod.A128GCM);
+        	header = new JWEHeader(JWEAlgorithm.RSA_OAEP, EncryptionMethod.A128GCM);
         } else if (jwk instanceof ECKey) {
-            return new JWEHeader(JWEAlgorithm.ECDH_ES_A128KW, EncryptionMethod.A192GCM);
+        	header = new JWEHeader(JWEAlgorithm.ECDH_ES_A128KW, EncryptionMethod.A192GCM);
+        } else {
+        	return null;
         }
-        return null;
+        return new JWEHeader.Builder(header).keyID(jwk.getKeyID()).build();
     }
 	
 	private List<ResourceServerAndSecret> filterServersByResources(String[] resources, Map<String, Map<String, ResourceServer>> resourceServersMultiMap, final List<ResourceServerAndSecret> result){
@@ -189,4 +192,26 @@ public class ResourceServerProcessor {
 			userDataService.storeUserCredentials(userCredentials);
 		}
 	}
+	
+	public void storeUserCredentials(UserDataService userDataService, String credentialForResourceServer, String resurceServerAudience){
+		if(userDataService==null) return;
+		// Result
+		List<ResourceServerAndSecret> resurceServers = new ArrayList<>();
+		Map<String, Map<String, ResourceServer>> resourceServersMultiMap = resourceServerManager.getResourceServersMultiMap();
+		
+		String[] resurceServerAudiences = new String[]{resurceServerAudience};
+		List<ResourceServerAndSecret> filterServersByAudience = filterServersByAudience(resurceServerAudiences, resourceServersMultiMap, resurceServers);
+
+		// If Resources are set, we can get or create the corresponding user secrets and have them included in the token.
+		UserCredentials userCredentials = userDataService.loadUserCredentials();
+
+		if(filterServersByAudience.isEmpty()) return;
+		
+		ResourceServerAndSecret resourceServer = filterServersByAudience.get(0);
+		String oldCredentialForResourceServer = userCredentials.getCredentialForResourceServer(resourceServer.getResourceServer().getAudience());
+		if(oldCredentialForResourceServer!=null) return;
+		userCredentials.setCredentialForResourceServer(resourceServer.getResourceServer().getAudience(), credentialForResourceServer);
+		userDataService.storeUserCredentials(userCredentials);
+	}
+	
 }

@@ -61,7 +61,9 @@ public class PasswordGrantController {
 	@Autowired
 	private ResourceServerProcessor resourceServerProcessor = new ResourceServerProcessor();
 
-	private static UserDataNamingPolicy namingPolicy = new UserDataNamingPolicy("STS");
+	@Autowired
+	private UserDataNamingPolicy namingPolicy;
+	
 	private static DefaultObjectMapper objectMapper = new DefaultObjectMapper();
 
 	
