@@ -19,6 +19,7 @@
 
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZZ</maven.build.timestamp.format>
 		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
+		<cryptoutils.version>0.5</cryptoutils.version>
 		<scmBranch />
 
 	</properties>
@@ -117,12 +118,12 @@
 		<dependency>
 			<groupId>de.adorsys.cryptoutils</groupId>
 			<artifactId>encobject</artifactId>
-			<version>0.2-SNAPSHOT</version>
+			<version>${cryptoutils.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.adorsys.cryptoutils</groupId>
 			<artifactId>jjwk</artifactId>
-			<version>0.2-SNAPSHOT</version>
+			<version>${cryptoutils.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
