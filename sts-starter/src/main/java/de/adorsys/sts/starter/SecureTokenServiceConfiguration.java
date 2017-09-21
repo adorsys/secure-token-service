@@ -1,5 +1,6 @@
 package de.adorsys.sts.starter;
 
+import de.adorsys.sts.admin.EnableAdmin;
 import de.adorsys.sts.common.EnableSTS;
 import de.adorsys.sts.pop.EnablePOP;
 import de.adorsys.sts.serverinfo.EnableServerInfo;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @EnablePOP
 @EnableTokenExchange
 @EnablePasswordGrant
+@EnableAdmin
 @EnableServerInfo
 public class SecureTokenServiceConfiguration {
 }

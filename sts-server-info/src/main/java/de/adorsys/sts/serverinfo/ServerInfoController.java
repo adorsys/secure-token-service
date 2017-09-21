@@ -1,6 +1,7 @@
 package de.adorsys.sts.serverinfo;
 
 
+import de.adorsys.sts.admin.EnableAdmin;
 import de.adorsys.sts.pop.EnablePOP;
 import de.adorsys.sts.token.tokenexchange.EnableTokenExchange;
 import io.swagger.annotations.Api;
@@ -43,7 +44,9 @@ public class ServerInfoController {
             serverInfoResponse.setJwks_url(urlBase + "/pop");
         }
 
-        serverInfoResponse.setAdmin_url(urlBase + "/admin");
+        if(isConfigurationEnabled(EnableAdmin.class)) {
+            serverInfoResponse.setAdmin_url(urlBase + "/admin");
+        }
 
         if(isConfigurationEnabled(EnableTokenExchange.class)) {
             serverInfoResponse.setToken_exchange(urlBase + "/token");

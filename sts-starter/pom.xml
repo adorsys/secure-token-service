@@ -31,6 +31,10 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
+            <artifactId>sts-admin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-server-info</artifactId>
         </dependency>
 
