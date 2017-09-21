@@ -34,6 +34,7 @@
 		<module>sts-starter</module>
 		<module>sts-pop</module>
 		<module>sts-token</module>
+		<module>sts-server-info</module>
 	</modules>
 
 	<dependencyManagement>
@@ -70,6 +71,11 @@
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-token</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-server-info</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 

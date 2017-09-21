@@ -30,3 +30,5 @@ src/main/resources/.~lock.sts_login_data.xls#
 # IntelliJ
 .idea/
 *.iml
+
+**/.DS_Store
