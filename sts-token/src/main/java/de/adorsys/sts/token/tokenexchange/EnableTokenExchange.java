@@ -1,4 +1,4 @@
-package de.adorsys.sts.tokenexchange;
+package de.adorsys.sts.token.tokenexchange;
 
 import org.springframework.context.annotation.Import;
 

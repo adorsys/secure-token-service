@@ -33,7 +33,7 @@
 		<module>sts-common</module>
 		<module>sts-starter</module>
 		<module>sts-pop</module>
-		<module>sts-token-exchange</module>
+		<module>sts-token</module>
 	</modules>
 
 	<dependencyManagement>
@@ -69,7 +69,7 @@
 			</dependency>
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
-				<artifactId>sts-token-exchange</artifactId>
+				<artifactId>sts-token</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 

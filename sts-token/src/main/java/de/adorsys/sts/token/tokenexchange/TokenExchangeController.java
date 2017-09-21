@@ -1,4 +1,4 @@
-package de.adorsys.sts.tokenexchange;
+package de.adorsys.sts.token.tokenexchange;
 
 
 import com.nimbusds.jose.JOSEException;
@@ -9,6 +9,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import de.adorsys.sts.common.config.TokenResource;
 import de.adorsys.sts.common.token.*;
+import de.adorsys.sts.token.api.TokenResponse;
 import io.swagger.annotations.*;
 import org.adorsys.jjwk.serverkey.KeyAndJwk;
 import org.adorsys.jjwk.serverkey.KeyConverter;

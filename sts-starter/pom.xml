@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-token-exchange</artifactId>
+            <artifactId>sts-token</artifactId>
         </dependency>
 
         <dependency>

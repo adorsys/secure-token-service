@@ -1,11 +1,11 @@
-package de.adorsys.sts.tokenexchange;
+package de.adorsys.sts.token.passwordgrant;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan(basePackages = {
-        "de.adorsys.sts.tokenexchange"
+        "de.adorsys.sts.token.passwordgrant"
 })
-public class TokenExchangeConfiguration {
+public class PasswordGrantConfiguration {
 }
