@@ -7,7 +7,7 @@ services:
             - ./target:/app
         environment:
           server.port: 8080
-        command: java -jar /app/secure-token-service.jar
+        command: java -jar /app/sts-core.jar
         ports:
             - "8080:8080"
             
