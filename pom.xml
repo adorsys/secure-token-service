@@ -31,6 +31,7 @@
 	
 	<modules>
 		<module>sts-common</module>
+		<module>sts-starter</module>
 	</modules>
 
 	<dependencyManagement>
@@ -55,10 +56,22 @@
 			</dependency>
 
 			<dependency>
+				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>com.nimbusds</groupId>
 				<artifactId>nimbus-jose-jwt</artifactId>
 				<version>4.34.1</version>
 			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcprov-jdk15on</artifactId>
+				<version>1.58</version>
+			</dependency>
+
 			<!-- Environmen -->
 			<dependency>
 				<groupId>de.adorsys.envutils</groupId>
@@ -151,6 +164,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.7.0</version>
 				</plugin>
 
 				<plugin>

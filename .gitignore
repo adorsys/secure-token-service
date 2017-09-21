@@ -26,3 +26,7 @@ hs_err_pid*
 .project
 .settings/
 src/main/resources/.~lock.sts_login_data.xls#
+
+# IntelliJ
+.idea/
+*.iml

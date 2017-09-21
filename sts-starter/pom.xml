@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>secure-token-service</artifactId>
+        <groupId>de.adorsys.sts</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>sts-starter</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.adorsys.sts</groupId>
+            <artifactId>sts-common</artifactId>
+            <!--<version>${project.version}</version>-->
+        </dependency>
+
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.envutils</groupId>
+            <artifactId>envutils4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.cryptoutils</groupId>
+            <artifactId>jjwk</artifactId>
+        </dependency>
+    </dependencies>
+</project>

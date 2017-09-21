@@ -7,6 +7,7 @@
 		<artifactId>secure-token-service</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
+
 	<artifactId>sts-common</artifactId>
 	<packaging>jar</packaging>
 
@@ -47,7 +48,7 @@
 			<groupId>com.nimbusds</groupId>
 			<artifactId>nimbus-jose-jwt</artifactId>
 		</dependency>
-		<!-- Environmen -->
+		<!-- Environment -->
 		<dependency>
 			<groupId>de.adorsys.envutils</groupId>
 			<artifactId>envutils4j</artifactId>
@@ -60,7 +61,7 @@
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
 
-		<!-- Environmen -->
+		<!-- Adorsys -->
 		<dependency>
 			<groupId>de.adorsys.cryptoutils</groupId>
 			<artifactId>jkeyutils</artifactId>
@@ -79,7 +80,6 @@
 		</dependency>
 
 
-		<!-- jackson buggy 2.8.x version https://github.com/FasterXML/jackson-databind/issues/1595 -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
