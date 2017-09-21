@@ -20,7 +20,10 @@
         <dependency>
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-common</artifactId>
-            <!--<version>${project.version}</version>-->
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.sts</groupId>
+            <artifactId>sts-pop</artifactId>
         </dependency>
 
         <dependency>
@@ -36,4 +39,21 @@
             <artifactId>jjwk</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

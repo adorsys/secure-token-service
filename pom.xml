@@ -32,6 +32,7 @@
 	<modules>
 		<module>sts-common</module>
 		<module>sts-starter</module>
+		<module>sts-pop</module>
 	</modules>
 
 	<dependencyManagement>
@@ -58,6 +59,11 @@
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-pop</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
