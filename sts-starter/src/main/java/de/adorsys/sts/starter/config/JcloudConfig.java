@@ -1,4 +1,4 @@
-package de.adorsys.sts.pop;
+package de.adorsys.sts.starter.config;
 
 import org.adorsys.encobject.filesystem.FsPersistenceFactory;
 import org.adorsys.encobject.serverdata.JcloudConstants;
