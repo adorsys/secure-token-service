@@ -1,7 +1,6 @@
-package de.adorsys.sts.common.config;
+package de.adorsys.sts.starter.config;
 
-import java.security.Principal;
-
+import de.adorsys.sts.common.config.JWTAuthenticationFilter;
 import de.adorsys.sts.common.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.security.Principal;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -33,7 +34,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.authorizeRequests()
-			.antMatchers(HttpMethod.GET, "/", "/pop", "/api-docs/**", "/v2/api-docs/**", "/health", "/health.json", "/info", "/info.json").permitAll()
+			.antMatchers(HttpMethod.GET,
+					"/",
+					"/pop",
+					"/api-docs/**",
+					"/v2/api-docs/**",
+					"/documentation/**",
+					"/swagger-resources/**",
+					"/health",
+					"/health.json",
+					"/info",
+					"/info.json"
+			).permitAll()
 			.antMatchers("/token/**").permitAll()// TOken Endpoint
 			.antMatchers(actuatorEndpoints()).hasRole("ADMIN")
 			.antMatchers("/accounts").hasRole("USER")

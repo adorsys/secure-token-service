@@ -1,11 +1,12 @@
-package de.adorsys.sts.common.config;
+package de.adorsys.sts.starter.config;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import de.adorsys.sts.common.config.AdminResource;
+import de.adorsys.sts.common.config.TokenResource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -16,12 +17,34 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * fpo
  */
 @Configuration
 @EnableSwagger2
-public class SwaggerConfig {
+public class SwaggerConfig extends WebMvcConfigurerAdapter {
+
+	@Override
+	public void addViewControllers(ViewControllerRegistry registry) {
+		registry.addRedirectViewController("/api-docs/v2/api-docs", "/v2/api-docs");
+		registry.addRedirectViewController("/api-docs/swagger-resources/configuration/ui","/swagger-resources/configuration/ui");
+		registry.addRedirectViewController("/api-docs/swagger-resources/configuration/security","/swagger-resources/configuration/security");
+		registry.addRedirectViewController("/api-docs/swagger-resources", "/swagger-resources");
+		registry.addRedirectViewController("/api-docs/", "/api-docs/swagger-ui.html");
+		registry.addRedirectViewController("/api-docs", "/api-docs/swagger-ui.html");
+		registry.addRedirectViewController("/api-docs/index.html", "/api-docs/swagger-ui.html");
+	}
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.
+				addResourceHandler("/api-docs/swagger-ui.html**").addResourceLocations("classpath:/META-INF/resources/swagger-ui.html");
+		registry.
+				addResourceHandler("/api-docs/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+	}
 
 	@Bean
 	public Docket tokenApi() {

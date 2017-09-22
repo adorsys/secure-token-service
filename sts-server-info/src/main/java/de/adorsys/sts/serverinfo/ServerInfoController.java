@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.annotation.Annotation;
@@ -52,7 +53,9 @@ public class ServerInfoController {
             serverInfoResponse.setToken_exchange(urlBase + "/token");
         }
 
-        serverInfoResponse.setApi_docs_url(urlBase + "/api-docs/index.html");
+        if(isConfigurationEnabled(EnableSwagger2.class)) {
+            serverInfoResponse.setApi_docs_url(urlBase + "/api-docs/index.html");
+        }
 
         return ResponseEntity.ok(serverInfoResponse);
     }
