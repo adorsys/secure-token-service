@@ -1,13 +1,12 @@
-package de.adorsys.sts.common.token;
+package de.adorsys.sts.tokenauth;
+
+import com.nimbusds.jwt.JWTClaimsSet;
+import net.minidev.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import com.nimbusds.jwt.JWTClaimsSet;
-
-import net.minidev.json.JSONObject;
 
 /**
  * Parses keycloak roles and render them as scope strings.

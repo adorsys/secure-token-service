@@ -10,6 +10,7 @@ import com.nimbusds.jwt.SignedJWT;
 import de.adorsys.sts.common.config.TokenResource;
 import de.adorsys.sts.common.token.*;
 import de.adorsys.sts.token.api.TokenResponse;
+import de.adorsys.sts.tokenauth.TokenService;
 import io.swagger.annotations.*;
 import org.adorsys.jjwk.serverkey.KeyAndJwk;
 import org.adorsys.jjwk.serverkey.KeyConverter;

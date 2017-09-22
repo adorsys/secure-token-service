@@ -36,6 +36,7 @@
 		<module>sts-token</module>
 		<module>sts-server-info</module>
 		<module>sts-admin</module>
+		<module>sts-token-auth</module>
 	</modules>
 
 	<dependencyManagement>
@@ -77,6 +78,11 @@
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-admin</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-token-auth</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

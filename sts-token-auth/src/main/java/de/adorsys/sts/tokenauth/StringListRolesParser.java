@@ -1,9 +1,9 @@
-package de.adorsys.sts.common.token;
+package de.adorsys.sts.tokenauth;
+
+import com.nimbusds.jwt.JWTClaimsSet;
 
 import java.text.ParseException;
 import java.util.List;
-
-import com.nimbusds.jwt.JWTClaimsSet;
 
 public class StringListRolesParser {
 

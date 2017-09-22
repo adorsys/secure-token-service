@@ -1,6 +1,5 @@
 package de.adorsys.sts.pop;
 
-import de.adorsys.sts.common.SecureTokenServiceConfig;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.Documented;
