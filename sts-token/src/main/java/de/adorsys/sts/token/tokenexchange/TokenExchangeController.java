@@ -42,7 +42,7 @@ public class TokenExchangeController {
     private HttpServletRequest servletRequest;
 
     @Autowired
-    private ResourceServerProcessor resourceServerProcessor = new ResourceServerProcessor();
+    private ResourceServerProcessor resourceServerProcessor;
 
     @GetMapping(consumes={MediaType.APPLICATION_FORM_URLENCODED_VALUE}, produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Exchange Token", notes = "Create an access or refresh token given a valide subject token.")

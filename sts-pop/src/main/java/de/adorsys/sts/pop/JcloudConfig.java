@@ -1,6 +1,4 @@
-package de.adorsys.sts.common.config;
-
-import javax.annotation.PostConstruct;
+package de.adorsys.sts.pop;
 
 import org.adorsys.encobject.filesystem.FsPersistenceFactory;
 import org.adorsys.encobject.serverdata.JcloudConstants;
@@ -8,6 +6,8 @@ import org.adorsys.encobject.userdata.UserDataNamingPolicy;
 import org.adorsys.envutils.EnvProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.PostConstruct;
 
 @Configuration
 public class JcloudConfig {

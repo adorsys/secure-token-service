@@ -1,34 +1,11 @@
-package de.adorsys.sts.common.config;
+package de.adorsys.sts.pop;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.security.KeyPair;
-import java.security.KeyStore;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.util.UUID;
-
-import javax.annotation.PostConstruct;
-import javax.crypto.SecretKey;
-import javax.security.auth.callback.CallbackHandler;
-
+import com.nimbusds.jose.jwk.JWKSet;
 import org.adorsys.encobject.domain.ObjectHandle;
 import org.adorsys.encobject.filesystem.FsPersistenceFactory;
-import org.adorsys.encobject.service.ContainerExistsException;
-import org.adorsys.encobject.service.ContainerPersistence;
-import org.adorsys.encobject.service.MissingKeyAlgorithmException;
-import org.adorsys.encobject.service.MissingKeystoreAlgorithmException;
-import org.adorsys.encobject.service.MissingKeystoreProviderException;
-import org.adorsys.encobject.service.ObjectNotFoundException;
-import org.adorsys.encobject.service.UnknownContainerException;
-import org.adorsys.encobject.service.WrongKeystoreCredentialException;
+import org.adorsys.encobject.service.*;
 import org.adorsys.envutils.EnvProperties;
-import org.adorsys.jjwk.serverkey.KeyConverter;
-import org.adorsys.jjwk.serverkey.KeyStoreUtils;
-import org.adorsys.jjwk.serverkey.ServerKeyManager;
-import org.adorsys.jjwk.serverkey.ServerKeyPropertiesConstants;
-import org.adorsys.jjwk.serverkey.ServerKeysHolder;
-import org.adorsys.jjwk.serverkey.SingleKeyUsageSelfSignedCertBuilder;
+import org.adorsys.jjwk.serverkey.*;
 import org.adorsys.jkeygen.keypair.KeyPairBuilder;
 import org.adorsys.jkeygen.keypair.SelfSignedKeyPairData;
 import org.adorsys.jkeygen.keystore.KeyPairData;
@@ -47,7 +24,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.nimbusds.jose.jwk.JWKSet;
+import javax.annotation.PostConstruct;
+import javax.crypto.SecretKey;
+import javax.security.auth.callback.CallbackHandler;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.security.KeyPair;
+import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.util.UUID;
 
 
 @Configuration

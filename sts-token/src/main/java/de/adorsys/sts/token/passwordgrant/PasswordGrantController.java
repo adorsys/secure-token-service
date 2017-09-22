@@ -55,7 +55,7 @@ public class PasswordGrantController {
     private FsPersistenceFactory persFactory;
 
     @Autowired
-    private ResourceServerProcessor resourceServerProcessor = new ResourceServerProcessor();
+    private ResourceServerProcessor resourceServerProcessor;
 
     @Autowired
     private UserDataNamingPolicy namingPolicy;
