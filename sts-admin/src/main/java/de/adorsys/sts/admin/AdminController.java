@@ -2,8 +2,8 @@ package de.adorsys.sts.admin;
 
 
 import de.adorsys.sts.common.config.AdminResource;
-import de.adorsys.sts.common.rserver.ResourceServerManager;
-import de.adorsys.sts.common.rserver.ResourceServers;
+import de.adorsys.sts.resourceserver.ResourceServerManager;
+import de.adorsys.sts.resourceserver.ResourceServers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

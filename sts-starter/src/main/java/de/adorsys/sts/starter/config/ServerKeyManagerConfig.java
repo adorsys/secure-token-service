@@ -1,7 +1,7 @@
 package de.adorsys.sts.starter.config;
 
 
-import de.adorsys.sts.common.rserver.ServerKeyManagerFactory;
+import de.adorsys.sts.common.ServerKeyManagerFactory;
 import org.adorsys.encobject.filesystem.FsPersistenceFactory;
 import org.adorsys.jjwk.serverkey.ServerKeyManager;
 import org.springframework.beans.factory.annotation.Autowired;

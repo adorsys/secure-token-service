@@ -1,4 +1,4 @@
-package de.adorsys.sts.common.rserver;
+package de.adorsys.sts.resourceserver;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import de.adorsys.sts.resourceserver.model.ResourceServer;
 import org.adorsys.encobject.domain.ContentMetaInfo;
 import org.adorsys.encobject.domain.ObjectHandle;
 import org.adorsys.encobject.filesystem.FsPersistenceFactory;

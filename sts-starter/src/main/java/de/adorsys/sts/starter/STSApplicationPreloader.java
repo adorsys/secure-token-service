@@ -1,14 +1,14 @@
-package de.adorsys.sts.common;
+package de.adorsys.sts.starter;
 
-import java.io.InputStream;
-
-import de.adorsys.sts.common.loader.DataSheetLoader;
-import de.adorsys.sts.common.rserver.ResourceServerInitializer;
+import de.adorsys.sts.resourceserver.ResourceServerInitializer;
+import de.adorsys.sts.worksheetloader.DataSheetLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.io.InputStream;
 
 /**
  * @author fpo

@@ -96,12 +96,6 @@
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
 
-		<!-- Excel Parsing -->
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-		</dependency>
-
 	</dependencies>
 
 	<build>

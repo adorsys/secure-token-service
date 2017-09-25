@@ -1,4 +1,4 @@
-package de.adorsys.sts.common.rserver;
+package de.adorsys.sts.common;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import org.adorsys.encobject.domain.ObjectHandle;

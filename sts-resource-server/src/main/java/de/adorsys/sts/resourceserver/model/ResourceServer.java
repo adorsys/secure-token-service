@@ -1,4 +1,4 @@
-package de.adorsys.sts.common.rserver;
+package de.adorsys.sts.resourceserver.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

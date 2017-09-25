@@ -37,6 +37,8 @@
 		<module>sts-server-info</module>
 		<module>sts-admin</module>
 		<module>sts-token-auth</module>
+		<module>sts-resource-server</module>
+		<module>sts-worksheet-loader</module>
 	</modules>
 
 	<dependencyManagement>
@@ -87,7 +89,17 @@
 			</dependency>
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-resource-server</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-server-info</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-worksheet-loader</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 

@@ -1,10 +1,11 @@
-package de.adorsys.sts.common.rserver;
+package de.adorsys.sts.resourceserver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.adorsys.sts.resourceserver.model.ResourceServer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 

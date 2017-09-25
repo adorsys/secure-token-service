@@ -1,4 +1,4 @@
-package de.adorsys.sts.common.token;
+package de.adorsys.sts.resourceserver;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
 import org.adorsys.envutils.EnvProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;

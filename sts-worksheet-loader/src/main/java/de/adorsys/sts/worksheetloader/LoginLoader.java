@@ -1,7 +1,7 @@
-package de.adorsys.sts.common.loader;
+package de.adorsys.sts.worksheetloader;
 
-import de.adorsys.sts.common.token.ResourceServerProcessor;
 import de.adorsys.sts.common.user.DefaultObjectMapper;
+import de.adorsys.sts.resourceserver.ResourceServerProcessor;
 import org.adorsys.encobject.domain.KeyCredentials;
 import org.adorsys.encobject.filesystem.FsPersistenceFactory;
 import org.adorsys.encobject.service.KeystoreNotFoundException;

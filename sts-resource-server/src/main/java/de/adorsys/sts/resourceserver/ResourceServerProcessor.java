@@ -1,11 +1,15 @@
-package de.adorsys.sts.common.token;
+package de.adorsys.sts.resourceserver;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import de.adorsys.sts.common.rserver.ResourceServerManager;
-import de.adorsys.sts.common.rserver.ResourceServers;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.jwk.*;
+import com.nimbusds.jose.jwk.source.RemoteJWKSet;
+import com.nimbusds.jose.proc.SecurityContext;
+import com.nimbusds.jose.util.DefaultResourceRetriever;
+import com.nimbusds.jose.util.ResourceRetriever;
+import de.adorsys.sts.resourceserver.model.ResourceServer;
+import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
+import de.adorsys.sts.common.user.UserCredentials;
+import de.adorsys.sts.common.user.UserDataService;
 import org.adorsys.jjwk.selector.JWEEncryptedSelector;
 import org.adorsys.jjwk.selector.KeyExtractionException;
 import org.adorsys.jjwk.selector.UnsupportedEncAlgorithmException;
@@ -15,29 +19,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nimbusds.jose.EncryptionMethod;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWEAlgorithm;
-import com.nimbusds.jose.JWEEncrypter;
-import com.nimbusds.jose.JWEHeader;
-import com.nimbusds.jose.JWEObject;
-import com.nimbusds.jose.Payload;
-import com.nimbusds.jose.RemoteKeySourceException;
-import com.nimbusds.jose.jwk.ECKey;
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.JWKMatcher;
-import com.nimbusds.jose.jwk.JWKSelector;
-import com.nimbusds.jose.jwk.KeyUse;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.RemoteJWKSet;
-import com.nimbusds.jose.proc.SecurityContext;
-import com.nimbusds.jose.util.DefaultResourceRetriever;
-import com.nimbusds.jose.util.ResourceRetriever;
-
-import de.adorsys.sts.common.rserver.ResourceServer;
-import de.adorsys.sts.common.rserver.ResourceServerInfo;
-import de.adorsys.sts.common.user.UserCredentials;
-import de.adorsys.sts.common.user.UserDataService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Processes information specific to a resoruce server.

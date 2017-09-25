@@ -1,5 +1,6 @@
-package de.adorsys.sts.common.rserver;
+package de.adorsys.sts.resourceserver;
 
+import de.adorsys.sts.resourceserver.model.ResourceServer;
 import org.adorsys.envutils.EnvProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

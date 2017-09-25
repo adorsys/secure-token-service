@@ -35,7 +35,15 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
+            <artifactId>sts-resource-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-server-info</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.sts</groupId>
+            <artifactId>sts-worksheet-loader</artifactId>
         </dependency>
 
         <dependency>
