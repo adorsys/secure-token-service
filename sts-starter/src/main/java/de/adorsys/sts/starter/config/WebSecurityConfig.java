@@ -39,7 +39,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					"/pop",
 					"/api-docs/**",
 					"/v2/api-docs/**",
-					"/documentation/**",
 					"/swagger-resources/**",
 					"/health",
 					"/health.json",

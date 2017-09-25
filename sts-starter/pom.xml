@@ -19,10 +19,6 @@
 
         <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-pop</artifactId>
         </dependency>
         <dependency>
