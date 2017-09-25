@@ -37,6 +37,7 @@
 		<module>sts-server-info</module>
 		<module>sts-admin</module>
 		<module>sts-token-auth</module>
+		<module>sts-example</module>
 	</modules>
 
 	<dependencyManagement>
