@@ -70,6 +70,7 @@ public class ResourceServerInfo {
 		try {
 			JWKSet.parse(res.getContent());
 			jwkSource = new RemoteJWKSet<>(new URL(resourceServer.getEndpointUrl()), resourceRetriever);
+			return jwkSource;
 		} catch (java.text.ParseException e) {
 			// ignore.
 		} catch (MalformedURLException e) {
