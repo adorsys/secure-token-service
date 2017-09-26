@@ -1,4 +1,4 @@
-package de.adorsys.sts.common.rserver;
+package de.adorsys.sts.resourceserver;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import de.adorsys.sts.resourceserver.model.ResourceServer;
 import org.adorsys.encobject.domain.ContentMetaInfo;
 import org.adorsys.encobject.domain.ObjectHandle;
 import org.adorsys.encobject.filesystem.FsPersistenceFactory;
@@ -34,7 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *   - jwks_url The jwks_url of an endpoint so we can read and key published by that endpoint for authenticated encryption
  *   - pop The pop endpoint for the same purpose.
  *   
- * We can cache the thse keys and refresh them at well defined intervals using the parameter:
+ * We can cache the these keys and refresh them at well defined intervals using the parameter:
  *   - refresh_interval_seconds
  * 
  * @author fpo
@@ -47,12 +48,12 @@ public class ResourceServerManager {
 
 	@Autowired
 	private FsPersistenceFactory persFactory;
+	private String containerName;
+	private static final String RESOURCE_SERVERS_FILE_NAME = "resource_servers";
 
     @Autowired
     private ServerKeyManager keyManager;
 
-	private String containerName;
-    private static final String RESOURCE_SERVERS_FILE_NAME = "resource_servers";
     
     private ObjectMapper objectMapper = new ObjectMapper();
     

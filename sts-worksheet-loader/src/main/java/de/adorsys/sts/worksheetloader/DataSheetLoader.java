@@ -1,4 +1,4 @@
-package de.adorsys.sts.common.loader;
+package de.adorsys.sts.worksheetloader;
 
 import java.io.IOException;
 import java.io.InputStream;

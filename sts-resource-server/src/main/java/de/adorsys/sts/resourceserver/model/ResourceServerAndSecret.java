@@ -1,6 +1,5 @@
-package de.adorsys.sts.common.token;
+package de.adorsys.sts.resourceserver.model;
 
-import de.adorsys.sts.common.rserver.ResourceServer;
 import org.apache.commons.lang3.StringUtils;
 
 /**

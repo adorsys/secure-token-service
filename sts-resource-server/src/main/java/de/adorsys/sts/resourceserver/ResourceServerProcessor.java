@@ -1,11 +1,15 @@
-package de.adorsys.sts.common.token;
+package de.adorsys.sts.resourceserver;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import de.adorsys.sts.common.rserver.ResourceServerManager;
-import de.adorsys.sts.common.rserver.ResourceServers;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.jwk.*;
+import com.nimbusds.jose.jwk.source.RemoteJWKSet;
+import com.nimbusds.jose.proc.SecurityContext;
+import com.nimbusds.jose.util.DefaultResourceRetriever;
+import com.nimbusds.jose.util.ResourceRetriever;
+import de.adorsys.sts.resourceserver.model.ResourceServer;
+import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
+import de.adorsys.sts.common.user.UserCredentials;
+import de.adorsys.sts.common.user.UserDataService;
 import org.adorsys.jjwk.selector.JWEEncryptedSelector;
 import org.adorsys.jjwk.selector.KeyExtractionException;
 import org.adorsys.jjwk.selector.UnsupportedEncAlgorithmException;
@@ -15,29 +19,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nimbusds.jose.EncryptionMethod;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWEAlgorithm;
-import com.nimbusds.jose.JWEEncrypter;
-import com.nimbusds.jose.JWEHeader;
-import com.nimbusds.jose.JWEObject;
-import com.nimbusds.jose.Payload;
-import com.nimbusds.jose.RemoteKeySourceException;
-import com.nimbusds.jose.jwk.ECKey;
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.JWKMatcher;
-import com.nimbusds.jose.jwk.JWKSelector;
-import com.nimbusds.jose.jwk.KeyUse;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.RemoteJWKSet;
-import com.nimbusds.jose.proc.SecurityContext;
-import com.nimbusds.jose.util.DefaultResourceRetriever;
-import com.nimbusds.jose.util.ResourceRetriever;
-
-import de.adorsys.sts.common.rserver.ResourceServer;
-import de.adorsys.sts.common.rserver.ResourceServerInfo;
-import de.adorsys.sts.common.user.UserCredentials;
-import de.adorsys.sts.common.user.UserDataService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Processes information specific to a resoruce server.
@@ -99,42 +84,83 @@ public class ResourceServerProcessor {
 
 		// Encrypt credentials for token
 		for (ResourceServerAndSecret resourceServerAndSecret : resurceServers) {
-			if(StringUtils.isBlank(resourceServerAndSecret.getResourceServer().getUserSecretClaimName())) continue;
-			ResourceServerInfo serverInfo = new ResourceServerInfo(resourceRetriever, resourceServerAndSecret.getResourceServer());
-			RemoteJWKSet<SecurityContext> jwkSource = serverInfo.getJWKSource();
-			List<JWK> keys;
-			try {
-				keys = jwkSource.get(encKeySelector, null);
-			} catch (RemoteKeySourceException e) {
-				// TODO. Log Warn
-				e.printStackTrace();
-				continue;
-			}
-			if(keys==null ||  keys.isEmpty()) continue;
-			JWK jwk = keys.iterator().next();
-			JWEEncrypter jweEncrypter;
-			try {
-				jweEncrypter = JWEEncryptedSelector.geEncrypter(jwk, null, null);
-			} catch (UnsupportedEncAlgorithmException | KeyExtractionException | UnsupportedKeyLengthException e) {
-				// TODO log.warn
-				e.printStackTrace();
-				continue;
-			}
-			Payload payload = new Payload(resourceServerAndSecret.getRawSecret());
-			// JWE encrypt secret.
-			JWEObject jweObj;
-			try {
-				jweObj = new JWEObject(getHeader(jwk), payload);
-				jweObj.encrypt(jweEncrypter);
-			} catch (JOSEException e) {
-				// TODO log.warn
-				e.printStackTrace();
-				continue;
-			}
-			String serializedCredential = jweObj.serialize();
-			resourceServerAndSecret.setEncryptedSecret(serializedCredential);
+			encryptSecret(resourceServerAndSecret);
 		}
+
 		return resurceServers;
+	}
+
+	public List<ResourceServerAndSecret> processResources(String[] audiences, String[] resources){
+
+		// Result
+		List<ResourceServerAndSecret> resurceServers = new ArrayList<>();
+
+		Map<String, Map<String, ResourceServer>> resourceServersMultiMap = resourceServerManager.getResourceServersMultiMap();
+
+		if(audiences!=null) filterServersByAudience(audiences, resourceServersMultiMap, resurceServers);
+
+		if(resources!=null)filterServersByResources(resources, resourceServersMultiMap, resurceServers);
+
+		if(resurceServers.isEmpty()) return resurceServers;
+
+		// Encrypt credentials for token
+		for (ResourceServerAndSecret resourceServerAndSecret : resurceServers) {
+			encryptSecret(resourceServerAndSecret);
+		}
+
+		return resurceServers;
+	}
+
+	private void encryptSecret(ResourceServerAndSecret resourceServerAndSecret) {
+		ResourceServer resourceServer = resourceServerAndSecret.getResourceServer();
+
+		if(StringUtils.isBlank(resourceServer.getUserSecretClaimName())) return;
+
+		Optional<String> encryptedSecret = tryToEncrypt(resourceServerAndSecret);
+
+		encryptedSecret.ifPresent(resourceServerAndSecret::setEncryptedSecret);
+	}
+
+	private Optional<String> tryToEncrypt(ResourceServerAndSecret resourceServerAndSecret) {
+		Optional<String> encryptedSecret = Optional.empty();
+
+		ResourceServer resourceServer = resourceServerAndSecret.getResourceServer();
+
+		if(StringUtils.isBlank(resourceServer.getUserSecretClaimName())) return encryptedSecret;
+
+		ResourceServerInfo serverInfo = new ResourceServerInfo(resourceRetriever, resourceServer);
+		RemoteJWKSet<SecurityContext> jwkSource = serverInfo.getJWKSource();
+		List<JWK> keys;
+		try {
+			keys = jwkSource.get(encKeySelector, null);
+		} catch (RemoteKeySourceException e) {
+			// TODO. Log Warn
+			e.printStackTrace();
+			return encryptedSecret;
+		}
+		if(keys==null ||  keys.isEmpty()) return encryptedSecret;
+		JWK jwk = keys.iterator().next();
+		JWEEncrypter jweEncrypter;
+		try {
+			jweEncrypter = JWEEncryptedSelector.geEncrypter(jwk, null, null);
+		} catch (UnsupportedEncAlgorithmException | KeyExtractionException | UnsupportedKeyLengthException e) {
+			// TODO log.warn
+			e.printStackTrace();
+			return encryptedSecret;
+		}
+		Payload payload = new Payload(resourceServerAndSecret.getRawSecret());
+		// JWE encrypt secret.
+		JWEObject jweObj;
+		try {
+			jweObj = new JWEObject(getHeader(jwk), payload);
+			jweObj.encrypt(jweEncrypter);
+		} catch (JOSEException e) {
+			// TODO log.warn
+			e.printStackTrace();
+			return encryptedSecret;
+		}
+
+		return Optional.of(jweObj.serialize());
 	}
 
 	private JWEHeader getHeader(JWK jwk) throws JOSEException {

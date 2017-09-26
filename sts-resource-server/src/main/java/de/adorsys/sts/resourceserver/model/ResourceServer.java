@@ -1,4 +1,4 @@
-package de.adorsys.sts.common.rserver;
+package de.adorsys.sts.resourceserver.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description="Describes a resource server", value="ResourceServer" )
 public class ResourceServer {
 	
-	@ApiModelProperty(value = "The resource server's endpoint url", 
+	@ApiModelProperty(value = "The resource server's endpoint uri. This shall be the physical endpoint URL resource server.", 
 			required=true, example="http://localhost:8080/multibanking-service")
 	private String endpointUrl;
 	
@@ -14,19 +14,19 @@ public class ResourceServer {
 			required=false, example="userSecret")
 	private String userSecretClaimName;
 	
-	@ApiModelProperty(value = "States that this is an idp server. This exchange server will be accespt tokens produces by the resource server.", 
+	@ApiModelProperty(value = "States that the referenced resource server is an idp server. This exchange server will be accespt tokens produces by the resource server.", 
 			required=false, example="true", allowableValues="true,false")	
 	private boolean idpServer;
 
-	@ApiModelProperty(value = "The json web key set url", 
+	@ApiModelProperty(value = "The physical json web key set url of the resource server", 
 			required=false, example="http://localhost:8080/multibanking-service/pop")	
 	private String jwksUrl;
 	
-	@ApiModelProperty(value = "The client id of this server in the realm of the exchange server", 
+	@ApiModelProperty(value = "The client id of the referenced resource server in the realm of this token exchange server", 
 			required=false, example="multibanking-service")	
 	private String clientId;
 
-	@ApiModelProperty(value = "The audience of this server in the realm of the exchange server", 
+	@ApiModelProperty(value = "The audience of this server in the realm of the exchange server. This is the audience field in the access token. This can also be an URI, but must not match the pysical address of the resource server", 
 			required=false, example="multibanking-service")	
 	private String audience;
 

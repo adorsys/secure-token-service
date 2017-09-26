@@ -37,6 +37,8 @@
 		<module>sts-server-info</module>
 		<module>sts-admin</module>
 		<module>sts-token-auth</module>
+		<module>sts-resource-server</module>
+		<module>sts-worksheet-loader</module>
 		<module>sts-example</module>
 	</modules>
 
@@ -88,7 +90,17 @@
 			</dependency>
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-resource-server</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-server-info</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-worksheet-loader</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
@@ -114,7 +126,9 @@
 			<dependency>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
+				<version>1.16.18</version>
 			</dependency>
+
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
@@ -236,6 +250,12 @@
 						<!-- Die commit id bei "git log -abbrev-commit" ist ebenfalls 7 Zeichen. -->
 						<shortRevisionLength>7</shortRevisionLength>
 					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.projectlombok</groupId>
+					<artifactId>lombok-maven-plugin</artifactId>
+					<version>1.16.18.1</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

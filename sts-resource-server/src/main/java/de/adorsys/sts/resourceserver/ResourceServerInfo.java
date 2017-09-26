@@ -1,4 +1,4 @@
-package de.adorsys.sts.common.rserver;
+package de.adorsys.sts.resourceserver;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -12,6 +12,7 @@ import com.nimbusds.jose.util.JSONObjectUtils;
 import com.nimbusds.jose.util.Resource;
 import com.nimbusds.jose.util.ResourceRetriever;
 
+import de.adorsys.sts.resourceserver.model.ResourceServer;
 import net.minidev.json.JSONObject;
 
 public class ResourceServerInfo {
@@ -70,6 +71,7 @@ public class ResourceServerInfo {
 		try {
 			JWKSet.parse(res.getContent());
 			jwkSource = new RemoteJWKSet<>(new URL(resourceServer.getEndpointUrl()), resourceRetriever);
+			return jwkSource;
 		} catch (java.text.ParseException e) {
 			// ignore.
 		} catch (MalformedURLException e) {

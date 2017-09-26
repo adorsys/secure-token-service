@@ -1,4 +1,4 @@
-package de.adorsys.sts.common.rserver;
+package de.adorsys.sts.resourceserver;
 
 public class ResourceServerException extends Exception {
 	private static final long serialVersionUID = -2576469717846924984L;

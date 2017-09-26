@@ -1,4 +1,6 @@
-package de.adorsys.sts.common.rserver;
+package de.adorsys.sts.resourceserver;
+
+import de.adorsys.sts.resourceserver.model.ResourceServer;
 
 public class ResourceServerError {
 	private String error;

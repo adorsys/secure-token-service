@@ -8,7 +8,10 @@ import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import de.adorsys.sts.common.config.TokenResource;
+import de.adorsys.sts.resourceserver.ResponseUtils;
+import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
 import de.adorsys.sts.common.token.*;
+import de.adorsys.sts.resourceserver.ResourceServerProcessor;
 import de.adorsys.sts.token.api.TokenResponse;
 import de.adorsys.sts.tokenauth.TokenService;
 import io.swagger.annotations.*;
@@ -148,7 +151,7 @@ public class TokenExchangeController {
         }
 
         // TODO produce user data service from controller
-        List<ResourceServerAndSecret> processedResources = resourceServerProcessor.processResources(audiences, resources, null);
+        List<ResourceServerAndSecret> processedResources = resourceServerProcessor.processResources(audiences, resources);
         // Resources or audiances
         claimSetBuilder = ResponseUtils.handleResources(claimSetBuilder, processedResources);
 
