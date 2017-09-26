@@ -39,7 +39,7 @@ public class EncryptionService {
         ).findFirst().orElseThrow(RuntimeException::new);
     }
 
-    private String encrypt(JWK jwk, String rawSecret) throws SecretEncryptionException {
+    public String encrypt(JWK jwk, String rawSecret) throws SecretEncryptionException {
         JWEEncrypter jweEncrypter;
 
         try {

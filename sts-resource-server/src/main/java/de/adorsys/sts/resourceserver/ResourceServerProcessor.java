@@ -11,6 +11,7 @@ import de.adorsys.sts.common.user.UserDataService;
 import de.adorsys.sts.resourceserver.model.ResourceServer;
 import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
 import de.adorsys.sts.resourceserver.model.ResourceServers;
+import de.adorsys.sts.resourceserver.service.EncryptionService;
 import de.adorsys.sts.resourceserver.service.SecretEncryptionException;
 import org.adorsys.jjwk.selector.JWEEncryptedSelector;
 import org.adorsys.jjwk.selector.KeyExtractionException;
@@ -57,6 +58,10 @@ public class ResourceServerProcessor {
 	
     @Autowired
     private ResourceServerManager resourceServerManager;
+
+    @Autowired
+	private EncryptionService encryptionService;
+
     private static JWKSelector encKeySelector = new JWKSelector(new JWKMatcher.Builder().keyUse(KeyUse.ENCRYPTION).build());
 	private ResourceRetriever resourceRetriever=new DefaultResourceRetriever(DEFAULT_HTTP_CONNECT_TIMEOUT, DEFAULT_HTTP_READ_TIMEOUT, DEFAULT_HTTP_SIZE_LIMIT);
 	
@@ -141,42 +146,21 @@ public class ResourceServerProcessor {
 			return encryptedSecret;
 		}
 		if(keys==null ||  keys.isEmpty()) return encryptedSecret;
+
 		JWK jwk = keys.iterator().next();
-		JWEEncrypter jweEncrypter;
+
+		String encrypted;
 		try {
-			jweEncrypter = JWEEncryptedSelector.geEncrypter(jwk, null, null);
-		} catch (UnsupportedEncAlgorithmException | KeyExtractionException | UnsupportedKeyLengthException e) {
-			// TODO log.warn
-			e.printStackTrace();
-			return encryptedSecret;
-		}
-		Payload payload = new Payload(resourceServerAndSecret.getRawSecret());
-		// JWE encrypt secret.
-		JWEObject jweObj;
-		try {
-			jweObj = new JWEObject(getHeader(jwk), payload);
-			jweObj.encrypt(jweEncrypter);
-		} catch (JOSEException e) {
+			encrypted = encryptionService.encrypt(jwk, resourceServerAndSecret.getRawSecret());
+		} catch(SecretEncryptionException e) {
 			// TODO log.warn
 			e.printStackTrace();
 			return encryptedSecret;
 		}
 
-		return Optional.of(jweObj.serialize());
+		return Optional.of(encrypted);
 	}
 
-	private JWEHeader getHeader(JWK jwk) throws JOSEException {
-		JWEHeader header = null;
-        if (jwk instanceof RSAKey) {
-        	header = new JWEHeader(JWEAlgorithm.RSA_OAEP, EncryptionMethod.A128GCM);
-        } else if (jwk instanceof ECKey) {
-        	header = new JWEHeader(JWEAlgorithm.ECDH_ES_A128KW, EncryptionMethod.A192GCM);
-        } else {
-        	return null;
-        }
-        return new JWEHeader.Builder(header).keyID(jwk.getKeyID()).build();
-    }
-	
 	private List<ResourceServerAndSecret> filterServersByResources(String[] resources, Map<String, Map<String, ResourceServer>> resourceServersMultiMap, final List<ResourceServerAndSecret> result){
 		Map<String, ResourceServer> map = resourceServersMultiMap.get(ResourceServers.ENDPOINT);
 		return filterServers0(resources, map, result);
