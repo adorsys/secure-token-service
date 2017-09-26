@@ -85,6 +85,11 @@
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+
 		<!-- TEST -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -137,6 +142,11 @@
 					<!-- Die commit id bei "git log -abbrev-commit" ist ebenfalls 7 Zeichen. -->
 					<shortRevisionLength>7</shortRevisionLength>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

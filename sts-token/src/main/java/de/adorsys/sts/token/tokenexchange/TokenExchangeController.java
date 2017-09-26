@@ -151,7 +151,7 @@ public class TokenExchangeController {
         }
 
         // TODO produce user data service from controller
-        List<ResourceServerAndSecret> processedResources = resourceServerProcessor.processResources(audiences, resources, null);
+        List<ResourceServerAndSecret> processedResources = resourceServerProcessor.processResources(audiences, resources);
         // Resources or audiances
         claimSetBuilder = ResponseUtils.handleResources(claimSetBuilder, processedResources);
 

@@ -125,7 +125,9 @@
 			<dependency>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
+				<version>1.16.18</version>
 			</dependency>
+
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
@@ -247,6 +249,12 @@
 						<!-- Die commit id bei "git log -abbrev-commit" ist ebenfalls 7 Zeichen. -->
 						<shortRevisionLength>7</shortRevisionLength>
 					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.projectlombok</groupId>
+					<artifactId>lombok-maven-plugin</artifactId>
+					<version>1.16.18.1</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
