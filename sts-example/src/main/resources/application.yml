@@ -3,3 +3,8 @@ server:
 
 security:
   ignored: /**
+
+app:
+  servers:
+    - jwksUrl: http://localhost:8080/pop
+      clientId: my_client

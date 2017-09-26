@@ -3,7 +3,7 @@ package de.adorsys.sts.admin;
 
 import de.adorsys.sts.common.config.AdminResource;
 import de.adorsys.sts.resourceserver.ResourceServerManager;
-import de.adorsys.sts.resourceserver.ResourceServers;
+import de.adorsys.sts.resourceserver.model.ResourceServers;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

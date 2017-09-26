@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import de.adorsys.sts.resourceserver.model.ResourceServer;
+import de.adorsys.sts.resourceserver.model.ResourceServers;
 import org.adorsys.encobject.domain.ContentMetaInfo;
 import org.adorsys.encobject.domain.ObjectHandle;
 import org.adorsys.encobject.filesystem.FsPersistenceFactory;

@@ -1,4 +1,4 @@
-package de.adorsys.sts.resourceserver;
+package de.adorsys.sts.resourceserver.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,8 +12,10 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description="Holds a list of resource servers", value="ResourceServers" )
 public class ResourceServers {
 	
-	public static final String AUNDIENCE = "aundience";
+	public static final String AUDIENCE = "audience";
 	public static final String ENDPOINT = "endpoint";
+	public static final String CLIENT_ID = "clientId";
+
 	@ApiModelProperty(value = "Holds the list of resource servers", required=true)
 	private List<ResourceServer> servers = new ArrayList<>();
 
@@ -25,14 +27,19 @@ public class ResourceServers {
 		this.servers = servers;
 	}
 	
-	Map<String, Map<String, ResourceServer>> toMultiMap(){
+	public Map<String, Map<String, ResourceServer>> toMultiMap(){
 		Map<String, Map<String, ResourceServer>> result = new HashMap<>();
+
 		result.put(ENDPOINT, new HashMap<>());
-		result.put(AUNDIENCE, new HashMap<>());
+		result.put(AUDIENCE, new HashMap<>());
+		result.put(CLIENT_ID, new HashMap<>());
+
 		for (ResourceServer resourceServer : servers) {
 			result.get(ENDPOINT).put(resourceServer.getEndpointUrl(), resourceServer);
-			result.get(AUNDIENCE).put(resourceServer.getAudience(), resourceServer);
+			result.get(AUDIENCE).put(resourceServer.getAudience(), resourceServer);
+			result.get(CLIENT_ID).put(resourceServer.getClientId(), resourceServer);
 		}
+
 		return result;
 	}
 }

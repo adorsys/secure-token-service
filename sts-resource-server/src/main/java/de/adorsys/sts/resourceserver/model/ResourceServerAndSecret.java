@@ -1,5 +1,6 @@
 package de.adorsys.sts.resourceserver.model;
 
+import lombok.Builder;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author fpo
  *
  */
+@Builder
 public class ResourceServerAndSecret {
 	private ResourceServer resourceServer;
 	private String rawSecret;
@@ -15,9 +17,6 @@ public class ResourceServerAndSecret {
 	
 	public ResourceServer getResourceServer() {
 		return resourceServer;
-	}
-	public void setResourceServer(ResourceServer resourceServer) {
-		this.resourceServer = resourceServer;
 	}
 
 	public String getRawSecret() {

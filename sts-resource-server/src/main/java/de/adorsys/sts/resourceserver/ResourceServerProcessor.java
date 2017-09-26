@@ -6,10 +6,12 @@ import com.nimbusds.jose.jwk.source.RemoteJWKSet;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jose.util.DefaultResourceRetriever;
 import com.nimbusds.jose.util.ResourceRetriever;
-import de.adorsys.sts.resourceserver.model.ResourceServer;
-import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
 import de.adorsys.sts.common.user.UserCredentials;
 import de.adorsys.sts.common.user.UserDataService;
+import de.adorsys.sts.resourceserver.model.ResourceServer;
+import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
+import de.adorsys.sts.resourceserver.model.ResourceServers;
+import de.adorsys.sts.resourceserver.service.SecretEncryptionException;
 import org.adorsys.jjwk.selector.JWEEncryptedSelector;
 import org.adorsys.jjwk.selector.KeyExtractionException;
 import org.adorsys.jjwk.selector.UnsupportedEncAlgorithmException;
@@ -180,7 +182,7 @@ public class ResourceServerProcessor {
 		return filterServers0(resources, map, result);
 	}
 	private List<ResourceServerAndSecret> filterServersByAudience(String[] audiences, Map<String, Map<String, ResourceServer>> resourceServersMultiMap, final List<ResourceServerAndSecret> result){
-		Map<String, ResourceServer> map = resourceServersMultiMap.get(ResourceServers.AUNDIENCE);
+		Map<String, ResourceServer> map = resourceServersMultiMap.get(ResourceServers.AUDIENCE);
 		return filterServers0(audiences, map, result);
 	}
 
@@ -191,8 +193,9 @@ public class ResourceServerProcessor {
 			for (ResourceServerAndSecret resourceServerAndSecret : result) {
 				if(resourceServer.equals(resourceServerAndSecret.getResourceServer())) continue;
 			}
-			ResourceServerAndSecret resourceServerAndSecret = new ResourceServerAndSecret();
-			resourceServerAndSecret.setResourceServer(resourceServer);
+			ResourceServerAndSecret resourceServerAndSecret = ResourceServerAndSecret.builder()
+					.resourceServer(resourceServer)
+					.build();
 			result.add(resourceServerAndSecret);
 		}
 		return result;
