@@ -8,6 +8,39 @@
 	<version>0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
+	<name>SecureTokenService</name>
+	<url>https://github.com/adorsys/secure-token-service</url>
+	<description>SecureTokenService modules</description>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Boris Skert</name>
+			<email>bsk@adorsys.de</email>
+			<organization>adorsys</organization>
+			<organizationUrl>https://adorsys.de/</organizationUrl>
+		</developer>
+		<developer>
+			<name>Francis Pouatcha</name>
+			<email>fpo@adorsys.de</email>
+			<organization>adorsys</organization>
+			<organizationUrl>https://adorsys.de/</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:https://git.adorsys.de/adorsys/secure-token-service.git</connection>
+		<developerConnection>scm:git:git@github.com:adorsys/secure-token-service.git</developerConnection>
+		<url>git@github.com:adorsys/secure-token-service.git</url>
+		<tag>HEAD</tag>
+	</scm>
+
 	<properties>
 		<spring-boot.version>1.5.2.RELEASE</spring-boot.version>
 		<swagger.version>2.6.1</swagger.version>
@@ -21,13 +54,7 @@
 		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
 		<cryptoutils.version>0.5</cryptoutils.version>
 		<scmBranch />
-
 	</properties>
-
-	<scm>
-		<connection>scm:git:https://git.adorsys.de/adorsys/secure-token-service.git</connection>
-		<tag>HEAD</tag>
-	</scm>
 	
 	<modules>
 		<module>sts-common</module>
@@ -260,4 +287,50 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.2.1</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<configuration>
+						</configuration>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<configuration>
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
