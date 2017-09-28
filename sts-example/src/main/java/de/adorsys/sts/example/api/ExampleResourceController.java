@@ -23,6 +23,6 @@ public class ExampleResourceController {
         String username = login.getUsername();
 
         String token = loginAdapter.getExampleToken(username, login.getPassword());
-        return encryptionService.encryptFor(username, token);
+        return encryptionService.encryptFor(login.getClientId(), token);
     }
 }

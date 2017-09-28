@@ -10,6 +10,10 @@ class LoginRequest {
 
     @NotNull
     @NotEmpty
+    private String clientId;
+
+    @NotNull
+    @NotEmpty
     private String username;
 
     @NotNull

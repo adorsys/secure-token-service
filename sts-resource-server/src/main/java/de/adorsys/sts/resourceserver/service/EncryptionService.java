@@ -33,10 +33,7 @@ public class EncryptionService {
 
     private JWK selectKeyFrom(JWKSet keyset) {
         List<JWK> keys = encKeySelector.select(keyset);
-
-        return keys.stream().filter(
-                k -> KeyUse.ENCRYPTION == k.getKeyUse()
-        ).findFirst().orElseThrow(RuntimeException::new);
+        return keys.stream().findFirst().orElseThrow(RuntimeException::new);
     }
 
     public String encrypt(JWK jwk, String rawSecret) throws SecretEncryptionException {
