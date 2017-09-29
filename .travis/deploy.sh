@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-TAG_PATTERN="^v([[:digit:]]+\.)+[[:digit:]]+$"
+TAG_PATTERN="^v([[:digit:]]+\.)+[[:digit:]]+(-[[:digit:]]+)?$"
 
 if [[ ${TRAVIS_TAG} =~ ${TAG_PATTERN} ]]; then
   echo "RELEASE TAG -> publish $TRAVIS_TAG to mvn central";
