@@ -7,11 +7,16 @@ install:
   - mvn --settings .travis/settings.xml install -DskipTests -Dmaven.javadoc.skip=true -B -V
 
 script:
-  - mvn --settings .travis/settings.xml package -B -V
+  - mvn --settings .travis/settings.xml package -DskipTests -B -V
+
+before_deploy:
+  - echo $GPG_SECRET_KEY | base64 --decode | $GPG_EXECUTABLE --import
+  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
 
 deploy:
   -
+    skip_cleanup: true
     provider: script
-    script: .travis/deploy.sh
+    script: /bin/bash .travis/deploy.sh
     on:
       tags: true
