@@ -12,7 +12,7 @@
     </servers>
     <profiles>
         <profile>
-            <id>ossrh</id>
+            <id>sonatype</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
