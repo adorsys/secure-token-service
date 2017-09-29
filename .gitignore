@@ -32,3 +32,5 @@ src/main/resources/.~lock.sts_login_data.xls#
 *.iml
 
 **/.DS_Store
+
+**/pom.xml.versionsBackup
