@@ -9,10 +9,6 @@ install:
 script:
   - mvn --settings .travis/settings.xml package -DskipTests -B -V
 
-before_deploy:
-  - echo $GPG_SECRET_KEY | base64 --decode | $GPG_EXECUTABLE --import
-  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
-
 deploy:
   -
     skip_cleanup: true
