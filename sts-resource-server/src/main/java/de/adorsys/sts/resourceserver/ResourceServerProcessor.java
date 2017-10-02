@@ -1,7 +1,10 @@
 package de.adorsys.sts.resourceserver;
 
-import com.nimbusds.jose.*;
-import com.nimbusds.jose.jwk.*;
+import com.nimbusds.jose.RemoteKeySourceException;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKMatcher;
+import com.nimbusds.jose.jwk.JWKSelector;
+import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.source.RemoteJWKSet;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jose.util.DefaultResourceRetriever;
@@ -12,11 +15,8 @@ import de.adorsys.sts.resourceserver.model.ResourceServer;
 import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
 import de.adorsys.sts.resourceserver.model.ResourceServers;
 import de.adorsys.sts.resourceserver.service.EncryptionService;
+import de.adorsys.sts.resourceserver.service.ResourceServerService;
 import de.adorsys.sts.resourceserver.service.SecretEncryptionException;
-import org.adorsys.jjwk.selector.JWEEncryptedSelector;
-import org.adorsys.jjwk.selector.KeyExtractionException;
-import org.adorsys.jjwk.selector.UnsupportedEncAlgorithmException;
-import org.adorsys.jjwk.selector.UnsupportedKeyLengthException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +57,7 @@ public class ResourceServerProcessor {
 	public static final int DEFAULT_HTTP_SIZE_LIMIT = 50 * 1024;
 	
     @Autowired
-    private ResourceServerManager resourceServerManager;
+    private ResourceServerService resourceServerService;
 
     @Autowired
 	private EncryptionService encryptionService;
@@ -78,7 +78,7 @@ public class ResourceServerProcessor {
 		// Result
 		List<ResourceServerAndSecret> resurceServers = new ArrayList<>();
 			
-		Map<String, Map<String, ResourceServer>> resourceServersMultiMap = resourceServerManager.getResourceServersMultiMap();
+		Map<String, Map<String, ResourceServer>> resourceServersMultiMap = resourceServerService.getAll().toMultiMap();
 		
 		if(audiences!=null) filterServersByAudience(audiences, resourceServersMultiMap, resurceServers);
 
@@ -102,7 +102,7 @@ public class ResourceServerProcessor {
 		// Result
 		List<ResourceServerAndSecret> resurceServers = new ArrayList<>();
 
-		Map<String, Map<String, ResourceServer>> resourceServersMultiMap = resourceServerManager.getResourceServersMultiMap();
+		Map<String, Map<String, ResourceServer>> resourceServersMultiMap = resourceServerService.getAll().toMultiMap();
 
 		if(audiences!=null) filterServersByAudience(audiences, resourceServersMultiMap, resurceServers);
 
@@ -210,8 +210,8 @@ public class ResourceServerProcessor {
 		if(userDataService==null) return;
 		// Result
 		List<ResourceServerAndSecret> resurceServers = new ArrayList<>();
-		Map<String, Map<String, ResourceServer>> resourceServersMultiMap = resourceServerManager.getResourceServersMultiMap();
-		
+		Map<String, Map<String, ResourceServer>> resourceServersMultiMap = resourceServerService.getAll().toMultiMap();
+
 		String[] resurceServerAudiences = new String[]{resurceServerAudience};
 		List<ResourceServerAndSecret> filterServersByAudience = filterServersByAudience(resurceServerAudiences, resourceServersMultiMap, resurceServers);
 

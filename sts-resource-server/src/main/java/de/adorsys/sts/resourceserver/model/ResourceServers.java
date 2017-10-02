@@ -1,15 +1,16 @@
 package de.adorsys.sts.resourceserver.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.adorsys.sts.resourceserver.model.ResourceServer;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 @ApiModel(description="Holds a list of resource servers", value="ResourceServers" )
+@Builder
 public class ResourceServers {
 	
 	public static final String AUDIENCE = "audience";
@@ -17,16 +18,13 @@ public class ResourceServers {
 	public static final String CLIENT_ID = "clientId";
 
 	@ApiModelProperty(value = "Holds the list of resource servers", required=true)
+	@Builder.Default
 	private List<ResourceServer> servers = new ArrayList<>();
 
 	public List<ResourceServer> getServers() {
 		return servers;
 	}
 
-	public void setServers(List<ResourceServer> servers) {
-		this.servers = servers;
-	}
-	
 	public Map<String, Map<String, ResourceServer>> toMultiMap(){
 		Map<String, Map<String, ResourceServer>> result = new HashMap<>();
 

@@ -2,23 +2,33 @@ package de.adorsys.sts.resourceserver.service;
 
 import de.adorsys.sts.resourceserver.model.ResourceServer;
 import de.adorsys.sts.resourceserver.model.ResourceServers;
-import de.adorsys.sts.resourceserver.provider.ResourceServersProvider;
+import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class ResourceServerService {
 
-    private final ResourceServersProvider resourceServersProvider;
-
-    private ResourceServers resourceServers;
-    private Map<String, Map<String, ResourceServer>> mappedResourceServers;
+    private final ResourceServerRepository repository;
 
     @Autowired
-    public ResourceServerService(ResourceServersProvider resourceServersProvider) {
-        this.resourceServersProvider = resourceServersProvider;
+    public ResourceServerService(ResourceServerRepository repository) {
+        this.repository = repository;
+    }
+
+    public ResourceServers getAll() {
+        List<ResourceServer> all = repository.getAll();
+
+        return ResourceServers.builder()
+                .servers(all)
+                .build();
+    }
+
+    public void create(ResourceServer resourceServer) {
+        repository.add(resourceServer);
     }
 
     public ResourceServer getForClient(String clientId) {
@@ -33,19 +43,10 @@ public class ResourceServerService {
     }
 
     private Map<String, Map<String, ResourceServer>> getMappedResourceServers() {
-        if(mappedResourceServers == null) {
-            ResourceServers resourceServers = getResourceServers();
-            mappedResourceServers = resourceServers.toMultiMap();
-        }
+        ResourceServers resourceServers = ResourceServers.builder()
+                .servers(repository.getAll())
+                .build();
 
-        return mappedResourceServers;
-    }
-
-    private ResourceServers getResourceServers() {
-        if(resourceServers == null) {
-            resourceServers = resourceServersProvider.get();
-        }
-
-        return resourceServers;
+        return resourceServers.toMultiMap();
     }
 }
