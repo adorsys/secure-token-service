@@ -1,6 +1,5 @@
 package de.adorsys.sts.example.config;
 
-import de.adorsys.sts.example.service.ResourceServerPropertiesProvider;
 import de.adorsys.sts.resourceserver.persistence.InMemoryResourceServerRepository;
 import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
 import de.adorsys.sts.resourceserver.service.EncryptionService;

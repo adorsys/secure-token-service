@@ -1,15 +1,14 @@
 package de.adorsys.sts.common.config;
 
-import java.security.Key;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.KeySourceException;
 import com.nimbusds.jose.proc.JWSKeySelector;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.apache.commons.lang3.StringUtils;
+
+import java.security.Key;
+import java.util.Collections;
+import java.util.List;
 
 public class MultiAuthJWSKeySelector<C extends SecurityContext> implements JWSKeySelector<C> {
 

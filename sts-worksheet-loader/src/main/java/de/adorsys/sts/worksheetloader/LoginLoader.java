@@ -2,6 +2,7 @@ package de.adorsys.sts.worksheetloader;
 
 import com.google.common.collect.Lists;
 import de.adorsys.sts.common.user.DefaultObjectMapper;
+import de.adorsys.sts.common.user.UserDataService;
 import de.adorsys.sts.resourceserver.ResourceServerProcessor;
 import org.adorsys.encobject.domain.KeyCredentials;
 import org.adorsys.encobject.filesystem.FsPersistenceFactory;
@@ -15,8 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import de.adorsys.sts.common.user.UserDataService;
 
 import java.util.List;
 import java.util.Optional;

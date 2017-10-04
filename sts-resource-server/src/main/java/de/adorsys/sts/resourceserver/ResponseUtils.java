@@ -1,20 +1,14 @@
 package de.adorsys.sts.resourceserver;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.nimbusds.jwt.JWTClaimsSet.Builder;
 import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
 import org.adorsys.envutils.EnvProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 
-import com.nimbusds.jwt.JWTClaimsSet.Builder;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 public class ResponseUtils {
 	public static final String ERROR_FIELD = "error";

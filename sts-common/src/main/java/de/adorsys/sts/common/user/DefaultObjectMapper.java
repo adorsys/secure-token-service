@@ -1,10 +1,9 @@
 package de.adorsys.sts.common.user;
 
-import java.io.IOException;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.adorsys.encobject.userdata.ObjectMapperSPI;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 
 public class DefaultObjectMapper implements ObjectMapperSPI {
 	private ObjectMapper objectMapper = new ObjectMapper();

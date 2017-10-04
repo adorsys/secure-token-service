@@ -1,23 +1,18 @@
 package de.adorsys.sts.common.config;
 
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.KeySourceException;
+import com.nimbusds.jose.jwk.*;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.jwk.source.RemoteJWKSet;
+import com.nimbusds.jose.proc.SecurityContext;
+import org.apache.commons.lang3.time.DateUtils;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Key;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.commons.lang3.time.DateUtils;
-
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.KeySourceException;
-import com.nimbusds.jose.jwk.AssymetricJWK;
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.JWKMatcher;
-import com.nimbusds.jose.jwk.JWKSelector;
-import com.nimbusds.jose.jwk.SecretJWK;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.jwk.source.RemoteJWKSet;
-import com.nimbusds.jose.proc.SecurityContext;
 
 public class AuthServer {
 	private String name;

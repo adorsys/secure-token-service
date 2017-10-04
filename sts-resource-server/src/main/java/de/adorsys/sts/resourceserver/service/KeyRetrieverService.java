@@ -5,7 +5,6 @@ import com.nimbusds.jose.util.DefaultResourceRetriever;
 import com.nimbusds.jose.util.Resource;
 import com.nimbusds.jose.util.ResourceRetriever;
 import de.adorsys.sts.resourceserver.model.ResourceServer;
-import de.adorsys.sts.resourceserver.service.ResourceServerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

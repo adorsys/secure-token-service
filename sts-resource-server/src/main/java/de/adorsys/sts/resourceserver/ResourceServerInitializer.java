@@ -1,7 +1,6 @@
 package de.adorsys.sts.resourceserver;
 
 import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
-import de.adorsys.sts.resourceserver.provider.EnvironmentVariableResourceServersProvider;
 import de.adorsys.sts.resourceserver.provider.ResourceServersProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
