@@ -1,4 +1,4 @@
-package de.adorsys.sts.resourceserver;
+package de.adorsys.sts.resourceserver.initializer;
 
 import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
 import de.adorsys.sts.resourceserver.provider.ResourceServersProvider;
@@ -21,7 +21,6 @@ public class ResourceServerInitializer implements ApplicationRunner {
 		this.repository = repository;
 		this.provider = provider;
 	}
-
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {

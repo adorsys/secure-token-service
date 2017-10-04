@@ -47,8 +47,8 @@ public class KeyRetrieverService {
         this.resourceServerService = resourceServerService;
     }
 
-    public JWKSet retrieve(String clientId) {
-        ResourceServer resourceServer = resourceServerService.getForClient(clientId);
+    public JWKSet retrieve(String audience) {
+        ResourceServer resourceServer = resourceServerService.getForAudience(audience);
 
         return retrieveJwkSet(resourceServer.getJwksUrl());
     }

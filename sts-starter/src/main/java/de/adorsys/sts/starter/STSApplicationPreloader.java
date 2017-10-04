@@ -1,6 +1,6 @@
 package de.adorsys.sts.starter;
 
-import de.adorsys.sts.resourceserver.ResourceServerInitializer;
+import de.adorsys.sts.resourceserver.initializer.ResourceServerInitializer;
 import de.adorsys.sts.worksheetloader.DataSheetLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;

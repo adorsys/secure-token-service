@@ -31,12 +31,12 @@ public class ResourceServerService {
         repository.add(resourceServer);
     }
 
-    public ResourceServer getForClient(String clientId) {
+    public ResourceServer getForAudience(String audience) {
         Map<String, Map<String, ResourceServer>> resourceServersMap = getMappedResourceServers();
-        ResourceServer resourceServer = resourceServersMap.get(ResourceServers.CLIENT_ID).get(clientId);
+        ResourceServer resourceServer = resourceServersMap.get(ResourceServers.AUDIENCE).get(audience);
 
         if(resourceServer == null) {
-            throw new RuntimeException("No resource server found for client '" + clientId + "'");
+            throw new RuntimeException("No resource server found for audience '" + audience + "'");
         }
 
         return resourceServer;
