@@ -22,6 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class FsPersistenceResourceServerRepository implements ResourceServerRepository {
     private static final TypeReference<List<ResourceServer>> RESOURCE_SERVER_LIST_TYPE = new TypeReference<List<ResourceServer>>() {
@@ -93,21 +96,25 @@ public class FsPersistenceResourceServerRepository implements ResourceServerRepo
         add(resourceServer, resourceServers);
     }
 
+    private Map<String, ResourceServer> mapResourceServers(List<ResourceServer> resourceServers) {
+        return resourceServers.stream().collect(Collectors.toMap(ResourceServer::getAudience, Function.identity()));
+    }
+
     private void add(ResourceServer resourceServer, List<ResourceServer> existingServers) {
-        ResourceServer serverToReplace = null;
-        for (ResourceServer server : existingServers) {
-            if (resourceServer.equals(server)) continue;
-            if (StringUtils.equals(resourceServer.getAudience(), server.getAudience())) {
-                serverToReplace = server;
-                break;
+        Map<String, ResourceServer> resourceServerMap = mapResourceServers(existingServers);
+
+        String audience = resourceServer.getAudience();
+        if(resourceServerMap.containsKey(audience)) {
+            ResourceServer existingResourceServer = resourceServerMap.get(audience);
+
+            if(!existingResourceServer.equals(resourceServer)) {
+                int indexOf = existingServers.indexOf(existingResourceServer);
+                existingServers.set(indexOf, resourceServer);
             }
-        }
-        if (serverToReplace != null) {
-            int indexOf = existingServers.indexOf(serverToReplace);
-            existingServers.set(indexOf, resourceServer);
+        } else {
+            existingServers.add(resourceServer);
         }
 
-        existingServers.add(resourceServer);
         persist(existingServers);
     }
 
