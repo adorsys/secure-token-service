@@ -22,15 +22,7 @@ public class ExampleResourceController {
 
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody @Valid LoginRequest login) {
-        Map<String, String> tokens = Maps.newHashMap();
-
-        String token = loginAdapter.getExampleToken(login.getUsername(), login.getPassword());
-
-        for(String audience : login.getAudiences()) {
-            String encryptedToken = encryptionService.encryptFor(audience, token);
-            tokens.put(audience, encryptedToken);
-        }
-
-        return tokens;
+        String secretToken = loginAdapter.getExampleToken(login.getUsername(), login.getPassword());
+        return encryptionService.encryptFor(login.getAudiences(), secretToken);
     }
 }

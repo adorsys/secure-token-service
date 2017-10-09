@@ -1,7 +1,9 @@
 package de.adorsys.sts.resourceserver.service;
 
+import com.google.common.collect.Maps;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.jwk.*;
+import de.adorsys.sts.resourceserver.exception.NoJwkFoundException;
 import org.adorsys.jjwk.selector.JWEEncryptedSelector;
 import org.adorsys.jjwk.selector.KeyExtractionException;
 import org.adorsys.jjwk.selector.UnsupportedEncAlgorithmException;
@@ -9,7 +11,10 @@ import org.adorsys.jjwk.selector.UnsupportedKeyLengthException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EncryptionService {
@@ -23,17 +28,30 @@ public class EncryptionService {
         this.keyRetrieverService = keyRetrieverService;
     }
 
-    public String encryptFor(String clientId, String secret) {
-        JWKSet keySetForClient = keyRetrieverService.retrieve(clientId);
+    public String encryptFor(String audience, String secret) {
+        JWKSet keySetForAudience = keyRetrieverService.retrieve(audience);
 
-        JWK selectedKey = selectKeyFrom(keySetForClient);
+        JWK selectedKey = selectKeyFrom(keySetForAudience);
 
         return encrypt(selectedKey, secret);
     }
 
-    private JWK selectKeyFrom(JWKSet keyset) {
+    public Map<String, String> encryptFor(Iterable<String> audiences, String secret) {
+        Map<String, String> encryptedSecrets = Maps.newHashMap();
+
+        for(String audience : audiences) {
+            String encrypted = encryptFor(audience, secret);
+            encryptedSecrets.put(audience, encrypted);
+        }
+
+        return encryptedSecrets;
+    }
+
+    private JWK selectKeyFrom(JWKSet keyset) throws NoJwkFoundException {
         List<JWK> keys = encKeySelector.select(keyset);
-        return keys.stream().findFirst().orElseThrow(RuntimeException::new);
+        Collections.shuffle(keys);
+
+        return keys.stream().findAny().orElseThrow(() -> new NoJwkFoundException("Cannot find a JWK for encryption"));
     }
 
     public String encrypt(JWK jwk, String rawSecret) throws SecretEncryptionException {
