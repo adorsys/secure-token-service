@@ -9,8 +9,6 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
-import de.adorsys.sts.common.config.AuthServer;
-import de.adorsys.sts.common.config.MultiAuthJWSKeySelector;
 import org.adorsys.envutils.EnvProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

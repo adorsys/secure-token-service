@@ -1,4 +1,4 @@
-package de.adorsys.sts.common.token;
+package de.adorsys.sts.token.tokenexchange;
 
 public class TokenValidationException extends Exception {
 	private static final long serialVersionUID = -2576469717846924984L;

@@ -1,7 +1,6 @@
 package de.adorsys.sts.resourceserver.provider;
 
 import com.google.common.collect.Lists;
-import de.adorsys.sts.common.props.STSPropertiesConstants;
 import de.adorsys.sts.resourceserver.model.ResourceServer;
 import org.adorsys.envutils.EnvProperties;
 import org.apache.commons.lang3.StringUtils;

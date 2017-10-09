@@ -1,4 +1,4 @@
-package de.adorsys.sts.common.config;
+package de.adorsys.sts.tokenauth;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.KeySourceException;

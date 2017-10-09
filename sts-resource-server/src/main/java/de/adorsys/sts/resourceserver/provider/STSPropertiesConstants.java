@@ -1,4 +1,4 @@
-package de.adorsys.sts.common.props;
+package de.adorsys.sts.resourceserver.provider;
 
 public class STSPropertiesConstants {
 
