@@ -3,3 +3,28 @@ logging:
         org:
             springframework:
                 web: DEBUG
+
+sts:
+  keymanagement:
+    keystore:
+      password: 0123456789ABCDEF
+      type: UBER
+      name: adsts-keystore
+      alias_prefix: adsts-
+      keys:
+        encKeyPairs:
+          initialCount: 5
+          algo: RSA
+          sigAlgo: SHA256withRSA
+          size: 2048
+          name: Adorsys Security Token Service
+        signKeyPairs:
+          initialCount: 5
+          algo: RSA
+          sigAlgo: SHA256withRSA
+          size: 2048
+          name: Adorsys Security Token Service
+        secretKeys:
+          initialCount: 5
+          algo: AES
+          size: 256

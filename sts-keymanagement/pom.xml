@@ -9,8 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>sts-pop</artifactId>
-
+    <artifactId>sts-keymanagement</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -18,27 +17,18 @@
         </dependency>
 
         <dependency>
-            <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-common</artifactId>
+            <groupId>de.adorsys.cryptoutils</groupId>
+            <artifactId>jkeyutils</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-keymanagement</artifactId>
+            <groupId>de.adorsys.cryptoutils</groupId>
+            <artifactId>encobject</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.cryptoutils</groupId>
+            <artifactId>jjwk</artifactId>
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+
 </project>

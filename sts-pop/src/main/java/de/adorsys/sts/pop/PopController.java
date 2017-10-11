@@ -2,11 +2,11 @@ package de.adorsys.sts.pop;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import de.adorsys.sts.common.config.TokenResource;
+import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.adorsys.jjwk.serverkey.ServerKeyManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +20,18 @@ import org.springframework.web.bind.annotation.RestController;
 @TokenResource
 public class PopController {
 
+    private final KeyManagementService keyManagementService;
+
     @Autowired
-    private ServerKeyManager keyManager;
+    public PopController(KeyManagementService keyManagementService) {
+        this.keyManagementService = keyManagementService;
+    }
 
     @GetMapping(produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Read server public keys", response=JWKSet.class, notes = "Fetches publick keys of the target server. Keys are used to encrypt data sent to the server and also send a response encrytpion key to the server. See RFC7800")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok")})
     public ResponseEntity<String> getPublicKeys(){
-        JWKSet publicKeySet = keyManager.getServerKeysHolder().getPublicKeySet();
+        JWKSet publicKeySet = keyManagementService.get().getPublicKeySet();
         return ResponseEntity.ok(publicKeySet.toPublicJWKSet().toJSONObject().toJSONString());
     }
 }

@@ -67,6 +67,7 @@
 		<module>sts-resource-server</module>
 		<module>sts-worksheet-loader</module>
 		<module>sts-example</module>
+		<module>sts-keymanagement</module>
 	</modules>
 
 	<dependencyManagement>
@@ -128,6 +129,11 @@
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-worksheet-loader</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-keymanagement</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
