@@ -1,10 +1,10 @@
 package de.adorsys.sts.keymanagement.config;
 
+import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.keymanagement.service.KeyPairGenerator;
 import de.adorsys.sts.keymanagement.service.KeyStoreGenerator;
 import de.adorsys.sts.keymanagement.service.SecretKeyGenerator;
-import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

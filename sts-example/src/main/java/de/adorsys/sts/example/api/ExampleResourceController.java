@@ -1,6 +1,5 @@
 package de.adorsys.sts.example.api;
 
-import com.google.common.collect.Maps;
 import de.adorsys.sts.example.service.ExampleLoginAdapter;
 import de.adorsys.sts.resourceserver.service.EncryptionService;
 import org.springframework.beans.factory.annotation.Autowired;

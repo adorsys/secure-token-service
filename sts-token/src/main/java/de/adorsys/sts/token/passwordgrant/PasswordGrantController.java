@@ -24,7 +24,6 @@ import org.adorsys.encobject.userdata.ObjectPersistenceAdapter;
 import org.adorsys.encobject.userdata.UserDataNamingPolicy;
 import org.adorsys.jjwk.serverkey.KeyAndJwk;
 import org.adorsys.jjwk.serverkey.KeyConverter;
-import org.adorsys.jjwk.serverkey.ServerKeyManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;

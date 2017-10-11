@@ -17,7 +17,6 @@ import de.adorsys.sts.tokenauth.TokenService;
 import io.swagger.annotations.*;
 import org.adorsys.jjwk.serverkey.KeyAndJwk;
 import org.adorsys.jjwk.serverkey.KeyConverter;
-import org.adorsys.jjwk.serverkey.ServerKeyManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

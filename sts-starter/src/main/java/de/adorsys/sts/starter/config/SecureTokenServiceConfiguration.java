@@ -4,7 +4,6 @@ import de.adorsys.sts.admin.EnableAdmin;
 import de.adorsys.sts.keymanagement.EnableKeyManagement;
 import de.adorsys.sts.keymanagement.config.KeyManagementProperties;
 import de.adorsys.sts.keymanagement.persistence.FsPersistenceKeyStoreRepository;
-import de.adorsys.sts.keymanagement.persistence.InMemoryKeyStoreRepository;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.pop.EnablePOP;
@@ -14,16 +13,12 @@ import de.adorsys.sts.resourceserver.persistence.FsPersistenceResourceServerRepo
 import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
 import de.adorsys.sts.resourceserver.provider.EnvironmentVariableResourceServersProvider;
 import de.adorsys.sts.resourceserver.provider.ResourceServersProvider;
-import de.adorsys.sts.resourceserver.service.EncryptionService;
-import de.adorsys.sts.resourceserver.service.KeyRetrieverService;
-import de.adorsys.sts.resourceserver.service.ResourceServerService;
 import de.adorsys.sts.serverinfo.EnableServerInfo;
 import de.adorsys.sts.token.passwordgrant.EnablePasswordGrant;
 import de.adorsys.sts.token.tokenexchange.EnableTokenExchange;
 import de.adorsys.sts.worksheetloader.DataSheetLoader;
 import de.adorsys.sts.worksheetloader.LoginLoader;
 import org.adorsys.encobject.filesystem.FsPersistenceFactory;
-import org.adorsys.jjwk.serverkey.ServerKeyManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -63,27 +58,6 @@ public class SecureTokenServiceConfiguration {
             KeyManagementService keyManagementService
     ) {
         return new FsPersistenceResourceServerRepository(fsPersistenceFactory, keyManagementService);
-    }
-
-    @Bean
-    ResourceServerService resourceServerService(
-            ResourceServerRepository resourceServerRepository
-    ) {
-        return new ResourceServerService(resourceServerRepository);
-    }
-
-    @Bean
-    KeyRetrieverService keyRetrieverService(
-            ResourceServerService resourceServerService
-    ) {
-        return new KeyRetrieverService(resourceServerService);
-    }
-
-    @Bean
-    EncryptionService encryptionService(
-            KeyRetrieverService keyRetrieverService
-    ) {
-        return new EncryptionService(keyRetrieverService);
     }
 
     @Bean
