@@ -2,8 +2,11 @@ package de.adorsys.sts.starter.config;
 
 import de.adorsys.sts.admin.EnableAdmin;
 import de.adorsys.sts.keymanagement.EnableKeyManagement;
+import de.adorsys.sts.keymanagement.config.KeyManagementProperties;
+import de.adorsys.sts.keymanagement.persistence.FsPersistenceKeyStoreRepository;
 import de.adorsys.sts.keymanagement.persistence.InMemoryKeyStoreRepository;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
+import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.pop.EnablePOP;
 import de.adorsys.sts.resourceserver.EnableResourceServerManagement;
 import de.adorsys.sts.resourceserver.ResourceServerProcessor;
@@ -57,9 +60,9 @@ public class SecureTokenServiceConfiguration {
     @Bean
     ResourceServerRepository resourceServerRepository(
             FsPersistenceFactory fsPersistenceFactory,
-            ServerKeyManager serverKeyManager
+            KeyManagementService keyManagementService
     ) {
-        return new FsPersistenceResourceServerRepository(fsPersistenceFactory, serverKeyManager);
+        return new FsPersistenceResourceServerRepository(fsPersistenceFactory, keyManagementService);
     }
 
     @Bean
@@ -84,7 +87,13 @@ public class SecureTokenServiceConfiguration {
     }
 
     @Bean
-    KeyStoreRepository keyStoreRepository() {
-        return new InMemoryKeyStoreRepository();
+    KeyStoreRepository keyStoreRepository(
+            FsPersistenceFactory fsPersistenceFactory,
+            KeyManagementProperties keyManagementProperties
+    ) {
+        return new FsPersistenceKeyStoreRepository(
+                fsPersistenceFactory,
+                keyManagementProperties
+        );
     }
 }

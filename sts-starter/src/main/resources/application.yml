@@ -6,6 +6,7 @@ logging:
 
 sts:
   keymanagement:
+    persistenceContainerName: adsts-container
     keystore:
       password: 0123456789ABCDEF
       type: UBER

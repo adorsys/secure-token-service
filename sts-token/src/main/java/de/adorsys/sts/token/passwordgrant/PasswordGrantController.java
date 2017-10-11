@@ -11,6 +11,7 @@ import de.adorsys.sts.common.config.TokenResource;
 import de.adorsys.sts.common.user.DefaultObjectMapper;
 import de.adorsys.sts.common.user.UserCredentials;
 import de.adorsys.sts.common.user.UserDataService;
+import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.resourceserver.ResourceServerProcessor;
 import de.adorsys.sts.resourceserver.ResponseUtils;
 import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
@@ -46,7 +47,7 @@ import java.util.UUID;
 public class PasswordGrantController {
 
     @Autowired
-    private ServerKeyManager keyManager;
+    private KeyManagementService keyManager;
 
     @Autowired
     private HttpServletRequest servletRequest;

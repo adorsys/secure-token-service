@@ -3,12 +3,14 @@ package de.adorsys.sts.keymanagement.service;
 import com.nimbusds.jose.jwk.JWKSet;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import org.adorsys.jjwk.serverkey.KeyConverter;
+import org.adorsys.jjwk.serverkey.ServerKeyMap;
+import org.adorsys.jjwk.serverkey.ServerKeyMapProvider;
 import org.adorsys.jjwk.serverkey.ServerKeysHolder;
 
 import javax.annotation.PostConstruct;
 import java.security.KeyStore;
 
-public class KeyManagementService {
+public class KeyManagementService implements ServerKeyMapProvider {
 
     private final KeyStoreRepository repository;
     private final KeyStoreGenerator keyStoreGenerator;
@@ -37,14 +39,15 @@ public class KeyManagementService {
         }
     }
 
-    public ServerKeysHolder get() {
+    public ServerKeyMap getKeyMap() {
+        return new ServerKeyMap(getServerKeysHolder().getPrivateKeySet());
+    }
+
+    @Override
+    public ServerKeysHolder getServerKeysHolder() {
         JWKSet privateKeys = KeyConverter.exportPrivateKeys(keyStore, keyStorePassword.toCharArray());
         JWKSet publicKeys = privateKeys.toPublicJWKSet();
 
         return new ServerKeysHolder(privateKeys, publicKeys);
-    }
-
-    public void addNewKey() {
-
     }
 }

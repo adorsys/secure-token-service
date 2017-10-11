@@ -7,7 +7,16 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "sts.keymanagement")
 public class KeyManagementProperties {
 
+    private String persistenceContainerName;
     private KeyStoreProperties keystore = new KeyStoreProperties();
+
+    public String getPersistenceContainerName() {
+        return persistenceContainerName;
+    }
+
+    public void setPersistenceContainerName(String persistenceContainerName) {
+        this.persistenceContainerName = persistenceContainerName;
+    }
 
     public KeyStoreProperties getKeystore() {
         return keystore;

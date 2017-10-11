@@ -15,9 +15,8 @@ import org.adorsys.envutils.EnvProperties;
 import org.adorsys.jjwk.selector.UnsupportedEncAlgorithmException;
 import org.adorsys.jjwk.selector.UnsupportedKeyLengthException;
 import org.adorsys.jjwk.serverkey.KeyAndJwk;
-import org.adorsys.jjwk.serverkey.ServerKeyManager;
+import org.adorsys.jjwk.serverkey.ServerKeyMapProvider;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -33,17 +32,16 @@ public class FsPersistenceResourceServerRepository implements ResourceServerRepo
     private static final String RESOURCE_SERVERS_FILE_NAME = "resource_servers";
 
     private final FsPersistenceFactory persFactory;
-    private final ServerKeyManager keyManager;
+    private final ServerKeyMapProvider keyMapProvider;
 
     private String containerName;
 
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    @Autowired
-    public FsPersistenceResourceServerRepository(FsPersistenceFactory persFactory, ServerKeyManager keyManager) {
+    public FsPersistenceResourceServerRepository(FsPersistenceFactory persFactory, ServerKeyMapProvider keyMapProvider) {
         this.persFactory = persFactory;
-        this.keyManager = keyManager;
+        this.keyMapProvider = keyMapProvider;
     }
 
     @PostConstruct
@@ -71,7 +69,7 @@ public class FsPersistenceResourceServerRepository implements ResourceServerRepo
         ObjectHandle handle = new ObjectHandle(containerName, RESOURCE_SERVERS_FILE_NAME);
         byte[] resourceServersByte = null;
         try {
-            resourceServersByte = persFactory.getServerObjectPersistence().loadObject(handle, keyManager);
+            resourceServersByte = persFactory.getServerObjectPersistence().loadObject(handle, keyMapProvider);
         } catch (ObjectNotFoundException e) {
             // No list stored so far
             return resourceServers;
@@ -125,12 +123,12 @@ public class FsPersistenceResourceServerRepository implements ResourceServerRepo
         } catch (JsonProcessingException e) {
             throw new IllegalStateException(e);
         }
-        ContentMetaInfo metaIno = null;
+        ContentMetaInfo metaInfo = null;
         ObjectHandle handle = new ObjectHandle(containerName, RESOURCE_SERVERS_FILE_NAME);
         EncryptionParams encParams = null;
-        KeyAndJwk randomSecretKey = keyManager.getKeyMap().randomSecretKey();
+        KeyAndJwk randomSecretKey = keyMapProvider.getKeyMap().randomSecretKey();
         try {
-            persFactory.getServerObjectPersistence().storeObject(data, metaIno, handle, keyManager, randomSecretKey.jwk.getKeyID(), encParams);
+            persFactory.getServerObjectPersistence().storeObject(data, metaInfo, handle, keyMapProvider, randomSecretKey.jwk.getKeyID(), encParams);
         } catch (UnsupportedEncAlgorithmException | UnsupportedKeyLengthException | UnknownContainerException e) {
             throw new IllegalStateException(e);
         }

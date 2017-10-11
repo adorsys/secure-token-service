@@ -31,7 +31,7 @@ public class PopController {
     @ApiOperation(value = "Read server public keys", response=JWKSet.class, notes = "Fetches publick keys of the target server. Keys are used to encrypt data sent to the server and also send a response encrytpion key to the server. See RFC7800")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok")})
     public ResponseEntity<String> getPublicKeys(){
-        JWKSet publicKeySet = keyManagementService.get().getPublicKeySet();
+        JWKSet publicKeySet = keyManagementService.getServerKeysHolder().getPublicKeySet();
         return ResponseEntity.ok(publicKeySet.toPublicJWKSet().toJSONObject().toJSONString());
     }
 }

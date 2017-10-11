@@ -8,6 +8,7 @@ import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import de.adorsys.sts.common.config.TokenResource;
+import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.resourceserver.ResourceServerProcessor;
 import de.adorsys.sts.resourceserver.ResponseUtils;
 import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
@@ -36,7 +37,7 @@ import java.util.*;
 public class TokenExchangeController {
 
     @Autowired
-    private ServerKeyManager keyManager;
+    private KeyManagementService keyManager;
 
     @Autowired
     private TokenService tokenService;
