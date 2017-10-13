@@ -33,10 +33,10 @@ public class FsPersistenceKeyStoreRepository implements KeyStoreRepository {
             KeyManagementProperties keyManagementProperties
     ) {
         this.persFactory = persFactory;
-        this.keystoreContainerName = keyManagementProperties.getPersistenceContainerName();
+        this.keystoreContainerName = keyManagementProperties.getPersistence().getContainerName();
         this.keystoreName = keyManagementProperties.getKeystore().getName();
 
-        String keyStorePassword = keyManagementProperties.getKeystore().getPassword();
+        String keyStorePassword = keyManagementProperties.getPersistence().getPassword();
         keyPassHandler = new PasswordCallbackHandler(keyStorePassword.toCharArray());
     }
 

@@ -1,21 +1,31 @@
 package de.adorsys.sts.keymanagement.config;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Component
 @ConfigurationProperties(prefix = "sts.keymanagement")
+@Validated
 public class KeyManagementProperties {
 
-    private String persistenceContainerName;
-    private KeyStoreProperties keystore = new KeyStoreProperties();
+    @Valid
+    private PersistenceProperties persistence;
 
-    public String getPersistenceContainerName() {
-        return persistenceContainerName;
+    @Valid
+    @NotNull
+    private KeyStoreProperties keystore;
+
+    public PersistenceProperties getPersistence() {
+        return persistence;
     }
 
-    public void setPersistenceContainerName(String persistenceContainerName) {
-        this.persistenceContainerName = persistenceContainerName;
+    public void setPersistence(PersistenceProperties persistence) {
+        this.persistence = persistence;
     }
 
     public KeyStoreProperties getKeystore() {
@@ -26,13 +36,55 @@ public class KeyManagementProperties {
         this.keystore = keystore;
     }
 
+    @Validated
+    public static class PersistenceProperties {
+
+        @NotNull
+        @NotEmpty
+        private String containerName;
+
+        @NotNull
+        @NotEmpty
+        private String password;
+
+        public String getContainerName() {
+            return containerName;
+        }
+
+        public void setContainerName(String containerName) {
+            this.containerName = containerName;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+    }
+
+    @Validated
     public static class KeyStoreProperties {
 
+        @NotNull
+        @NotEmpty
         private String password;
+
+        @NotNull
+        @NotEmpty
         private String type;
+
+        @NotNull
+        @NotEmpty
         private String name;
+
+        @NotNull
+        @NotEmpty
         private String aliasPrefix;
 
+        @Valid
+        @NotNull
         private KeysProperties keys;
 
         public String getPassword() {
@@ -75,10 +127,19 @@ public class KeyManagementProperties {
             this.keys = keys;
         }
 
+        @Validated
         public static class KeysProperties {
 
+            @Valid
+            @NotNull
             private KeyPairProperties encKeyPairs;
+
+            @Valid
+            @NotNull
             private KeyPairProperties signKeyPairs;
+
+            @Valid
+            @NotNull
             private SecretKeyProperties secretKeys;
 
             public KeyPairProperties getEncKeyPairs() {
@@ -105,12 +166,25 @@ public class KeyManagementProperties {
                 this.secretKeys = secretKeys;
             }
 
+            @Validated
             public static class KeyPairProperties {
-                 private Integer initialCount;
-                 private String algo;
-                 private String sigAlgo;
-                 private Integer size;
-                 private String name;
+
+                private Integer initialCount = 1;
+
+                @NotNull
+                @NotEmpty
+                private String algo;
+
+                @NotNull
+                @NotEmpty
+                private String sigAlgo;
+
+                @NotNull
+                private Integer size;
+
+                @NotNull
+                @NotEmpty
+                private String name;
 
                 public Integer getInitialCount() {
                     return initialCount;
@@ -153,9 +227,15 @@ public class KeyManagementProperties {
                 }
             }
 
+            @Validated
             public static class SecretKeyProperties {
-                private Integer initialCount;
+                private Integer initialCount = 1;
+
+                @NotNull
+                @NotEmpty
                 private String algo;
+
+                @NotNull
                 private Integer size;
 
                 public Integer getInitialCount() {
