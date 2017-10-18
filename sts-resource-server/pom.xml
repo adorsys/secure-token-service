@@ -16,12 +16,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-common</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>de.adorsys.cryptoutils</groupId>
+            <artifactId>encobject</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

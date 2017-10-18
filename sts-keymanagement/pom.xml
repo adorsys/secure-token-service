@@ -15,11 +15,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>de.adorsys.cryptoutils</groupId>
-            <artifactId>jkeyutils</artifactId>
-        </dependency>
         <dependency>
             <groupId>de.adorsys.cryptoutils</groupId>
             <artifactId>encobject</artifactId>
@@ -29,6 +24,4 @@
             <artifactId>jjwk</artifactId>
         </dependency>
     </dependencies>
-
-
 </project>

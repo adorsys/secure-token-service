@@ -1,14 +1,7 @@
 package de.adorsys.sts.worksheetloader;
 
 import com.google.common.collect.Lists;
-import de.adorsys.sts.common.user.DefaultObjectMapper;
-import de.adorsys.sts.common.user.UserDataService;
-import de.adorsys.sts.resourceserver.ResourceServerProcessor;
-import org.adorsys.encobject.domain.KeyCredentials;
-import org.adorsys.encobject.filesystem.FsPersistenceFactory;
-import org.adorsys.encobject.service.KeystoreNotFoundException;
-import org.adorsys.encobject.userdata.ObjectPersistenceAdapter;
-import org.adorsys.encobject.userdata.UserDataNamingPolicy;
+import de.adorsys.sts.resourceserver.service.ResourceServerProcessorService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -24,37 +17,19 @@ import java.util.Optional;
 public class LoginLoader {
 	Logger LOG = LoggerFactory.getLogger(LoginLoader.class);
 
-	@Autowired
-	private UserDataNamingPolicy namingPolicy;
     @Autowired
-    private FsPersistenceFactory persFactory;
-    @Autowired
-    private ResourceServerProcessor resourceServerProcessor;
-
-    private static DefaultObjectMapper objectMapper = new DefaultObjectMapper();
+    private ResourceServerProcessorService resourceServerProcessorService;
 
 	public void update(Row row) {
 		Optional<ReadUserCredentials> userCredentialsFromRow = parseFromRow(row);
 
 		if(userCredentialsFromRow.isPresent()) {
 			ReadUserCredentials readUserCredentials = userCredentialsFromRow.get();
-			KeyCredentials keyCredentials = namingPolicy.newKeyCredntials(readUserCredentials.getLogin(), readUserCredentials.getPassword());
-
-			ObjectPersistenceAdapter objectPersistenceAdapter = new ObjectPersistenceAdapter(persFactory.getEncObjectService(), keyCredentials, objectMapper);
-			// Check if we have this user in the storage. If so user the record, if not create one.
-			UserDataService userDataService = new UserDataService(namingPolicy, objectPersistenceAdapter);
-			if(!userDataService.hasAccount()){
-				try {
-					userDataService.addAccount();
-				} catch (KeystoreNotFoundException e) {
-					throw new IllegalStateException();
-				}
-			}
 
 			List<ReadUserCredentials.ServerAndUserEncKey> serverAndUserEncKeyList = readUserCredentials.getServerAndUserEncKeyList();
 
 			for(ReadUserCredentials.ServerAndUserEncKey serverAndUserEncKey : serverAndUserEncKeyList) {
-				resourceServerProcessor.storeUserCredentials(userDataService, serverAndUserEncKey.getUserEncKey(), serverAndUserEncKey.getServerAudienceName());
+				resourceServerProcessorService.storeCredentials(readUserCredentials.getLogin(), readUserCredentials.getPassword(), serverAndUserEncKey.getServerAudienceName(), serverAndUserEncKey.getUserEncKey());
 			}
 		}
 	}

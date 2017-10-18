@@ -90,7 +90,6 @@
 				<artifactId>springfox-swagger-ui</artifactId>
 				<version>${swagger.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-common</artifactId>

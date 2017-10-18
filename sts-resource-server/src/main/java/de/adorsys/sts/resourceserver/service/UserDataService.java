@@ -1,5 +1,6 @@
-package de.adorsys.sts.common.user;
+package de.adorsys.sts.resourceserver.service;
 
+import de.adorsys.sts.resourceserver.model.UserCredentials;
 import org.adorsys.encobject.domain.ObjectHandle;
 import org.adorsys.encobject.service.KeystoreNotFoundException;
 import org.adorsys.encobject.userdata.ObjectPersistenceAdapter;

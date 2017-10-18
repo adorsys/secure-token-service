@@ -1,4 +1,4 @@
-package de.adorsys.sts.resourceserver;
+package de.adorsys.sts.resourceserver.service;
 
 import com.nimbusds.jose.RemoteKeySourceException;
 import com.nimbusds.jose.jwk.JWK;
@@ -9,8 +9,9 @@ import com.nimbusds.jose.jwk.source.RemoteJWKSet;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jose.util.DefaultResourceRetriever;
 import com.nimbusds.jose.util.ResourceRetriever;
-import de.adorsys.sts.common.user.UserCredentials;
-import de.adorsys.sts.common.user.UserDataService;
+import de.adorsys.sts.resourceserver.ResourceServerInfo;
+import de.adorsys.sts.resourceserver.model.UserCredentials;
+import de.adorsys.sts.resourceserver.service.UserDataService;
 import de.adorsys.sts.resourceserver.model.ResourceServer;
 import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
 import de.adorsys.sts.resourceserver.model.ResourceServers;
@@ -64,7 +65,7 @@ public class ResourceServerProcessor {
 
     private static JWKSelector encKeySelector = new JWKSelector(new JWKMatcher.Builder().keyUse(KeyUse.ENCRYPTION).build());
 	private ResourceRetriever resourceRetriever=new DefaultResourceRetriever(DEFAULT_HTTP_CONNECT_TIMEOUT, DEFAULT_HTTP_READ_TIMEOUT, DEFAULT_HTTP_SIZE_LIMIT);
-	
+
 	/**
 	 * Returns the list of resource server with corresponding user custom secret.
 	 * 

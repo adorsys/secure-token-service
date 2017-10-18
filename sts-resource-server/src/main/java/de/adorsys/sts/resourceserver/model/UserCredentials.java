@@ -1,4 +1,4 @@
-package de.adorsys.sts.common.user;
+package de.adorsys.sts.resourceserver.model;
 
 import java.util.HashMap;
 import java.util.Map;

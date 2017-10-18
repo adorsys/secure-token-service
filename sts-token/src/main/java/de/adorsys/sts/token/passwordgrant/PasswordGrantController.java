@@ -8,20 +8,12 @@ import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import de.adorsys.sts.common.config.TokenResource;
-import de.adorsys.sts.common.user.DefaultObjectMapper;
-import de.adorsys.sts.common.user.UserCredentials;
-import de.adorsys.sts.common.user.UserDataService;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
-import de.adorsys.sts.resourceserver.ResourceServerProcessor;
 import de.adorsys.sts.resourceserver.ResponseUtils;
 import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
+import de.adorsys.sts.resourceserver.service.ResourceServerProcessorService;
 import de.adorsys.sts.token.api.TokenResponse;
 import io.swagger.annotations.*;
-import org.adorsys.encobject.domain.KeyCredentials;
-import org.adorsys.encobject.filesystem.FsPersistenceFactory;
-import org.adorsys.encobject.service.KeystoreNotFoundException;
-import org.adorsys.encobject.userdata.ObjectPersistenceAdapter;
-import org.adorsys.encobject.userdata.UserDataNamingPolicy;
 import org.adorsys.jjwk.serverkey.KeyAndJwk;
 import org.adorsys.jjwk.serverkey.KeyConverter;
 import org.apache.commons.lang3.StringUtils;
@@ -52,16 +44,7 @@ public class PasswordGrantController {
     private HttpServletRequest servletRequest;
 
     @Autowired
-    private FsPersistenceFactory persFactory;
-
-    @Autowired
-    private ResourceServerProcessor resourceServerProcessor;
-
-    @Autowired
-    private UserDataNamingPolicy namingPolicy;
-
-    private static DefaultObjectMapper objectMapper = new DefaultObjectMapper();
-
+    private ResourceServerProcessorService resourceServerProcessorService;
 
     @GetMapping(path="", consumes={MediaType.APPLICATION_FORM_URLENCODED_VALUE}, produces={MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Password Grant", notes = "Implements the oauth2 Pasword grant type. Works only if server is configured to accept password grant")
@@ -99,20 +82,6 @@ public class PasswordGrantController {
             return ResponseUtils.missingParam(password);
         }
 
-        KeyCredentials keyCredentials = namingPolicy.newKeyCredntials(username, password);
-        ObjectPersistenceAdapter objectPersistenceAdapter = new ObjectPersistenceAdapter(persFactory.getEncObjectService(), keyCredentials, objectMapper);
-        // Check if we have this user in the storage. If so user the record, if not create one.
-        UserDataService userDataService = new UserDataService(namingPolicy, objectPersistenceAdapter);
-        if(!userDataService.hasAccount()){
-            try {
-                userDataService.addAccount();
-            } catch (KeystoreNotFoundException e) {
-                throw new IllegalStateException();
-            }
-        }
-        // Check access
-        UserCredentials loadUserCredentials = userDataService.loadUserCredentials();
-
         JWTClaimsSet.Builder claimSetBuilder = new JWTClaimsSet.Builder();
         claimSetBuilder = claimSetBuilder.subject(username)
                 .expirationTime(DateUtils.addMinutes(new Date(), 5))
@@ -123,7 +92,8 @@ public class PasswordGrantController {
                 .claim("typ", "Bearer")
                 .claim("role", "USER");
 
-        List<ResourceServerAndSecret> processedResources = resourceServerProcessor.processResources(audiences, resources, userDataService);
+        List<ResourceServerAndSecret> processedResources = resourceServerProcessorService.processResources(audiences, resources, username, password);
+
         // Resources or audiances
         claimSetBuilder = ResponseUtils.handleResources(claimSetBuilder, processedResources);
 
