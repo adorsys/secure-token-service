@@ -1,4 +1,4 @@
-package de.adorsys.sts.resourceserver.service;
+package de.adorsys.sts.resourceserver.processing;
 
 import com.nimbusds.jose.RemoteKeySourceException;
 import com.nimbusds.jose.jwk.JWK;

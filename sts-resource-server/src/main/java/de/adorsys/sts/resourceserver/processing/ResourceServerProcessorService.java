@@ -1,7 +1,8 @@
-package de.adorsys.sts.resourceserver.service;
+package de.adorsys.sts.resourceserver.processing;
 
 import de.adorsys.sts.resourceserver.model.UserCredentials;
 import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
+import de.adorsys.sts.resourceserver.service.UserDataService;
 import org.adorsys.encobject.domain.KeyCredentials;
 import org.adorsys.encobject.filesystem.FsPersistenceFactory;
 import org.adorsys.encobject.service.KeystoreNotFoundException;

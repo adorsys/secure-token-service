@@ -1,7 +1,7 @@
 package de.adorsys.sts.worksheetloader;
 
 import com.google.common.collect.Lists;
-import de.adorsys.sts.resourceserver.service.ResourceServerProcessorService;
+import de.adorsys.sts.resourceserver.processing.ResourceServerProcessorService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;

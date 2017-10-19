@@ -11,7 +11,7 @@ import de.adorsys.sts.common.config.TokenResource;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.resourceserver.ResponseUtils;
 import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
-import de.adorsys.sts.resourceserver.service.ResourceServerProcessorService;
+import de.adorsys.sts.resourceserver.processing.ResourceServerProcessorService;
 import de.adorsys.sts.token.api.TokenResponse;
 import io.swagger.annotations.*;
 import org.adorsys.jjwk.serverkey.KeyAndJwk;

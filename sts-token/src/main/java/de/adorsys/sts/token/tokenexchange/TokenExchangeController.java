@@ -9,7 +9,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import de.adorsys.sts.common.config.TokenResource;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
-import de.adorsys.sts.resourceserver.service.ResourceServerProcessor;
+import de.adorsys.sts.resourceserver.processing.ResourceServerProcessor;
 import de.adorsys.sts.resourceserver.ResponseUtils;
 import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
 import de.adorsys.sts.token.api.TokenResponse;

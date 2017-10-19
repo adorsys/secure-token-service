@@ -8,7 +8,7 @@ import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.pop.EnablePOP;
 import de.adorsys.sts.resourceserver.EnableResourceServerManagement;
-import de.adorsys.sts.resourceserver.service.ResourceServerProcessor;
+import de.adorsys.sts.resourceserver.processing.ResourceServerProcessor;
 import de.adorsys.sts.resourceserver.persistence.FsPersistenceResourceServerRepository;
 import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
 import de.adorsys.sts.resourceserver.provider.EnvironmentVariableResourceServersProvider;
