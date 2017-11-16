@@ -14,21 +14,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-pop</artifactId>
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-token</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-admin</artifactId>
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>

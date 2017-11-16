@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-admin</artifactId>
+            <artifactId>sts-spring</artifactId>
         </dependency>
 
         <dependency>

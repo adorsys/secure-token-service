@@ -27,10 +27,6 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-admin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-token-auth</artifactId>
         </dependency>
         <dependency>
@@ -40,6 +36,10 @@
         <dependency>
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-server-info</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.sts</groupId>
+            <artifactId>sts-spring</artifactId>
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>

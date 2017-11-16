@@ -3,18 +3,14 @@ package de.adorsys.sts.resourceserver.service;
 import de.adorsys.sts.resourceserver.model.ResourceServer;
 import de.adorsys.sts.resourceserver.model.ResourceServers;
 import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
-@Service
 public class ResourceServerService {
 
     private final ResourceServerRepository repository;
 
-    @Autowired
     public ResourceServerService(ResourceServerRepository repository) {
         this.repository = repository;
     }
