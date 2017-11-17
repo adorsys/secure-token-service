@@ -1,4 +1,4 @@
-package de.adorsys.sts.keymanagement;
+package de.adorsys.sts.encryption;
 
 import org.springframework.context.annotation.Import;
 
@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 @Target(value = {java.lang.annotation.ElementType.TYPE})
 @Documented
 @Import({
-        KeyManagerConfiguration.class
+        EncryptionConfiguration.class
 })
-public @interface EnableKeyManagement {
+public @interface EnableEncryption {
 }

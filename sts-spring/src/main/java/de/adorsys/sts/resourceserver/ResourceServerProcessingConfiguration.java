@@ -1,7 +1,6 @@
-package de.adorsys.sts.token;
+package de.adorsys.sts.resourceserver;
 
 import de.adorsys.sts.encryption.EncryptionConfiguration;
-import de.adorsys.sts.keymanagement.KeyManagerConfiguration;
 import de.adorsys.sts.resourceserver.processing.ResourceServerProcessor;
 import de.adorsys.sts.resourceserver.service.EncryptionService;
 import de.adorsys.sts.resourceserver.service.ResourceServerService;
@@ -10,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({EncryptionConfiguration.class, KeyManagerConfiguration.class})
-public class TokenCoreConfiguration {
+@Import(EncryptionConfiguration.class)
+public class ResourceServerProcessingConfiguration {
 
     @Bean
     public ResourceServerProcessor resourceServerProcessor(

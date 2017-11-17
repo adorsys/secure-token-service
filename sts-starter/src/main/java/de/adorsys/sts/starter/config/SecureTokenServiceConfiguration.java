@@ -7,7 +7,6 @@ import de.adorsys.sts.keymanagement.persistence.FsPersistenceKeyStoreRepository;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.pop.EnablePOP;
-import de.adorsys.sts.resourceserver.EnableResourceServerManagement;
 import de.adorsys.sts.resourceserver.persistence.FsPersistenceResourceServerRepository;
 import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
 import de.adorsys.sts.resourceserver.provider.EnvironmentVariableResourceServersProvider;
@@ -26,7 +25,6 @@ import org.springframework.context.annotation.Configuration;
 @EnableTokenExchange
 @EnablePasswordGrant
 @EnableAdmin
-@EnableResourceServerManagement
 @EnableKeyManagement
 @EnableServerInfo
 public class SecureTokenServiceConfiguration {
