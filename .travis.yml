@@ -20,3 +20,4 @@ deploy:
     script: /bin/bash .travis/deploy.sh
     on:
       tags: true
+      condition: "$TRAVIS_TAG =~ ^v([[:digit:]]+\\.)+[[:digit:]]+(-[[:digit:]]+)?$"
