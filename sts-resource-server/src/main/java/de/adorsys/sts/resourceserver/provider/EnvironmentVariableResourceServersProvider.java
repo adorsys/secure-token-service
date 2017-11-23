@@ -1,10 +1,10 @@
 package de.adorsys.sts.resourceserver.provider;
 
-import com.google.common.collect.Lists;
 import de.adorsys.sts.resourceserver.model.ResourceServer;
 import org.adorsys.envutils.EnvProperties;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -12,7 +12,7 @@ public class EnvironmentVariableResourceServersProvider implements ResourceServe
 
     @Override
     public List<ResourceServer> get() {
-        List<ResourceServer> resourceServers = Lists.newArrayList();
+        List<ResourceServer> resourceServers = new ArrayList<>();
 
         String res_servers_prop = EnvProperties.getEnvOrSysProp(STSPropertiesConstants.RESOURCE_SERVER_NAMES, "");
         String[] res_servers = StringUtils.split(res_servers_prop,",");

@@ -38,7 +38,7 @@ public class PasswordGrantConfiguration {
         return new ResourceServerProcessorService(
                 resourceServerProcessor,
                 namingPolicy,
-                fsPersistenceFactory,
+                fsPersistenceFactory.getEncObjectService(),
                 objectMapper
         );
     }

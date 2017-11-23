@@ -1,6 +1,5 @@
 package de.adorsys.sts.resourceserver.service;
 
-import com.google.common.collect.Maps;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.jwk.*;
 import de.adorsys.sts.resourceserver.exception.NoJwkFoundException;
@@ -10,6 +9,7 @@ import org.adorsys.jjwk.selector.UnsupportedEncAlgorithmException;
 import org.adorsys.jjwk.selector.UnsupportedKeyLengthException;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +32,7 @@ public class EncryptionService {
     }
 
     public Map<String, String> encryptFor(Iterable<String> audiences, String secret) {
-        Map<String, String> encryptedSecrets = Maps.newHashMap();
+        Map<String, String> encryptedSecrets = new HashMap<>();
 
         for(String audience : audiences) {
             String encrypted = encryptFor(audience, secret);

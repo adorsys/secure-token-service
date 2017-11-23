@@ -35,6 +35,10 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
+            <artifactId>sts-jclouds-persistence</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-server-info</artifactId>
         </dependency>
         <dependency>

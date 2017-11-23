@@ -52,7 +52,7 @@
 
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZZ</maven.build.timestamp.format>
 		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
-		<cryptoutils.version>0.6</cryptoutils.version>
+		<cryptoutils.version>0.7.0</cryptoutils.version>
 		<scmBranch />
 	</properties>
 	
@@ -68,6 +68,7 @@
 		<module>sts-example</module>
 		<module>sts-keymanagement</module>
 		<module>sts-spring</module>
+		<module>sts-jclouds-persistence</module>
 	</modules>
 
 	<dependencyManagement>
@@ -132,6 +133,11 @@
 			</dependency>
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-jclouds-persistence</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-spring</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -177,6 +183,11 @@
 			<dependency>
 				<groupId>de.adorsys.cryptoutils</groupId>
 				<artifactId>encobject</artifactId>
+				<version>${cryptoutils.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.cryptoutils</groupId>
+				<artifactId>encobject-jcloud</artifactId>
 				<version>${cryptoutils.version}</version>
 			</dependency>
 			<dependency>

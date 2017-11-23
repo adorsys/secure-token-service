@@ -41,5 +41,10 @@
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-token-auth</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>de.adorsys.cryptoutils</groupId>
+            <artifactId>encobject-jcloud</artifactId>
+        </dependency>
     </dependencies>
 </project>
