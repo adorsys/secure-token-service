@@ -1,0 +1,7 @@
+version: '3.1'
+services:
+  sts:
+    build: sts-starter/.
+    image: "adorsys/secure-token-service:latest"
+    ports:
+    - "8888:8080"

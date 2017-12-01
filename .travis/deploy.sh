@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 set -e
 
-mvn --settings .travis/settings.xml package gpg:sign deploy -Prelease -DskipTests -B -U;
+/bin/bash .travis/maven_deploy.sh
+/bin/bash .travis/docker_push.sh
