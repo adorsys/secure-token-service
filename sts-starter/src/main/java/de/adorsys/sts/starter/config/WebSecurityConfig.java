@@ -1,7 +1,7 @@
 package de.adorsys.sts.starter.config;
 
-import de.adorsys.sts.tokenauth.JWTAuthenticationFilter;
-import de.adorsys.sts.tokenauth.TokenService;
+import de.adorsys.sts.filter.JWTAuthenticationFilter;
+import de.adorsys.sts.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

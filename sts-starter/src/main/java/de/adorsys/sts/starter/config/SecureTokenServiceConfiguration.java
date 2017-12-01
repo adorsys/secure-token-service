@@ -2,13 +2,11 @@ package de.adorsys.sts.starter.config;
 
 import de.adorsys.sts.admin.EnableAdmin;
 import de.adorsys.sts.keymanagement.EnableKeyManagement;
-import de.adorsys.sts.keymanagement.config.KeyManagementProperties;
+import de.adorsys.sts.keymanagement.KeyManagementConfigurationProperties;
 import de.adorsys.sts.keymanagement.persistence.FsPersistenceKeyStoreRepository;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.pop.EnablePOP;
-import de.adorsys.sts.resourceserver.EnableResourceServerManagement;
-import de.adorsys.sts.resourceserver.processing.ResourceServerProcessor;
 import de.adorsys.sts.resourceserver.persistence.FsPersistenceResourceServerRepository;
 import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
 import de.adorsys.sts.resourceserver.provider.EnvironmentVariableResourceServersProvider;
@@ -27,15 +25,9 @@ import org.springframework.context.annotation.Configuration;
 @EnableTokenExchange
 @EnablePasswordGrant
 @EnableAdmin
-@EnableResourceServerManagement
 @EnableKeyManagement
 @EnableServerInfo
 public class SecureTokenServiceConfiguration {
-
-    @Bean
-    public ResourceServerProcessor resourceServerProcessor() {
-        return new ResourceServerProcessor();
-    }
 
     @Bean
     public DataSheetLoader dataSheetLoader() {
@@ -63,7 +55,7 @@ public class SecureTokenServiceConfiguration {
     @Bean
     KeyStoreRepository keyStoreRepository(
             FsPersistenceFactory fsPersistenceFactory,
-            KeyManagementProperties keyManagementProperties
+            KeyManagementConfigurationProperties keyManagementProperties
     ) {
         return new FsPersistenceKeyStoreRepository(
                 fsPersistenceFactory,

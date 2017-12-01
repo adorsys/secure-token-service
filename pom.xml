@@ -5,7 +5,7 @@
 
 	<groupId>de.adorsys.sts</groupId>
 	<artifactId>secure-token-service</artifactId>
-	<version>0.8.0-SNAPSHOT</version>
+	<version>0.9.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>SecureTokenService</name>
@@ -62,12 +62,12 @@
 		<module>sts-pop</module>
 		<module>sts-token</module>
 		<module>sts-server-info</module>
-		<module>sts-admin</module>
 		<module>sts-token-auth</module>
 		<module>sts-resource-server</module>
 		<module>sts-worksheet-loader</module>
 		<module>sts-example</module>
 		<module>sts-keymanagement</module>
+		<module>sts-spring</module>
 	</modules>
 
 	<dependencyManagement>
@@ -107,11 +107,6 @@
 			</dependency>
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
-				<artifactId>sts-admin</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-token-auth</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -133,6 +128,11 @@
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-keymanagement</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-spring</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 

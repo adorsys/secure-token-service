@@ -1,7 +1,7 @@
 package de.adorsys.sts.resourceserver.processing;
 
-import de.adorsys.sts.resourceserver.model.UserCredentials;
 import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
+import de.adorsys.sts.resourceserver.model.UserCredentials;
 import de.adorsys.sts.resourceserver.service.UserDataService;
 import org.adorsys.encobject.domain.KeyCredentials;
 import org.adorsys.encobject.filesystem.FsPersistenceFactory;
@@ -9,12 +9,9 @@ import org.adorsys.encobject.service.KeystoreNotFoundException;
 import org.adorsys.encobject.userdata.ObjectMapperSPI;
 import org.adorsys.encobject.userdata.ObjectPersistenceAdapter;
 import org.adorsys.encobject.userdata.UserDataNamingPolicy;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public class ResourceServerProcessorService {
 
     private final ResourceServerProcessor resourceServerProcessor;
@@ -25,7 +22,6 @@ public class ResourceServerProcessorService {
 
     private final ObjectMapperSPI objectMapper;
 
-    @Autowired
     public ResourceServerProcessorService(
             ResourceServerProcessor resourceServerProcessor,
             UserDataNamingPolicy namingPolicy,

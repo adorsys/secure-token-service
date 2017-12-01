@@ -1,6 +1,6 @@
 package de.adorsys.sts.keymanagement.persistence;
 
-import de.adorsys.sts.keymanagement.config.KeyManagementProperties;
+import de.adorsys.sts.common.config.KeyManagementProperties;
 import org.adorsys.encobject.domain.ObjectHandle;
 import org.adorsys.encobject.filesystem.FsPersistenceFactory;
 import org.adorsys.encobject.service.*;

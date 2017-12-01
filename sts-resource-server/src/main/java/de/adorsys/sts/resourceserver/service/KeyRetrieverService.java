@@ -5,13 +5,10 @@ import com.nimbusds.jose.util.DefaultResourceRetriever;
 import com.nimbusds.jose.util.Resource;
 import com.nimbusds.jose.util.ResourceRetriever;
 import de.adorsys.sts.resourceserver.model.ResourceServer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URL;
 
-@Service
 public class KeyRetrieverService {
 
     /**
@@ -42,7 +39,6 @@ public class KeyRetrieverService {
 
     private final ResourceServerService resourceServerService;
 
-    @Autowired
     public KeyRetrieverService(ResourceServerService resourceServerService) {
         this.resourceServerService = resourceServerService;
     }

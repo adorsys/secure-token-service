@@ -1,6 +1,6 @@
 package de.adorsys.sts.keymanagement.service;
 
-import de.adorsys.sts.keymanagement.config.KeyManagementProperties;
+import de.adorsys.sts.common.config.KeyManagementProperties;
 import org.adorsys.jkeygen.keystore.SecretKeyData;
 import org.adorsys.jkeygen.secretkey.SecretKeyBuilder;
 

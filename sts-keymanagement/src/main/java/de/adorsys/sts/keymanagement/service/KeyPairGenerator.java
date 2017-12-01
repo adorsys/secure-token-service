@@ -1,6 +1,6 @@
 package de.adorsys.sts.keymanagement.service;
 
-import de.adorsys.sts.keymanagement.config.KeyManagementProperties;
+import de.adorsys.sts.common.config.KeyManagementProperties;
 import org.adorsys.jjwk.serverkey.SingleKeyUsageSelfSignedCertBuilder;
 import org.adorsys.jkeygen.keypair.KeyPairBuilder;
 import org.adorsys.jkeygen.keypair.SelfSignedKeyPairData;
