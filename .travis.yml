@@ -3,6 +3,9 @@ language: java
 jdk:
   - oraclejdk8
 
+services:
+  - docker
+
 install:
   - mvn --settings .travis/settings.xml install -DskipTests -Dmaven.javadoc.skip=true -B -V
 
