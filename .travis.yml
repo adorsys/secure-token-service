@@ -7,10 +7,10 @@ services:
   - docker
 
 install:
-  - mvn --settings .travis/settings.xml install -DskipTests -Dmaven.javadoc.skip=true -B -V
+  - mvn --settings .travis/settings.xml clean install -DskipTests -Dmaven.javadoc.skip=true -B -V
 
 script:
-  - mvn --settings .travis/settings.xml package -DskipTests -B -V
+  - mvn --settings .travis/settings.xml clean package -DskipTests -B -V
 
 before_deploy:
   - echo $GPG_SECRET_KEY | base64 --decode | $GPG_EXECUTABLE --import
@@ -29,5 +29,4 @@ deploy:
 env:
   global:
   - STS_EXAMPLE_DOCKER_IMAGE_NAME=adorsys/sts-example
-  # encrypted docker hub credentials
-  - secure: sZxiKpqHwFAeyTBHdIbZ55lVT2c5cl1EEvpJRtMYig3oZZB5GuN+BW/jnqtmZYtoJHPYcVWkOmlZk3ido0NQOzOVmvbHvv7GLBUfszNYji6Xjba14y+pwVODqQvwqGHg7kLFWFoYqc1ru2rWWCZJNwAZUbxaghw1BGYFti6Dbx0M6wwZpRO2qpbVLiFZ955/vhnKV/fPXkvAGW+2CcO8KGo+IQdqFVkXzPnzinE7dWJ44Yk4edZKvfwzQAm56taMKxvW0JewBHQZm661ng7g26cjJEJ0fTw1oamPI2B5UzdtYc9i62nBv1qfEkZQNLjVPuvlSBwXcahiX8556GKAeLsUr1GjpkGOzh3X2j4W/XPi9MK7OePsXK0UxR2H3CI9+ANS85WxUaVj8ZSgqVRV+zHpNhOhy9krs+qPaeRi2/mvDzy0TI/dL7GJfzDEcuHCyZHFlYmB76fdwHWMMO7NO1CFjqQrNcFiYBzent7lcfKGFnuLGDYDrzFkQapaKBSA3Em3/IM0gMszrjA7YUBQ9EYYK1QQin60C3F9cZSwiKHs8gPCbxYr7GSrKJmkhsa6SfIK+A31Ede42z0UVvYIUKoDwFUaiiXNe5B+vO+sEPfFcvxmfRGC1Xc5zpOtfioBhT/Azd4rcPA9PWeYGORh1a4ikqzO08CaN9rTMtIqzzA=
+  - secure: DLeMMWzLNe7Cog7zzqiohYyJk/15WAjxJSahBAWiUIN1MLbC8RwhsMRlGmWYGVaVdt+bobAgdKU3ZbHpTZ4b+NIzeZ36CsbZtOegp1gw9Zhm89KaZE6HxttHeQcDL9QAoVFtddy0yWrKM1OhlBBzCfFsE5UbwvAQAmx6edXa7KrSfad0HozXZxwCwMgMgIC8GGnDEHJoyfQQFvgCDY8gXu7uHDKY+STExXDAvZn95wX/SmvYY/zKxsXXydqwQbGAGOB/Z8dtIHtv+ZTpVQcNyC0DF5V5LtfovbYojOhGO1QVWvc7WiTWDDfGQctPuVYT5F8vR3XralWkCtz6SR8EvL51y8CEuLYwd84/Nhq9MTtsY53/1rpauOPrkpNl839PZO17Vw4i4Z1jOOE4miXwmtCY9tru9VHpwX8udrGuQlJIElc1SMPG+FzC5XQO9tyJvtrjlxW5rPBMucppyGgniP46pu7cALDMPLKQWaBEuhfhUFe9ExjxmvjbxNoMc9RViPWolFajU1YxuN4yWIaWxW0WL45wPHZ39BLuhuwmEDeX6qZ8bhFbNGdtkZ7VWMFOF7teEj65V0cy0H2tbo+2lJupakqZowdPbJ8LAry3ZjdWdFL0od0SDWSG9FsTyg/1HyYh0UfWTYZ2Ecl3N+XD6S3XyVLnkslfV/ruNNh2V9k=
