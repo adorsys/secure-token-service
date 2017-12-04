@@ -10,3 +10,31 @@ app:
     jwksUrl: "http://localhost:8888/pop"
   - audience: "my_audience_2"
     jwksUrl: "http://another_server:8080/pop"
+
+sts:
+  keymanagement:
+    persistence:
+      containerName: adsts-container
+      password: 0123456789ABCDEF
+    keystore:
+      password: FEDCBA9876543210
+      type: UBER
+      name: adsts-keystore
+      alias_prefix: adsts-
+      keys:
+        encKeyPairs:
+          initialCount: 5
+          algo: RSA
+          sigAlgo: SHA256withRSA
+          size: 2048
+          name: Adorsys Security Token Service
+        signKeyPairs:
+          initialCount: 5
+          algo: RSA
+          sigAlgo: SHA256withRSA
+          size: 2048
+          name: Adorsys Security Token Service
+        secretKeys:
+          initialCount: 5
+          algo: AES
+          size: 256
