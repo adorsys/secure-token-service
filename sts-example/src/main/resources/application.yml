@@ -6,6 +6,8 @@ security:
 
 app:
   servers:
+  - audience: "sts"
+    jwksUrl: "http://localhost:8888/pop"
   - audience: "my_audience"
     jwksUrl: "http://localhost:8888/pop"
   - audience: "my_audience_2"

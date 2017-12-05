@@ -1,5 +1,6 @@
 package de.adorsys.sts.example.api;
 
+import com.google.common.collect.ImmutableList;
 import de.adorsys.sts.example.service.ExampleLoginAdapter;
 import de.adorsys.sts.resourceserver.service.EncryptionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,12 @@ public class ExampleResourceController {
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody @Valid LoginRequest login) {
         String secretToken = loginAdapter.getExampleToken(login.getUsername(), login.getPassword());
-        return encryptionService.encryptFor(login.getAudiences(), secretToken);
+
+        ImmutableList<String> audiences = ImmutableList.<String>builder()
+                .addAll(login.getAudiences())
+                .add("sts")
+                .build();
+
+        return encryptionService.encryptFor(audiences, secretToken);
     }
 }
