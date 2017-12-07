@@ -1,6 +1,5 @@
 package de.adorsys.sts.worksheetloader;
 
-import com.google.common.collect.Lists;
 import de.adorsys.sts.resourceserver.processing.ResourceServerProcessorService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -10,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,7 +62,7 @@ public class LoginLoader {
 	}
 
 	private List<ReadUserCredentials.ServerAndUserEncKey> readFrom(Row row) {
-		List<ReadUserCredentials.ServerAndUserEncKey> serverAndUserEncKeyList = Lists.newArrayList();
+		List<ReadUserCredentials.ServerAndUserEncKey> serverAndUserEncKeyList = new ArrayList<>();
 
 		Optional<String> serverAndEncKeyList = readText(row, 2);
 		if(!serverAndEncKeyList.isPresent()) {
