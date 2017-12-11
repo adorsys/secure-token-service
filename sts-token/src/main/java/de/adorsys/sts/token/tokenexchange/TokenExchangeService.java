@@ -60,45 +60,37 @@ public class TokenExchangeService {
             throws InvalidParameterException, MissingParameterException, TokenValidationException {
         // Validate input parameters.
         if (!StringUtils.equals("urn:ietf:params:oauth:grant-type:token-exchange", grant_type)) {
-//            return ResponseUtils.invalidParam("Request parameter grant_type is missing or does not carry the value urn:ietf:params:oauth:grant-type:token-exchange. See https://tools.ietf.org/html/draft-ietf-oauth-token-exchange-08#section-2.1");
             throw new InvalidParameterException("Request parameter grant_type is missing or does not carry the value urn:ietf:params:oauth:grant-type:token-exchange. See https://tools.ietf.org/html/draft-ietf-oauth-token-exchange-08#section-2.1");
         }
 
         if (StringUtils.isBlank(subject_token)) {
             throw new MissingParameterException("subject_token");
-//            return ResponseUtils.missingParam("subject_token");
         }
 
         if (StringUtils.isBlank(subject_token_type)) {
             throw new MissingParameterException("subject_token_type");
-//            return ResponseUtils.missingParam(subject_token_type);
         }
 
         // If requested token type is not null, then the value must be urn:ietf:params:oauth:token-type:jwt
         if (StringUtils.isNotBlank(requested_token_type) && !StringUtils.equals("urn:ietf:params:oauth:token-type:jwt", requested_token_type)) {
             throw new InvalidParameterException("Request parameter requested_token_type must be left blank or carry the value urn:ietf:params:oauth:token-type:jwt. Only JWT token types are supported by this version");
-//            return ResponseUtils.invalidParam("Request parameter requested_token_type must be left blank or carry the value urn:ietf:params:oauth:token-type:jwt. Only JWT token types are supported by this version");
         }
 
         if (!StringUtils.equals("urn:ietf:params:oauth:token-type:jwt", subject_token_type)) {
             throw new InvalidParameterException("Request parameter subject_token_type is missing or does not carry the value urn:ietf:params:oauth:token-type:jwt. Only JWT token types can be consumed by this version");
-//            return ResponseUtils.invalidParam("Request parameter subject_token_type is missing or does not carry the value urn:ietf:params:oauth:token-type:jwt. Only JWT token types can be consumed by this version");
         }
 
         BearerToken subjectBearerToken = new BearerToken(subject_token);
 
         if (!subjectBearerToken.isValid()) {
             String tokenName = "subject_token";
-//            ResponseEntity<Object> errorData = ResponseUtils.invalidParam("Token in field " + tokenName + " does not seam to be a valid token");
             throw new TokenValidationException("Token in field " + tokenName + " does not seam to be a valid token");
-//            return ResponseEntity.badRequest().body(errorData);
         }
 
         JWTClaimsSet actorTokenClaim = null;
         if (StringUtils.isNotBlank(actor_token)) {
             // If actor token is not null, then the value of the actor_token_type must be urn:ietf:params:oauth:token-type:jwt
             if (!StringUtils.equals("urn:ietf:params:oauth:token-type:jwt", actor_token_type)) {
-//                return ResponseUtils.invalidParam("The conditional parameter actor_token_type must be set when actor_token is sent and carry the value urn:ietf:params:oauth:token-type:jwt. Only JWT token types are supported by this version");
                 throw new InvalidParameterException("The conditional parameter actor_token_type must be set when actor_token is sent and carry the value urn:ietf:params:oauth:token-type:jwt. Only JWT token types are supported by this version");
             }
 
@@ -107,10 +99,7 @@ public class TokenExchangeService {
             if (!actorBearerToken.isValid()) {
                 String tokenName = "actor_token";
 
-//                ResponseEntity<Object> errorData = ResponseUtils.invalidParam("Token in field " + tokenName + " does not seam to be a valid token");
                 throw new TokenValidationException("Token in field " + tokenName + " does not seam to be a valid token");
-
-//                return ResponseEntity.badRequest().body(e.getErrorData());
             }
         }
 
