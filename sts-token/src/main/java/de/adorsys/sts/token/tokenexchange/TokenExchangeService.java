@@ -14,6 +14,7 @@ import de.adorsys.sts.token.JwtClaimSetHelper;
 import de.adorsys.sts.token.MissingParameterException;
 import de.adorsys.sts.token.api.TokenResponse;
 import de.adorsys.sts.tokenauth.BearerToken;
+import de.adorsys.sts.tokenauth.BearerTokenValidator;
 import org.adorsys.jjwk.serverkey.KeyAndJwk;
 import org.adorsys.jjwk.serverkey.KeyConverter;
 import org.apache.commons.lang3.StringUtils;
@@ -24,10 +25,12 @@ public class TokenExchangeService {
 
     private final ResourceServerProcessor resourceServerProcessor;
     private final KeyManagementService keyManager;
+    private final BearerTokenValidator bearerTokenValidator;
 
-    public TokenExchangeService(ResourceServerProcessor resourceServerProcessor, KeyManagementService keyManager) {
+    public TokenExchangeService(ResourceServerProcessor resourceServerProcessor, KeyManagementService keyManager, BearerTokenValidator bearerTokenValidator) {
         this.resourceServerProcessor = resourceServerProcessor;
         this.keyManager = keyManager;
+        this.bearerTokenValidator = bearerTokenValidator;
     }
 
     public TokenResponse exchangeToken(TokenExchangeRequest tokenExchange) {
@@ -80,7 +83,7 @@ public class TokenExchangeService {
             throw new InvalidParameterException("Request parameter subject_token_type is missing or does not carry the value urn:ietf:params:oauth:token-type:jwt. Only JWT token types can be consumed by this version");
         }
 
-        BearerToken subjectBearerToken = new BearerToken(subject_token);
+        BearerToken subjectBearerToken = bearerTokenValidator.extract(subject_token);
 
         if (!subjectBearerToken.isValid()) {
             String tokenName = "subject_token";
@@ -94,7 +97,7 @@ public class TokenExchangeService {
                 throw new InvalidParameterException("The conditional parameter actor_token_type must be set when actor_token is sent and carry the value urn:ietf:params:oauth:token-type:jwt. Only JWT token types are supported by this version");
             }
 
-            BearerToken actorBearerToken = new BearerToken(actor_token);
+            BearerToken actorBearerToken = bearerTokenValidator.extract(actor_token);
 
             if (!actorBearerToken.isValid()) {
                 String tokenName = "actor_token";
@@ -118,7 +121,7 @@ public class TokenExchangeService {
 // preferred_username
 
         // Dealing with scope
-        List<String> existingScope = subjectBearerToken.extractRoles();
+        List<String> existingScope = subjectBearerToken.getRoles();
         List<String> newScopeList = existingScope;
         if (StringUtils.isNotBlank(scope)) {
             newScopeList = new ArrayList<>();

@@ -69,6 +69,7 @@
 		<module>sts-keymanagement</module>
 		<module>sts-spring</module>
 		<module>sts-jclouds-persistence</module>
+		<module>sts-service-component-example</module>
 	</modules>
 
 	<dependencyManagement>
@@ -160,7 +161,7 @@
 				<version>0.2</version>
 			</dependency>
 
-			<!-- commons foo -->
+			<!-- commons -->
 			<dependency>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>

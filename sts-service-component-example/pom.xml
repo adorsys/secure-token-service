@@ -9,25 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>sts-token-auth</artifactId>
+    <artifactId>sts-service-component-example</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.envutils</groupId>
-            <artifactId>envutils4j</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <artifactId>sts-spring</artifactId>
         </dependency>
     </dependencies>
 </project>

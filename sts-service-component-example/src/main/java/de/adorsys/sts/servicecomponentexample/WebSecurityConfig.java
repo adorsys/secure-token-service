@@ -1,4 +1,4 @@
-package de.adorsys.sts.starter.config;
+package de.adorsys.sts.servicecomponentexample;
 
 import de.adorsys.sts.filter.JWTAuthenticationFilter;
 import de.adorsys.sts.token.authentication.TokenAuthenticationService;
@@ -36,44 +36,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.authorizeRequests()
 			.antMatchers(HttpMethod.GET,
-					"/",
-					"/pop",
-					"/api-docs/**",
-					"/v2/api-docs/**",
-					"/swagger-resources/**",
-					"/health",
-					"/health.json",
-					"/info",
-					"/info.json"
+					"/"
 			).permitAll()
-			.antMatchers("/token/**").permitAll()// TOken Endpoint
-			.antMatchers(actuatorEndpoints()).hasRole("ADMIN")
-			.antMatchers("/accounts").hasRole("USER")
-			.antMatchers("/bankAccess").hasRole("ADMIN")
-			.antMatchers(actuatorEndpoints()).denyAll()
 			.anyRequest().authenticated()
-//			.and()
-//			.anonymous().disable()
 			;
-		// And filter other requests to check the presence of JWT in header
+
+		 // And filter other requests to check the presence of JWT in header
 		 http
 		 	.addFilterBefore(new JWTAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class)
-		 	.addFilterBefore(new BasicAuthenticationFilter(authenticationManager()), BasicAuthenticationFilter.class)		
+		 	.addFilterBefore(new BasicAuthenticationFilter(authenticationManager()), BasicAuthenticationFilter.class)
 		 ;
 	}
-	
+
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		// Create a default account
 		auth.inMemoryAuthentication().withUser("admin").password("password").roles("ADMIN");
 	}
-	
-	private String[] actuatorEndpoints() {
-        return new String[]{"/auditevents", "/auditevents.json", "/dump", "/dump.json", "/metrics/**", "/metrics", "/metrics.json",
-        		"/beans", "/beans.json", "/loggers/**", "/loggers", "/loggers.json", "/trace", "/trace.json","/configprops", "/configprops.json",
-        		"/heapdump", "/heapdump.json", "/autoconfig", "/autoconfig.json", "/mappings", "/mappings.json", "/env/**", "/env", "/env.json"};
-    }	
 
 	@Bean
     @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST,proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -81,9 +61,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return SecurityContextHolder.getContext().getAuthentication();
 
     }
-
-    @Bean
-	TokenAuthenticationService tokenService(BearerTokenValidator bearerTokenValidator) {
-		return new TokenAuthenticationService(bearerTokenValidator);
-	}
 }

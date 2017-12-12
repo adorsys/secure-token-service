@@ -1,0 +1,9 @@
+server:
+  port: 8887
+
+sts:
+  authservers:
+  - name: keycloak-playground
+    issUrl: https://sso-keycloak-playground.dev.adorsys.de/auth/realms/moped
+    jwksUrl: https://sso-keycloak-playground.dev.adorsys.de/auth/realms/moped/protocol/openid-connect/certs
+    refreshIntervalSeconds: 600

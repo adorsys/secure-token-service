@@ -1,6 +1,6 @@
 package de.adorsys.sts.filter;
 
-import de.adorsys.sts.service.TokenService;
+import de.adorsys.sts.token.authentication.TokenAuthenticationService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -14,9 +14,9 @@ import java.io.IOException;
 
 public class JWTAuthenticationFilter extends GenericFilterBean {
 
-    private TokenService tokenAuthenticationService;
+    private TokenAuthenticationService tokenAuthenticationService;
 
-    public JWTAuthenticationFilter(TokenService tokenAuthenticationService) {
+    public JWTAuthenticationFilter(TokenAuthenticationService tokenAuthenticationService) {
         this.tokenAuthenticationService = tokenAuthenticationService;
     }
 

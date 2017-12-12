@@ -6,10 +6,11 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EnvironmentVariablesAuthServersProvider {
+public class EnvironmentVariablesAuthServersProvider implements AuthServersProvider {
 
     private Map<String, AuthServer> authServers;
 
+    @Override
     public Map<String, AuthServer> getAll() {
         if(authServers == null) {
             authServers = read();
@@ -18,6 +19,7 @@ public class EnvironmentVariablesAuthServersProvider {
         return authServers;
     }
 
+    @Override
     public AuthServer get(String issuer) {
         return authServers.get(issuer);
     }

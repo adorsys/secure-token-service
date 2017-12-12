@@ -27,7 +27,6 @@ public class MultiAuthJWSKeySelector<C extends SecurityContext> implements JWSKe
 	}
 
 	public MultiAuthJWSKeySelector(AuthServer authServer) {
-		super();
 		this.authServer = authServer;
 	}
 }
