@@ -36,7 +36,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.authorizeRequests()
 			.antMatchers(HttpMethod.GET,
-					"/"
+					"/",
+					"/pop"
 			).permitAll()
 			.anyRequest().authenticated()
 			;

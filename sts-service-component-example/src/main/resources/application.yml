@@ -2,8 +2,36 @@ server:
   port: 8887
 
 sts:
+  audience_name: sts-service-component-example
+  secret_claim_property_key: secretClaim
   authservers:
   - name: keycloak-playground
     issUrl: https://sso-keycloak-playground.dev.adorsys.de/auth/realms/moped
     jwksUrl: https://sso-keycloak-playground.dev.adorsys.de/auth/realms/moped/protocol/openid-connect/certs
     refreshIntervalSeconds: 600
+  keymanagement:
+    persistence:
+      containerName: adsts-container
+      password: 0123456789ABCDEF
+    keystore:
+      password: FEDCBA9876543210
+      type: UBER
+      name: adsts-keystore
+      alias_prefix: adsts-
+      keys:
+        encKeyPairs:
+          initialCount: 5
+          algo: RSA
+          sigAlgo: SHA256withRSA
+          size: 2048
+          name: Adorsys Security Token Service
+        signKeyPairs:
+          initialCount: 5
+          algo: RSA
+          sigAlgo: SHA256withRSA
+          size: 2048
+          name: Adorsys Security Token Service
+        secretKeys:
+          initialCount: 5
+          algo: AES
+          size: 256
