@@ -4,5 +4,13 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  keycloak: {
+    url: 'https://sso-keycloak-playground.dev.adorsys.de/auth',
+    realm: 'moped',
+    clientId: 'moped-client',
+    /** scopes: comma-separated list of scopes*/
+    scope: 'sts-service-component'
+  },
+  serviceUrl: 'https://service-component-keycloak-playground.dev.adorsys.de/helloworld'
 };
