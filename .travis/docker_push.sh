@@ -24,3 +24,17 @@ docker tag $IMAGE_NAME $LATEST_IMAGE_NAME
 
 docker push $IMAGE_NAME
 docker push $LATEST_IMAGE_NAME
+
+# ----- push sts-client-example -----
+
+docker run --rm -v `pwd`/sts-client-example:/opt/src adorsys/angular-cli:v1.6.1 npm install
+docker run --rm -v `pwd`/sts-client-example:/opt/src adorsys/angular-cli:v1.6.1 npm run prod
+
+IMAGE_NAME="${STS_CLIENT_EXAMPLE_DOCKER_IMAGE_NAME}:${TRAVIS_TAG}"
+LATEST_IMAGE_NAME="${STS_CLIENT_EXAMPLE_DOCKER_IMAGE_NAME}:latest"
+
+docker build -t $IMAGE_NAME ./sts-client-example
+docker tag $IMAGE_NAME $LATEST_IMAGE_NAME
+
+docker push $IMAGE_NAME
+docker push $LATEST_IMAGE_NAME
