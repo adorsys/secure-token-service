@@ -17,27 +17,31 @@ export class AppComponent {
   constructor(private http: KeycloakHttp, private keycloak: KeycloakService) {
   }
 
+  login() {
+    this.keycloak.login();
+  }
+
   logout() {
     this.keycloak.logout();
   }
 
-  getSampleData() {
-    console.log(`get sample data from ${environment.serviceUrl}`);
-
-    this.http.request(environment.serviceUrl)
-      .subscribe(response => {
-        this.sampleData = response.text();
-        console.log(`got sample data: "${this.sampleData}"`);
-      });
+  get isLoggedIn() {
+    return this.keycloak.isAuthenticated;
   }
 
-  getRealmRoles() {
-    return this.keycloak.realmAccess;
-  };
+  get initSuccess() {
+    return this.keycloak.initSuccess;
+  }
 
-  getResourceRoles() {
-    return this.keycloak.resourceAccess;
-  };
+  getSampleData() {
+    this.http.request(environment.serviceUrl)
+      .subscribe(response => {
+        this.sampleData = {
+          status: response.status,
+          text: response.text()
+        };
+      });
+  }
 
   getSecretClaims() {
     if (this.keycloak.tokenParsed) {

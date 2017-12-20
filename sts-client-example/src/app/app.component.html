@@ -1,12 +1,27 @@
 <div id="content-area" class="col-md-9" role="main">
   <div id="content">
-    <h2><span>Keycloak Angular Sample</span></h2>
-    <h3>Realm roles: {{getRealmRoles()}}</h3>
-    <h3>Resource roles: {{getResourceRoles()}}</h3>
-    <h3>Secret claims: {{getSecretClaims()}}</h3>
-    <button (click)="getSampleData()">GET sample data</button>
-    <button (click)="logout()">Sign Out</button>
-    <br>
-    {{sampleData | json }}
+    <h2><span>Client Example Application</span></h2>
+
+    <div *ngIf="initSuccess">
+      <div *ngIf="!isLoggedIn">
+        <button (click)="login()">Sign In</button>
+      </div>
+
+      <div *ngIf="isLoggedIn">
+        <h3>Secret claims: {{getSecretClaims()}}</h3>
+
+        <button (click)="logout()">Sign Out</button>
+      </div>
+
+      <button (click)="getSampleData()">GET sample data</button>
+
+      <div>
+        {{sampleData | json }}
+      </div>
+    </div>
+
+    <div *ngIf="!initSuccess">
+      Initialization failed!
+    </div>
   </div>
 </div>

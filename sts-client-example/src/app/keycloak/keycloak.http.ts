@@ -9,11 +9,13 @@ export class KeycloakHttp {
   }
 
   request(url: string | Request, options?: RequestOptionsArgs): Observable<Response> {
-    let authOptions: RequestOptions = new RequestOptions({headers: new Headers({'Authorization': `Bearer ${this.keycloak.token}`})});
-    let mergedOptions = new RequestOptions().merge(options).merge(authOptions);
+    let requestOptions = options;
 
-    console.log('request')
+    if(this.keycloak.hasToken) {
+      let authOptions: RequestOptions = new RequestOptions({headers: new Headers({'Authorization': `Bearer ${this.keycloak.token}`})});
+      requestOptions = new RequestOptions().merge(options).merge(authOptions);
+    }
 
-    return this.http.request(url, mergedOptions);
+    return this.http.request(url, requestOptions);
   }
 }

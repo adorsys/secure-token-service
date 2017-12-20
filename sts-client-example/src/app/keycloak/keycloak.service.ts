@@ -8,8 +8,11 @@ declare let Keycloak: any;
 export class KeycloakService {
   private keycloak: any;
 
+  public initSuccess: boolean;
+  public isAuthenticated: boolean;
+
   constructor() {
-    let keycloak = new Keycloak({
+    const keycloak = new Keycloak({
       "url": environment.keycloak.url,
       "realm": environment.keycloak.realm,
       "clientId": environment.keycloak.clientId
@@ -19,18 +22,13 @@ export class KeycloakService {
     keycloak.loginRequired = true;
 
     keycloak.init({flow: 'implicit'})
-      .success(initSuccess)
+      .success(authenticated => {
+        this.initSuccess = true;
+        this.isAuthenticated = authenticated;
+      })
       .error(function () {
-        window.location.reload();
+        this.initSuccess = false;
       });
-
-    function initSuccess(authenticated) {
-      if (!authenticated) {
-        keycloak.login({scope: environment.keycloak.scope});
-      } else {
-        console.log('TODO: do something')
-      }
-    }
 
     this.keycloak = keycloak;
   }
@@ -39,20 +37,16 @@ export class KeycloakService {
     return this.keycloak.token;
   }
 
+  login() {
+    this.keycloak.login({scope: environment.keycloak.scope});
+  }
+
   logout() {
     this.keycloak.logout();
   }
 
   get tokenParsed() {
     return this.keycloak.tokenParsed;
-  }
-
-  get realmAccess() {
-    return this.keycloak.realmAccess;
-  }
-
-  get resourceAccess() {
-    return this.keycloak.resourceAccess;
   }
 
   get hasToken(): boolean {
