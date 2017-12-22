@@ -54,7 +54,7 @@ public class KeyRetrieverService {
         try {
             res = resourceRetriever.retrieveResource(new URL(endpointUrl));
         } catch (IOException e) {
-            throw new IllegalStateException("Couldn't retrieve remote metadata: " + e.getMessage(), e);
+            throw new IllegalStateException("Couldn't retrieve remote jwk set from: " + endpointUrl, e);
         }
 
         try {
