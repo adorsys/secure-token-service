@@ -4,8 +4,8 @@ server:
 security:
   ignored: /**
 
-app:
-  servers:
+sts:
+  resourceServers:
   - audience: "sts"
     jwksUrl: "http://localhost:8888/pop"
   - audience: "my_audience"
@@ -16,8 +16,6 @@ app:
     jwksUrl: "http://localhost:8887/pop"
   - audience: "sts-service-component"
     jwksUrl: "http://sts-service-component:8887/service-component/pop"
-
-sts:
   keymanagement:
     persistence:
       containerName: adsts-container

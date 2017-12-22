@@ -5,7 +5,6 @@ import de.adorsys.sts.resourceserver.service.ResourceServerService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
-@ComponentScan("de.adorsys.sts.resourceserver.service")
 public class ResourceServerManagementConfiguration {
 
     @Bean
