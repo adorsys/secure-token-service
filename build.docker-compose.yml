@@ -1,0 +1,19 @@
+version: '3.1'
+services:
+  sts-maven:
+    build:
+      context: ./
+      dockerfile: build.Dockerfile
+    image: local/build__sts-maven:latest
+    volumes:
+      - ./:/opt/src
+      - ./.docker-build/.m2:/root/.m2
+  sts-client:
+    build:
+      context: ./sts-client-example
+      dockerfile: build.Dockerfile
+    image: local/build__sts-client-example:latest
+    volumes:
+      - ./sts-client-example:/opt/src
+      - ./.docker-build/node_modules:/opt/src/node_modules
+

@@ -34,3 +34,5 @@ src/main/resources/.~lock.sts_login_data.xls#
 **/.DS_Store
 
 **/pom.xml.versionsBackup
+.docker-build/
+.docker/

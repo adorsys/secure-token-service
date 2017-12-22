@@ -11,3 +11,17 @@ Authentication is the process of identifying and legitimating the subject of aut
 - Ask the token manager to invalidate the token
 
 Token management solely focuses on managing oAuth tokens and exchanging them like specified in the token exchange working draft (https://tools.ietf.org/html/draft-ietf-oauth-token-exchange-08)
+
+## Build this solution
+
+### Within docker
+
+```
+docker-compose --file build.docker-compose.yml up --build --remove-orphans 
+```
+
+## Run example application
+
+```
+docker-compose --file docker-compose.yml up --build --remove-orphans
+```
