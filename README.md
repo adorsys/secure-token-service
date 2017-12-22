@@ -25,3 +25,10 @@ docker-compose --file build.docker-compose.yml up --build --remove-orphans
 ```
 docker-compose --file docker-compose.yml up --build --remove-orphans
 ```
+
+| Container | URL |
+|-----------|-----|
+| keycloak  | http://localhost:8080 |
+| STS       | http://localhost:8888 |
+| Service Component | http://localhost:8887 |
+| Angular client | http://localhost:8090 |
