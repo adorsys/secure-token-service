@@ -1,6 +1,7 @@
 package de.adorsys.sts.servicecomponentexample;
 
 import de.adorsys.sts.decryption.EnableDecryption;
+import de.adorsys.sts.keymanagement.EnableKeyManagement;
 import de.adorsys.sts.keymanagement.persistence.InMemoryKeyStoreRepository;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.pop.EnablePOP;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableTokenAuthentication
 @EnablePOP
 @EnableDecryption
+@EnableKeyManagement(keyRotationEnabled = true)
 public class ServiceComponentExampleConfiguration {
 
     @Bean
