@@ -102,6 +102,10 @@ public class KeyRotationServiceTest {
         when(signatureKeyPairRotationProperties.getMinKeys()).thenReturn(1);
         when(secretKeyRotationProperties.getMinKeys()).thenReturn(1);
 
+        when(encryptionKeyPairRotationProperties.isEnabled()).thenReturn(true);
+        when(signatureKeyPairRotationProperties.isEnabled()).thenReturn(true);
+        when(secretKeyRotationProperties.isEnabled()).thenReturn(true);
+
         keyRotationService = new KeyRotationService(
                 keyStoreFilter,
                 keyStoreGenerator,

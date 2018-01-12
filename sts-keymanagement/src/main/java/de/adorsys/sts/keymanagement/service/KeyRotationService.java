@@ -16,9 +16,9 @@ public class KeyRotationService {
     private final KeyStoreFilter keyStoreFilter;
     private final KeyStoreGenerator keyStoreGenerator;
 
-    private final Integer minimumEncryptionKeys;
-    private final Integer minimumSignatureKeys;
-    private final Integer minimumSecretKeys;
+    private final KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyRotationProperties encryptionKeyPairRotationProperties;
+    private final KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyRotationProperties signatureKeyPairRotationProperties;
+    private final KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyRotationProperties secretKeyRotationProperties;
 
     public KeyRotationService(
             KeyStoreFilter keyStoreFilter,
@@ -30,26 +30,46 @@ public class KeyRotationService {
         this.keyStoreFilter = keyStoreFilter;
         this.keyStoreGenerator = keyStoreGenerator;
 
-        this.minimumEncryptionKeys = encryptionKeyPairRotationProperties.getMinKeys();
-        this.minimumSignatureKeys = signatureKeyPairRotationProperties.getMinKeys();
-        this.minimumSecretKeys = secretKeyRotationProperties.getMinKeys();
+        this.encryptionKeyPairRotationProperties = encryptionKeyPairRotationProperties;
+        this.signatureKeyPairRotationProperties = signatureKeyPairRotationProperties;
+        this.secretKeyRotationProperties = secretKeyRotationProperties;
     }
 
     public KeyRotationResult rotate(StsKeyStore stsKeyStore) {
-        Collection<StsKeyEntry> actualKeys = stsKeyStore.getKeyEntries().values();
-        Collection<StsKeyEntry> keyEntries = new ArrayList<>(actualKeys);
-
-        List<String> removedKeys = keyEntries.stream()
-                .filter(keyStoreFilter::isInvalid)
-                .map(k -> removeKey(stsKeyStore, k))
-                .collect(Collectors.toList());
-
+        List<String> removedKeys = removeExpiredKeys(stsKeyStore);
         List<String> generatedKeyAliases = generateAndAddMissingKeys(stsKeyStore);
 
         return KeyRotationResult.builder()
                 .generatedKeys(generatedKeyAliases)
                 .removedKeys(removedKeys)
                 .build();
+    }
+
+    private List<String> removeExpiredKeys(StsKeyStore stsKeyStore) {
+        List<String> removedKeys = new ArrayList<>();
+
+        if(encryptionKeyPairRotationProperties.isEnabled()) {
+            removedKeys.addAll(removeExpiredKeys(stsKeyStore, KeyUsage.Encryption));
+        }
+        if(signatureKeyPairRotationProperties.isEnabled()) {
+            removedKeys.addAll(removeExpiredKeys(stsKeyStore, KeyUsage.Signature));
+        }
+        if(secretKeyRotationProperties.isEnabled()) {
+            removedKeys.addAll(removeExpiredKeys(stsKeyStore, KeyUsage.SecretKey));
+        }
+
+        return removedKeys;
+    }
+
+    private List<String> removeExpiredKeys(StsKeyStore stsKeyStore, KeyUsage keyUsage) {
+        Collection<StsKeyEntry> actualKeys = stsKeyStore.getKeyEntries().values();
+        Collection<StsKeyEntry> copiedKeyEntries = new ArrayList<>(actualKeys);
+
+        return copiedKeyEntries.stream()
+                .filter(keyStoreFilter::isInvalid)
+                .filter(k -> k.getKeyUsage() == keyUsage)
+                .map(k -> removeKey(stsKeyStore, k))
+                .collect(Collectors.toList());
     }
 
     private List<String> generateAndAddMissingKeys(StsKeyStore stsKeyStore) {
@@ -69,9 +89,15 @@ public class KeyRotationService {
     private List<StsKeyEntry> generateMissingKeys(Collection<StsKeyEntry> actualKeys) {
         List<StsKeyEntry> generatedKeys = new ArrayList<>();
 
-        generatedKeys.addAll(generateMissingEncryptionKeys(actualKeys));
-        generatedKeys.addAll(generateMissingSignatureKeys(actualKeys));
-        generatedKeys.addAll(generateMissingSecretKeys(actualKeys));
+        if(encryptionKeyPairRotationProperties.isEnabled()) {
+            generatedKeys.addAll(generateMissingEncryptionKeys(actualKeys));
+        }
+        if(signatureKeyPairRotationProperties.isEnabled()) {
+            generatedKeys.addAll(generateMissingSignatureKeys(actualKeys));
+        }
+        if(secretKeyRotationProperties.isEnabled()) {
+            generatedKeys.addAll(generateMissingSecretKeys(actualKeys));
+        }
 
         return generatedKeys;
     }
@@ -84,7 +110,7 @@ public class KeyRotationService {
                 .filter(k -> k.getKeyUsage() == KeyUsage.Encryption)
                 .count();
 
-        for(int i = 0; i < minimumEncryptionKeys - countOfValidEncryptionKeyPairs; i++) {
+        for(int i = 0; i < encryptionKeyPairRotationProperties.getMinKeys() - countOfValidEncryptionKeyPairs; i++) {
             StsKeyEntry generatedKeyAlias = generateKey(KeyUsage.Encryption);
             generatedKeys.add(generatedKeyAlias);
         }
@@ -100,7 +126,7 @@ public class KeyRotationService {
                 .filter(k -> k.getKeyUsage() == KeyUsage.Signature)
                 .count();
 
-        for(int i = 0; i < minimumSignatureKeys - countOfValidSignatureKeyPairs; i++) {
+        for(int i = 0; i < signatureKeyPairRotationProperties.getMinKeys() - countOfValidSignatureKeyPairs; i++) {
             StsKeyEntry generatedKeyAlias = generateKey(KeyUsage.Signature);
             generatedKeys.add(generatedKeyAlias);
         }
@@ -116,7 +142,7 @@ public class KeyRotationService {
                 .filter(k -> k.getKeyUsage() == KeyUsage.SecretKey)
                 .count();
 
-        for(int i = 0; i < minimumSecretKeys - countOfValidSecretKeys; i++) {
+        for(int i = 0; i < secretKeyRotationProperties.getMinKeys() - countOfValidSecretKeys; i++) {
             StsKeyEntry generatedKeyAlias = generateKey(KeyUsage.SecretKey);
             generatedKeys.add(generatedKeyAlias);
         }

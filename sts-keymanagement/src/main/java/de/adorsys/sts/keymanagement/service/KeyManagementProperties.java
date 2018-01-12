@@ -41,6 +41,7 @@ public interface KeyManagementProperties {
                 Long getValidityInterval();
                 Long getLegacyInterval();
                 Integer getMinKeys();
+                Boolean isEnabled();
             }
         }
     }

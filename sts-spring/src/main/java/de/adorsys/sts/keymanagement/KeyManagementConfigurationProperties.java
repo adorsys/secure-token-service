@@ -327,6 +327,8 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
                 @Min(1)
                 private Integer minKeys;
 
+                private Boolean enabled = false;
+
                 @Override
                 public Long getValidityInterval() {
                     return validityInterval;
@@ -340,6 +342,15 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
                 @Override
                 public Integer getMinKeys() {
                     return minKeys;
+                }
+
+                @Override
+                public Boolean isEnabled() {
+                    return enabled;
+                }
+
+                public void setEnabled(Boolean enabled) {
+                    this.enabled = enabled;
                 }
 
                 public void setValidityInterval(Long validityInterval) {

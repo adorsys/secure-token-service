@@ -5,7 +5,7 @@ security:
   ignored: /**
 
 logging:
-  level.de.adorsys.sts.keymanagement.KeyRotationSchedule: 'debug'
+  level.de.adorsys.sts.keymanagement.KeyRotationSchedule: 'info'
 
 sts:
   resourceServers:
@@ -35,6 +35,7 @@ sts:
             validityInterval: 432000000
             legacyInterval: 86400000
             minKeys: 5
+            enabled: true
           initialCount: 5
           algo: RSA
           sigAlgo: SHA256withRSA
@@ -45,6 +46,7 @@ sts:
             validityInterval: 432000000
             legacyInterval: 86400000
             minKeys: 5
+            enabled: true
           initialCount: 5
           algo: RSA
           sigAlgo: SHA256withRSA
@@ -55,6 +57,7 @@ sts:
             validityInterval: 432000000
             legacyInterval: 86400000
             minKeys: 5
+            enabled: false
           initialCount: 5
           algo: AES
           size: 256
