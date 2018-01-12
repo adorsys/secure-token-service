@@ -1,13 +1,13 @@
 package de.adorsys.sts.keymanagement.persistence;
 
-import java.security.KeyStore;
+import de.adorsys.sts.keymanagement.model.StsKeyStore;
 
 public class InMemoryKeyStoreRepository implements KeyStoreRepository {
 
-    private KeyStore keyStore;
+    private StsKeyStore keyStore;
 
     @Override
-    public KeyStore load() {
+    public StsKeyStore load() {
         return keyStore;
     }
 
@@ -17,7 +17,7 @@ public class InMemoryKeyStoreRepository implements KeyStoreRepository {
     }
 
     @Override
-    public void save(KeyStore keyStore) {
+    public void save(StsKeyStore keyStore) {
         this.keyStore = keyStore;
     }
 }

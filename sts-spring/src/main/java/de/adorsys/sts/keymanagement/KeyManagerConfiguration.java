@@ -1,29 +1,61 @@
 package de.adorsys.sts.keymanagement;
 
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
-import de.adorsys.sts.keymanagement.service.KeyManagementService;
-import de.adorsys.sts.keymanagement.service.KeyPairGenerator;
-import de.adorsys.sts.keymanagement.service.KeyStoreGenerator;
-import de.adorsys.sts.keymanagement.service.SecretKeyGenerator;
+import de.adorsys.sts.keymanagement.service.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
+import java.time.Clock;
 
 @Configuration
+@EnableScheduling
 @ComponentScan("de.adorsys.sts.keymanagement")
 public class KeyManagerConfiguration {
+
+    @Bean
+    KeyConversionService keyConversionService(
+            KeyManagementConfigurationProperties keyManagementProperties
+    ) {
+        return new KeyConversionService(keyManagementProperties.getKeystore().getPassword());
+    }
+
+    @Bean
+    KeyRotationService keyRotationService(
+            KeyStoreFilter keyStoreFilter,
+            KeyStoreGenerator keyStoreGenerator,
+            KeyManagementConfigurationProperties keyManagementProperties
+    ) {
+        KeyManagementProperties.KeyStoreProperties.KeysProperties keysProperties = keyManagementProperties.getKeystore().getKeys();
+
+        return new KeyRotationService(
+                keyStoreFilter,
+                keyStoreGenerator,
+                keysProperties.getEncKeyPairs().getRotation(),
+                keysProperties.getSignKeyPairs().getRotation(),
+                keysProperties.getSecretKeys().getRotation()
+        );
+    }
+
+    @Bean
+    KeyStoreFilter keyStoreFilter() {
+        return new KeyStoreFilter(Clock.systemUTC());
+    }
 
     @Bean
     KeyManagementService keyManagerService(
             KeyStoreRepository keyStoreRepository,
             KeyStoreGenerator keyStoreGenerator,
-            KeyManagementConfigurationProperties keyManagementProperties
+            KeyConversionService keyConversionService,
+            KeyStoreFilter keyStoreFilter
     ) {
         return new KeyManagementService(
                 keyStoreRepository,
                 keyStoreGenerator,
-                keyManagementProperties.getKeystore().getPassword()
+                keyConversionService,
+                keyStoreFilter
         );
     }
 

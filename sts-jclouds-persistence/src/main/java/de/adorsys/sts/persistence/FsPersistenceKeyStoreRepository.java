@@ -1,6 +1,7 @@
 package de.adorsys.sts.persistence;
 
-import de.adorsys.sts.common.config.KeyManagementProperties;
+import de.adorsys.sts.keymanagement.model.StsKeyStore;
+import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import org.adorsys.encobject.domain.ObjectHandle;
 import org.adorsys.encobject.filesystem.FsPersistenceFactory;
@@ -54,11 +55,17 @@ public class FsPersistenceKeyStoreRepository implements KeyStoreRepository {
     }
 
     @Override
-    public KeyStore load() {
+    public StsKeyStore load() {
         ObjectHandle handle = new ObjectHandle(keystoreContainerName, keystoreName);
 
         try {
-            return persFactory.getKeystorePersistence().loadKeystore(handle, keyPassHandler);
+            KeyStore keyStore = persFactory.getKeystorePersistence().loadKeystore(handle, keyPassHandler);
+
+            return StsKeyStore.builder()
+                    .keyStore(keyStore)
+                    // TODO load key attributes
+                    .keyEntries(null)
+                    .build();
         } catch (KeystoreNotFoundException | CertificateException | WrongKeystoreCredentialException | MissingKeystoreAlgorithmException | MissingKeystoreProviderException | MissingKeyAlgorithmException | IOException | UnknownContainerException e) {
             throw new RuntimeException(e);
         }
@@ -72,11 +79,12 @@ public class FsPersistenceKeyStoreRepository implements KeyStoreRepository {
     }
 
     @Override
-    public void save(KeyStore keyStore) {
+    public void save(StsKeyStore keyStore) {
         ObjectHandle handle = new ObjectHandle(keystoreContainerName, keystoreName);
 
         try {
-            persFactory.getKeystorePersistence().saveKeyStore(keyStore, keyPassHandler, handle);
+            // TODO save key attributes
+            persFactory.getKeystorePersistence().saveKeyStore(keyStore.getKeyStore(), keyPassHandler, handle);
         } catch (NoSuchAlgorithmException | CertificateException | UnknownContainerException e) {
             throw new RuntimeException(e);
         }

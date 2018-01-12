@@ -28,7 +28,7 @@ public class DecryptionService {
         }
 
         String keyID = jweObject.getHeader().getKeyID();
-        Key key = keyMapProvider.getKeyMap().getKey(keyID);
+        Key key = keyMapProvider.getKey(keyID);
         if (key == null) {
             throw new IllegalStateException("No suitable key found");
         }

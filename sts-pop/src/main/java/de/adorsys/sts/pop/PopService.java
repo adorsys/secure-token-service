@@ -12,7 +12,6 @@ public class PopService {
     }
 
     public JWKSet getPublicKeys(){
-        JWKSet publicKeySet = keyManagementService.getServerKeysHolder().getPublicKeySet();
-        return publicKeySet.toPublicJWKSet();
+        return keyManagementService.getPublicKeys();
     }
 }

@@ -4,6 +4,9 @@ server:
 security:
   ignored: /**
 
+logging:
+  level.de.adorsys.sts.keymanagement.KeyRotationSchedule: 'debug'
+
 sts:
   resourceServers:
   - audience: "sts"
@@ -25,20 +28,33 @@ sts:
       type: UBER
       name: adsts-keystore
       alias_prefix: adsts-
+      rotationCheckInterval: 60000
       keys:
         encKeyPairs:
+          rotation:
+            validityInterval: 432000000
+            legacyInterval: 86400000
+            minKeys: 5
           initialCount: 5
           algo: RSA
           sigAlgo: SHA256withRSA
           size: 2048
           name: Adorsys Security Token Service
         signKeyPairs:
+          rotation:
+            validityInterval: 432000000
+            legacyInterval: 86400000
+            minKeys: 5
           initialCount: 5
           algo: RSA
           sigAlgo: SHA256withRSA
           size: 2048
           name: Adorsys Security Token Service
         secretKeys:
+          rotation:
+            validityInterval: 432000000
+            legacyInterval: 86400000
+            minKeys: 5
           initialCount: 5
           algo: AES
           size: 256

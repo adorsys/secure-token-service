@@ -162,7 +162,7 @@ public class TokenExchangeService {
 
         JWTClaimsSet jwtClaimsSet = claimSetBuilder.build();
 
-        KeyAndJwk randomKey = keyManager.getKeyMap().randomSignKey();
+        KeyAndJwk randomKey = keyManager.randomSignKey();
         JWSAlgorithm jwsAlgo = KeyConverter.getJWSAlgo(randomKey);
 
         JWSHeader jwsHeader = new JWSHeader.Builder(jwsAlgo)

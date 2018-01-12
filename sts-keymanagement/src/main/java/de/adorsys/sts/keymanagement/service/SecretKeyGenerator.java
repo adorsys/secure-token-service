@@ -1,11 +1,12 @@
 package de.adorsys.sts.keymanagement.service;
 
-import de.adorsys.sts.common.config.KeyManagementProperties;
 import org.adorsys.jkeygen.keystore.SecretKeyData;
+import org.adorsys.jkeygen.keystore.SecretKeyEntry;
 import org.adorsys.jkeygen.secretkey.SecretKeyBuilder;
 
 import javax.crypto.SecretKey;
 import javax.security.auth.callback.CallbackHandler;
+import java.security.KeyStore;
 
 public class SecretKeyGenerator {
 
@@ -22,12 +23,16 @@ public class SecretKeyGenerator {
         this.keySize = secretKeyProperties.getSize();
     }
 
-    public SecretKeyData generate(String alias, CallbackHandler secretKeyPassHandler) {
+    public SecretKeyEntry generate(String alias, CallbackHandler secretKeyPassHandler) {
         SecretKey secretKey = new SecretKeyBuilder()
                 .withKeyAlg(secretKeyAlgo)
                 .withKeyLength(keySize)
                 .build();
 
-        return new SecretKeyData(secretKey, alias, secretKeyPassHandler);
+        return SecretKeyData.builder()
+                .secretKey(secretKey)
+                .alias(alias)
+                .passwordSource(secretKeyPassHandler)
+                .build();
     }
 }

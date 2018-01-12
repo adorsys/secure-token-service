@@ -126,7 +126,7 @@ public class FsPersistenceResourceServerRepository implements ResourceServerRepo
         ContentMetaInfo metaInfo = null;
         ObjectHandle handle = new ObjectHandle(containerName, RESOURCE_SERVERS_FILE_NAME);
         EncryptionParams encParams = null;
-        KeyAndJwk randomSecretKey = keyMapProvider.getKeyMap().randomSecretKey();
+        KeyAndJwk randomSecretKey = keyMapProvider.randomSecretKey();
         try {
             persFactory.getServerObjectPersistence().storeObject(data, metaInfo, handle, keyMapProvider, randomSecretKey.jwk.getKeyID(), encParams);
         } catch (UnsupportedEncAlgorithmException | UnsupportedKeyLengthException | UnknownContainerException e) {

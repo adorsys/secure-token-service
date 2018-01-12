@@ -1,10 +1,10 @@
 package de.adorsys.sts.keymanagement.persistence;
 
-import java.security.KeyStore;
+import de.adorsys.sts.keymanagement.model.StsKeyStore;
 
 public interface KeyStoreRepository {
 
-    KeyStore load();
+    StsKeyStore load();
     boolean exists();
-    void save(KeyStore keyStore);
+    void save(StsKeyStore keyStore);
 }

@@ -1,4 +1,4 @@
-package de.adorsys.sts.common.config;
+package de.adorsys.sts.keymanagement.service;
 
 public interface KeyManagementProperties {
     KeyManagementProperties.PersistenceProperties getPersistence();
@@ -22,6 +22,7 @@ public interface KeyManagementProperties {
             KeyManagementProperties.KeyStoreProperties.KeysProperties.SecretKeyProperties getSecretKeys();
 
             interface KeyPairProperties {
+                KeyRotationProperties getRotation();
                 Integer getInitialCount();
                 String getAlgo();
                 String getSigAlgo();
@@ -30,9 +31,16 @@ public interface KeyManagementProperties {
             }
 
             interface SecretKeyProperties {
+                KeyRotationProperties getRotation();
                 Integer getInitialCount();
                 String getAlgo();
                 Integer getSize();
+            }
+
+            interface KeyRotationProperties {
+                Long getValidityInterval();
+                Long getLegacyInterval();
+                Integer getMinKeys();
             }
         }
     }

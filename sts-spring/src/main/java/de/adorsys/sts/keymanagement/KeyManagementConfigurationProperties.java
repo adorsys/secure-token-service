@@ -1,12 +1,13 @@
 package de.adorsys.sts.keymanagement;
 
-import de.adorsys.sts.common.config.KeyManagementProperties;
+import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Component
@@ -182,6 +183,10 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
             @Validated
             public static class KeyPairConfigurationProperties implements KeyPairProperties {
 
+                @NotNull
+                @Valid
+                private KeyRotationConfigurationProperties rotation;
+
                 private Integer initialCount = 1;
 
                 @NotNull
@@ -198,6 +203,15 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
                 @NotNull
                 @NotEmpty
                 private String name;
+
+                @Override
+                public KeyRotationProperties getRotation() {
+                    return rotation;
+                }
+
+                public void setRotation(KeyRotationConfigurationProperties rotation) {
+                    this.rotation = rotation;
+                }
 
                 @Override
                 public Integer getInitialCount() {
@@ -247,6 +261,11 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
 
             @Validated
             public static class SecretKeyConfigurationProperties implements SecretKeyProperties {
+
+                @NotNull
+                @Valid
+                private KeyRotationConfigurationProperties rotation;
+
                 private Integer initialCount = 1;
 
                 @NotNull
@@ -255,6 +274,15 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
 
                 @NotNull
                 private Integer size;
+
+                @Override
+                public KeyRotationProperties getRotation() {
+                    return rotation;
+                }
+
+                public void setRotation(KeyRotationConfigurationProperties rotation) {
+                    this.rotation = rotation;
+                }
 
                 @Override
                 public Integer getInitialCount() {
@@ -281,6 +309,49 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
 
                 public void setSize(Integer size) {
                     this.size = size;
+                }
+            }
+
+            @Validated
+            public static class KeyRotationConfigurationProperties implements KeyRotationProperties {
+
+                @NotNull
+                @Min(1)
+                private Long validityInterval;
+
+                @NotNull
+                @Min(1)
+                private Long legacyInterval;
+
+                @NotNull
+                @Min(1)
+                private Integer minKeys;
+
+                @Override
+                public Long getValidityInterval() {
+                    return validityInterval;
+                }
+
+                @Override
+                public Long getLegacyInterval() {
+                    return legacyInterval;
+                }
+
+                @Override
+                public Integer getMinKeys() {
+                    return minKeys;
+                }
+
+                public void setValidityInterval(Long validityInterval) {
+                    this.validityInterval = validityInterval;
+                }
+
+                public void setLegacyInterval(Long legacyInterval) {
+                    this.legacyInterval = legacyInterval;
+                }
+
+                public void setMinKeys(Integer minKeys) {
+                    this.minKeys = minKeys;
                 }
             }
         }

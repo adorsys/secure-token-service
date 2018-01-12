@@ -1,37 +1,47 @@
 package de.adorsys.sts.keymanagement.service;
 
+import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
+import de.adorsys.sts.keymanagement.model.KeyUsage;
+import de.adorsys.sts.keymanagement.model.StsKeyEntry;
+import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
-import org.adorsys.jjwk.serverkey.KeyConverter;
+import org.adorsys.jjwk.serverkey.KeyAndJwk;
 import org.adorsys.jjwk.serverkey.ServerKeyMap;
 import org.adorsys.jjwk.serverkey.ServerKeyMapProvider;
 import org.adorsys.jjwk.serverkey.ServerKeysHolder;
 
 import javax.annotation.PostConstruct;
-import java.security.KeyStore;
+import java.security.Key;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class KeyManagementService implements ServerKeyMapProvider {
 
     private final KeyStoreRepository repository;
     private final KeyStoreGenerator keyStoreGenerator;
+    private final KeyConversionService keyConversionService;
+    private final KeyStoreFilter keyStoreFilter;
 
-    private final String keyStorePassword;
-
-    private KeyStore keyStore;
+    private StsKeyStore keyStore;
 
     public KeyManagementService(
             KeyStoreRepository repository,
             KeyStoreGenerator keyStoreGenerator,
-            String keyStorePassword
+            KeyConversionService keyConversionService,
+            KeyStoreFilter keyStoreFilter
     ) {
         this.repository = repository;
         this.keyStoreGenerator = keyStoreGenerator;
-        this.keyStorePassword = keyStorePassword;
+        this.keyConversionService = keyConversionService;
+        this.keyStoreFilter = keyStoreFilter;
     }
 
     @PostConstruct
     public void postConstruct() {
-        if(repository.exists()) {
+        if (repository.exists()) {
             keyStore = repository.load();
         } else {
             keyStore = keyStoreGenerator.generate();
@@ -39,15 +49,88 @@ public class KeyManagementService implements ServerKeyMapProvider {
         }
     }
 
+    @Override
     public ServerKeyMap getKeyMap() {
-        return new ServerKeyMap(getServerKeysHolder().getPrivateKeySet());
+        throw new IllegalStateException("Method not supported");
     }
 
     @Override
     public ServerKeysHolder getServerKeysHolder() {
-        JWKSet privateKeys = KeyConverter.exportPrivateKeys(keyStore, keyStorePassword.toCharArray());
-        JWKSet publicKeys = privateKeys.toPublicJWKSet();
+        throw new IllegalStateException("Method not supported");
+    }
 
-        return new ServerKeysHolder(privateKeys, publicKeys);
+    @Override
+    public KeyAndJwk randomSecretKey() {
+        return getSecretKeys().randomSecretKey();
+    }
+
+    @Override
+    public KeyAndJwk randomSignKey() {
+        return getPrivateKeys().randomSignKey();
+    }
+
+    @Override
+    public Key getKey(String keyId) {
+        ServerKeysHolder exportedKeys = keyConversionService.export(keyStore.getKeyStore());
+        ServerKeyMap serverKeyMap = new ServerKeyMap(exportedKeys.getPrivateKeySet());
+
+        return serverKeyMap.getKey(keyId);
+    }
+
+    @Override
+    public JWKSet getPublicKeys() {
+        ServerKeysHolder exportedKeys = keyConversionService.export(keyStore.getKeyStore());
+        Map<String, StsKeyEntry> keyEntries = keyStore.getKeyEntries();
+
+        List<String> filteredKeyAliases = keyEntries.values().stream()
+                .filter(this::hasUsablePublicKey)
+                .map(StsKeyEntry::getAlias)
+                .collect(Collectors.toList());
+
+        List<JWK> filteredKeys = exportedKeys.getPublicKeySet().getKeys()
+                .stream()
+                .filter(k -> filteredKeyAliases.contains(k.getKeyID()))
+                .collect(Collectors.toList());
+
+        return new JWKSet(filteredKeys);
+    }
+
+    private ServerKeyMap getPrivateKeys() {
+        return new ServerKeyMap(getFilteredPrivateKeys(this::hasUsablePrivateKey));
+    }
+
+    private ServerKeyMap getSecretKeys() {
+        return new ServerKeyMap(getFilteredPrivateKeys(this::isUsableSecretKey));
+    }
+
+    private JWKSet getFilteredPrivateKeys(Predicate<StsKeyEntry> predicate) {
+        ServerKeysHolder exportedKeys = keyConversionService.export(keyStore.getKeyStore());
+        Map<String, StsKeyEntry> keyEntries = keyStore.getKeyEntries();
+
+        List<String> filteredKeyAliases = keyEntries.values().stream()
+                .filter(predicate)
+                .map(StsKeyEntry::getAlias)
+                .collect(Collectors.toList());
+
+        List<JWK> filteredKeys = exportedKeys.getPrivateKeySet().getKeys()
+                .stream()
+                .filter(k -> filteredKeyAliases.contains(k.getKeyID()))
+                .collect(Collectors.toList());
+
+        return new JWKSet(filteredKeys);
+    }
+
+    private boolean hasUsablePublicKey(StsKeyEntry stsKeyEntry) {
+        return stsKeyEntry.getKeyUsage() == KeyUsage.Encryption && keyStoreFilter.isValid(stsKeyEntry)
+                || stsKeyEntry.getKeyUsage() == KeyUsage.Signature && (keyStoreFilter.isValid(stsKeyEntry) || keyStoreFilter.isLegacy(stsKeyEntry));
+    }
+
+    private boolean hasUsablePrivateKey(StsKeyEntry stsKeyEntry) {
+        return stsKeyEntry.getKeyUsage() == KeyUsage.Signature && keyStoreFilter.isValid(stsKeyEntry)
+                || stsKeyEntry.getKeyUsage() == KeyUsage.Encryption && (keyStoreFilter.isValid(stsKeyEntry) || keyStoreFilter.isLegacy(stsKeyEntry));
+    }
+
+    private boolean isUsableSecretKey(StsKeyEntry stsKeyEntry) {
+        return stsKeyEntry.getKeyUsage() == KeyUsage.SecretKey && keyStoreFilter.isValid(stsKeyEntry);
     }
 }
