@@ -13,4 +13,6 @@ import java.lang.annotation.Target;
         KeyManagerConfiguration.class
 })
 public @interface EnableKeyManagement {
+
+    boolean keyRotationEnabled() default false;
 }

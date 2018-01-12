@@ -1,6 +1,7 @@
 package de.adorsys.sts.example.config;
 
 import de.adorsys.sts.encryption.EnableEncryption;
+import de.adorsys.sts.keymanagement.EnableKeyManagement;
 import de.adorsys.sts.keymanagement.persistence.InMemoryKeyStoreRepository;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.pop.EnablePOP;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableResourceServerInitialization
 @EnableEncryption
 @EnablePOP
+@EnableKeyManagement(keyRotationEnabled = true)
 public class ExampleConfiguration {
 
     @Bean

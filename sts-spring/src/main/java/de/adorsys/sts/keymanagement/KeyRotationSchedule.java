@@ -19,6 +19,8 @@ public class KeyRotationSchedule {
     private final KeyRotationService keyRotationService;
     private final KeyStoreRepository keyStoreRepository;
 
+    private boolean isEnabled = false;
+
     @Autowired
     public KeyRotationSchedule(
             KeyRotationService keyRotationService,
@@ -32,7 +34,13 @@ public class KeyRotationSchedule {
             initialDelayString = "${sts.keymanagement.keystore.rotationCheckInterval}",
             fixedDelayString = "${sts.keymanagement.keystore.rotationCheckInterval}"
     )
-    public void performEncryptionKeyPairRotation() {
+    public void schedule() {
+        if(isEnabled) {
+            performEncryptionKeyPairRotation();
+        }
+    }
+
+    private void performEncryptionKeyPairRotation() {
         LOG.debug("Perform key rotation...");
 
         StsKeyStore keyStore = keyStoreRepository.load();
@@ -50,5 +58,9 @@ public class KeyRotationSchedule {
         keyStoreRepository.save(keyStore);
 
         LOG.debug("Key rotation finished.");
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
 }
