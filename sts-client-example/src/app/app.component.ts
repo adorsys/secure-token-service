@@ -2,7 +2,6 @@ import {Component} from '@angular/core';
 import {KeycloakService} from "./keycloak/keycloak.service";
 import {KeycloakHttp} from "./keycloak/keycloak.http";
 import {environment} from "../environments/environment";
-import {Observable} from "rxjs/Observable";
 import 'rxjs/add/operator/map';
 
 @Component({

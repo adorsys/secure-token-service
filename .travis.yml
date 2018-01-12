@@ -10,7 +10,7 @@ install:
   - mvn --settings .travis/settings.xml clean install -DskipTests -Dmaven.javadoc.skip=true -B -V
 
 script:
-  - mvn --settings .travis/settings.xml clean package -DskipTests -B -V
+  - /bin/bash .travis/build.sh
 
 before_deploy:
   - echo $GPG_SECRET_KEY | base64 --decode | $GPG_EXECUTABLE --import
