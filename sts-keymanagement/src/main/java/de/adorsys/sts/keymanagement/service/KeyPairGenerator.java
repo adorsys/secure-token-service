@@ -51,7 +51,7 @@ public class KeyPairGenerator {
                 .build(keyPair);
 
         return KeyPairData.builder()
-                .keyPairs(keyPairData)
+                .keyPair(keyPairData)
                 .alias(alias)
                 .passwordSource(keyPassHandler)
                 .build();

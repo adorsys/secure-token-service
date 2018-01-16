@@ -6,6 +6,7 @@ import de.adorsys.sts.keymanagement.KeyManagementConfigurationProperties;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.persistence.FsPersistenceKeyStoreRepository;
+import de.adorsys.sts.persistence.KeyEntryMapper;
 import de.adorsys.sts.pop.EnablePOP;
 import de.adorsys.sts.resourceserver.persistence.FsPersistenceResourceServerRepository;
 import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
@@ -17,6 +18,7 @@ import de.adorsys.sts.token.tokenexchange.EnableTokenExchange;
 import de.adorsys.sts.worksheetloader.DataSheetLoader;
 import de.adorsys.sts.worksheetloader.LoginLoader;
 import org.adorsys.encobject.filesystem.FsPersistenceFactory;
+import org.adorsys.encobject.userdata.ObjectMapperSPI;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -53,13 +55,22 @@ public class SecureTokenServiceConfiguration {
     }
 
     @Bean
+    KeyEntryMapper keyEntryMapper(
+            ObjectMapperSPI objectMapper
+    ) {
+        return new KeyEntryMapper(objectMapper);
+    }
+
+    @Bean
     KeyStoreRepository keyStoreRepository(
             FsPersistenceFactory fsPersistenceFactory,
-            KeyManagementConfigurationProperties keyManagementProperties
+            KeyManagementConfigurationProperties keyManagementProperties,
+            KeyEntryMapper keyEntryMapper
     ) {
         return new FsPersistenceKeyStoreRepository(
                 fsPersistenceFactory,
-                keyManagementProperties
+                keyManagementProperties,
+                keyEntryMapper
         );
     }
 }

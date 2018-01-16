@@ -1,11 +1,15 @@
 package de.adorsys.sts.persistence;
 
+import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
-import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
+import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
 import org.adorsys.encobject.domain.ObjectHandle;
+import org.adorsys.encobject.domain.Tuple;
 import org.adorsys.encobject.filesystem.FsPersistenceFactory;
 import org.adorsys.encobject.service.*;
+import org.adorsys.jkeygen.keystore.KeyEntry;
+import org.adorsys.jkeygen.keystore.KeyStoreService;
 import org.adorsys.jkeygen.pwd.PasswordCallbackHandler;
 
 import javax.annotation.PostConstruct;
@@ -14,6 +18,9 @@ import java.io.IOException;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FsPersistenceKeyStoreRepository implements KeyStoreRepository {
 
@@ -21,22 +28,32 @@ public class FsPersistenceKeyStoreRepository implements KeyStoreRepository {
     private final String keystoreContainerName;
     private final String keystoreName;
     private final CallbackHandler keyPassHandler;
+    private final KeyEntryMapper keyEntryMapper;
 
-    public FsPersistenceKeyStoreRepository(FsPersistenceFactory persFactory, String keystoreContainerName, String keystoreName, String keyStorePassword) {
+    public FsPersistenceKeyStoreRepository(
+            FsPersistenceFactory persFactory,
+            String keystoreContainerName,
+            String keystoreName,
+            String keyStorePassword,
+            KeyEntryMapper keyEntryMapper
+    ) {
         this.persFactory = persFactory;
         this.keystoreContainerName = keystoreContainerName;
         this.keystoreName = keystoreName;
 
         keyPassHandler = new PasswordCallbackHandler(keyStorePassword.toCharArray());
+        this.keyEntryMapper = keyEntryMapper;
     }
 
     public FsPersistenceKeyStoreRepository(
             FsPersistenceFactory persFactory,
-            KeyManagementProperties keyManagementProperties
+            KeyManagementProperties keyManagementProperties,
+            KeyEntryMapper keyEntryMapper
     ) {
         this.persFactory = persFactory;
         this.keystoreContainerName = keyManagementProperties.getPersistence().getContainerName();
         this.keystoreName = keyManagementProperties.getKeystore().getName();
+        this.keyEntryMapper = keyEntryMapper;
 
         String keyStorePassword = keyManagementProperties.getPersistence().getPassword();
         keyPassHandler = new PasswordCallbackHandler(keyStorePassword.toCharArray());
@@ -59,16 +76,35 @@ public class FsPersistenceKeyStoreRepository implements KeyStoreRepository {
         ObjectHandle handle = new ObjectHandle(keystoreContainerName, keystoreName);
 
         try {
-            KeyStore keyStore = persFactory.getKeystorePersistence().loadKeystore(handle, keyPassHandler);
+            Tuple<KeyStore, Map<String, String>> keyStoreAndAttributes = persFactory.getKeystorePersistence().loadKeystoreAndAttributes(handle, keyPassHandler);
+            KeyStore keyStore = keyStoreAndAttributes.getX();
+            Map<String, String> attributesMap = keyStoreAndAttributes.getY();
+
+            Map<String, StsKeyEntry> loadedKeyEntries = loadKeyEntries(keyStore, attributesMap);
 
             return StsKeyStore.builder()
                     .keyStore(keyStore)
-                    // TODO load key attributes
-                    .keyEntries(null)
+                    .keyEntries(loadedKeyEntries)
                     .build();
         } catch (KeystoreNotFoundException | CertificateException | WrongKeystoreCredentialException | MissingKeystoreAlgorithmException | MissingKeystoreProviderException | MissingKeyAlgorithmException | IOException | UnknownContainerException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Map<String, StsKeyEntry> loadKeyEntries(KeyStore keyStore, Map<String, String> attributesMap) {
+        Map<String, StsKeyEntry> loadedKeyEntries = new HashMap<>();
+
+        List<KeyEntry> keyEntries = KeyStoreService.loadEntries(keyStore, new KeyStoreService.SimplePasswordProvider(keyPassHandler));
+
+        for(KeyEntry keyEntry : keyEntries) {
+            String alias = keyEntry.getAlias();
+            String attributes = attributesMap.get(alias);
+            StsKeyEntry stsKeyEntry = keyEntryMapper.mapFromKeyEntryWithAttributes(keyEntry, attributes);
+
+            loadedKeyEntries.put(alias, stsKeyEntry);
+        }
+
+        return loadedKeyEntries;
     }
 
     @Override
@@ -83,10 +119,25 @@ public class FsPersistenceKeyStoreRepository implements KeyStoreRepository {
         ObjectHandle handle = new ObjectHandle(keystoreContainerName, keystoreName);
 
         try {
-            // TODO save key attributes
-            persFactory.getKeystorePersistence().saveKeyStore(keyStore.getKeyStore(), keyPassHandler, handle);
+            Map<String, String> attributes = buildAttributes(keyStore);
+            persFactory.getKeystorePersistence().saveKeyStoreWithAttributes(keyStore.getKeyStore(), attributes, keyPassHandler, handle);
         } catch (NoSuchAlgorithmException | CertificateException | UnknownContainerException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Map<String, String> buildAttributes(StsKeyStore keyStore) {
+        Map<String, String> attributes = new HashMap<>();
+
+        for (Map.Entry<String, StsKeyEntry> entry : keyStore.getKeyEntries().entrySet()) {
+            String alias = entry.getKey();
+            StsKeyEntry keyEntry = entry.getValue();
+
+            String valuesAsString = keyEntryMapper.extractEntryAttributesToString(keyEntry);
+
+            attributes.put(alias, valuesAsString);
+        }
+
+        return attributes;
     }
 }

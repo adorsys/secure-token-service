@@ -52,7 +52,7 @@
 
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZZ</maven.build.timestamp.format>
 		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
-		<cryptoutils.version>0.8.0</cryptoutils.version>
+		<cryptoutils.version>0.9.0-SNAPSHOT</cryptoutils.version>
 		<scmBranch />
 	</properties>
 	

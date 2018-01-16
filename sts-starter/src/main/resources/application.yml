@@ -6,6 +6,17 @@ logging:
 
 sts:
   keymanagement:
+    rotation:
+      checkInterval: 60000
+      encKeyPairs:
+        minKeys: 5
+        enabled: true
+      signKeyPairs:
+        minKeys: 5
+        enabled: true
+      secretKeys:
+        minKeys: 5
+        enabled: false
     persistence:
       containerName: adsts-container
       password: 0123456789ABCDEF
@@ -21,13 +32,19 @@ sts:
           sigAlgo: SHA256withRSA
           size: 2048
           name: Adorsys Security Token Service
+          validityInterval: 30000
+          legacyInterval: 20000
         signKeyPairs:
           initialCount: 5
           algo: RSA
           sigAlgo: SHA256withRSA
           size: 2048
           name: Adorsys Security Token Service
+          validityInterval: 30000
+          legacyInterval: 20000
         secretKeys:
           initialCount: 5
           algo: AES
           size: 256
+          validityInterval: 30000
+          legacyInterval: 20000
