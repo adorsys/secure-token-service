@@ -1,6 +1,6 @@
 package de.adorsys.sts.pop;
 
-import de.adorsys.sts.keymanagement.KeyManagerConfiguration;
+import de.adorsys.sts.keymanagement.KeyManagementConfiguration;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Import;
 @ComponentScan(basePackages = {
         "de.adorsys.sts.pop"
 })
-@Import(KeyManagerConfiguration.class)
+@Import(KeyManagementConfiguration.class)
 public class PopConfiguration {
 
     @Bean

@@ -2,6 +2,7 @@ package de.adorsys.sts.keymanagement.service;
 
 import com.nitorcreations.junit.runners.NestedRunner;
 import de.adorsys.sts.CollectionHelpers;
+import de.adorsys.sts.keymanagement.config.KeyManagementRotationProperties;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
@@ -64,13 +65,16 @@ public class KeyRotationServiceTest {
     StsKeyEntry generatedSecretKey;
 
     @Mock
-    KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyRotationProperties encryptionKeyPairRotationProperties;
+    KeyManagementRotationProperties rotationProperties;
 
     @Mock
-    KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyRotationProperties signatureKeyPairRotationProperties;
+    KeyManagementRotationProperties.KeyRotationProperties encryptionKeyPairRotationProperties;
 
     @Mock
-    KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyRotationProperties secretKeyRotationProperties;
+    KeyManagementRotationProperties.KeyRotationProperties signatureKeyPairRotationProperties;
+
+    @Mock
+    KeyManagementRotationProperties.KeyRotationProperties secretKeyRotationProperties;
 
     @Before
     public void setup() throws Exception {
@@ -106,12 +110,14 @@ public class KeyRotationServiceTest {
         when(signatureKeyPairRotationProperties.isEnabled()).thenReturn(true);
         when(secretKeyRotationProperties.isEnabled()).thenReturn(true);
 
+        when(rotationProperties.getEncKeyPairs()).thenReturn(encryptionKeyPairRotationProperties);
+        when(rotationProperties.getSignKeyPairs()).thenReturn(signatureKeyPairRotationProperties);
+        when(rotationProperties.getSecretKeys()).thenReturn(secretKeyRotationProperties);
+
         keyRotationService = new KeyRotationService(
                 keyStoreFilter,
                 keyStoreGenerator,
-                encryptionKeyPairRotationProperties,
-                signatureKeyPairRotationProperties,
-                secretKeyRotationProperties
+                rotationProperties
         );
     }
 

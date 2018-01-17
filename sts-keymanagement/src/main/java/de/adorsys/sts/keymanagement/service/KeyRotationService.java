@@ -1,5 +1,6 @@
 package de.adorsys.sts.keymanagement.service;
 
+import de.adorsys.sts.keymanagement.config.KeyManagementRotationProperties;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
@@ -16,23 +17,21 @@ public class KeyRotationService {
     private final KeyStoreFilter keyStoreFilter;
     private final KeyStoreGenerator keyStoreGenerator;
 
-    private final KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyRotationProperties encryptionKeyPairRotationProperties;
-    private final KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyRotationProperties signatureKeyPairRotationProperties;
-    private final KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyRotationProperties secretKeyRotationProperties;
+    private final KeyManagementRotationProperties.KeyRotationProperties encryptionKeyPairRotationProperties;
+    private final KeyManagementRotationProperties.KeyRotationProperties signatureKeyPairRotationProperties;
+    private final KeyManagementRotationProperties.KeyRotationProperties secretKeyRotationProperties;
 
     public KeyRotationService(
             KeyStoreFilter keyStoreFilter,
             KeyStoreGenerator keyStoreGenerator,
-            KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyRotationProperties encryptionKeyPairRotationProperties,
-            KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyRotationProperties signatureKeyPairRotationProperties,
-            KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyRotationProperties secretKeyRotationProperties
+            KeyManagementRotationProperties rotationProperties
     ) {
         this.keyStoreFilter = keyStoreFilter;
         this.keyStoreGenerator = keyStoreGenerator;
 
-        this.encryptionKeyPairRotationProperties = encryptionKeyPairRotationProperties;
-        this.signatureKeyPairRotationProperties = signatureKeyPairRotationProperties;
-        this.secretKeyRotationProperties = secretKeyRotationProperties;
+        this.encryptionKeyPairRotationProperties = rotationProperties.getEncKeyPairs();
+        this.signatureKeyPairRotationProperties = rotationProperties.getSignKeyPairs();
+        this.secretKeyRotationProperties = rotationProperties.getSecretKeys();
     }
 
     public KeyRotationResult rotate(StsKeyStore stsKeyStore) {

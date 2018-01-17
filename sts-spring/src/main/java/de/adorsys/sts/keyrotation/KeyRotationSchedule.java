@@ -1,4 +1,4 @@
-package de.adorsys.sts.keymanagement;
+package de.adorsys.sts.keyrotation;
 
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
@@ -19,8 +19,6 @@ public class KeyRotationSchedule {
     private final KeyRotationService keyRotationService;
     private final KeyStoreRepository keyStoreRepository;
 
-    private boolean isEnabled = false;
-
     @Autowired
     public KeyRotationSchedule(
             KeyRotationService keyRotationService,
@@ -31,16 +29,10 @@ public class KeyRotationSchedule {
     }
 
     @Scheduled(
-            initialDelayString = "${sts.keymanagement.keystore.rotationCheckInterval}",
-            fixedDelayString = "${sts.keymanagement.keystore.rotationCheckInterval}"
+            initialDelayString = "${sts.keymanagement.rotation.checkInterval:60000}",
+            fixedDelayString = "${sts.keymanagement.rotation.checkInterval:60000}"
     )
-    public void schedule() {
-        if(isEnabled) {
-            performEncryptionKeyPairRotation();
-        }
-    }
-
-    private void performEncryptionKeyPairRotation() {
+    public void performEncryptionKeyPairRotation() {
         LOG.debug("Perform key rotation...");
 
         StsKeyStore keyStore = keyStoreRepository.load();
@@ -58,9 +50,5 @@ public class KeyRotationSchedule {
         keyStoreRepository.save(keyStore);
 
         LOG.debug("Key rotation finished.");
-    }
-
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
     }
 }

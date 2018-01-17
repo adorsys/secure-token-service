@@ -1,6 +1,6 @@
 package de.adorsys.sts.decryption;
 
-import de.adorsys.sts.keymanagement.KeyManagerConfiguration;
+import de.adorsys.sts.keymanagement.KeyManagementConfiguration;
 import de.adorsys.sts.keymanagement.service.DecryptionService;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import(KeyManagerConfiguration.class)
+@Import(KeyManagementConfiguration.class)
 public class DecryptionConfiguration {
 
     @Bean

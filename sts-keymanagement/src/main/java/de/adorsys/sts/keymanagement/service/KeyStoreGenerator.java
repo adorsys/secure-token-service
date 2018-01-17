@@ -98,13 +98,11 @@ public class KeyStoreGenerator {
                 keyPassHandler
         );
 
-        KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyRotationProperties signKeyRotationProperties = signKeyPairsProperties.getRotation();
-
         return StsKeyEntry.builder()
                 .alias(alias)
                 .createdAt(now())
-                .validityInterval(signKeyRotationProperties.getValidityInterval())
-                .legacyInterval(signKeyRotationProperties.getLegacyInterval())
+                .validityInterval(signKeyPairsProperties.getValidityInterval())
+                .legacyInterval(signKeyPairsProperties.getLegacyInterval())
                 .keyUsage(KeyUsage.Signature)
                 .keyEntry(signatureKeyPair)
                 .build();
@@ -117,13 +115,11 @@ public class KeyStoreGenerator {
                 keyPassHandler
         );
 
-        KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyRotationProperties encKeyRotationProperties = encKeyPairsProperties.getRotation();
-
         return StsKeyEntry.builder()
                 .alias(alias)
                 .createdAt(now())
-                .validityInterval(encKeyRotationProperties.getValidityInterval())
-                .legacyInterval(encKeyRotationProperties.getLegacyInterval())
+                .validityInterval(encKeyPairsProperties.getValidityInterval())
+                .legacyInterval(encKeyPairsProperties.getLegacyInterval())
                 .keyUsage(KeyUsage.Encryption)
                 .keyEntry(signatureKeyPair)
                 .build();
@@ -136,13 +132,11 @@ public class KeyStoreGenerator {
                 keyPassHandler
         );
 
-        KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyRotationProperties secretKeyRotationProperties = secretKeyProperties.getRotation();
-
         return StsKeyEntry.builder()
                 .alias(alias)
                 .createdAt(now())
-                .validityInterval(secretKeyRotationProperties.getValidityInterval())
-                .legacyInterval(secretKeyRotationProperties.getLegacyInterval())
+                .validityInterval(secretKeyProperties.getValidityInterval())
+                .legacyInterval(secretKeyProperties.getLegacyInterval())
                 .keyUsage(KeyUsage.SecretKey)
                 .keyEntry(secretKeyData)
                 .build();

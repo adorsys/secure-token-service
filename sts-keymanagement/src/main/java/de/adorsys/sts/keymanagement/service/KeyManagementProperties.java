@@ -22,26 +22,21 @@ public interface KeyManagementProperties {
             KeyManagementProperties.KeyStoreProperties.KeysProperties.SecretKeyProperties getSecretKeys();
 
             interface KeyPairProperties {
-                KeyRotationProperties getRotation();
                 Integer getInitialCount();
                 String getAlgo();
                 String getSigAlgo();
                 Integer getSize();
                 String getName();
+                Long getValidityInterval();
+                Long getLegacyInterval();
             }
 
             interface SecretKeyProperties {
-                KeyRotationProperties getRotation();
                 Integer getInitialCount();
                 String getAlgo();
                 Integer getSize();
-            }
-
-            interface KeyRotationProperties {
                 Long getValidityInterval();
                 Long getLegacyInterval();
-                Integer getMinKeys();
-                Boolean isEnabled();
             }
         }
     }

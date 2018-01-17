@@ -14,8 +14,9 @@ public class KeyStoreFilter {
 
     private final Clock clock;
 
-
-    public KeyStoreFilter(Clock clock) {
+    public KeyStoreFilter(
+            Clock clock
+    ) {
         this.clock = clock;
     }
 
@@ -59,10 +60,10 @@ public class KeyStoreFilter {
 
     private final Predicate<StsKeyEntry> IsLegacy = new Predicate<StsKeyEntry>() {
         @Override
-        public boolean test(StsKeyEntry attributes) {
-            ZonedDateTime createdAt = attributes.getCreatedAt();
-            Long validityInterval = attributes.getValidityInterval();
-            Long legacyInterval = attributes.getLegacyInterval();
+        public boolean test(StsKeyEntry keyEntry) {
+            ZonedDateTime createdAt = keyEntry.getCreatedAt();
+            Long validityInterval = keyEntry.getValidityInterval();
+            Long legacyInterval = keyEntry.getLegacyInterval();
 
             Instant invalidAt = createdAt.toInstant().plusMillis(validityInterval).plusMillis(legacyInterval);
             Instant legacySince = createdAt.toInstant().plusMillis(legacyInterval);

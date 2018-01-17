@@ -183,10 +183,6 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
             @Validated
             public static class KeyPairConfigurationProperties implements KeyPairProperties {
 
-                @NotNull
-                @Valid
-                private KeyRotationConfigurationProperties rotation;
-
                 private Integer initialCount = 1;
 
                 @NotNull
@@ -204,14 +200,13 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
                 @NotEmpty
                 private String name;
 
-                @Override
-                public KeyRotationProperties getRotation() {
-                    return rotation;
-                }
+                @NotNull
+                @Min(1)
+                private Long validityInterval;
 
-                public void setRotation(KeyRotationConfigurationProperties rotation) {
-                    this.rotation = rotation;
-                }
+                @NotNull
+                @Min(1)
+                private Long legacyInterval;
 
                 @Override
                 public Integer getInitialCount() {
@@ -257,14 +252,28 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
                 public void setName(String name) {
                     this.name = name;
                 }
+
+                @Override
+                public Long getValidityInterval() {
+                    return validityInterval;
+                }
+
+                @Override
+                public Long getLegacyInterval() {
+                    return legacyInterval;
+                }
+
+                public void setValidityInterval(Long validityInterval) {
+                    this.validityInterval = validityInterval;
+                }
+
+                public void setLegacyInterval(Long legacyInterval) {
+                    this.legacyInterval = legacyInterval;
+                }
             }
 
             @Validated
             public static class SecretKeyConfigurationProperties implements SecretKeyProperties {
-
-                @NotNull
-                @Valid
-                private KeyRotationConfigurationProperties rotation;
 
                 private Integer initialCount = 1;
 
@@ -275,14 +284,13 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
                 @NotNull
                 private Integer size;
 
-                @Override
-                public KeyRotationProperties getRotation() {
-                    return rotation;
-                }
+                @NotNull
+                @Min(1)
+                private Long validityInterval;
 
-                public void setRotation(KeyRotationConfigurationProperties rotation) {
-                    this.rotation = rotation;
-                }
+                @NotNull
+                @Min(1)
+                private Long legacyInterval;
 
                 @Override
                 public Integer getInitialCount() {
@@ -310,24 +318,6 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
                 public void setSize(Integer size) {
                     this.size = size;
                 }
-            }
-
-            @Validated
-            public static class KeyRotationConfigurationProperties implements KeyRotationProperties {
-
-                @NotNull
-                @Min(1)
-                private Long validityInterval;
-
-                @NotNull
-                @Min(1)
-                private Long legacyInterval;
-
-                @NotNull
-                @Min(1)
-                private Integer minKeys;
-
-                private Boolean enabled = false;
 
                 @Override
                 public Long getValidityInterval() {
@@ -339,30 +329,12 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
                     return legacyInterval;
                 }
 
-                @Override
-                public Integer getMinKeys() {
-                    return minKeys;
-                }
-
-                @Override
-                public Boolean isEnabled() {
-                    return enabled;
-                }
-
-                public void setEnabled(Boolean enabled) {
-                    this.enabled = enabled;
-                }
-
                 public void setValidityInterval(Long validityInterval) {
                     this.validityInterval = validityInterval;
                 }
 
                 public void setLegacyInterval(Long legacyInterval) {
                     this.legacyInterval = legacyInterval;
-                }
-
-                public void setMinKeys(Integer minKeys) {
-                    this.minKeys = minKeys;
                 }
             }
         }
