@@ -3,8 +3,10 @@ package de.adorsys.sts.starter.config;
 import de.adorsys.sts.admin.EnableAdmin;
 import de.adorsys.sts.keymanagement.EnableKeyManagement;
 import de.adorsys.sts.keymanagement.KeyManagementConfigurationProperties;
+import de.adorsys.sts.keymanagement.persistence.InMemoryKeyStoreRepository;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
+import de.adorsys.sts.keyrotation.EnableKeyRotation;
 import de.adorsys.sts.persistence.FsPersistenceKeyStoreRepository;
 import de.adorsys.sts.pop.EnablePOP;
 import de.adorsys.sts.resourceserver.persistence.FsPersistenceResourceServerRepository;
@@ -25,7 +27,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableTokenExchange
 @EnablePasswordGrant
 @EnableAdmin
-@EnableKeyManagement
+@EnableKeyRotation
 @EnableServerInfo
 public class SecureTokenServiceConfiguration {
 
