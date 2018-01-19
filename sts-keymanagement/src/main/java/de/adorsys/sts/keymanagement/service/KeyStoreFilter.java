@@ -48,29 +48,38 @@ public class KeyStoreFilter {
 
     private final Predicate<StsKeyEntry> IsValid = new Predicate<StsKeyEntry>() {
         @Override
-        public boolean test(StsKeyEntry attributes) {
-            ZonedDateTime createdAt = attributes.getCreatedAt();
-            Long validityInterval = attributes.getValidityInterval();
+        public boolean test(StsKeyEntry keyEntry) {
+            Long validityInterval = keyEntry.getValidityInterval();
 
-            Instant invalidAt = createdAt.toInstant().plusMillis(validityInterval);
+            if(validityInterval > 0) {
+                ZonedDateTime createdAt = keyEntry.getCreatedAt();
+                Instant invalidAt = createdAt.toInstant().plusMillis(validityInterval);
 
-            return clock.instant().isBefore(invalidAt);
+                return clock.instant().isBefore(invalidAt);
+            } else {
+                return true;
+            }
         }
     };
 
     private final Predicate<StsKeyEntry> IsLegacy = new Predicate<StsKeyEntry>() {
         @Override
         public boolean test(StsKeyEntry keyEntry) {
-            ZonedDateTime createdAt = keyEntry.getCreatedAt();
-            Long validityInterval = keyEntry.getValidityInterval();
             Long legacyInterval = keyEntry.getLegacyInterval();
 
-            Instant invalidAt = createdAt.toInstant().plusMillis(validityInterval).plusMillis(legacyInterval);
-            Instant legacySince = createdAt.toInstant().plusMillis(legacyInterval);
+            if(legacyInterval > 0) {
+                ZonedDateTime createdAt = keyEntry.getCreatedAt();
+                Long validityInterval = keyEntry.getValidityInterval();
 
-            Instant clockInstant = clock.instant();
+                Instant invalidAt = createdAt.toInstant().plusMillis(validityInterval).plusMillis(legacyInterval);
+                Instant legacySince = createdAt.toInstant().plusMillis(validityInterval);
 
-            return clockInstant.isAfter(legacySince) && clockInstant.isBefore(invalidAt);
+                Instant clockInstant = clock.instant();
+
+                return clockInstant.isAfter(legacySince) && clockInstant.isBefore(invalidAt);
+            } else {
+                return true;
+            }
         }
     };
 }

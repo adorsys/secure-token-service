@@ -5,7 +5,7 @@ security:
   ignored: /**
 
 logging:
-  level.de.adorsys.sts.keyrotation.KeyRotationSchedule: 'info'
+  level.de.adorsys.sts.keyrotation.KeyRotationSchedule: 'debug'
 
 sts:
   resourceServers:
@@ -21,7 +21,7 @@ sts:
     jwksUrl: "http://sts-service-component:8887/service-component/pop"
   keymanagement:
     rotation:
-      checkInterval: 60000
+      checkInterval: 5000
       encKeyPairs:
         minKeys: 5
         enabled: true
@@ -46,19 +46,19 @@ sts:
           sigAlgo: SHA256withRSA
           size: 2048
           name: Adorsys Security Token Service
-          validityInterval: 432000000
-          legacyInterval: 86400000
+          validityInterval: 30000
+          legacyInterval: 20000
         signKeyPairs:
           initialCount: 5
           algo: RSA
           sigAlgo: SHA256withRSA
           size: 2048
           name: Adorsys Security Token Service
-          validityInterval: 432000000
-          legacyInterval: 86400000
+          validityInterval: 30000
+          legacyInterval: 20000
         secretKeys:
           initialCount: 5
           algo: AES
           size: 256
-          validityInterval: 432000000
-          legacyInterval: 86400000
+          validityInterval: 30000
+          legacyInterval: 20000

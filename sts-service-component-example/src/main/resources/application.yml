@@ -10,6 +10,17 @@ sts:
     jwksUrl: https://sso-keycloak-playground.dev.adorsys.de/auth/realms/moped/protocol/openid-connect/certs
     refreshIntervalSeconds: 600
   keymanagement:
+    rotation:
+      checkInterval: 60000
+      encKeyPairs:
+        minKeys: 5
+        enabled: true
+      signKeyPairs:
+        minKeys: 5
+        enabled: true
+      secretKeys:
+        minKeys: 5
+        enabled: true
     persistence:
       containerName: adsts-container
       password: 0123456789ABCDEF
@@ -18,36 +29,26 @@ sts:
       type: UBER
       name: adsts-keystore
       alias_prefix: adsts-
-      rotationCheckInterval: 10000
       keys:
         encKeyPairs:
-          rotation:
-            validityInterval: 432000000
-            legacyInterval: 86400000
-            minKeys: 10
-            enabled: true
           initialCount: 5
           algo: RSA
           sigAlgo: SHA256withRSA
           size: 2048
           name: Adorsys Security Token Service
+          validityInterval: 432000000
+          legacyInterval: 86400000
         signKeyPairs:
-          rotation:
-            validityInterval: 432000000
-            legacyInterval: 86400000
-            minKeys: 10
-            enabled: true
           initialCount: 5
           algo: RSA
           sigAlgo: SHA256withRSA
           size: 2048
           name: Adorsys Security Token Service
+          validityInterval: 432000000
+          legacyInterval: 86400000
         secretKeys:
-          rotation:
-            validityInterval: 432000000
-            legacyInterval: 86400000
-            minKeys: 10
-            enabled: true
           initialCount: 5
           algo: AES
           size: 256
+          validityInterval: 432000000
+          legacyInterval: 86400000
