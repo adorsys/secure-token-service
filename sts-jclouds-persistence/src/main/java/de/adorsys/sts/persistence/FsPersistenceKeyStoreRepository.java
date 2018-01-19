@@ -32,21 +32,6 @@ public class FsPersistenceKeyStoreRepository implements KeyStoreRepository {
 
     public FsPersistenceKeyStoreRepository(
             FsPersistenceFactory persFactory,
-            String keystoreContainerName,
-            String keystoreName,
-            String keyStorePassword,
-            KeyEntryMapper keyEntryMapper
-    ) {
-        this.persFactory = persFactory;
-        this.keystoreContainerName = keystoreContainerName;
-        this.keystoreName = keystoreName;
-
-        keyPassHandler = new PasswordCallbackHandler(keyStorePassword.toCharArray());
-        this.keyEntryMapper = keyEntryMapper;
-    }
-
-    public FsPersistenceKeyStoreRepository(
-            FsPersistenceFactory persFactory,
             KeyManagementProperties keyManagementProperties,
             KeyEntryMapper keyEntryMapper
     ) {
@@ -55,7 +40,7 @@ public class FsPersistenceKeyStoreRepository implements KeyStoreRepository {
         this.keystoreName = keyManagementProperties.getKeystore().getName();
         this.keyEntryMapper = keyEntryMapper;
 
-        String keyStorePassword = keyManagementProperties.getPersistence().getPassword();
+        String keyStorePassword = keyManagementProperties.getKeystore().getPassword();
         keyPassHandler = new PasswordCallbackHandler(keyStorePassword.toCharArray());
     }
 

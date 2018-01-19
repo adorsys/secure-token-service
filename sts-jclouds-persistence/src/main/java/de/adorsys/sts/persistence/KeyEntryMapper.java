@@ -2,20 +2,16 @@ package de.adorsys.sts.persistence;
 
 import de.adorsys.sts.keymanagement.model.KeyUsage;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.adorsys.encobject.userdata.ObjectMapperSPI;
 import org.adorsys.jkeygen.keystore.KeyEntry;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 public class KeyEntryMapper {
-
-    private static final String CREATED_AT_ATTRIBUTE_KEY = "createdAt";
-    private static final String VALIDITY_ATTRIBUTE_KEY = "validity";
-    private static final String LEGACY_ATTRIBUTE_KEY = "legacy";
-    private static final String USAGE_ATTRIBUTE_KEY = "usage";
 
     private final ObjectMapperSPI objectMapper;
 
@@ -24,16 +20,16 @@ public class KeyEntryMapper {
     }
 
     public String extractEntryAttributesToString(StsKeyEntry keyEntry) {
-        Map<String, Object> keyEntryValues = new HashMap<>();
-
-        keyEntryValues.put(CREATED_AT_ATTRIBUTE_KEY, keyEntry.getCreatedAt());
-        keyEntryValues.put(VALIDITY_ATTRIBUTE_KEY, keyEntry.getValidityInterval());
-        keyEntryValues.put(LEGACY_ATTRIBUTE_KEY, keyEntry.getLegacyInterval());
-        keyEntryValues.put(USAGE_ATTRIBUTE_KEY, keyEntry.getKeyUsage());
-
         String valuesAsString;
         try {
-            valuesAsString = objectMapper.writeValueAsString(keyEntryValues);
+            KeyEntryAttributes attributes = KeyEntryAttributes.builder()
+                    .createdAt(keyEntry.getCreatedAt())
+                    .validityInterval(keyEntry.getValidityInterval())
+                    .legacyInterval(keyEntry.getLegacyInterval())
+                    .keyUsage(keyEntry.getKeyUsage())
+                    .build();
+
+            valuesAsString = objectMapper.writeValueAsString(attributes);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -42,26 +38,31 @@ public class KeyEntryMapper {
     }
 
     public StsKeyEntry mapFromKeyEntryWithAttributes(KeyEntry keyEntry, String attributesAsString) {
-        Map<String, String> attributesAsMap;
+        KeyEntryAttributes attributes;
 
         try {
-            attributesAsMap = objectMapper.readValue(attributesAsString);
+            attributes = objectMapper.readValue(attributesAsString, KeyEntryAttributes.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        ZonedDateTime createdAt = ZonedDateTime.parse(attributesAsMap.get(CREATED_AT_ATTRIBUTE_KEY));
-        Long validityInterval = Long.parseLong(attributesAsMap.get(VALIDITY_ATTRIBUTE_KEY));
-        Long legacyInterval = Long.parseLong(attributesAsMap.get(LEGACY_ATTRIBUTE_KEY));
-        KeyUsage keyUsage = KeyUsage.valueOf(attributesAsMap.get(USAGE_ATTRIBUTE_KEY));
-
         return StsKeyEntry.builder()
                 .alias(keyEntry.getAlias())
-                .createdAt(createdAt)
+                .createdAt(attributes.getCreatedAt())
                 .keyEntry(keyEntry)
-                .validityInterval(validityInterval)
-                .legacyInterval(legacyInterval)
-                .keyUsage(keyUsage)
+                .validityInterval(attributes.getValidityInterval())
+                .legacyInterval(attributes.getLegacyInterval())
+                .keyUsage(attributes.getKeyUsage())
                 .build();
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    private static class KeyEntryAttributes {
+        private ZonedDateTime createdAt;
+        private Long validityInterval;
+        private Long legacyInterval;
+        private KeyUsage keyUsage;
     }
 }
