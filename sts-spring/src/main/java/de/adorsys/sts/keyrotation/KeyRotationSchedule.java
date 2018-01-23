@@ -43,6 +43,9 @@ public class KeyRotationSchedule {
             List<String> removedKeys = keyRotationResult.getRemovedKeys();
             LOG.debug(removedKeys.size() + " keys removed: [" + removedKeys.stream().collect(Collectors.joining(",")) + "]");
 
+            List<String> futureKeys = keyRotationResult.getFutureKeys();
+            LOG.debug(futureKeys.size() + " future keys generated: [" + futureKeys.stream().collect(Collectors.joining(",")) + "]");
+
             List<String> generatedKeys = keyRotationResult.getGeneratedKeys();
             LOG.debug(generatedKeys.size() + " keys generated: [" + generatedKeys.stream().collect(Collectors.joining(",")) + "]");
         }

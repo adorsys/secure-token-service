@@ -16,11 +16,26 @@ public class StsKeyEntry {
 
     private final ZonedDateTime createdAt;
 
-    private final Long validityInterval;
+    private final ZonedDateTime notBefore;
 
-    private final Long legacyInterval;
+    private final ZonedDateTime notAfter;
+
+    private final ZonedDateTime expireAt;
+
+    private State state;
 
     private final KeyUsage keyUsage;
 
     private final KeyEntry keyEntry;
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public enum State {
+        CREATED,
+        VALID,
+        LEGACY,
+        EXPIRED
+    }
 }

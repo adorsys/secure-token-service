@@ -6,6 +6,17 @@ logging:
 
 sts:
   keymanagement:
+    rotation:
+      checkInterval: 5000
+      encKeyPairs:
+        minKeys: 5
+        enabled: true
+      signKeyPairs:
+        minKeys: 5
+        enabled: true
+      secretKeys:
+        minKeys: 5
+        enabled: true
     persistence:
       containerName: adsts-container
       password: 0123456789ABCDEF

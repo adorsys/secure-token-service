@@ -46,19 +46,19 @@ sts:
           sigAlgo: SHA256withRSA
           size: 2048
           name: Adorsys Security Token Service
-          validityInterval: 30000
-          legacyInterval: 20000
+          validityInterval: 120000
+          legacyInterval: 60000
         signKeyPairs:
           initialCount: 5
           algo: RSA
           sigAlgo: SHA256withRSA
           size: 2048
           name: Adorsys Security Token Service
-          validityInterval: 30000
-          legacyInterval: 20000
+          validityInterval: 120000
+          legacyInterval: 60000
         secretKeys:
           initialCount: 5
           algo: AES
           size: 256
-          validityInterval: 30000
-          legacyInterval: 20000
+          validityInterval: 120000
+          legacyInterval: 60000

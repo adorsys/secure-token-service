@@ -1,7 +1,6 @@
 package de.adorsys.sts.keymanagement.service;
 
 import com.nitorcreations.junit.runners.NestedRunner;
-import de.adorsys.sts.CollectionHelpers;
 import de.adorsys.sts.keymanagement.config.KeyManagementRotationProperties;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
@@ -13,6 +12,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.security.KeyStore;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +28,9 @@ import static org.mockito.Mockito.*;
 
 @RunWith(NestedRunner.class)
 public class KeyRotationServiceTest {
+
+    static final LocalDateTime FIXED_DATE_TIME = LocalDateTime.of(2018, 1, 22, 14, 27, 34);
+    static final ZoneId FIXED_ZONE_ID = ZoneOffset.UTC;
 
     KeyRotationService keyRotationService;
 
@@ -50,9 +56,6 @@ public class KeyRotationServiceTest {
     StsKeyEntry secretKeyEntry;
 
     @Mock
-    KeyStoreFilter keyStoreFilter;
-
-    @Mock
     KeyStoreGenerator keyStoreGenerator;
 
     @Mock
@@ -76,6 +79,8 @@ public class KeyRotationServiceTest {
     @Mock
     KeyManagementRotationProperties.KeyRotationProperties secretKeyRotationProperties;
 
+    final Clock clock = Clock.fixed(FIXED_DATE_TIME.atZone(FIXED_ZONE_ID).toInstant(), FIXED_ZONE_ID);
+
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -84,12 +89,24 @@ public class KeyRotationServiceTest {
 
         when(signatureKeyEntry.getAlias()).thenReturn(SIGNATURE_KEY_ALIAS);
         when(signatureKeyEntry.getKeyUsage()).thenReturn(KeyUsage.Signature);
+        when(signatureKeyEntry.getState()).thenReturn(StsKeyEntry.State.VALID);
+        when(signatureKeyEntry.getNotBefore()).thenReturn(FIXED_DATE_TIME.minusSeconds(1).atZone(ZoneOffset.UTC));
+        when(signatureKeyEntry.getNotAfter()).thenReturn(FIXED_DATE_TIME.plusSeconds(1).atZone(ZoneOffset.UTC));
+        when(signatureKeyEntry.getExpireAt()).thenReturn(FIXED_DATE_TIME.plusSeconds(2).atZone(ZoneOffset.UTC));
 
         when(encryptionKeyEntry.getAlias()).thenReturn(ENCRYPTION_KEY_ALIAS);
         when(encryptionKeyEntry.getKeyUsage()).thenReturn(KeyUsage.Encryption);
+        when(encryptionKeyEntry.getState()).thenReturn(StsKeyEntry.State.VALID);
+        when(encryptionKeyEntry.getNotBefore()).thenReturn(FIXED_DATE_TIME.minusSeconds(1).atZone(ZoneOffset.UTC));
+        when(encryptionKeyEntry.getNotAfter()).thenReturn(FIXED_DATE_TIME.plusSeconds(1).atZone(ZoneOffset.UTC));
+        when(encryptionKeyEntry.getExpireAt()).thenReturn(FIXED_DATE_TIME.plusSeconds(2).atZone(ZoneOffset.UTC));
 
         when(secretKeyEntry.getAlias()).thenReturn(SECRET_KEY_ALIAS);
         when(secretKeyEntry.getKeyUsage()).thenReturn(KeyUsage.SecretKey);
+        when(secretKeyEntry.getState()).thenReturn(StsKeyEntry.State.VALID);
+        when(secretKeyEntry.getNotBefore()).thenReturn(FIXED_DATE_TIME.minusSeconds(1).atZone(ZoneOffset.UTC));
+        when(secretKeyEntry.getNotAfter()).thenReturn(FIXED_DATE_TIME.plusSeconds(1).atZone(ZoneOffset.UTC));
+        when(secretKeyEntry.getExpireAt()).thenReturn(FIXED_DATE_TIME.plusSeconds(2).atZone(ZoneOffset.UTC));
 
         keyEntries.put(SIGNATURE_KEY_ALIAS, signatureKeyEntry);
         keyEntries.put(ENCRYPTION_KEY_ALIAS, encryptionKeyEntry);
@@ -98,9 +115,9 @@ public class KeyRotationServiceTest {
         when(stsKeyStore.getKeyEntries()).thenReturn(keyEntries);
         when(stsKeyStore.getKeyStore()).thenReturn(keyStore);
 
-        when(keyStoreGenerator.generateEncryptionKeyPair()).thenReturn(generatedEncryptionKeyPair);
-        when(keyStoreGenerator.generateSignKeyPair()).thenReturn(generatedSignatureKeyPair);
-        when(keyStoreGenerator.generateSecretKey()).thenReturn(generatedSecretKey);
+        when(keyStoreGenerator.generateEncryptionKeyEntryForInstantUsage()).thenReturn(generatedEncryptionKeyPair);
+        when(keyStoreGenerator.generateSignatureKeyEntryForInstantUsage()).thenReturn(generatedSignatureKeyPair);
+        when(keyStoreGenerator.generateSecretKeyEntryForInstantUsage()).thenReturn(generatedSecretKey);
 
         when(encryptionKeyPairRotationProperties.getMinKeys()).thenReturn(1);
         when(signatureKeyPairRotationProperties.getMinKeys()).thenReturn(1);
@@ -115,8 +132,8 @@ public class KeyRotationServiceTest {
         when(rotationProperties.getSecretKeys()).thenReturn(secretKeyRotationProperties);
 
         keyRotationService = new KeyRotationService(
-                keyStoreFilter,
                 keyStoreGenerator,
+                clock,
                 rotationProperties
         );
     }
@@ -127,16 +144,7 @@ public class KeyRotationServiceTest {
 
         @Before
         public void setup() throws Exception {
-            when(keyStoreFilter.filterValid(keyEntries.values())).thenReturn(CollectionHelpers.asList(ENCRYPTION_KEY_ALIAS));
-            when(keyStoreFilter.filterLegacy(keyEntries.values())).thenReturn(CollectionHelpers.asList(SECRET_KEY_ALIAS));
-
-            when(keyStoreFilter.isInvalid(signatureKeyEntry)).thenReturn(true);
-            when(keyStoreFilter.isInvalid(encryptionKeyEntry)).thenReturn(false);
-            when(keyStoreFilter.isInvalid(secretKeyEntry)).thenReturn(false);
-
-            when(keyStoreFilter.isValid(signatureKeyEntry)).thenReturn(false);
-            when(keyStoreFilter.isValid(encryptionKeyEntry)).thenReturn(true);
-            when(keyStoreFilter.isValid(secretKeyEntry)).thenReturn(true);
+            when(signatureKeyEntry.getState()).thenReturn(StsKeyEntry.State.EXPIRED);
 
             keyRotationResult = keyRotationService.rotate(stsKeyStore);
         }
@@ -173,16 +181,7 @@ public class KeyRotationServiceTest {
 
         @Before
         public void setup() throws Exception {
-            when(keyStoreFilter.filterValid(keyEntries.values())).thenReturn(CollectionHelpers.asList(SECRET_KEY_ALIAS));
-            when(keyStoreFilter.filterLegacy(keyEntries.values())).thenReturn(CollectionHelpers.asList(SIGNATURE_KEY_ALIAS));
-
-            when(keyStoreFilter.isInvalid(signatureKeyEntry)).thenReturn(false);
-            when(keyStoreFilter.isInvalid(encryptionKeyEntry)).thenReturn(true);
-            when(keyStoreFilter.isInvalid(secretKeyEntry)).thenReturn(false);
-
-            when(keyStoreFilter.isValid(signatureKeyEntry)).thenReturn(true);
-            when(keyStoreFilter.isValid(encryptionKeyEntry)).thenReturn(false);
-            when(keyStoreFilter.isValid(secretKeyEntry)).thenReturn(true);
+            when(encryptionKeyEntry.getState()).thenReturn(StsKeyEntry.State.EXPIRED);
 
             keyRotationResult = keyRotationService.rotate(stsKeyStore);
         }
@@ -220,16 +219,7 @@ public class KeyRotationServiceTest {
 
         @Before
         public void setup() throws Exception {
-            when(keyStoreFilter.filterValid(keyEntries.values())).thenReturn(CollectionHelpers.asList(SIGNATURE_KEY_ALIAS));
-            when(keyStoreFilter.filterLegacy(keyEntries.values())).thenReturn(CollectionHelpers.asList(ENCRYPTION_KEY_ALIAS));
-
-            when(keyStoreFilter.isInvalid(signatureKeyEntry)).thenReturn(false);
-            when(keyStoreFilter.isInvalid(encryptionKeyEntry)).thenReturn(false);
-            when(keyStoreFilter.isInvalid(secretKeyEntry)).thenReturn(true);
-
-            when(keyStoreFilter.isValid(signatureKeyEntry)).thenReturn(true);
-            when(keyStoreFilter.isValid(encryptionKeyEntry)).thenReturn(true);
-            when(keyStoreFilter.isValid(secretKeyEntry)).thenReturn(false);
+            when(secretKeyEntry.getState()).thenReturn(StsKeyEntry.State.EXPIRED);
 
             keyRotationResult = keyRotationService.rotate(stsKeyStore);
         }
