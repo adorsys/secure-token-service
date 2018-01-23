@@ -183,6 +183,7 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
             @Validated
             public static class KeyPairConfigurationProperties implements KeyPairProperties {
 
+                @Min(1)
                 private Integer initialCount = 1;
 
                 @NotNull
@@ -194,6 +195,7 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
                 private String sigAlgo;
 
                 @NotNull
+                @Min(1024)
                 private Integer size;
 
                 @NotNull
@@ -275,6 +277,7 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
             @Validated
             public static class SecretKeyConfigurationProperties implements SecretKeyProperties {
 
+                @Min(1)
                 private Integer initialCount = 1;
 
                 @NotNull

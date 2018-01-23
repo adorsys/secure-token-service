@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.time.Clock;
 
@@ -22,33 +21,33 @@ public class KeyManagementConfiguration {
     }
 
     @Bean
-    KeyStoreFilter keyStoreFilter() {
-        return new KeyStoreFilter(Clock.systemUTC());
-    }
-
-    @Bean
     KeyManagementService keyManagerService(
             KeyStoreRepository keyStoreRepository,
             KeyStoreGenerator keyStoreGenerator,
-            KeyConversionService keyConversionService,
-            KeyStoreFilter keyStoreFilter
+            KeyConversionService keyConversionService
     ) {
         return new KeyManagementService(
                 keyStoreRepository,
                 keyStoreGenerator,
-                keyConversionService,
-                keyStoreFilter
+                keyConversionService
         );
     }
 
     @Bean
+    Clock clock() {
+        return Clock.systemUTC();
+    }
+
+    @Bean
     KeyStoreGenerator keyStoreGenerator(
+            Clock clock,
             @Qualifier("enc") KeyPairGenerator encKeyPairGenerator,
             @Qualifier("sign") KeyPairGenerator signKeyPairGenerator,
             SecretKeyGenerator secretKeyGenerator,
             KeyManagementConfigurationProperties keyManagementProperties
     ) {
         return new KeyStoreGenerator(
+                clock,
                 encKeyPairGenerator,
                 signKeyPairGenerator,
                 secretKeyGenerator,

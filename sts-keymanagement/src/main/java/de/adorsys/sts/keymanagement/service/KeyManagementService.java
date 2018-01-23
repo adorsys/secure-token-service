@@ -23,20 +23,17 @@ public class KeyManagementService implements ServerKeyMapProvider {
     private final KeyStoreRepository repository;
     private final KeyStoreGenerator keyStoreGenerator;
     private final KeyConversionService keyConversionService;
-    private final KeyStoreFilter keyStoreFilter;
 
     private StsKeyStore keyStore;
 
     public KeyManagementService(
             KeyStoreRepository repository,
             KeyStoreGenerator keyStoreGenerator,
-            KeyConversionService keyConversionService,
-            KeyStoreFilter keyStoreFilter
+            KeyConversionService keyConversionService
     ) {
         this.repository = repository;
         this.keyStoreGenerator = keyStoreGenerator;
         this.keyConversionService = keyConversionService;
-        this.keyStoreFilter = keyStoreFilter;
     }
 
     @PostConstruct
@@ -121,16 +118,16 @@ public class KeyManagementService implements ServerKeyMapProvider {
     }
 
     private boolean hasUsablePublicKey(StsKeyEntry stsKeyEntry) {
-        return stsKeyEntry.getKeyUsage() == KeyUsage.Encryption && keyStoreFilter.isValid(stsKeyEntry)
-                || stsKeyEntry.getKeyUsage() == KeyUsage.Signature && (keyStoreFilter.isValid(stsKeyEntry) || keyStoreFilter.isLegacy(stsKeyEntry));
+        return stsKeyEntry.getKeyUsage() == KeyUsage.Encryption && stsKeyEntry.getState() == StsKeyEntry.State.VALID
+                || stsKeyEntry.getKeyUsage() == KeyUsage.Signature && (stsKeyEntry.getState() == StsKeyEntry.State.VALID || stsKeyEntry.getState() == StsKeyEntry.State.LEGACY);
     }
 
     private boolean hasUsablePrivateKey(StsKeyEntry stsKeyEntry) {
-        return stsKeyEntry.getKeyUsage() == KeyUsage.Signature && keyStoreFilter.isValid(stsKeyEntry)
-                || stsKeyEntry.getKeyUsage() == KeyUsage.Encryption && (keyStoreFilter.isValid(stsKeyEntry) || keyStoreFilter.isLegacy(stsKeyEntry));
+        return stsKeyEntry.getKeyUsage() == KeyUsage.Signature && stsKeyEntry.getState() == StsKeyEntry.State.VALID
+                || stsKeyEntry.getKeyUsage() == KeyUsage.Encryption && (stsKeyEntry.getState() == StsKeyEntry.State.VALID ||stsKeyEntry.getState() == StsKeyEntry.State.LEGACY);
     }
 
     private boolean isUsableSecretKey(StsKeyEntry stsKeyEntry) {
-        return stsKeyEntry.getKeyUsage() == KeyUsage.SecretKey && keyStoreFilter.isValid(stsKeyEntry);
+        return stsKeyEntry.getKeyUsage() == KeyUsage.SecretKey && stsKeyEntry.getState() == StsKeyEntry.State.VALID;
     }
 }
