@@ -1,8 +1,7 @@
 logging:
     level:
-        org:
-            springframework:
-                web: DEBUG
+        org.springframework.web: DEBUG
+        de.adorsys.sts.keyrotation.KeyRotationSchedule: DEBUG
 
 sts:
   keymanagement:
@@ -33,7 +32,7 @@ sts:
           size: 2048
           name: Adorsys Security Token Service
           validityInterval: 300000
-          legacyInterval: 200000
+          legacyInterval: 600000
         signKeyPairs:
           initialCount: 5
           algo: RSA
@@ -41,10 +40,10 @@ sts:
           size: 2048
           name: Adorsys Security Token Service
           validityInterval: 300000
-          legacyInterval: 200000
+          legacyInterval: 600000
         secretKeys:
           initialCount: 5
           algo: AES
           size: 256
           validityInterval: 300000
-          legacyInterval: 200000
+          legacyInterval: 600000

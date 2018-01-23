@@ -1,6 +1,7 @@
 package de.adorsys.sts.keymanagement;
 
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
+import de.adorsys.sts.keymanagement.persistence.CachedKeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -21,8 +22,15 @@ public class KeyManagementConfiguration {
     }
 
     @Bean
+    CachedKeyStoreRepository cachedKeyStoreRepository(
+            KeyStoreRepository keyStoreRepository
+    ) {
+        return new CachedKeyStoreRepository(keyStoreRepository);
+    }
+
+    @Bean
     KeyManagementService keyManagerService(
-            KeyStoreRepository keyStoreRepository,
+            CachedKeyStoreRepository keyStoreRepository,
             KeyStoreGenerator keyStoreGenerator,
             KeyConversionService keyConversionService
     ) {

@@ -2,6 +2,7 @@ package de.adorsys.sts.keyrotation;
 
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
+import de.adorsys.sts.keymanagement.persistence.CachedKeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.KeyRotationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ public class KeyRotationSchedule {
     @Autowired
     public KeyRotationSchedule(
             KeyRotationService keyRotationService,
-            KeyStoreRepository keyStoreRepository
+            CachedKeyStoreRepository keyStoreRepository
     ) {
         this.keyRotationService = keyRotationService;
         this.keyStoreRepository = keyStoreRepository;

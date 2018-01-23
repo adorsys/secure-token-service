@@ -24,8 +24,10 @@ public class KeyEntryMapper {
         try {
             KeyEntryAttributes attributes = KeyEntryAttributes.builder()
                     .createdAt(keyEntry.getCreatedAt())
-                    .validityInterval(keyEntry.getValidityInterval())
-                    .legacyInterval(keyEntry.getLegacyInterval())
+                    .notBefore(keyEntry.getNotBefore())
+                    .notAfter(keyEntry.getNotAfter())
+                    .expireAt(keyEntry.getExpireAt())
+                    .state(keyEntry.getState())
                     .keyUsage(keyEntry.getKeyUsage())
                     .build();
 
@@ -49,10 +51,12 @@ public class KeyEntryMapper {
         return StsKeyEntry.builder()
                 .alias(keyEntry.getAlias())
                 .createdAt(attributes.getCreatedAt())
-                .keyEntry(keyEntry)
-                .validityInterval(attributes.getValidityInterval())
-                .legacyInterval(attributes.getLegacyInterval())
+                .notBefore(attributes.getNotBefore())
+                .notAfter(attributes.getNotAfter())
+                .expireAt(attributes.getExpireAt())
+                .state(attributes.getState())
                 .keyUsage(attributes.getKeyUsage())
+                .keyEntry(keyEntry)
                 .build();
     }
 
@@ -61,8 +65,10 @@ public class KeyEntryMapper {
     @Builder
     private static class KeyEntryAttributes {
         private ZonedDateTime createdAt;
-        private Long validityInterval;
-        private Long legacyInterval;
+        private ZonedDateTime notBefore;
+        private ZonedDateTime notAfter;
+        private ZonedDateTime expireAt;
+        private StsKeyEntry.State state;
         private KeyUsage keyUsage;
     }
 }
