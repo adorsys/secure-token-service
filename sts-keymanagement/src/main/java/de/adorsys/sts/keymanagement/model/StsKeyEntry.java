@@ -18,9 +18,13 @@ public class StsKeyEntry {
 
     private final ZonedDateTime notBefore;
 
-    private final ZonedDateTime notAfter;
+    private ZonedDateTime notAfter;
 
-    private final ZonedDateTime expireAt;
+    private ZonedDateTime expireAt;
+
+    private final Long validityInterval;
+
+    private final Long legacyInterval;
 
     private State state;
 
@@ -30,6 +34,14 @@ public class StsKeyEntry {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    public void setNotAfter(ZonedDateTime notAfter) {
+        this.notAfter = notAfter;
+    }
+
+    public void setExpireAt(ZonedDateTime expireAt) {
+        this.expireAt = expireAt;
     }
 
     public enum State {

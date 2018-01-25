@@ -1,5 +1,6 @@
 package de.adorsys.sts.keymanagement.service;
 
+import de.adorsys.sts.keymanagement.util.DateTimeUtils;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
@@ -137,8 +138,10 @@ public class KeyStoreGenerator {
                 .alias(signatureKeyPair.getAlias())
                 .createdAt(now)
                 .notBefore(now)
-                .notAfter(addMillis(now, signKeyPairsProperties.getValidityInterval()))
-                .expireAt(addMillis(now, signKeyPairsProperties.getLegacyInterval()))
+                .validityInterval(signKeyPairsProperties.getValidityInterval())
+                .legacyInterval(signKeyPairsProperties.getLegacyInterval())
+                .notAfter(DateTimeUtils.addMillis(now, signKeyPairsProperties.getValidityInterval()))
+                .expireAt(DateTimeUtils.addMillis(now, signKeyPairsProperties.getLegacyInterval()))
                 .keyUsage(KeyUsage.Signature)
                 .state(StsKeyEntry.State.VALID)
                 .keyEntry(signatureKeyPair)
@@ -153,8 +156,8 @@ public class KeyStoreGenerator {
                 .alias(signatureKeyPair.getAlias())
                 .createdAt(now)
                 .notBefore(notBefore)
-                .notAfter(addMillis(notBefore, signKeyPairsProperties.getValidityInterval()))
-                .expireAt(addMillis(notBefore, signKeyPairsProperties.getLegacyInterval()))
+                .validityInterval(signKeyPairsProperties.getValidityInterval())
+                .legacyInterval(signKeyPairsProperties.getLegacyInterval())
                 .keyUsage(KeyUsage.Signature)
                 .state(StsKeyEntry.State.CREATED)
                 .keyEntry(signatureKeyPair)
@@ -177,8 +180,10 @@ public class KeyStoreGenerator {
                 .alias(signatureKeyPair.getAlias())
                 .createdAt(now)
                 .notBefore(now)
-                .notAfter(addMillis(now, encKeyPairsProperties.getValidityInterval()))
-                .expireAt(addMillis(now, encKeyPairsProperties.getLegacyInterval()))
+                .validityInterval(encKeyPairsProperties.getValidityInterval())
+                .legacyInterval(encKeyPairsProperties.getLegacyInterval())
+                .notAfter(DateTimeUtils.addMillis(now, encKeyPairsProperties.getValidityInterval()))
+                .expireAt(DateTimeUtils.addMillis(now, encKeyPairsProperties.getLegacyInterval()))
                 .keyUsage(KeyUsage.Encryption)
                 .state(StsKeyEntry.State.VALID)
                 .keyEntry(signatureKeyPair)
@@ -193,8 +198,8 @@ public class KeyStoreGenerator {
                 .alias(encryptionKeyPair.getAlias())
                 .createdAt(now)
                 .notBefore(notBefore)
-                .notAfter(addMillis(notBefore, encKeyPairsProperties.getValidityInterval()))
-                .expireAt(addMillis(notBefore, encKeyPairsProperties.getLegacyInterval()))
+                .validityInterval(encKeyPairsProperties.getValidityInterval())
+                .legacyInterval(encKeyPairsProperties.getLegacyInterval())
                 .keyUsage(KeyUsage.Encryption)
                 .state(StsKeyEntry.State.CREATED)
                 .keyEntry(encryptionKeyPair)
@@ -217,8 +222,10 @@ public class KeyStoreGenerator {
                 .alias(secretKeyData.getAlias())
                 .createdAt(now)
                 .notBefore(now)
-                .notAfter(addMillis(now, secretKeyProperties.getValidityInterval()))
-                .expireAt(addMillis(now, secretKeyProperties.getLegacyInterval()))
+                .validityInterval(secretKeyProperties.getValidityInterval())
+                .legacyInterval(secretKeyProperties.getLegacyInterval())
+                .notAfter(DateTimeUtils.addMillis(now, secretKeyProperties.getValidityInterval()))
+                .expireAt(DateTimeUtils.addMillis(now, secretKeyProperties.getLegacyInterval()))
                 .keyUsage(KeyUsage.SecretKey)
                 .state(StsKeyEntry.State.VALID)
                 .keyEntry(secretKeyData)
@@ -233,8 +240,8 @@ public class KeyStoreGenerator {
                 .alias(secretKeyData.getAlias())
                 .createdAt(now)
                 .notBefore(notBefore)
-                .notAfter(addMillis(notBefore, secretKeyProperties.getValidityInterval()))
-                .expireAt(addMillis(notBefore, secretKeyProperties.getLegacyInterval()))
+                .validityInterval(secretKeyProperties.getValidityInterval())
+                .legacyInterval(secretKeyProperties.getLegacyInterval())
                 .keyUsage(KeyUsage.SecretKey)
                 .state(StsKeyEntry.State.CREATED)
                 .keyEntry(secretKeyData)
@@ -251,9 +258,5 @@ public class KeyStoreGenerator {
 
     private ZonedDateTime now() {
         return clock.instant().atZone(ZoneOffset.UTC);
-    }
-
-    private ZonedDateTime addMillis(ZonedDateTime now, Long millis) {
-        return now.toInstant().plusMillis(millis).atZone(ZoneOffset.UTC);
     }
 }

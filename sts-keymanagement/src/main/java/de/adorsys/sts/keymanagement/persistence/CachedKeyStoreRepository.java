@@ -4,10 +4,9 @@ import de.adorsys.sts.keymanagement.model.StsKeyStore;
 
 public class CachedKeyStoreRepository implements KeyStoreRepository {
 
-    private StsKeyStore cachedKeyStore;
-    private Boolean keyStoreExists;
-
     private final KeyStoreRepository decoratedRepository;
+
+    private StsKeyStore cachedKeyStore;
 
     public CachedKeyStoreRepository(KeyStoreRepository decoratedRepository) {
         this.decoratedRepository = decoratedRepository;
@@ -16,7 +15,9 @@ public class CachedKeyStoreRepository implements KeyStoreRepository {
     @Override
     public StsKeyStore load() {
         if(cachedKeyStore == null) {
-            cachedKeyStore = decoratedRepository.load();
+            if(decoratedRepository.exists()) {
+                cachedKeyStore = decoratedRepository.load();
+            }
         }
 
         return cachedKeyStore;
@@ -24,11 +25,7 @@ public class CachedKeyStoreRepository implements KeyStoreRepository {
 
     @Override
     public boolean exists() {
-        if(keyStoreExists == null) {
-            keyStoreExists = decoratedRepository.exists();
-        }
-
-        return keyStoreExists;
+        return decoratedRepository.exists();
     }
 
     @Override

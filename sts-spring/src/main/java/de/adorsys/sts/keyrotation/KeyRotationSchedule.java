@@ -33,9 +33,19 @@ public class KeyRotationSchedule {
             initialDelayString = "${sts.keymanagement.rotation.checkInterval:60000}",
             fixedDelayString = "${sts.keymanagement.rotation.checkInterval:60000}"
     )
-    public void performEncryptionKeyPairRotation() {
-        LOG.debug("Perform key rotation...");
+    public void scheduledRotation() {
+        if(keyStoreRepository.exists()) {
+            LOG.debug("Perform key rotation...");
 
+            performKeyRotation();
+
+            LOG.debug("Key rotation finished.");
+        } else {
+            LOG.debug("No key rotation needed. Keystore repository is (still) empty.");
+        }
+    }
+
+    private void performKeyRotation() {
         StsKeyStore keyStore = keyStoreRepository.load();
         KeyRotationService.KeyRotationResult keyRotationResult = keyRotationService.rotate(keyStore);
 
@@ -52,7 +62,5 @@ public class KeyRotationSchedule {
         }
 
         keyStoreRepository.save(keyStore);
-
-        LOG.debug("Key rotation finished.");
     }
 }

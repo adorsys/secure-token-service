@@ -27,6 +27,8 @@ public class KeyEntryMapper {
                     .notBefore(keyEntry.getNotBefore())
                     .notAfter(keyEntry.getNotAfter())
                     .expireAt(keyEntry.getExpireAt())
+                    .validityInterval(keyEntry.getValidityInterval())
+                    .legacyInterval(keyEntry.getLegacyInterval())
                     .state(keyEntry.getState())
                     .keyUsage(keyEntry.getKeyUsage())
                     .build();
@@ -54,6 +56,8 @@ public class KeyEntryMapper {
                 .notBefore(attributes.getNotBefore())
                 .notAfter(attributes.getNotAfter())
                 .expireAt(attributes.getExpireAt())
+                .validityInterval(attributes.getValidityInterval())
+                .legacyInterval(attributes.getValidityInterval())
                 .state(attributes.getState())
                 .keyUsage(attributes.getKeyUsage())
                 .keyEntry(keyEntry)
@@ -68,6 +72,10 @@ public class KeyEntryMapper {
         private ZonedDateTime notBefore;
         private ZonedDateTime notAfter;
         private ZonedDateTime expireAt;
+
+        private Long validityInterval;
+        private Long legacyInterval;
+
         private StsKeyEntry.State state;
         private KeyUsage keyUsage;
     }

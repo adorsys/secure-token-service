@@ -1,5 +1,6 @@
 package de.adorsys.sts.keymanagement.service;
 
+import de.adorsys.sts.keymanagement.util.DateTimeUtils;
 import de.adorsys.sts.keymanagement.config.KeyManagementRotationProperties;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
@@ -23,7 +24,8 @@ public class KeyRotationService {
 
     public KeyRotationService(
             KeyStoreGenerator keyStoreGenerator,
-            Clock clock, KeyManagementRotationProperties rotationProperties
+            Clock clock,
+            KeyManagementRotationProperties rotationProperties
     ) {
         this.keyStoreGenerator = keyStoreGenerator;
         this.clock = clock;
@@ -114,6 +116,11 @@ public class KeyRotationService {
                 .collect(Collectors.toList());
 
         for(StsKeyEntry keyEntry : keysToBeValid) {
+            ZonedDateTime notAfter = DateTimeUtils.addMillis(now, keyEntry.getValidityInterval());
+
+            keyEntry.setNotAfter(notAfter);
+            keyEntry.setExpireAt(DateTimeUtils.addMillis(notAfter, keyEntry.getValidityInterval()));
+
             keyEntry.setState(StsKeyEntry.State.VALID);
         }
 

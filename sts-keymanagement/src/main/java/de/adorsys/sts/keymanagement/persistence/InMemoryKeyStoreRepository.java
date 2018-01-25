@@ -13,7 +13,7 @@ public class InMemoryKeyStoreRepository implements KeyStoreRepository {
 
     @Override
     public boolean exists() {
-        return false;
+        return keyStore != null;
     }
 
     @Override

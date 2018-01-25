@@ -1,20 +1,22 @@
-server:
-  port: 8888
-
-security:
-  ignored: /**
+logging:
+  level:
+    de.adorsys.sts.keyrotation.KeyRotationSchedule: 'debug'
 
 sts:
   resourceServers:
   - audience: "sts"
     jwksUrl: "http://localhost:8888/pop"
+  - audience: "my_audience"
+    jwksUrl: "http://localhost:8888/pop"
+  - audience: "my_audience_2"
+    jwksUrl: "http://another_server:8080/pop"
   - audience: "sts-service-component-example"
     jwksUrl: "http://localhost:8887/pop"
   - audience: "sts-service-component"
     jwksUrl: "http://sts-service-component:8887/service-component/pop"
   keymanagement:
     rotation:
-      checkInterval: 60000
+      checkInterval: 5000
       encKeyPairs:
         minKeys: 5
         enabled: true
@@ -26,32 +28,32 @@ sts:
         enabled: true
     persistence:
       containerName: adsts-container
-      password: ahDa5cahda1ooxahh8aikaeChiePaeKa
+      password: 0123456789ABCDEF
     keystore:
-      password: LuYie2eebebahNgoopiehaiV9wis7anu
+      password: FEDCBA9876543210
       type: UBER
-      name: adsts-keystore
-      alias_prefix: adsts-
+      name: adsts-dev-keystore
+      alias_prefix: adsts-dev-
       keys:
         encKeyPairs:
           initialCount: 5
           algo: RSA
           sigAlgo: SHA256withRSA
-          size: 4096
+          size: 2048
           name: Adorsys Security Token Service
-          validityInterval: 3600000
-          legacyInterval: 86400000
+          validityInterval: 60000
+          legacyInterval: 120000
         signKeyPairs:
           initialCount: 5
           algo: RSA
           sigAlgo: SHA256withRSA
-          size: 4096
+          size: 2048
           name: Adorsys Security Token Service
-          validityInterval: 3600000
-          legacyInterval: 86400000
+          validityInterval: 60000
+          legacyInterval: 120000
         secretKeys:
           initialCount: 5
           algo: AES
           size: 256
-          validityInterval: 3600000
-          legacyInterval: 86400000
+          validityInterval: 60000
+          legacyInterval: 120000
