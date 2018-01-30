@@ -23,10 +23,10 @@ public class KeyRotationSchedule {
     @Autowired
     public KeyRotationSchedule(
             KeyRotationService keyRotationService,
-            CachedKeyStoreRepository keyStoreRepository
+            KeyStoreRepository keyStoreRepository
     ) {
         this.keyRotationService = keyRotationService;
-        this.keyStoreRepository = keyStoreRepository;
+        this.keyStoreRepository = new CachedKeyStoreRepository(keyStoreRepository);
     }
 
     @Scheduled(

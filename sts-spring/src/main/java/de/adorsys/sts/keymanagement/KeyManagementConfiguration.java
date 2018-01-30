@@ -3,11 +3,13 @@ package de.adorsys.sts.keymanagement;
 import de.adorsys.sts.keymanagement.persistence.CachedKeyStoreRepository;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.*;
+import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Resource;
 import java.time.Clock;
 
 @Configuration
@@ -22,19 +24,12 @@ public class KeyManagementConfiguration {
     }
 
     @Bean
-    CachedKeyStoreRepository cachedKeyStoreRepository(
-            KeyStoreRepository keyStoreRepository
-    ) {
-        return new CachedKeyStoreRepository(keyStoreRepository);
-    }
-
-    @Bean
     KeyManagementService keyManagerService(
-            CachedKeyStoreRepository keyStoreRepository,
+            KeyStoreRepository keyStoreRepository,
             KeyConversionService keyConversionService
     ) {
         return new KeyManagementService(
-                keyStoreRepository,
+                new CachedKeyStoreRepository(keyStoreRepository),
                 keyConversionService
         );
     }
