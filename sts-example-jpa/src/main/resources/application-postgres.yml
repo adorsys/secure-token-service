@@ -1,0 +1,12 @@
+logging:
+  level.de.adorsys.sts.keyrotation.KeyRotationSchedule: 'debug'
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sts
+    username: db_user
+    password: db_user@123
+  jpa:
+    properties:
+      hibernate:
+        show-sql: true

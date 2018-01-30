@@ -21,10 +21,14 @@ public class KeyStoreInitializationRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        logger.info("Initialize keys for keystore...");
+        logger.info("Check if keys for keystore are needed to be initialized...");
 
-        initializer.initialize();
+        boolean hasBeenInitialized = initializer.initialize();
 
-        logger.info("Key initialization completed.");
+        if(hasBeenInitialized) {
+            logger.info("Key initialization completed.");
+        } else {
+            logger.info("Key initialization skipped.");
+        }
     }
 }

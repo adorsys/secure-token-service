@@ -52,7 +52,7 @@
 
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZZ</maven.build.timestamp.format>
 		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
-		<cryptoutils.version>0.9.0</cryptoutils.version>
+		<cryptoutils.version>0.10.0</cryptoutils.version>
 
 		<!-- jackson buggy 2.8.x version https://github.com/FasterXML/jackson-databind/issues/1595 -->
 		<jackson.version>2.7.9</jackson.version>
@@ -73,6 +73,10 @@
 		<module>sts-spring</module>
 		<module>sts-jclouds-persistence</module>
 		<module>sts-service-component-example</module>
+		<module>sts-persistence-jpa</module>
+		<module>sts-persistence-jpa-postgresql</module>
+		<module>sts-example-jpa</module>
+		<module>sts-persistence-jpa-h2</module>
 	</modules>
 
 	<dependencyManagement>
@@ -85,6 +89,7 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+
 			<dependency>
 				<groupId>io.springfox</groupId>
 				<artifactId>springfox-swagger2</artifactId>
@@ -145,6 +150,21 @@
 				<artifactId>sts-spring</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-persistence-jpa</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-persistence-jpa-postgresql</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-persistence-jpa-h2</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>com.nimbusds</groupId>
@@ -157,7 +177,7 @@
 				<version>1.58</version>
 			</dependency>
 
-			<!-- Environmen -->
+			<!-- Environment -->
 			<dependency>
 				<groupId>de.adorsys.envutils</groupId>
 				<artifactId>envutils4j</artifactId>
@@ -178,7 +198,7 @@
 				<scope>compile</scope>
 			</dependency>
 
-			<!-- Environmen -->
+			<!-- Environment -->
 			<dependency>
 				<groupId>de.adorsys.cryptoutils</groupId>
 				<artifactId>jkeyutils</artifactId>
@@ -199,6 +219,7 @@
 				<artifactId>jjwk</artifactId>
 				<version>${cryptoutils.version}</version>
 			</dependency>
+
 			<dependency>
 				<groupId>com.google.code.gson</groupId>
 				<artifactId>gson</artifactId>
@@ -219,6 +240,25 @@
 				<groupId>com.fasterxml.jackson.datatype</groupId>
 				<artifactId>jackson-datatype-jsr310</artifactId>
 				<version>${jackson.version}</version>
+			</dependency>
+
+			<!-- Database -->
+			<dependency>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-core</artifactId>
+				<version>5.0.6</version>
+			</dependency>
+			<dependency>
+				<groupId>org.postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>9.4.1212</version>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+				<version>1.4.196</version>
+				<scope>runtime</scope>
 			</dependency>
 
 			<!-- Excel Parsing -->

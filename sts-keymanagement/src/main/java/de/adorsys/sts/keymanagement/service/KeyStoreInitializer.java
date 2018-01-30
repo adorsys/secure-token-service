@@ -16,10 +16,14 @@ public class KeyStoreInitializer {
         this.generator = generator;
     }
 
-    public void initialize() {
+    public boolean initialize() {
         if (!repository.exists()) {
             StsKeyStore keyStore = generator.generate();
             repository.save(keyStore);
+
+            return true;
+        } else {
+            return false;
         }
     }
 }

@@ -1,0 +1,77 @@
+version: '3.1'
+services:
+  keycloak:
+    image: "adorsys/keycloak-sts-adapter:latest"
+    environment:
+      KEYCLOAK_PASSWORD: admin123
+      KEYCLOAK_USER: admin
+    ports:
+    - "8080:8080"
+    - "8787:8787"
+    volumes:
+    - "./.docker/keycloak/data:/opt/jboss/keycloak/standalone/data"
+    networks:
+    - sts_network
+    command:
+    - "-b"
+    - "0.0.0.0"
+    - "--debug"
+  post_process:
+    image: adorsys/keycloak-config-cli:latest
+    depends_on:
+    - keycloak
+    networks:
+    - sts_network
+    volumes:
+    - ./keycloak-config:/opt/keycloak-config-cli/configs
+    environment:
+    - KEYCLOAK_URL=http://keycloak:8080/auth
+    - KEYCLOAK_ADMIN=admin
+    - KEYCLOAK_ADMIN_PASSWORD=admin123
+  postgres:
+    image: postgres:9.6-alpine
+    environment:
+      POSTGRES_USER: db_user
+      POSTGRES_PASSWORD: db_user@123
+      POSTGRES_DB: sts
+    volumes:
+    - "./.docker/postgres/data:/var/lib/postgresql/data"
+    ports:
+    - 5432:5432
+  sts:
+    build: ./sts-example-jpa
+    image: "local/sts-example-jpa:latest"
+    networks:
+    - sts_network
+    links:
+    - postgres
+    environment:
+    - SPRING_APPLICATION_JSON={"sts":{"resourceServers":[{"audience":"sts","jwksUrl":"http://localhost:8888/pop"},{"audience":"sts-service-component","jwksUrl":"http://sts-service-component:8887/pop"}]}}
+    ports:
+    - "8888:8888"
+  sts-service-component:
+    build: ./sts-service-component-example
+    image: "local/sts-service-component-example:latest"
+    ports:
+    - "8887:8887"
+    environment:
+    - sts_audience_name=sts-service-component
+    - SPRING_APPLICATION_JSON={"sts":{"authservers":[{"name":"local keycloak","issUrl":"http://localhost:8080/auth/realms/moped","jwksUrl":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}]}}
+    networks:
+    - sts_network
+  sts-client:
+    build: ./sts-client-example
+    image: local/sts-client-example:latest
+    environment:
+    - "KEYCLOAK_AUTH_URL=http://localhost:8080/auth"
+    - KEYCLOAK_REALM=moped
+    - KEYCLOAK_CLIENT_ID=moped-client
+    - KEYCLOAK_SCOPE=sts-service-component
+    - SERVICE_URL=http://localhost:8887/helloworld
+    networks:
+    - sts_network
+    ports:
+    - 8090:8090
+
+networks:
+  sts_network:

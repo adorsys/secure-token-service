@@ -1,17 +1,19 @@
+server:
+  port: 8888
+
+security:
+  ignored: /**
+
+logging:
+  level.de.adorsys.sts.keyrotation.KeyRotationSchedule: 'debug'
+
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/sts
     username: db_user
     password: db_user@123
   jpa:
-    properties:
-      hibernate:
-        show_sql: true
-        generate_statistics: true
-
-logging:
-  level:
-    de.adorsys.sts.keyrotation.KeyRotationSchedule: 'debug'
+    hibernate:
+      show-sql: false
 
 sts:
   resourceServers:
@@ -43,8 +45,8 @@ sts:
     keystore:
       password: FEDCBA9876543210
       type: UBER
-      name: adsts-dev-keystore
-      alias_prefix: adsts-dev-
+      name: adsts-keystore
+      alias_prefix: adsts-
       keys:
         encKeyPairs:
           initialCount: 5
@@ -52,19 +54,19 @@ sts:
           sigAlgo: SHA256withRSA
           size: 2048
           name: Adorsys Security Token Service
-          validityInterval: 60000
-          legacyInterval: 120000
+          validityInterval: 120000
+          legacyInterval: 240000
         signKeyPairs:
           initialCount: 5
           algo: RSA
           sigAlgo: SHA256withRSA
           size: 2048
           name: Adorsys Security Token Service
-          validityInterval: 60000
-          legacyInterval: 120000
+          validityInterval: 120000
+          legacyInterval: 240000
         secretKeys:
           initialCount: 5
           algo: AES
           size: 256
-          validityInterval: 60000
-          legacyInterval: 120000
+          validityInterval: 120000
+          legacyInterval: 240000
