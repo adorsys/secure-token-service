@@ -52,7 +52,7 @@
 
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZZ</maven.build.timestamp.format>
 		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
-		<cryptoutils.version>0.10.0</cryptoutils.version>
+		<cryptoutils.version>0.10.0-SNAPSHOT</cryptoutils.version>
 
 		<!-- jackson buggy 2.8.x version https://github.com/FasterXML/jackson-databind/issues/1595 -->
 		<jackson.version>2.7.9</jackson.version>
