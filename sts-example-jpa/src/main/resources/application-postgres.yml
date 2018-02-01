@@ -1,6 +1,10 @@
 logging:
   level.de.adorsys.sts.keyrotation.KeyRotationSchedule: 'debug'
 
+flyway:
+  locations:
+  - db/migration/postgres
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/sts

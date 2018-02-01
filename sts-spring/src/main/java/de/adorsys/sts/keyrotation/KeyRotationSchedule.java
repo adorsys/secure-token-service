@@ -1,12 +1,14 @@
 package de.adorsys.sts.keyrotation;
 
+import de.adorsys.lockpersistence.client.LockClient;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
+import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
 import de.adorsys.sts.keymanagement.service.KeyRotationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,13 +22,21 @@ public class KeyRotationSchedule {
     private final KeyRotationService keyRotationService;
     private final KeyStoreRepository keyStoreRepository;
 
+    private final LockClient lockClient;
+
+    private final String keyStoreName;
+
     @Autowired
     public KeyRotationSchedule(
             KeyRotationService keyRotationService,
-            KeyStoreRepository keyStoreRepository
+            KeyStoreRepository keyStoreRepository,
+            LockClient lockClient,
+            KeyManagementProperties properties
     ) {
         this.keyRotationService = keyRotationService;
         this.keyStoreRepository = keyStoreRepository;
+        this.lockClient = lockClient;
+        this.keyStoreName = properties.getKeystore().getName();
     }
 
     @Scheduled(
@@ -34,15 +44,18 @@ public class KeyRotationSchedule {
             fixedDelayString = "${sts.keymanagement.rotation.checkInterval:60000}"
     )
     public void scheduledRotation() {
-        if(keyStoreRepository.exists()) {
-            LOG.debug("Perform key rotation...");
 
-            performKeyRotation();
+        lockClient.executeIfOwned(keyStoreName, () -> {
+            if(keyStoreRepository.exists()) {
+                LOG.debug("Perform key rotation...");
 
-            LOG.debug("Key rotation finished.");
-        } else {
-            LOG.debug("No key rotation needed. Keystore repository is (still) empty.");
-        }
+                performKeyRotation();
+
+                LOG.debug("Key rotation finished.");
+            } else {
+                LOG.debug("No key rotation needed. Keystore repository is (still) empty.");
+            }
+        });
     }
 
     private void performKeyRotation() {

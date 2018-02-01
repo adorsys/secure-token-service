@@ -52,7 +52,8 @@
 
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZZ</maven.build.timestamp.format>
 		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
-		<cryptoutils.version>0.10.0-SNAPSHOT</cryptoutils.version>
+		<cryptoutils.version>0.10.0</cryptoutils.version>
+		<lock-persistence.version>0.1.0</lock-persistence.version>
 
 		<!-- jackson buggy 2.8.x version https://github.com/FasterXML/jackson-databind/issues/1595 -->
 		<jackson.version>2.7.9</jackson.version>
@@ -74,10 +75,9 @@
 		<module>sts-jclouds-persistence</module>
 		<module>sts-service-component-example</module>
 		<module>sts-persistence-jpa</module>
-		<module>sts-persistence-jpa-postgresql</module>
 		<module>sts-example-jpa</module>
-		<module>sts-persistence-jpa-h2</module>
-	</modules>
+        <module>sts-persistence-jpa-flyway</module>
+    </modules>
 
 	<dependencyManagement>
 		<dependencies>
@@ -157,12 +157,7 @@
 			</dependency>
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
-				<artifactId>sts-persistence-jpa-postgresql</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>de.adorsys.sts</groupId>
-				<artifactId>sts-persistence-jpa-h2</artifactId>
+				<artifactId>sts-persistence-jpa-flyway</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
@@ -219,6 +214,16 @@
 				<artifactId>jjwk</artifactId>
 				<version>${cryptoutils.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>de.adorsys.lock-persistence</groupId>
+				<artifactId>lock-persistence-jpa</artifactId>
+				<version>${lock-persistence.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.lock-persistence</groupId>
+				<artifactId>lock-persistence-core</artifactId>
+				<version>${lock-persistence.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>com.google.code.gson</groupId>
@@ -247,6 +252,7 @@
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-core</artifactId>
 				<version>5.0.6</version>
+				<scope>runtime</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.postgresql</groupId>

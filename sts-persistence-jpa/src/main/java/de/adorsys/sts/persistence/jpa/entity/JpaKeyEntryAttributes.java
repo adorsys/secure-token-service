@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -26,10 +27,21 @@ public class JpaKeyEntryAttributes {
 
     private String alias;
 
-    private ZonedDateTime createdAt;
-    private ZonedDateTime notBefore;
-    private ZonedDateTime notAfter;
-    private ZonedDateTime expireAt;
+    @Column(columnDefinition= "TIMESTAMP WITH TIME ZONE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+
+    @Column(columnDefinition= "TIMESTAMP WITH TIME ZONE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date notBefore;
+
+    @Column(columnDefinition= "TIMESTAMP WITH TIME ZONE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date notAfter;
+
+    @Column(columnDefinition= "TIMESTAMP WITH TIME ZONE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date expireAt;
 
     private Long validityInterval;
     private Long legacyInterval;

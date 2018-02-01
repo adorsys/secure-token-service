@@ -1,7 +1,12 @@
 package de.adorsys.sts.persistence.jpa.config;
 
+import de.adorsys.lockpersistence.client.LockClient;
+import de.adorsys.lockpersistence.client.SimpleLockClient;
+import de.adorsys.lockpersistence.jpa.config.EnableJpaLockPersistence;
+import de.adorsys.lockpersistence.service.LockService;
 import de.adorsys.sts.keymanagement.KeyManagementConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -20,5 +25,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         basePackages = "de.adorsys.sts.persistence.jpa.entity",
         basePackageClasses = {Jsr310JpaConverters.class}
 )
+@EnableJpaLockPersistence
 public class JpaConfiguration {
+
+    @Bean
+    LockClient lockClient(LockService lockService) {
+        return new SimpleLockClient("sts.lock", lockService);
+    }
 }

@@ -1,5 +1,7 @@
 package de.adorsys.sts.example.config;
 
+import de.adorsys.lockpersistence.client.LockClient;
+import de.adorsys.lockpersistence.client.NoopLockClient;
 import de.adorsys.sts.encryption.EnableEncryption;
 import de.adorsys.sts.keymanagement.persistence.InMemoryKeyStoreRepository;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
@@ -33,5 +35,10 @@ public class ExampleConfiguration {
     @Bean
     KeyStoreRepository keyStoreRepository() {
         return new InMemoryKeyStoreRepository();
+    }
+
+    @Bean
+    LockClient lockClient() {
+        return new NoopLockClient();
     }
 }

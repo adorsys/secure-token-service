@@ -17,6 +17,10 @@
         </dependency>
 
         <dependency>
+            <groupId>de.adorsys.lock-persistence</groupId>
+            <artifactId>lock-persistence-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>de.adorsys.cryptoutils</groupId>
             <artifactId>encobject</artifactId>
         </dependency>

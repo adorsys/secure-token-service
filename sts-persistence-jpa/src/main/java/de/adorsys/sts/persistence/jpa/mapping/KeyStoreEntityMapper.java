@@ -16,6 +16,11 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.temporal.TemporalAccessor;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,11 +95,10 @@ public class KeyStoreEntityMapper {
     private StsKeyEntry mapFromEntity(KeyEntry keyEntry, JpaKeyEntryAttributes keyEntryAttributes) {
         return StsKeyEntry.builder()
                 .alias(keyEntryAttributes.getAlias())
-
-                .createdAt(keyEntryAttributes.getCreatedAt())
-                .notBefore(keyEntryAttributes.getNotBefore())
-                .notAfter(keyEntryAttributes.getNotAfter())
-                .expireAt(keyEntryAttributes.getExpireAt())
+                .createdAt(convertDateToZonedDateTime(keyEntryAttributes.getCreatedAt()))
+                .notBefore(convertDateToZonedDateTime(keyEntryAttributes.getNotBefore()))
+                .notAfter(convertDateToZonedDateTime(keyEntryAttributes.getNotAfter()))
+                .expireAt(convertDateToZonedDateTime(keyEntryAttributes.getExpireAt()))
                 .validityInterval(keyEntryAttributes.getValidityInterval())
                 .legacyInterval(keyEntryAttributes.getLegacyInterval())
                 .state(keyEntryAttributes.getState())
@@ -105,12 +109,29 @@ public class KeyStoreEntityMapper {
                 .build();
     }
 
+    private ZonedDateTime convertDateToZonedDateTime(Date date) {
+        if(date == null) {
+            return null;
+        }
+
+        Instant instant = Instant.ofEpochMilli(date.getTime());
+        return ZonedDateTime.ofInstant(instant, ZoneOffset.UTC);
+    }
+
+    private Date convertZonedDateTimeToDate(ZonedDateTime zonedDateTime) {
+        if(zonedDateTime == null) {
+            return null;
+        }
+
+        return Date.from(zonedDateTime.toInstant());
+    }
+
     public void mapIntoEntity(StsKeyEntry stsKeyEntry, JpaKeyEntryAttributes keyEntryAttributes) {
         keyEntryAttributes.setAlias(stsKeyEntry.getAlias());
-        keyEntryAttributes.setCreatedAt(stsKeyEntry.getCreatedAt());
-        keyEntryAttributes.setNotBefore(stsKeyEntry.getNotBefore());
-        keyEntryAttributes.setNotAfter(stsKeyEntry.getNotAfter());
-        keyEntryAttributes.setExpireAt(stsKeyEntry.getExpireAt());
+        keyEntryAttributes.setCreatedAt(convertZonedDateTimeToDate(stsKeyEntry.getCreatedAt()));
+        keyEntryAttributes.setNotBefore(convertZonedDateTimeToDate(stsKeyEntry.getNotBefore()));
+        keyEntryAttributes.setNotAfter(convertZonedDateTimeToDate(stsKeyEntry.getNotAfter()));
+        keyEntryAttributes.setExpireAt(convertZonedDateTimeToDate(stsKeyEntry.getExpireAt()));
         keyEntryAttributes.setValidityInterval(stsKeyEntry.getValidityInterval());
         keyEntryAttributes.setLegacyInterval(stsKeyEntry.getLegacyInterval());
         keyEntryAttributes.setState(stsKeyEntry.getState());

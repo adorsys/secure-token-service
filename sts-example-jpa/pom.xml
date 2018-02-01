@@ -34,7 +34,7 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-persistence-jpa-postgresql</artifactId>
+            <artifactId>sts-persistence-jpa-flyway</artifactId>
         </dependency>
 
         <dependency>

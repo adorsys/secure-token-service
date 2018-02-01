@@ -19,6 +19,7 @@ public class JpaKeyStore {
 
     private String type;
 
+    @Column(length = 1024 * 1024)
     private byte[] keystore;
 }
 

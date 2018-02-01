@@ -1,6 +1,15 @@
 server:
   port: 8887
 
+spring:
+  datasource:
+    url: jdbc:postgresql://sts-db:5432/sts
+    username: db_user
+    password: db_user@123
+  jpa:
+    hibernate:
+      show-sql: false
+
 sts:
   audience_name: sts-service-component-example
   secret_claim_property_key: secretClaim
@@ -9,6 +18,8 @@ sts:
     issUrl: https://sso-keycloak-playground.dev.adorsys.de/auth/realms/moped
     jwksUrl: https://sso-keycloak-playground.dev.adorsys.de/auth/realms/moped/protocol/openid-connect/certs
     refreshIntervalSeconds: 600
+  persistence:
+    lockExpiry: 30000
   keymanagement:
     rotation:
       checkInterval: 60000
@@ -27,8 +38,8 @@ sts:
     keystore:
       password: FEDCBA9876543210
       type: UBER
-      name: adsts-keystore
-      alias_prefix: adsts-
+      name: service-component-example-keystore
+      alias_prefix: service-component-example-
       keys:
         encKeyPairs:
           initialCount: 5

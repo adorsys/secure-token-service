@@ -1,5 +1,8 @@
 package de.adorsys.sts.jpa.example.config;
 
+import de.adorsys.lockpersistence.client.LockClient;
+import de.adorsys.lockpersistence.client.SimpleLockClient;
+import de.adorsys.lockpersistence.service.LockService;
 import de.adorsys.sts.encryption.EnableEncryption;
 import de.adorsys.sts.keyrotation.EnableKeyRotation;
 import de.adorsys.sts.persistence.jpa.config.EnableJpaPersistence;

@@ -3,10 +3,11 @@ logging:
 
 flyway:
   locations:
-  - db/migration/h2
+  - db/migration/postgres
 
 spring:
   datasource:
-    url: jdbc:h2:~/sts_h2_db;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password:
+    url: jdbc:postgresql://localhost:5432/sts
+  jpa:
+    hibernate:
+      show-sql: true
