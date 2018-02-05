@@ -10,3 +10,15 @@ spring:
     url: jdbc:h2:~/sts_h2_db;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
+  jpa:
+    generate-ddl: false
+    hibernate:
+#      show-sql: true
+#      ddl: none
+      ddl-auto: none
+#      properties:
+#        show-sql: true
+#        ddl: none
+#        hbm2ddl:
+#          auto: none
+    database-platform: org.hibernate.dialect.H2Dialect

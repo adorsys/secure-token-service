@@ -14,3 +14,4 @@ spring:
     properties:
       hibernate:
         show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect

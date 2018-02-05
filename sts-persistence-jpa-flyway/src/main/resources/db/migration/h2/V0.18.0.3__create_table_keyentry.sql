@@ -5,10 +5,10 @@ CREATE TABLE sts.key_entry
 
   alias             VARCHAR(255) NOT NULL,
 
-  created_at        TIMESTAMP WITH TIME ZONE NOT NULL,
-  not_before        TIMESTAMP WITH TIME ZONE NOT NULL,
-  not_after         TIMESTAMP WITH TIME ZONE NULL,
-  expire_at         TIMESTAMP WITH TIME ZONE NULL,
+  created_at        TIMESTAMP    NOT NULL,
+  not_before        TIMESTAMP    NOT NULL,
+  not_after         TIMESTAMP    NULL,
+  expire_at         TIMESTAMP    NULL,
 
   validity_interval BIGINT       NOT NULL,
   legacy_interval   BIGINT       NOT NULL,
