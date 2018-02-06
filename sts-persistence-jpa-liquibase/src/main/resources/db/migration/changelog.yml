@@ -1,0 +1,13 @@
+databaseChangeLog:
+- include:
+    file: db/migration/changelogs/00-create_schema-sts.yml
+- include:
+    file: db/migration/changelogs/01-create-hibernate-sequence.yml
+- include:
+    file: db/migration/changelogs/02-create-table-keystore.yml
+- include:
+    file: db/migration/changelogs/03-create-table-keyentry.yml
+- include:
+    file: db/migration/changelogs/04-create_schema-lock-persistence.yml
+- include:
+    file: db/migration/changelogs/05-create-table-lock.yml

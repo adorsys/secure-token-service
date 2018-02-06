@@ -1,0 +1,31 @@
+databaseChangeLog:
+- changeSet:
+    id: 6
+    author: sts
+    changes:
+    - createTable:
+        schemaName: lock_persistence
+        tableName: lock
+        columns:
+        - column:
+            name: id
+            type: int
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              nullable: false
+        - column:
+            name: name
+            type: varchar(256)
+            constraints:
+              nullable: false
+        - column:
+            name: value
+            type: varchar(36)
+            constraints:
+              nullable: false
+        - column:
+            name: expires
+            type: java.sql.Types.TIMESTAMP
+            constraints:
+              nullable: false

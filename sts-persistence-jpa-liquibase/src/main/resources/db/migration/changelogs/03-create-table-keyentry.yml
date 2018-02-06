@@ -1,0 +1,57 @@
+databaseChangeLog:
+- changeSet:
+    id: 4
+    author: sts
+    changes:
+    - createTable:
+        schemaName: sts
+        tableName: key_entry
+        columns:
+        - column:
+            name: id
+            type: int
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              nullable: false
+        - column:
+            name: key_store_id
+            type: int
+            constraints:
+              nullable: false
+              foreignKeyName: fk_key_store
+              references: sts.key_store(id)
+        - column:
+            name: alias
+            type: varchar(255)
+            constraints:
+              nullable: false
+              unique: true
+        - column:
+            name: created_at
+            type: java.sql.Types.TIMESTAMP
+            constraints:
+              nullable: false
+        - column:
+            name: not_before
+            type: java.sql.Types.TIMESTAMP
+            constraints:
+              nullable: false
+        - column:
+            name: not_after
+            type: java.sql.Types.TIMESTAMP
+        - column:
+            name: expire_at
+            type: java.sql.Types.TIMESTAMP
+        - column:
+            name: validity_interval
+            type: bigint
+        - column:
+            name: legacy_interval
+            type: bigint
+        - column:
+            name: state
+            type: varchar(255)
+        - column:
+            name: key_usage
+            type: varchar(255)

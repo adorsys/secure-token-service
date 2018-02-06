@@ -1,0 +1,11 @@
+databaseChangeLog:
+- changeSet:
+    id: 5
+    author: sts
+    changes:
+    - sql:
+        dbms: postgresql, h2
+        endDelimiter: ;
+        splitStatements: true
+        sql: CREATE SCHEMA lock_persistence;
+        stripComments: true

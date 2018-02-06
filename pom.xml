@@ -77,7 +77,8 @@
 		<module>sts-persistence-jpa</module>
 		<module>sts-example-jpa</module>
         <module>sts-persistence-jpa-flyway</module>
-    </modules>
+		<module>sts-persistence-jpa-liquibase</module>
+	</modules>
 
 	<dependencyManagement>
 		<dependencies>
@@ -158,6 +159,11 @@
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-persistence-jpa-flyway</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-persistence-jpa-liquibase</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
