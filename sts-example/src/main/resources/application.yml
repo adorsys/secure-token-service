@@ -4,6 +4,22 @@ server:
 security:
   ignored: /**
 
+liquibase:
+  change-log: classpath:/db/migration/changelog.yml
+
+flyway:
+  locations:
+  - db/migration/h2
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: db_user
+    password: db_user@123
+  jpa:
+    hibernate:
+      show-sql: false
+
 sts:
   resourceServers:
   - audience: "sts"
@@ -12,6 +28,8 @@ sts:
     jwksUrl: "http://localhost:8887/pop"
   - audience: "sts-service-component"
     jwksUrl: "http://sts-service-component:8887/service-component/pop"
+  persistence:
+    lockExpiry: 30000
   keymanagement:
     rotation:
       checkInterval: 60000
@@ -30,8 +48,8 @@ sts:
     keystore:
       password: LuYie2eebebahNgoopiehaiV9wis7anu
       type: UBER
-      name: adsts-keystore
-      alias_prefix: adsts-
+      name: sts-example-keystore
+      alias_prefix: sts-example-
       keys:
         encKeyPairs:
           initialCount: 5

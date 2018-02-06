@@ -75,7 +75,6 @@
 		<module>sts-jclouds-persistence</module>
 		<module>sts-service-component-example</module>
 		<module>sts-persistence-jpa</module>
-		<module>sts-example-jpa</module>
         <module>sts-persistence-jpa-flyway</module>
 		<module>sts-persistence-jpa-liquibase</module>
 	</modules>

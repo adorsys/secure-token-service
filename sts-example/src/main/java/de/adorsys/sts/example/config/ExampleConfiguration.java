@@ -1,11 +1,8 @@
 package de.adorsys.sts.example.config;
 
-import de.adorsys.lockpersistence.client.LockClient;
-import de.adorsys.lockpersistence.client.NoopLockClient;
 import de.adorsys.sts.encryption.EnableEncryption;
-import de.adorsys.sts.keymanagement.persistence.InMemoryKeyStoreRepository;
-import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keyrotation.EnableKeyRotation;
+import de.adorsys.sts.persistence.jpa.config.EnableJpaPersistence;
 import de.adorsys.sts.pop.EnablePOP;
 import de.adorsys.sts.resourceserver.initializer.EnableResourceServerInitialization;
 import de.adorsys.sts.resourceserver.persistence.InMemoryResourceServerRepository;
@@ -20,25 +17,16 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 @EnableEncryption
 @EnablePOP
 @EnableKeyRotation
+@EnableJpaPersistence
 public class ExampleConfiguration {
 
     @Bean
-    public TaskScheduler taskExecutor () {
+    public TaskScheduler taskExecutor() {
         return new ConcurrentTaskScheduler();
     }
 
     @Bean
     ResourceServerRepository resourceServerRepository() {
         return new InMemoryResourceServerRepository();
-    }
-
-    @Bean
-    KeyStoreRepository keyStoreRepository() {
-        return new InMemoryKeyStoreRepository();
-    }
-
-    @Bean
-    LockClient lockClient() {
-        return new NoopLockClient();
     }
 }
