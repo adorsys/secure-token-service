@@ -1,9 +1,16 @@
 server:
   port: 8887
 
+liquibase:
+  change-log: classpath:/db/migration/changelog.yml
+
+flyway:
+  locations:
+  - db/migration/h2
+
 spring:
   datasource:
-    url: jdbc:postgresql://sts-db:5432/sts
+    url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: db_user
     password: db_user@123
   jpa:
@@ -47,7 +54,7 @@ sts:
           sigAlgo: SHA256withRSA
           size: 2048
           name: Adorsys Security Token Service
-          validityInterval: 432000000
+          validityInterval: 3600000
           legacyInterval: 86400000
         signKeyPairs:
           initialCount: 5
@@ -55,11 +62,11 @@ sts:
           sigAlgo: SHA256withRSA
           size: 2048
           name: Adorsys Security Token Service
-          validityInterval: 432000000
+          validityInterval: 3600000
           legacyInterval: 86400000
         secretKeys:
           initialCount: 5
           algo: AES
           size: 256
-          validityInterval: 432000000
+          validityInterval: 3600000
           legacyInterval: 86400000

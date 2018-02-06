@@ -24,7 +24,7 @@ public class KeyRotationSchedule {
 
     private final LockClient lockClient;
 
-    private final String keyStoreName;
+    private final String rotationLockName;
 
     @Autowired
     public KeyRotationSchedule(
@@ -36,7 +36,9 @@ public class KeyRotationSchedule {
         this.keyRotationService = keyRotationService;
         this.keyStoreRepository = keyStoreRepository;
         this.lockClient = lockClient;
-        this.keyStoreName = properties.getKeystore().getName();
+
+        String keyStoreName = properties.getKeystore().getName();
+        this.rotationLockName = "key-rotation -- " + keyStoreName;
     }
 
     @Scheduled(
@@ -45,7 +47,7 @@ public class KeyRotationSchedule {
     )
     public void scheduledRotation() {
 
-        lockClient.executeIfOwned(keyStoreName, () -> {
+        lockClient.executeIfOwned(rotationLockName, () -> {
             if(keyStoreRepository.exists()) {
                 LOG.debug("Perform key rotation...");
 

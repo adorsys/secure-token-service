@@ -55,6 +55,8 @@ services:
   sts:
     build: ./sts-example
     image: "local/sts-example:latest"
+    depends_on:
+    - sts-db
     networks:
     - sts_network
     environment:
@@ -64,14 +66,14 @@ services:
     - SPRING_APPLICATION_JSON={"sts":{"resourceServers":[{"audience":"sts","jwksUrl":"http://localhost:8888/pop"},{"audience":"sts-service-component","jwksUrl":"http://sts-service-component:8887/pop"}]}}
     ports:
     - "8888:8888"
-  sts-service-component_1:
+  sts-service-component:
     build: ./sts-service-component-example
     image: "local/sts-service-component-example:latest"
     ports:
     - "8887:8887"
     environment:
     - sts_audience_name=sts-service-component
-    - SPRING_PROFILES_ACTIVE=dev
+    - SPRING_PROFILES_ACTIVE=postgres
     - SPRING_DATASOURCE_URL=jdbc:postgresql://sts-db:5432/sts
     - logging_level_de_adorsys_sts_keyrotation_KeyRotationSchedule=debug
     - SPRING_APPLICATION_JSON={"sts":{"authservers":[{"name":"local keycloak","issUrl":"http://localhost:8080/auth/realms/moped","jwksUrl":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}]}}
@@ -86,7 +88,7 @@ services:
     - "8886:8887"
     environment:
     - sts_audience_name=sts-service-component
-    - SPRING_PROFILES_ACTIVE=dev
+    - SPRING_PROFILES_ACTIVE=postgres
     - SPRING_DATASOURCE_URL=jdbc:postgresql://sts-db:5432/sts
     - logging_level_de_adorsys_sts_keyrotation_KeyRotationSchedule=debug
     - SPRING_APPLICATION_JSON={"sts":{"authservers":[{"name":"local keycloak","issUrl":"http://localhost:8080/auth/realms/moped","jwksUrl":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}]}}
