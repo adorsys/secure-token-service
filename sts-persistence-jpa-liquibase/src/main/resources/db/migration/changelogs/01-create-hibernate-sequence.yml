@@ -4,5 +4,6 @@ databaseChangeLog:
     author: sts
     changes:
     - createSequence:
+        schemaName: sts
         sequenceName: hibernate_sequence
         startValue: 1

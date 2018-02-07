@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "key_store", schema = "sts")
+@Table(name = "key_store")
 public class JpaKeyStore {
 
     @Id

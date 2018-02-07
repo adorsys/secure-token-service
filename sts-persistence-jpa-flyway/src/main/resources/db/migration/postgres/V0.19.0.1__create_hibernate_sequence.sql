@@ -1,1 +1,1 @@
-CREATE SEQUENCE hibernate_sequence START 1;
+CREATE SEQUENCE sts.hibernate_sequence START 1;

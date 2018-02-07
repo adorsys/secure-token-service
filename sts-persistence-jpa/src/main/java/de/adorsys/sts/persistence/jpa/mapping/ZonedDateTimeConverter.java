@@ -3,6 +3,7 @@ package de.adorsys.sts.persistence.jpa.mapping;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -25,7 +26,7 @@ public class ZonedDateTimeConverter implements AttributeConverter<ZonedDateTime,
             return null;
         }
 
-        LocalDateTime localDateTime = databaseValue.toLocalDateTime();
-        return localDateTime.atZone(ZoneOffset.UTC);
+        Instant instant = databaseValue.toInstant();
+        return instant.atZone(ZoneOffset.UTC);
     }
 }

@@ -5,9 +5,11 @@ security:
   ignored: /**
 
 liquibase:
+  enabled: true
   change-log: classpath:/db/migration/changelog.yml
 
 flyway:
+  enabled: false
   locations:
   - db/migration/h2
 
@@ -19,6 +21,9 @@ spring:
   jpa:
     hibernate:
       show-sql: false
+    properties:
+      hibernate:
+        default_schema: sts
 
 sts:
   resourceServers:

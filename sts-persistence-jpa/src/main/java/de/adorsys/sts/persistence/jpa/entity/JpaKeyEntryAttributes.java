@@ -21,7 +21,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "key_entry", schema = "sts")
+@Table(name = "key_entry")
 public class JpaKeyEntryAttributes {
 
     @Id

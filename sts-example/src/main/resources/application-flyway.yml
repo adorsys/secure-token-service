@@ -1,0 +1,5 @@
+liquibase:
+  enabled: false
+
+flyway:
+  enabled: true

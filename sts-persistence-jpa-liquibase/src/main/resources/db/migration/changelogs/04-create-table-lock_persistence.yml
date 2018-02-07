@@ -4,8 +4,8 @@ databaseChangeLog:
     author: sts
     changes:
     - createTable:
-        schemaName: lock_persistence
-        tableName: lock
+        schemaName: sts
+        tableName: lock_persistence
         columns:
         - column:
             name: id
