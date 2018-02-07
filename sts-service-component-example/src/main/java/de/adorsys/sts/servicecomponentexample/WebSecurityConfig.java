@@ -2,9 +2,7 @@ package de.adorsys.sts.servicecomponentexample;
 
 import de.adorsys.sts.filter.JWTAuthenticationFilter;
 import de.adorsys.sts.token.authentication.TokenAuthenticationService;
-import de.adorsys.sts.tokenauth.BearerTokenValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;

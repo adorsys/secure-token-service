@@ -6,7 +6,6 @@ import org.adorsys.jkeygen.secretkey.SecretKeyBuilder;
 
 import javax.crypto.SecretKey;
 import javax.security.auth.callback.CallbackHandler;
-import java.security.KeyStore;
 
 public class SecretKeyGenerator {
 

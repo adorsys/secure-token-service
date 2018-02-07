@@ -4,7 +4,6 @@ import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.resourceserver.processing.ResourceServerProcessor;
 import de.adorsys.sts.token.TokenCoreConfiguration;
 import de.adorsys.sts.token.authentication.TokenAuthenticationConfiguration;
-import de.adorsys.sts.tokenauth.AuthServersProvider;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

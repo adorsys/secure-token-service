@@ -1,21 +1,14 @@
 package de.adorsys.sts.persistence.jpa.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.persistence.jpa.mapping.ZonedDateTimeConverter;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Columns;
-import org.hibernate.annotations.Type;
-import org.hibernate.type.ZonedDateTimeType;
 
 import javax.persistence.*;
-import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 @Getter
 @Setter

@@ -1,9 +1,7 @@
 package de.adorsys.sts.starter.config;
 
 import de.adorsys.sts.admin.EnableAdmin;
-import de.adorsys.sts.keymanagement.EnableKeyManagement;
 import de.adorsys.sts.keymanagement.KeyManagementConfigurationProperties;
-import de.adorsys.sts.keymanagement.persistence.InMemoryKeyStoreRepository;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.keyrotation.EnableKeyRotation;
