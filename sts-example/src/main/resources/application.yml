@@ -7,6 +7,7 @@ security:
 liquibase:
   enabled: true
   change-log: classpath:/db/migration/changelog.yml
+  default-schema: public
 
 flyway:
   enabled: false

@@ -1,3 +1,6 @@
+liquibase:
+  default-schema: public
+
 flyway:
   locations:
   - db/migration/postgres
