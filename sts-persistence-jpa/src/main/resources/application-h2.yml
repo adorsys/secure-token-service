@@ -1,6 +1,10 @@
 liquibase:
   default-schema: public
 
+flyway:
+  locations:
+  - db/migration/flyway/h2
+
 spring:
   datasource:
     url: jdbc:h2:./sts_h2_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE

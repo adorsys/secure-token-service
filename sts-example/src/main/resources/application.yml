@@ -6,13 +6,13 @@ security:
 
 liquibase:
   enabled: true
-  change-log: classpath:/db/migration/changelog.yml
+  change-log: classpath:/db/migration/liquibase/changelog.yml
   default-schema: public
 
 flyway:
   enabled: false
   locations:
-  - db/migration/h2
+  - db/migration/flyway/h2
 
 spring:
   datasource:

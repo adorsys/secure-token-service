@@ -75,8 +75,6 @@
 		<module>sts-jclouds-persistence</module>
 		<module>sts-service-component-example</module>
 		<module>sts-persistence-jpa</module>
-        <module>sts-persistence-jpa-flyway</module>
-		<module>sts-persistence-jpa-liquibase</module>
 	</modules>
 
 	<dependencyManagement>
@@ -153,16 +151,6 @@
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-persistence-jpa</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>de.adorsys.sts</groupId>
-				<artifactId>sts-persistence-jpa-flyway</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>de.adorsys.sts</groupId>
-				<artifactId>sts-persistence-jpa-liquibase</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 

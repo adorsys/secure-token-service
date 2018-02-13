@@ -3,7 +3,7 @@ liquibase:
 
 flyway:
   locations:
-  - db/migration/mysql
+  - db/migration/flyway/mysql
 
 spring:
   datasource:

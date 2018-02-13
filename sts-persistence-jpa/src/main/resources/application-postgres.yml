@@ -3,7 +3,7 @@ liquibase:
 
 flyway:
   locations:
-  - db/migration/postgres
+  - db/migration/flyway/postgres
 
 spring:
   datasource:

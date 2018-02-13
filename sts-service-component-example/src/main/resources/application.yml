@@ -2,7 +2,7 @@ server:
   port: 8887
 
 liquibase:
-  change-log: classpath:/db/migration/changelog.yml
+  change-log: classpath:/db/migration/liquibase/changelog.yml
 
 flyway:
   locations:
