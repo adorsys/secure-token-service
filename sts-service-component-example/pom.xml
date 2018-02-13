@@ -20,10 +20,6 @@
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-persistence-jpa</artifactId>
         </dependency>
-        <dependency>
-            <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-persistence-jpa-liquibase</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
