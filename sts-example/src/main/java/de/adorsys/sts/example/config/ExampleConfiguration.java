@@ -3,6 +3,7 @@ package de.adorsys.sts.example.config;
 import de.adorsys.sts.encryption.EnableEncryption;
 import de.adorsys.sts.keyrotation.EnableKeyRotation;
 import de.adorsys.sts.persistence.jpa.config.EnableJpaPersistence;
+import de.adorsys.sts.persistence.mongo.config.EnableMongoPersistence;
 import de.adorsys.sts.pop.EnablePOP;
 import de.adorsys.sts.resourceserver.initializer.EnableResourceServerInitialization;
 import de.adorsys.sts.resourceserver.persistence.InMemoryResourceServerRepository;
@@ -18,6 +19,7 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 @EnablePOP
 @EnableKeyRotation
 @EnableJpaPersistence
+@EnableMongoPersistence
 public class ExampleConfiguration {
 
     @Bean

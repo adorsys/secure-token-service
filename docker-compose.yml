@@ -77,6 +77,14 @@ services:
 #    - "./.docker/sts-db/mysql57:/var/lib/mysql"
 #    ports:
 #    - 3306:3306
+  sts-mongo:
+    image: mongo:3.0
+    container_name: sts_mongo
+    volumes:
+    - "./.docker/sts-mongo:/data/db"
+    ports:
+    - 27017:27017
+    command: --smallfiles
   sts:
     build: ./sts-example
     image: "local/sts-example:latest"
