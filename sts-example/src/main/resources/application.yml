@@ -27,13 +27,18 @@ spring:
         default_schema: sts
 
 sts:
-  resourceServers:
-  - audience: "sts"
-    jwksUrl: "http://localhost:8888/pop"
-  - audience: "sts-service-component-example"
-    jwksUrl: "http://localhost:8887/pop"
-  - audience: "sts-service-component"
-    jwksUrl: "http://sts-service-component:8887/service-component/pop"
+  resourceServerManagement:
+    resourceRetriever:
+      httpConnectTimeout: 10000
+      httpReadTimeout: 60000
+      httpSizeLimit: 512000
+    resourceServers:
+    - audience: "sts"
+      jwksUrl: "http://localhost:8888/pop"
+    - audience: "sts-service-component-example"
+      jwksUrl: "http://localhost:8887/pop"
+    - audience: "sts-service-component"
+      jwksUrl: "http://sts-service-component:8887/service-component/pop"
   persistence:
     lockExpiry: 30000
   keymanagement:
