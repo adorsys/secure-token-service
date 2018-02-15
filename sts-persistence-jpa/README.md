@@ -27,6 +27,8 @@ By default this package will provide an embedded h2-database you do not need to 
 --spring.profiles.active=postgres
 ```
 
+Note: Spring provides alternative ways to set profiles.
+
 ## How to use with mysql 5.7 and 8.0
 
 1. Make sure your mysql-instance is running and adjust the datasource-properties in the `application-postgres.yml`.
@@ -37,6 +39,8 @@ By default this package will provide an embedded h2-database you do not need to 
 --spring.profiles.active=mysql
 ```
 
+Note: Spring provides alternative ways to set profiles.
+
 ## How to use with a persistent h2
 
 1. Use the `h2` spring profile with following command-line-argument:
@@ -45,7 +49,21 @@ By default this package will provide an embedded h2-database you do not need to 
 --spring.profiles.active=h2
 ```
 
+Note: Spring provides alternative ways to set profiles.
+
 Your h2-database files will be stored as `sts_h2_db.mv.db` and `sts_h2_db.trace.db` as default.
+
+## Configure your datasource connection
+
+Connectors for h2, postgres and mysql are using the datasource-properties:
+
+```
+spring:
+  datasource:
+    url: <database connection url - consider documentation of your selected database - default: h2 in-memory>
+    username: <database username - default: db_user>
+    password: <database password - default: db_user@123>
+```
 
 ## Database migration/refactoring
 
@@ -63,6 +81,8 @@ liquibase will be used as default migration tool.
 --spring.profiles.active=liquibase
 ```
 
+Note: Spring provides alternative ways to set profiles.
+
 Alternatively you can copy the migration scripts to your `resource`-folder. 
 Do not forget to adjust the paths to your migration scripts in your `application.yml`:
 
@@ -78,6 +98,8 @@ liquibase:
 ```
 --spring.profiles.active=flyway
 ```
+
+Note: Spring provides alternative ways to set profiles.
 
 Like for liquibase you can copy the migration scripts to your `resource`-folder. 
 You need to adjust your `application.yml`. Make sure you use the correct migration files for your database type:
