@@ -29,20 +29,20 @@ databaseChangeLog:
               unique: true
         - column:
             name: created_at
-            type: java.sql.Types.TIMESTAMP
+            type: datetime
             constraints:
               nullable: false
         - column:
             name: not_before
-            type: java.sql.Types.TIMESTAMP
+            type: datetime
             constraints:
               nullable: false
         - column:
             name: not_after
-            type: java.sql.Types.TIMESTAMP
+            type: datetime
         - column:
             name: expire_at
-            type: java.sql.Types.TIMESTAMP
+            type: datetime
         - column:
             name: validity_interval
             type: bigint

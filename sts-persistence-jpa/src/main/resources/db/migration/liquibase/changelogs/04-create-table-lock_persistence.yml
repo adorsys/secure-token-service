@@ -26,6 +26,6 @@ databaseChangeLog:
               nullable: false
         - column:
             name: expires
-            type: java.sql.Types.TIMESTAMP
+            type: datetime
             constraints:
               nullable: false

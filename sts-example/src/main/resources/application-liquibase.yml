@@ -1,6 +1,0 @@
-liquibase:
-  enabled: true
-  change-log: classpath:/db/migration/changelog.yml
-
-flyway:
-  enabled: false

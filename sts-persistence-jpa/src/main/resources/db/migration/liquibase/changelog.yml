@@ -1,0 +1,11 @@
+databaseChangeLog:
+- include:
+    file: db/migration/liquibase/changelogs/00-create_schema-sts.yml
+- include:
+    file: db/migration/liquibase/changelogs/01-create-hibernate-sequence.yml
+- include:
+    file: db/migration/liquibase/changelogs/02-create-table-keystore.yml
+- include:
+    file: db/migration/liquibase/changelogs/03-create-table-keyentry.yml
+- include:
+    file: db/migration/liquibase/changelogs/04-create-table-lock_persistence.yml

@@ -62,9 +62,29 @@ services:
 #      MYSQL_PASSWORD: db_user@123
 #      MYSQL_DATABASE: sts
 #    volumes:
-#    - "./.docker/sts-db/mysql:/var/lib/mysql"
+#    - "./.docker/sts-db/mysql8:/var/lib/mysql"
 #    ports:
 #    - 3306:3306
+#  sts-db:
+#    image: mysql:5.7
+#    container_name: sts_db
+#    environment:
+#      MYSQL_ROOT_PASSWORD: db_root@123
+#      MYSQL_USER: db_user
+#      MYSQL_PASSWORD: db_user@123
+#      MYSQL_DATABASE: sts
+#    volumes:
+#    - "./.docker/sts-db/mysql57:/var/lib/mysql"
+#    ports:
+#    - 3306:3306
+  sts-mongo:
+    image: mongo:3.0
+    container_name: sts_mongo
+    volumes:
+    - "./.docker/sts-mongo:/data/db"
+    ports:
+    - 27017:27017
+    command: --smallfiles
   sts:
     build: ./sts-example
     image: "local/sts-example:latest"

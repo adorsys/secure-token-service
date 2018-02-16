@@ -9,20 +9,26 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>sts-token-auth</artifactId>
+    <artifactId>sts-persistence-mongo</artifactId>
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.adorsys.lock-persistence</groupId>
+            <artifactId>lock-persistence-mongo</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-common</artifactId>
+            <artifactId>sts-keymanagement</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.envutils</groupId>
-            <artifactId>envutils4j</artifactId>
+            <groupId>de.adorsys.sts</groupId>
+            <artifactId>sts-spring</artifactId>
         </dependency>
 
         <dependency>

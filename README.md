@@ -59,9 +59,14 @@ You can configure the array of resources servers in your `application.yml`:
 
 ```
 sts:
-  resourceServers:
-  - audience: <(text) the name of your resource server / the audience key>
-    jwksUrl: <(text, url) the jwks-url of the resource-server, like "http://localhost:8888/pop">
+  resourceServerManagement:
+    resourceRetriever:
+      httpConnectTimeout: <http connect timeout for JWK set retrieval in milliseconds, default: 250>
+      httpReadTimeout: <http read timeout for JWK set retrieval in milliseconds, default: 250>
+      httpSizeLimit: <http entity size limit for JWK set retrieval in bytes, default: 50 * 1024>
+    resourceServers:
+    - audience: <(text) the name of your resource server / the audience key>
+      jwksUrl: <(text, url) the jwks-url of the resource-server, like "http://localhost:8888/pop">
 ```
 
 You have to decide:
