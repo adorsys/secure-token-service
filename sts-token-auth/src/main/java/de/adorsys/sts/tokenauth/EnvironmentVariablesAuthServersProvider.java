@@ -33,7 +33,7 @@ public class EnvironmentVariablesAuthServersProvider implements AuthServersProvi
             for (String auth_server : auth_servers) {
                 String auth_server_iss_url = EnvProperties.getEnvOrSysProp(auth_server + "_AUTH_SERVER_ISS_URL", false);
                 String auth_server_jwks_url = EnvProperties.getEnvOrSysProp(auth_server + "_AUTH_SERVER_JWKS_URL", false);
-                String auth_server_jwks_refresh_int = EnvProperties.getEnvOrSysProp(auth_server + "_AUTH_SERVER_JWKS_URL", "600");
+                String auth_server_jwks_refresh_int = EnvProperties.getEnvOrSysProp(auth_server + "_AUTH_SERVER_REFRESH_INTERVAL", "600");
 
                 AuthServer authServer = new AuthServer(auth_server, auth_server_iss_url, auth_server_jwks_url);
                 if(StringUtils.isNumeric(auth_server_jwks_refresh_int)){
