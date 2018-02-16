@@ -12,7 +12,7 @@
     </dependency>
 ```
 
-2. To use the JPA-Repository to save your keystore, you have to add the `@EnableMongoPersistence` annotation to your spring configuration class.
+2. To use the Mongo-Repository to save your keystore, you have to add the `@EnableMongoPersistence` annotation to your spring configuration class.
 
 3. Use the `mongo` spring profile with following command-line-argument:
 
