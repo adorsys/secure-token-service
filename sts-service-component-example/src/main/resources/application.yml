@@ -2,11 +2,14 @@ server:
   port: 8887
 
 liquibase:
+  enabled: true
   change-log: classpath:/db/migration/liquibase/changelog.yml
+  default-schema: public
 
 flyway:
+  enabled: false
   locations:
-  - db/migration/h2
+  - db/migration/flyway/h2
 
 spring:
   datasource:
@@ -16,6 +19,9 @@ spring:
   jpa:
     hibernate:
       show-sql: false
+    properties:
+      hibernate:
+        default_schema: sts
 
 sts:
   audience_name: sts-service-component-example
