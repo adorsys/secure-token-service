@@ -6,23 +6,37 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
 
-## Running unit tests
+## Running docker container
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run the container with following environment settings:
 
-## Running end-to-end tests
+| Variable name | Description | Mandatory? | Example |
+|---------------|-------------|------------|---------|
+| KEYCLOAK_AUTH_URL | The url to the keycloak auth endpoint | yes | http://keycloakhost:8080/auth |
+| KEYCLOAK_REALM    | The keycloak realm name               | yes | moped                         |
+| KEYCLOAK_CLIENT_ID | The keycloak realm client name       | yes | moped-client                  |
+| KEYCLOAK_SCOPE     | The scopes (=sts-audiences) which will be used for login. (comma-separated list) | yes | sts-service-component,other-service-component | 
+| SERVICE_URL        | The url of the service which will be used                                        | yes | http://servicehost:8887/helloworld            |
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
+The web-service will listen to port `8090`.
 
-## Further help
+Here is an example for `docker-compose.yml`:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+```
+version: '3.1'
+services:
+  sts-client:
+    image: adorsys/sts-client-example:latest
+    environment:
+    - "KEYCLOAK_AUTH_URL=http://<your keycloak host>:8080/auth"
+    - KEYCLOAK_REALM=<your realm name>
+    - KEYCLOAK_CLIENT_ID=<your realm client name>
+    - KEYCLOAK_SCOPE=<your scopes/audiences>
+    - SERVICE_URL=http://<your service-component host>:8887/helloworld
+    ports:
+    - 8090:8090
+```
