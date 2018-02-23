@@ -1,12 +1,13 @@
 package de.adorsys.sts.keymanagement.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import org.adorsys.jkeygen.keystore.KeyStoreService;
-
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.util.Map;
+
+import org.adorsys.jkeygen.keystore.KeyStoreService;
+
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
 @Builder
@@ -16,11 +17,7 @@ public class StsKeyStore {
     private final KeyStore keyStore;
 
     public void addKey(StsKeyEntry keyEntry) {
-        try {
-            KeyStoreService.addToKeyStore(keyStore, keyEntry.getKeyEntry());
-        } catch (KeyStoreException e) {
-            throw new RuntimeException(e);
-        }
+    	KeyStoreService.addToKeyStore(keyStore, keyEntry.getKeyEntry());
 
         this.keyEntries.put(keyEntry.getAlias(), keyEntry);
     }

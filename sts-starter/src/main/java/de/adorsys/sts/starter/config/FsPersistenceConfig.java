@@ -1,39 +1,35 @@
 package de.adorsys.sts.starter.config;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.adorsys.encobject.filesystem.FsPersistenceFactory;
-import org.adorsys.encobject.serverdata.JcloudConstants;
+import java.io.IOException;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+
+import org.adorsys.encobject.filesystem.FileSystemExtendedStorageConnection;
+import org.adorsys.encobject.service.ExtendedStoreConnection;
 import org.adorsys.encobject.userdata.ObjectMapperSPI;
-import org.adorsys.encobject.userdata.UserDataNamingPolicy;
 import org.adorsys.envutils.EnvProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.util.Map;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
-public class JcloudConfig {
+public class FsPersistenceConfig {
 	private static final String APP_NAME = "sts";
 
-	private FsPersistenceFactory persFactory;
+	private ExtendedStoreConnection storeConnection;
 
 	@PostConstruct
 	public void postConstruct() {
-		String baseDir = EnvProperties.getEnvOrSysProp(JcloudConstants.JCLOUD_FS_PERSISTENCE_DIR, "./target/"+APP_NAME);
-		persFactory = new FsPersistenceFactory(baseDir);
+		String baseDir = EnvProperties.getEnvOrSysProp("JCLOUD_FS_PERSISTENCE_DIR", "./target/"+APP_NAME);
+		storeConnection = new FileSystemExtendedStorageConnection(baseDir);
 	}
 
-	@Bean
-	public UserDataNamingPolicy userDataNamingPolicy(){
-		return new UserDataNamingPolicy(APP_NAME);
-	}
-	
     @Bean
-	public FsPersistenceFactory getPersFactory() {
-		return persFactory;
+	public ExtendedStoreConnection geExtendedStorageConnection() {
+		return storeConnection;
 	}
 
 	@Bean

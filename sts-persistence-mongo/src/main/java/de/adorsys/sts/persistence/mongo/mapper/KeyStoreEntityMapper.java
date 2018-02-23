@@ -1,21 +1,5 @@
 package de.adorsys.sts.persistence.mongo.mapper;
 
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
-import de.adorsys.sts.keymanagement.model.StsKeyStore;
-import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
-import de.adorsys.sts.persistence.mongo.entity.KeyEntryAttributesEntity;
-import de.adorsys.sts.persistence.mongo.entity.KeyStoreEntity;
-import org.adorsys.jkeygen.keystore.KeyEntry;
-import org.adorsys.jkeygen.keystore.KeyStoreService;
-import org.adorsys.jkeygen.pwd.PasswordCallbackHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -23,6 +7,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.adorsys.jkeygen.keystore.KeyEntry;
+import org.adorsys.jkeygen.keystore.KeyStoreService;
+import org.adorsys.jkeygen.pwd.PasswordCallbackHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import de.adorsys.sts.keymanagement.model.StsKeyEntry;
+import de.adorsys.sts.keymanagement.model.StsKeyStore;
+import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
+import de.adorsys.sts.persistence.mongo.entity.KeyEntryAttributesEntity;
+import de.adorsys.sts.persistence.mongo.entity.KeyStoreEntity;
 
 @Component
 public class KeyStoreEntityMapper {
@@ -48,13 +44,7 @@ public class KeyStoreEntityMapper {
     }
 
     public void mapIntoEntity(StsKeyStore keyStore, KeyStoreEntity persistentKeyStore) {
-        byte[] bytes;
-
-        try {
-            bytes = KeyStoreService.toByteArray(keyStore.getKeyStore(), keystoreName, keyPassHandler);
-        } catch (NoSuchAlgorithmException | CertificateException | IOException e) {
-            throw new RuntimeException(e);
-        }
+        byte[] bytes = KeyStoreService.toByteArray(keyStore.getKeyStore(), keystoreName, keyPassHandler);
 
         persistentKeyStore.setName(keystoreName);
         persistentKeyStore.setKeystore(bytes);
@@ -134,12 +124,7 @@ public class KeyStoreEntityMapper {
     }
 
     public StsKeyStore mapFromEntity(KeyStoreEntity persistentKeyStore) {
-        java.security.KeyStore keyStore;
-        try {
-            keyStore = KeyStoreService.loadKeyStore(persistentKeyStore.getKeystore(), keystoreName, persistentKeyStore.getType(), keyPassHandler);
-        } catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
-            throw new RuntimeException(e);
-        }
+        java.security.KeyStore keyStore = KeyStoreService.loadKeyStore(persistentKeyStore.getKeystore(), keystoreName, persistentKeyStore.getType(), keyPassHandler);
 
         Map<String, StsKeyEntry> mappedKeyEntries = mapFromEntities(keyStore, persistentKeyStore.getEntries());
 

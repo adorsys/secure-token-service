@@ -1,5 +1,10 @@
 package de.adorsys.sts.starter.config;
 
+import org.adorsys.encobject.service.ExtendedStoreConnection;
+import org.adorsys.encobject.userdata.ObjectMapperSPI;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import de.adorsys.sts.admin.EnableAdmin;
 import de.adorsys.sts.keymanagement.KeyManagementConfigurationProperties;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
@@ -17,10 +22,6 @@ import de.adorsys.sts.token.passwordgrant.EnablePasswordGrant;
 import de.adorsys.sts.token.tokenexchange.EnableTokenExchange;
 import de.adorsys.sts.worksheetloader.DataSheetLoader;
 import de.adorsys.sts.worksheetloader.LoginLoader;
-import org.adorsys.encobject.filesystem.FsPersistenceFactory;
-import org.adorsys.encobject.userdata.ObjectMapperSPI;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnablePOP
@@ -48,10 +49,10 @@ public class SecureTokenServiceConfiguration {
 
     @Bean
     ResourceServerRepository resourceServerRepository(
-            FsPersistenceFactory fsPersistenceFactory,
+    		ExtendedStoreConnection storeConnection,
             KeyManagementService keyManagementService
     ) {
-        return new FsPersistenceResourceServerRepository(fsPersistenceFactory, keyManagementService);
+        return new FsPersistenceResourceServerRepository(storeConnection, keyManagementService);
     }
 
     @Bean
@@ -63,12 +64,12 @@ public class SecureTokenServiceConfiguration {
 
     @Bean
     KeyStoreRepository keyStoreRepository(
-            FsPersistenceFactory fsPersistenceFactory,
+    		ExtendedStoreConnection storeConnection,
             KeyManagementConfigurationProperties keyManagementProperties,
             KeyEntryMapper keyEntryMapper
     ) {
         return new FsPersistenceKeyStoreRepository(
-                fsPersistenceFactory,
+        		storeConnection,
                 keyManagementProperties,
                 keyEntryMapper
         );

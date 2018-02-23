@@ -4,8 +4,9 @@ import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
 import de.adorsys.sts.resourceserver.model.UserCredentials;
 import de.adorsys.sts.resourceserver.service.UserDataService;
 import org.adorsys.encobject.domain.KeyCredentials;
-import org.adorsys.encobject.service.EncObjectService;
-import org.adorsys.encobject.service.KeystoreNotFoundException;
+import org.adorsys.encobject.exceptions.KeystoreNotFoundException;
+import org.adorsys.encobject.service.EncryptionService;
+import org.adorsys.encobject.service.ExtendedStoreConnection;
 import org.adorsys.encobject.userdata.ObjectMapperSPI;
 import org.adorsys.encobject.userdata.ObjectPersistenceAdapter;
 import org.adorsys.encobject.userdata.UserDataNamingPolicy;
@@ -18,26 +19,28 @@ public class ResourceServerProcessorService {
 
     private final UserDataNamingPolicy namingPolicy;
 
-    private final EncObjectService encObjectService;
+    private final EncryptionService encryptionService;
+    private final ExtendedStoreConnection storeConnection;
 
     private final ObjectMapperSPI objectMapper;
 
     public ResourceServerProcessorService(
             ResourceServerProcessor resourceServerProcessor,
             UserDataNamingPolicy namingPolicy,
-            EncObjectService encObjectService,
+            EncryptionService encryptionService,
+            ExtendedStoreConnection storeConnection,
             ObjectMapperSPI objectMapper
     ) {
         this.resourceServerProcessor = resourceServerProcessor;
         this.namingPolicy = namingPolicy;
-        this.encObjectService = encObjectService;
+        this.encryptionService = encryptionService;
+        this.storeConnection = storeConnection;
         this.objectMapper = objectMapper;
     }
 
     public List<ResourceServerAndSecret> processResources(String[] audiences, String[] resources, String username, String password) {
         KeyCredentials keyCredentials = namingPolicy.newKeyCredntials(username, password);
-
-        ObjectPersistenceAdapter persistenceAdapter = new ObjectPersistenceAdapter(encObjectService, keyCredentials, objectMapper);
+        ObjectPersistenceAdapter persistenceAdapter = new ObjectPersistenceAdapter(encryptionService, storeConnection, keyCredentials, objectMapper);
 
         // Check if we have this user in the storage. If so user the record, if not create one.
         UserDataService userDataService = new UserDataService(namingPolicy, persistenceAdapter);
@@ -58,7 +61,7 @@ public class ResourceServerProcessorService {
     public void storeCredentials(String login, String password, String audience, String userEncKey) {
         KeyCredentials keyCredentials = namingPolicy.newKeyCredntials(login, password);
 
-        ObjectPersistenceAdapter persistenceAdapter = new ObjectPersistenceAdapter(encObjectService, keyCredentials, objectMapper);
+        ObjectPersistenceAdapter persistenceAdapter = new ObjectPersistenceAdapter(encryptionService, storeConnection, keyCredentials, objectMapper);
 
         // Check if we have this user in the storage. If so user the record, if not create one.
         UserDataService userDataService = new UserDataService(namingPolicy, persistenceAdapter);

@@ -1,17 +1,28 @@
 package de.adorsys.sts.resourceserver.service;
 
-import com.nimbusds.jose.*;
-import com.nimbusds.jose.jwk.*;
-import de.adorsys.sts.resourceserver.exception.NoJwkFoundException;
-import org.adorsys.jjwk.selector.JWEEncryptedSelector;
-import org.adorsys.jjwk.selector.KeyExtractionException;
-import org.adorsys.jjwk.selector.UnsupportedEncAlgorithmException;
-import org.adorsys.jjwk.selector.UnsupportedKeyLengthException;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.adorsys.jjwk.selector.JWEEncryptedSelector;
+
+import com.nimbusds.jose.EncryptionMethod;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWEAlgorithm;
+import com.nimbusds.jose.JWEEncrypter;
+import com.nimbusds.jose.JWEHeader;
+import com.nimbusds.jose.JWEObject;
+import com.nimbusds.jose.Payload;
+import com.nimbusds.jose.jwk.ECKey;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKMatcher;
+import com.nimbusds.jose.jwk.JWKSelector;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.KeyUse;
+import com.nimbusds.jose.jwk.RSAKey;
+
+import de.adorsys.sts.resourceserver.exception.NoJwkFoundException;
 
 public class EncryptionService {
 
@@ -52,11 +63,7 @@ public class EncryptionService {
     public String encrypt(JWK jwk, String rawSecret) throws SecretEncryptionException {
         JWEEncrypter jweEncrypter;
 
-        try {
-            jweEncrypter = JWEEncryptedSelector.geEncrypter(jwk, null, null);
-        } catch (UnsupportedEncAlgorithmException | KeyExtractionException | UnsupportedKeyLengthException e) {
-            throw new SecretEncryptionException(e);
-        }
+        jweEncrypter = JWEEncryptedSelector.geEncrypter(jwk, null, null);
         Payload payload = new Payload(rawSecret);
         // JWE encrypt secret.
         JWEObject jweObj;

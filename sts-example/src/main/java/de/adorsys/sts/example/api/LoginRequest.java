@@ -1,11 +1,13 @@
 package de.adorsys.sts.example.api;
 
-import com.google.common.collect.Lists;
-import lombok.Data;
-import org.hibernate.validator.constraints.NotEmpty;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
+import lombok.Data;
 
 @Data
 class LoginRequest {
@@ -18,5 +20,5 @@ class LoginRequest {
     @NotEmpty
     private String password;
 
-    private List<String> audiences = Lists.newArrayList();
+    private List<String> audiences = new ArrayList<>();
 }

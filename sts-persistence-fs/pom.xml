@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>sts-jclouds-persistence</artifactId>
+    <artifactId>sts-persistence-fs</artifactId>
 
     <dependencies>
         <dependency>
@@ -18,7 +18,11 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys.cryptoutils</groupId>
-            <artifactId>encobject-jcloud</artifactId>
+            <artifactId>filesystemstoreconnection</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.cryptoutils</groupId>
+            <artifactId>encobject</artifactId>
         </dependency>
     </dependencies>
 </project>

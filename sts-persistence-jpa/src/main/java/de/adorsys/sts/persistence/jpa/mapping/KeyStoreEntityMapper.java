@@ -1,24 +1,20 @@
 package de.adorsys.sts.persistence.jpa.mapping;
 
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
-import de.adorsys.sts.keymanagement.model.StsKeyStore;
-import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
-import de.adorsys.sts.persistence.jpa.entity.JpaKeyEntryAttributes;
-import de.adorsys.sts.persistence.jpa.entity.JpaKeyStore;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.adorsys.jkeygen.keystore.KeyEntry;
 import org.adorsys.jkeygen.keystore.KeyStoreService;
 import org.adorsys.jkeygen.pwd.PasswordCallbackHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import de.adorsys.sts.keymanagement.model.StsKeyEntry;
+import de.adorsys.sts.keymanagement.model.StsKeyStore;
+import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
+import de.adorsys.sts.persistence.jpa.entity.JpaKeyEntryAttributes;
+import de.adorsys.sts.persistence.jpa.entity.JpaKeyStore;
 
 @Component
 public class KeyStoreEntityMapper {
@@ -44,13 +40,7 @@ public class KeyStoreEntityMapper {
     }
 
     public void mapIntoEntity(StsKeyStore keyStore, JpaKeyStore persistentKeyStore) {
-        byte[] bytes;
-
-        try {
-            bytes = KeyStoreService.toByteArray(keyStore.getKeyStore(), keystoreName, keyPassHandler);
-        } catch (NoSuchAlgorithmException | CertificateException | IOException e) {
-            throw new RuntimeException(e);
-        }
+        byte[] bytes = KeyStoreService.toByteArray(keyStore.getKeyStore(), keystoreName, keyPassHandler);
 
         persistentKeyStore.setName(keystoreName);
         persistentKeyStore.setKeystore(bytes);
@@ -58,12 +48,7 @@ public class KeyStoreEntityMapper {
     }
 
     public StsKeyStore mapFromEntity(JpaKeyStore persistentKeyStore, List<JpaKeyEntryAttributes> persistentKeyEntries) {
-        java.security.KeyStore keyStore;
-        try {
-            keyStore = KeyStoreService.loadKeyStore(persistentKeyStore.getKeystore(), keystoreName, persistentKeyStore.getType(), keyPassHandler);
-        } catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException | CertificateException | IOException e) {
-            throw new RuntimeException(e);
-        }
+        java.security.KeyStore keyStore = KeyStoreService.loadKeyStore(persistentKeyStore.getKeystore(), keystoreName, persistentKeyStore.getType(), keyPassHandler);
 
         Map<String, StsKeyEntry> mappedKeyEntries = mapFromEntities(keyStore, persistentKeyEntries);
 

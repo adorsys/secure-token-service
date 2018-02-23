@@ -1,29 +1,33 @@
 package de.adorsys.sts.resourceserver.persistence;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import de.adorsys.sts.resourceserver.model.ResourceServer;
-import org.adorsys.encobject.domain.ContentMetaInfo;
-import org.adorsys.encobject.domain.ObjectHandle;
-import org.adorsys.encobject.filesystem.FsPersistenceFactory;
-import org.adorsys.encobject.params.EncryptionParams;
-import org.adorsys.encobject.service.*;
-import org.adorsys.envutils.EnvProperties;
-import org.adorsys.jjwk.selector.UnsupportedEncAlgorithmException;
-import org.adorsys.jjwk.selector.UnsupportedKeyLengthException;
-import org.adorsys.jjwk.serverkey.KeyAndJwk;
-import org.adorsys.jjwk.serverkey.ServerKeyMapProvider;
-import org.apache.commons.lang3.StringUtils;
-
-import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+
+import org.adorsys.encobject.complextypes.BucketPath;
+import org.adorsys.encobject.domain.ObjectHandle;
+import org.adorsys.encobject.domain.Payload;
+import org.adorsys.encobject.keysource.KeyMapProviderBasedKeySource;
+import org.adorsys.encobject.keysource.KeySource;
+import org.adorsys.encobject.service.EncryptedPersistenceService;
+import org.adorsys.encobject.service.ExtendedStoreConnection;
+import org.adorsys.encobject.service.JWEncryptionService;
+import org.adorsys.encobject.service.SimplePayloadImpl;
+import org.adorsys.encobject.types.KeyID;
+import org.adorsys.envutils.EnvProperties;
+import org.adorsys.jjwk.serverkey.ServerKeyMapProvider;
+import org.apache.commons.lang3.StringUtils;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import de.adorsys.sts.resourceserver.model.ResourceServer;
 
 public class FsPersistenceResourceServerRepository implements ResourceServerRepository {
     private static final TypeReference<List<ResourceServer>> RESOURCE_SERVER_LIST_TYPE = new TypeReference<List<ResourceServer>>() {
@@ -31,30 +35,29 @@ public class FsPersistenceResourceServerRepository implements ResourceServerRepo
     private static final String RESOURCE_SERVER_CONTAINER = "RESOURCE_SERVER_CONTAINER";
     private static final String RESOURCE_SERVERS_FILE_NAME = "resource_servers";
 
-    private final FsPersistenceFactory persFactory;
+    private final ExtendedStoreConnection storeConnection;
+    private final EncryptedPersistenceService encryptedPersistenceService;
     private final ServerKeyMapProvider keyMapProvider;
+    private KeySource keySource;
 
     private String containerName;
 
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public FsPersistenceResourceServerRepository(FsPersistenceFactory persFactory, ServerKeyMapProvider keyMapProvider) {
-        this.persFactory = persFactory;
+    public FsPersistenceResourceServerRepository(ExtendedStoreConnection storeConnection, 
+    		ServerKeyMapProvider keyMapProvider) {
+        this.storeConnection = storeConnection;
         this.keyMapProvider = keyMapProvider;
+        this.keySource = new KeyMapProviderBasedKeySource(keyMapProvider);
+        this.encryptedPersistenceService = new EncryptedPersistenceService(this.storeConnection, new JWEncryptionService());
     }
 
     @PostConstruct
     public void postConstruct() {
         containerName = EnvProperties.getEnvOrSysProp(RESOURCE_SERVER_CONTAINER, "sts-rservers");
-        ContainerPersistence containerPersistence = persFactory.getContainerPersistence();
-
-        if (!containerPersistence.containerExists(containerName)) {
-            try {
-                containerPersistence.creteContainer(containerName);
-            } catch (ContainerExistsException e) {
-                throw new IllegalStateException(e);
-            }
+        if (!storeConnection.containerExists(containerName)) {
+        	storeConnection.createContainer(containerName);
         }
     }
 
@@ -64,20 +67,15 @@ public class FsPersistenceResourceServerRepository implements ResourceServerRepo
     }
 
     private List<ResourceServer> loadAll() {
-        List<ResourceServer> resourceServers = Lists.newArrayList();
-
         ObjectHandle handle = new ObjectHandle(containerName, RESOURCE_SERVERS_FILE_NAME);
-        byte[] resourceServersByte = null;
-        try {
-            resourceServersByte = persFactory.getServerObjectPersistence().loadObject(handle, keyMapProvider);
-        } catch (ObjectNotFoundException e) {
-            // No list stored so far
-            return resourceServers;
-        } catch (WrongKeyCredentialException | UnknownContainerException e) {
-            throw new IllegalStateException(e);
+        BucketPath bucketPath = BucketPath.fromHandle(handle);
+        if(!storeConnection.blobExists(bucketPath)){
+        	return Collections.emptyList();
         }
+        Payload payload = encryptedPersistenceService.loadAndDecrypt(bucketPath, keySource);
+
         try {
-            return objectMapper.readValue(resourceServersByte, RESOURCE_SERVER_LIST_TYPE);
+        	return objectMapper.readValue(payload.getData(), RESOURCE_SERVER_LIST_TYPE);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -98,7 +96,13 @@ public class FsPersistenceResourceServerRepository implements ResourceServerRepo
         return resourceServers.stream().collect(Collectors.toMap(ResourceServer::getAudience, Function.identity()));
     }
 
-    private void add(ResourceServer resourceServer, List<ResourceServer> existingServers) {
+    private void add(ResourceServer resourceServer, final List<ResourceServer> existingServers) {
+        addInternal(resourceServer, existingServers);
+        persist(existingServers);
+    }
+    
+    // Add without persisting.
+    private void addInternal(ResourceServer resourceServer, final List<ResourceServer> existingServers) {
         Map<String, ResourceServer> resourceServerMap = mapResourceServers(existingServers);
 
         String audience = resourceServer.getAudience();
@@ -112,10 +116,8 @@ public class FsPersistenceResourceServerRepository implements ResourceServerRepo
         } else {
             existingServers.add(resourceServer);
         }
-
-        persist(existingServers);
     }
-
+    
     private void persist(List<ResourceServer> existingServers) {
         byte[] data;
         try {
@@ -123,28 +125,21 @@ public class FsPersistenceResourceServerRepository implements ResourceServerRepo
         } catch (JsonProcessingException e) {
             throw new IllegalStateException(e);
         }
-        ContentMetaInfo metaInfo = null;
         ObjectHandle handle = new ObjectHandle(containerName, RESOURCE_SERVERS_FILE_NAME);
-        EncryptionParams encParams = null;
-        KeyAndJwk randomSecretKey = keyMapProvider.randomSecretKey();
-        try {
-            persFactory.getServerObjectPersistence().storeObject(data, metaInfo, handle, keyMapProvider, randomSecretKey.jwk.getKeyID(), encParams);
-        } catch (UnsupportedEncAlgorithmException | UnsupportedKeyLengthException | UnknownContainerException e) {
-            throw new IllegalStateException(e);
-        }
+        BucketPath bucketPath = BucketPath.fromHandle(handle);
+        KeyID keyID = new KeyID(keyMapProvider.randomSecretKey().jwk.getKeyID());
+		encryptedPersistenceService.encryptAndPersist(bucketPath, new SimplePayloadImpl(data), keySource, keyID);
     }
 
     @Override
     public void addAll(Iterable<ResourceServer> serversIn) {
         List<ResourceServer> existingServers = loadAll();
-
-        if (Iterables.isEmpty(serversIn)) {
-            return;
-        }
-
+        boolean persist = false;
         for (ResourceServer resourceServer : serversIn) {
             add(resourceServer, existingServers);
+            persist = true;
         }
+        if(persist)persist(existingServers);
     }
 
     private boolean isValid(ResourceServer resourceServer) {

@@ -1,16 +1,18 @@
 package de.adorsys.sts.token.passwordgrant;
 
-import de.adorsys.sts.keymanagement.service.KeyManagementService;
-import de.adorsys.sts.resourceserver.processing.ResourceServerProcessor;
-import de.adorsys.sts.resourceserver.processing.ResourceServerProcessorService;
-import de.adorsys.sts.token.TokenCoreConfiguration;
-import org.adorsys.encobject.filesystem.FsPersistenceFactory;
+import org.adorsys.encobject.service.EncryptionService;
+import org.adorsys.encobject.service.ExtendedStoreConnection;
 import org.adorsys.encobject.userdata.ObjectMapperSPI;
 import org.adorsys.encobject.userdata.UserDataNamingPolicy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+
+import de.adorsys.sts.keymanagement.service.KeyManagementService;
+import de.adorsys.sts.resourceserver.processing.ResourceServerProcessor;
+import de.adorsys.sts.resourceserver.processing.ResourceServerProcessorService;
+import de.adorsys.sts.token.TokenCoreConfiguration;
 
 @Configuration
 @ComponentScan(basePackages = {
@@ -32,14 +34,10 @@ public class PasswordGrantConfiguration {
     public ResourceServerProcessorService resourceServerProcessorService(
             ResourceServerProcessor resourceServerProcessor,
             UserDataNamingPolicy namingPolicy,
-            FsPersistenceFactory fsPersistenceFactory,
+            EncryptionService encryptionService,
+            ExtendedStoreConnection storeConnection,
             ObjectMapperSPI objectMapper
     ) {
-        return new ResourceServerProcessorService(
-                resourceServerProcessor,
-                namingPolicy,
-                fsPersistenceFactory.getEncObjectService(),
-                objectMapper
-        );
+    	return new ResourceServerProcessorService(resourceServerProcessor, namingPolicy, encryptionService, storeConnection, objectMapper);
     }
 }
