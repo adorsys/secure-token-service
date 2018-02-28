@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.adorsys.encobject.filesystem.FileSystemExtendedStorageConnection;
-import org.adorsys.encobject.service.ExtendedStoreConnection;
+import org.adorsys.encobject.service.api.ExtendedStoreConnection;
 import org.adorsys.encobject.userdata.ObjectMapperSPI;
 import org.adorsys.envutils.EnvProperties;
 import org.springframework.context.annotation.Bean;

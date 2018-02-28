@@ -5,6 +5,7 @@ import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.util.DateTimeUtils;
 import org.adorsys.jkeygen.keystore.KeyPairEntry;
+import org.adorsys.jkeygen.keystore.KeyStoreType;
 import org.adorsys.jkeygen.keystore.KeystoreBuilder;
 import org.adorsys.jkeygen.keystore.SecretKeyEntry;
 import org.adorsys.jkeygen.pwd.PasswordCallbackHandler;
@@ -26,7 +27,7 @@ public class KeyStoreGenerator {
     private final KeyPairGenerator signKeyPairGenerator;
     private final SecretKeyGenerator secretKeyGenerator;
 
-    private final String keyStoreType;
+    private final KeyStoreType keyStoreType;
     private final String serverKeyPairAliasPrefix;
 
     private final CallbackHandler keyPassHandler;
@@ -49,7 +50,7 @@ public class KeyStoreGenerator {
 
         KeyManagementProperties.KeyStoreProperties keystoreProperties = keyManagementProperties.getKeystore();
 
-        this.keyStoreType = keystoreProperties.getType();
+        this.keyStoreType = new KeyStoreType(keystoreProperties.getType());
         this.serverKeyPairAliasPrefix = keystoreProperties.getAliasPrefix();
 
         String password = keystoreProperties.getPassword();

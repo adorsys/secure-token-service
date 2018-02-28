@@ -1,6 +1,6 @@
 package de.adorsys.sts.starter.config;
 
-import org.adorsys.encobject.service.ExtendedStoreConnection;
+import org.adorsys.encobject.service.api.ExtendedStoreConnection;
 import org.adorsys.encobject.userdata.ObjectMapperSPI;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

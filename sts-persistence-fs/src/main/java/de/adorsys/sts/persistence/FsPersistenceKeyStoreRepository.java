@@ -11,9 +11,9 @@ import javax.security.auth.callback.CallbackHandler;
 import org.adorsys.encobject.domain.ObjectHandle;
 import org.adorsys.encobject.domain.Tuple;
 import org.adorsys.encobject.domain.UserMetaData;
-import org.adorsys.encobject.service.BlobStoreKeystorePersistence;
-import org.adorsys.encobject.service.ExtendedStoreConnection;
-import org.adorsys.encobject.service.KeystorePersistence;
+import org.adorsys.encobject.service.api.ExtendedStoreConnection;
+import org.adorsys.encobject.service.api.KeystorePersistence;
+import org.adorsys.encobject.service.impl.BlobStoreKeystorePersistenceImpl;
 import org.adorsys.jkeygen.keystore.KeyEntry;
 import org.adorsys.jkeygen.keystore.KeyStoreService;
 import org.adorsys.jkeygen.pwd.PasswordCallbackHandler;
@@ -45,7 +45,7 @@ public class FsPersistenceKeyStoreRepository implements KeyStoreRepository {
         String keyStorePassword = keyManagementProperties.getKeystore().getPassword();
         keyPassHandler = new PasswordCallbackHandler(keyStorePassword.toCharArray());
         
-        keystorePersistence = new BlobStoreKeystorePersistence(storageConnection);
+        keystorePersistence = new BlobStoreKeystorePersistenceImpl(storageConnection);
     }
 
     @PostConstruct
