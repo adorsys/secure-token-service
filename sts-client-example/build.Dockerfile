@@ -1,4 +1,4 @@
-FROM adorsys/angular-cli:v1.6.5
+FROM adorsys/angular-cli:v1.7.3
 
 COPY ./docker/build.cmd.bash /opt/build.cmd.bash
 
