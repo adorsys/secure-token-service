@@ -42,7 +42,7 @@
 	</scm>
 
 	<properties>
-		<spring-boot.version>1.5.10.RELEASE</spring-boot.version>
+		<spring-boot.version>2.0.1.RELEASE</spring-boot.version>
 		<swagger.version>2.6.1</swagger.version>
 		<java.version>1.8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
@@ -56,7 +56,7 @@
 		<lock-persistence.version>0.2.0</lock-persistence.version>
 
 		<!-- jackson buggy 2.8.x version https://github.com/FasterXML/jackson-databind/issues/1595 -->
-		<jackson.version>2.7.9</jackson.version>
+		<jackson.version>2.9.5</jackson.version>
 		<scmBranch />
 	</properties>
 	
@@ -255,19 +255,19 @@
 			<dependency>
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-core</artifactId>
-				<version>5.0.6</version>
+				<version>5.0.7</version>
 				<scope>runtime</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.postgresql</groupId>
 				<artifactId>postgresql</artifactId>
-				<version>9.4.1212</version>
+				<version>42.2.2</version>
 				<scope>runtime</scope>
 			</dependency>
 			<dependency>
 				<groupId>com.h2database</groupId>
 				<artifactId>h2</artifactId>
-				<version>1.4.196</version>
+				<version>1.4.197</version>
 				<scope>runtime</scope>
 			</dependency>
 

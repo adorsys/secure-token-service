@@ -1,5 +1,6 @@
-liquibase:
-  enabled: false
+spring:
+  liquibase:
+    enabled: false
 
-flyway:
-  enabled: true
+  flyway:
+    enabled: true

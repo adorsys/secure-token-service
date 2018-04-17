@@ -25,8 +25,8 @@ public class SecretClaimDecryptionService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public SecretClaimDecryptionService(
-            @Value("${sts.audience_name}") String audience,
-            @Value("${sts.secret_claim_property_key}") String secretClaimPropertyKey,
+            @Value("${sts.audience-name}") String audience,
+            @Value("${sts.secret-claim-property-key}") String secretClaimPropertyKey,
             DecryptionService decryptionService
     ) {
         this.audience = audience;

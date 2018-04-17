@@ -1,15 +1,14 @@
-liquibase:
-  default-schema: public
-
-flyway:
-  locations:
-  - db/migration/flyway/postgres
-
 spring:
+  liquibase:
+    default-schema: public
+
+  flyway:
+    locations:
+    - db/migration/flyway/postgres
+
   datasource:
     url: jdbc:postgresql://localhost:5432/sts
   jpa:
-    properties:
-      hibernate:
-        show-sql: true
+    show-sql: false
     database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    properties.hibernate.temp.use_jdbc_metadata_defaults: false

@@ -1,78 +1,77 @@
 server:
   port: 8887
 
-liquibase:
-  enabled: true
-  change-log: classpath:/db/migration/liquibase/changelog.yml
-  default-schema: public
-
-flyway:
-  enabled: false
-  locations:
-  - db/migration/flyway/h2
-
 spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/migration/liquibase/changelog.yml
+    default-schema: public
+
+  flyway:
+    enabled: false
+    locations:
+    - db/migration/flyway/h2
+
   datasource:
     url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: db_user
     password: db_user@123
   jpa:
-    hibernate:
-      show-sql: false
+    show-sql: false
     properties:
       hibernate:
         default_schema: sts
 
 sts:
-  audience_name: sts-service-component-example
-  secret_claim_property_key: secretClaim
+  audience-name: sts-service-component-example
+  secret-claim-property-key: secretClaim
   authservers:
   - name: keycloak-playground
-    issUrl: https://sso-keycloak-playground.dev.adorsys.de/auth/realms/moped
-    jwksUrl: https://sso-keycloak-playground.dev.adorsys.de/auth/realms/moped/protocol/openid-connect/certs
-    refreshIntervalSeconds: 600
+    iss-url: https://sso-keycloak-playground.dev.adorsys.de/auth/realms/moped
+    jwks-url: https://sso-keycloak-playground.dev.adorsys.de/auth/realms/moped/protocol/openid-connect/certs
+    refresh-interval-seconds: 600
   persistence:
-    lockExpiry: 30000
+    lock-expiry: 30000
   keymanagement:
     rotation:
-      checkInterval: 60000
-      encKeyPairs:
-        minKeys: 5
+      check-interval: 60000
+      enc-key-pairs:
+        min-keys: 5
         enabled: true
-      signKeyPairs:
-        minKeys: 5
+      sign-key-pairs:
+        min-keys: 5
         enabled: true
-      secretKeys:
-        minKeys: 5
+      secret-keys:
+        min-keys: 5
         enabled: true
     persistence:
-      containerName: adsts-container
+      container-name: adsts-container
       password: 0123456789ABCDEF
     keystore:
       password: FEDCBA9876543210
       type: UBER
       name: service-component-example-keystore
-      alias_prefix: service-component-example-
+      alias-prefix: service-component-example-
       keys:
-        encKeyPairs:
-          initialCount: 5
+        enc-key-pairs:
+          initial-count: 5
           algo: RSA
-          sigAlgo: SHA256withRSA
+          sig-algo: SHA256withRSA
           size: 2048
           name: Adorsys Security Token Service
-          validityInterval: 3600000
-          legacyInterval: 86400000
-        signKeyPairs:
-          initialCount: 5
+          validity-interval: 3600000
+          legacy-interval: 86400000
+        sign-key-pairs:
+          initial-count: 5
           algo: RSA
-          sigAlgo: SHA256withRSA
+          sig-algo: SHA256withRSA
           size: 2048
           name: Adorsys Security Token Service
-          validityInterval: 3600000
-          legacyInterval: 86400000
-        secretKeys:
-          initialCount: 5
+          validity-interval: 3600000
+          legacy-interval: 86400000
+        secret-keys:
+          initial-count: 5
           algo: AES
           size: 256
-          validityInterval: 3600000
-          legacyInterval: 86400000
+          validity-interval: 3600000
+          legacy-interval: 86400000

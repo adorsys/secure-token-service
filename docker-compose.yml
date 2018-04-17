@@ -65,6 +65,8 @@ services:
 #    - "./.docker/sts-db/mysql8:/var/lib/mysql"
 #    ports:
 #    - 3306:3306
+#    networks:
+#    - sts_network
 #  sts-db:
 #    image: mysql:5.7
 #    container_name: sts_db
@@ -77,6 +79,8 @@ services:
 #    - "./.docker/sts-db/mysql57:/var/lib/mysql"
 #    ports:
 #    - 3306:3306
+#    networks:
+#    - sts_network
   sts-mongo:
     image: mongo:3.0
     container_name: sts_mongo
@@ -95,8 +99,9 @@ services:
     environment:
     - SPRING_PROFILES_ACTIVE=postgres
     - SPRING_DATASOURCE_URL=jdbc:postgresql://sts-db:5432/sts
+#    - SPRING_DATASOURCE_URL=jdbc:mysql://sts-db:3306/sts
     - logging_level_de_adorsys_sts_keyrotation_KeyRotationSchedule=debug
-    - SPRING_APPLICATION_JSON={"sts":{"resourceServerManagement":{"resourceRetriever":{"httpConnectTimeout":10000,"httpReadTimeout":60000,"httpSizeLimit":512000},"resourceServers":[{"audience":"sts","jwksUrl":"http://localhost:8888/pop"},{"audience":"sts-service-component","jwksUrl":"http://sts-service-component:8887/pop"}]}}}
+    - SPRING_APPLICATION_JSON={"sts":{"resource-server-management":{"resource-retriever":{"http-connect-timeout":10000,"http-read-timeout":60000,"http-size-limit":512000},"resource-servers":[{"audience":"sts","jwks-url":"http://localhost:8888/pop"},{"audience":"sts-service-component","jwks-url":"http://sts-service-component:8887/pop"}]}}}
     ports:
     - "8888:8888"
   sts-service-component:
@@ -108,8 +113,9 @@ services:
     - sts_audience_name=sts-service-component
     - SPRING_PROFILES_ACTIVE=postgres
     - SPRING_DATASOURCE_URL=jdbc:postgresql://sts-db:5432/sts
+#    - SPRING_DATASOURCE_URL=jdbc:mysql://sts-db:3306/sts
     - logging_level_de_adorsys_sts_keyrotation_KeyRotationSchedule=debug
-    - SPRING_APPLICATION_JSON={"sts":{"authservers":[{"name":"local keycloak","issUrl":"http://localhost:8080/auth/realms/moped","jwksUrl":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}]}}
+    - SPRING_APPLICATION_JSON={"sts":{"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}]}}
     depends_on:
     - sts-db
     networks:
@@ -123,8 +129,9 @@ services:
     - sts_audience_name=sts-service-component
     - SPRING_PROFILES_ACTIVE=postgres
     - SPRING_DATASOURCE_URL=jdbc:postgresql://sts-db:5432/sts
+#    - SPRING_DATASOURCE_URL=jdbc:mysql://sts-db:3306/sts
     - logging_level_de_adorsys_sts_keyrotation_KeyRotationSchedule=debug
-    - SPRING_APPLICATION_JSON={"sts":{"authservers":[{"name":"local keycloak","issUrl":"http://localhost:8080/auth/realms/moped","jwksUrl":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}]}}
+    - SPRING_APPLICATION_JSON={"sts":{"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}]}}
     depends_on:
     - sts-db
     networks:

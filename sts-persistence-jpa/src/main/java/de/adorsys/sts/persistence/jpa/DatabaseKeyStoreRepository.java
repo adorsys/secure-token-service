@@ -72,7 +72,7 @@ public class DatabaseKeyStoreRepository implements KeyStoreRepository {
 
             for(JpaKeyEntryAttributes keyEntry : keyEntries) {
                 if(!stsKeyEntries.containsKey(keyEntry.getAlias())) {
-                    keyEntryRepository.delete(keyEntry.getId());
+                    keyEntryRepository.deleteById(keyEntry.getId());
                 }
             }
 
