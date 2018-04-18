@@ -34,11 +34,14 @@ You can easily use features by adding following annotations to your spring `@Con
 |------------|-------------|
 | `@EnablePOP` | Enables the Proof-Of-Possession endpoint |
 | `@EnableResourceServerInitialization` | Enables the initialization of the resource server configuration read from the spring properties |
-| `@EnableEncryption` | Enables the encryption service bean |
-| `@EnableDecryption` | Enables the decryption service bean |
-| `@EnableKeyRotation` | Enables the key-rotation for the key-management |
-| `@EnableServerInfo` | Enables the server-info endpoint |
-| `@EnableTokenAuthentication` | Enables token-authentication-service bean |
+| `@EnableEncryption`                   | Enables the encryption service bean |
+| `@EnableDecryption`                   | Enables the decryption service bean |
+| `@EnableSecretDecryption`             | Enables the secret claim decryption service bean |
+| `@EnableKeyRotation`                  | Enables the key-rotation for the key-management  |
+| `@EnableServerInfo`                   | Enables the server-info endpoint                 |
+| `@EnableTokenAuthentication`          | Enables token-authentication-service bean        |
+| `@EnableSecurityContextSecretProviding` | Enables the security-context secret provider bean |
+| `@EnableJacksonObjectMapping`           | Enables jackson object mapper SPI bean            |
 
 ## Features
 
@@ -86,6 +89,26 @@ Provides the `DecryptionService` which can be used to decrypt JWE-encrypted ciph
 
 Depends on:
 * Key-Management
+
+### Secret decryption
+
+Usage of annotation `@EnableSecretDecryption` provides the `SecretDecryptionService` instance which is used to get the decrypted secret.
+ The encrypted secret is provided by a bean implementing the `SecretProvider` interface.
+
+### Secret provider
+
+Provided by the `@EnableSecurityContextSecretProviding` annotation a bean instance of `SecurityContextSecretProvider` class is provided.
+ This implementation reads the secret claims from the JWT token (stored in spring's security context).
+
+#### Configuration
+
+The `SecurityContextSecretProvider` needs the following configuration to work properly:
+
+```
+sts:
+  secret-claim-property-key: <the claim property key used to read the right claim from the claims-set, mandatory>
+  audience-name: <the application's audience name. Is used to read the right entry from the secrets map, mandatory)>
+```
 
 ### Key-Management
 
