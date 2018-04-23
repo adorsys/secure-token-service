@@ -3,6 +3,7 @@ package de.adorsys.sts.token.passwordgrant;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.resourceserver.processing.ResourceServerProcessor;
 import de.adorsys.sts.resourceserver.processing.ResourceServerProcessorService;
+import de.adorsys.sts.resourceserver.service.UserDataRepository;
 import de.adorsys.sts.token.TokenCoreConfiguration;
 import org.adorsys.encobject.service.api.EncryptionService;
 import org.adorsys.encobject.service.api.ExtendedStoreConnection;
@@ -32,11 +33,8 @@ public class PasswordGrantConfiguration {
     @Bean
     public ResourceServerProcessorService resourceServerProcessorService(
             ResourceServerProcessor resourceServerProcessor,
-            UserDataNamingPolicy namingPolicy,
-            EncryptionService encryptionService,
-            ExtendedStoreConnection storeConnection,
-            ObjectMapperSPI objectMapper
+            UserDataRepository userDataRepository
     ) {
-    	return new ResourceServerProcessorService(resourceServerProcessor, namingPolicy, encryptionService, storeConnection, objectMapper);
+    	return new ResourceServerProcessorService(resourceServerProcessor, userDataRepository);
     }
 }

@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @Component
-@ConfigurationProperties(prefix = "sts.resourceServerManagement")
+@ConfigurationProperties(prefix = "sts.resourceservermanagement")
 @Validated
 public class ResourceServerManagementConfigurationProperties implements ResourceServerManagementProperties {
 
@@ -35,7 +35,7 @@ public class ResourceServerManagementConfigurationProperties implements Resource
     public ResourceRetrieverProperties getResourceRetriever() {
         return resourceRetriever;
     }
-
+    
     public void setResourceServers(List<ResourceServer> resourceServers) {
         this.resourceServers = resourceServers;
     }

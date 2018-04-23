@@ -1,21 +1,23 @@
 package de.adorsys.sts.persistence;
 
+import java.io.IOException;
+import java.time.ZonedDateTime;
+
+import org.adorsys.jkeygen.keystore.KeyEntry;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.adorsys.sts.keymanagement.model.KeyUsage;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.adorsys.encobject.userdata.ObjectMapperSPI;
-import org.adorsys.jkeygen.keystore.KeyEntry;
-
-import java.io.IOException;
-import java.time.ZonedDateTime;
 
 public class KeyEntryMapper {
 
-    private final ObjectMapperSPI objectMapper;
+    private final ObjectMapper objectMapper;
 
-    public KeyEntryMapper(ObjectMapperSPI objectMapper) {
+    public KeyEntryMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
