@@ -6,6 +6,9 @@ jdk:
 services:
   - docker
 
+git:
+  submodules: false
+
 install:
   - mvn --settings .travis/settings.xml clean install -DskipTests -Dmaven.javadoc.skip=true -B -V
 

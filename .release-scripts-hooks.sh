@@ -22,6 +22,12 @@ function format_snapshot_version {
   echo "$1-SNAPSHOT"
 }
 
+# Hook method to define the remote repository name
+# Returns the name of the remote repository as text
+function get_remote_repo_name {
+  echo "origin"
+}
+
 # Hook method to define the develop branch name
 # Returns the develop branch name as text
 function get_develop_branch_name {
@@ -63,5 +69,6 @@ function build_release_modules {
 # Should set version numbers in your modules
 # Parameter $1 - version as text
 function set_modules_version {
-  echo "Version: $1 - do nothing" >> /dev/null
+  cd $SCRIPT_PATH/.. && mvn -B versions:set -DnewVersion=$1
+  cd $SCRIPT_PATH/../sts-client-example && npm version --no-git-tag-version $1
 }
