@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
+import de.adorsys.sts.objectmapper.JacksonObjectMapper;
 import de.adorsys.sts.resourceserver.processing.ResourceServerProcessor;
 import de.adorsys.sts.resourceserver.processing.ResourceServerProcessorService;
 import de.adorsys.sts.resourceserver.service.UserDataRepository;
@@ -24,7 +25,7 @@ public class PasswordGrantConfiguration {
             KeyManagementService keyManagementService,
             ResourceServerProcessorService resourceServerProcessorService
     ) {
-        return new PasswordGrantService(keyManagementService, resourceServerProcessorService);
+        return new PasswordGrantService(keyManagementService, resourceServerProcessorService, new JacksonObjectMapper());
     }
 
     @Bean

@@ -14,7 +14,7 @@ import de.adorsys.sts.resourceserver.service.UserDataRepository;
 
 public class FsUserDataRepository extends FsBasedService implements UserDataRepository {
 
-	private static final String RESOURCE_SERVERS_FILE_NAME = "user_data";
+	private static final String RESOURCE_SERVERS_FILE_NAME = "sts_user_data.aes";
 	private static final TypeReference<UserCredentials> VALUE_TYPE = new TypeReference<UserCredentials>() {}; 
 	private final DocumentFQN dataFileFQN = new DocumentFQN(RESOURCE_SERVERS_FILE_NAME);
 

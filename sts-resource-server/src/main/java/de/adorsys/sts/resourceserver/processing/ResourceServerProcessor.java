@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 /**
  * Processes information specific to a resoruce server.
@@ -33,7 +34,7 @@ import java.util.Optional;
  *
  */
 public class ResourceServerProcessor {
-
+	private static final Logger LOGGER = Logger.getLogger(ResourceServerProcessor.class.getName());
 	/**
 	 * The default HTTP connect timeout for JWK set retrieval, in
 	 * milliseconds. Set to 250 milliseconds.
@@ -127,7 +128,7 @@ public class ResourceServerProcessor {
 	private void encryptSecret(ResourceServerAndSecret resourceServerAndSecret) {
 		ResourceServer resourceServer = resourceServerAndSecret.getResourceServer();
 
-		if(StringUtils.isBlank(resourceServer.getUserSecretClaimName())) return;
+		if(StringUtils.isBlank(resourceServer.getUserSecretClaimName()) && StringUtils.isBlank(resourceServer.getAudience())) return;
 
 		Optional<String> encryptedSecret = tryToEncrypt(resourceServerAndSecret);
 
@@ -147,8 +148,7 @@ public class ResourceServerProcessor {
 		try {
 			keys = jwkSource.get(encKeySelector, null);
 		} catch (RemoteKeySourceException e) {
-			// TODO. Log Warn
-			e.printStackTrace();
+			LOGGER.warning("Can not access resource server encryption key. Secret will not be transmitted.");
 			return encryptedSecret;
 		}
 		if(keys==null ||  keys.isEmpty()) return encryptedSecret;
@@ -159,8 +159,7 @@ public class ResourceServerProcessor {
 		try {
 			encrypted = encryptionService.encrypt(jwk, resourceServerAndSecret.getRawSecret());
 		} catch(SecretEncryptionException e) {
-			// TODO log.warn
-			e.printStackTrace();
+			LOGGER.warning("Can not encrypt secret encryption key. Secret will not be transmitted.");
 			return encryptedSecret;
 		}
 
