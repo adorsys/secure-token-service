@@ -197,6 +197,11 @@ public class ResourceServerProcessor {
 		UserCredentials userCredentials = userDataService.loadUserCredentials(user, password);
 
 		boolean store = false;
+		
+		if(userCredentials==null){
+			userCredentials = new UserCredentials();
+			store = true;
+		}
 		for (ResourceServerAndSecret resourceServer : resurceServers) {
 			String credentialForResourceServer = userCredentials.getCredentialForResourceServer(resourceServer.getResourceServer().getAudience());
 			if(credentialForResourceServer==null){
