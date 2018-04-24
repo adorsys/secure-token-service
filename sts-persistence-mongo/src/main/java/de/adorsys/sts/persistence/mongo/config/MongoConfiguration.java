@@ -39,7 +39,7 @@ public class MongoConfiguration extends AbstractMongoConfiguration {
     }
 
     @Override
-    public Mongo mongo() throws Exception {
+    public MongoClient mongoClient() {
         return new MongoClient();
     }
 }

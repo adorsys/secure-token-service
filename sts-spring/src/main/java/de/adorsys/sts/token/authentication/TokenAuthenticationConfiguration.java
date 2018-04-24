@@ -5,15 +5,20 @@ import de.adorsys.sts.tokenauth.BearerTokenValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 
 @Configuration
-@ComponentScan(basePackages = {
-        "de.adorsys.sts.token.authentication"
-})
+@ComponentScan(
+        basePackages = {"de.adorsys.sts.token.authentication"},
+        excludeFilters = @ComponentScan.Filter(
+                pattern = "de.adorsys.sts.token.authentication.securitycontext.*",
+                type = FilterType.REGEX
+        )
+)
 public class TokenAuthenticationConfiguration {
 
     @Bean
-    public BearerTokenValidator bearerTokenValidator(AuthServersProvider authServersProvider) {
+    BearerTokenValidator bearerTokenValidator(AuthServersProvider authServersProvider) {
         return new BearerTokenValidator(authServersProvider);
     }
 }

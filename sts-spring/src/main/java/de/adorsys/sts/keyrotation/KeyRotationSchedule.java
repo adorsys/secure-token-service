@@ -41,8 +41,8 @@ public class KeyRotationSchedule {
     }
 
     @Scheduled(
-            initialDelayString = "${sts.keymanagement.rotation.checkInterval:60000}",
-            fixedDelayString = "${sts.keymanagement.rotation.checkInterval:60000}"
+            initialDelayString = "${sts.keymanagement.rotation.check-interval:60000}",
+            fixedDelayString = "${sts.keymanagement.rotation.check-interval:60000}"
     )
     public void scheduledRotation() {
 

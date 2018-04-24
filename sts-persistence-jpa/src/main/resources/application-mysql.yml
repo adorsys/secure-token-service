@@ -1,15 +1,13 @@
-liquibase:
-  default-schema: sts
-
-flyway:
-  locations:
-  - db/migration/flyway/mysql
-
 spring:
+  liquibase:
+    default-schema: sts
+
+  flyway:
+    locations:
+    - db/migration/flyway/mysql
+
   datasource:
     url: jdbc:mysql://localhost:3306/sts
   jpa:
-    properties:
-      hibernate:
-        show-sql: true
     database-platform: org.hibernate.dialect.MySQLInnoDBDialect
+    hibernate.use-new-id-generator-mappings: false

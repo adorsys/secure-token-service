@@ -101,9 +101,10 @@ public class TokenExchangeService {
 
             if (!actorBearerToken.isValid()) {
                 String tokenName = "actor_token";
-
                 throw new TokenValidationException("Token in field " + tokenName + " does not seam to be a valid token");
             }
+
+            actorTokenClaim = actorBearerToken.getClaims();
         }
 
         JWTClaimsSet subjectTokenClaim = subjectBearerToken.getClaims();

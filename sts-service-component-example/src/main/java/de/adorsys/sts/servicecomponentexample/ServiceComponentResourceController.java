@@ -1,5 +1,6 @@
 package de.adorsys.sts.servicecomponentexample;
 
+import de.adorsys.sts.keymanagement.service.SecretDecryptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,15 +8,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ServiceComponentResourceController {
 
-    private final SecretClaimDecryptionService secretClaimDecryptionService;
+    private final SecretDecryptionService secretDecryptionService;
 
     @Autowired
-    public ServiceComponentResourceController(SecretClaimDecryptionService secretClaimDecryptionService) {
-        this.secretClaimDecryptionService = secretClaimDecryptionService;
+    public ServiceComponentResourceController(SecretDecryptionService secretDecryptionService) {
+        this.secretDecryptionService = secretDecryptionService;
     }
 
     @GetMapping("/helloworld")
     public String helloWorld() {
-        return secretClaimDecryptionService.decryptSecretClaim();
+        return secretDecryptionService.decryptSecretClaim();
     }
 }

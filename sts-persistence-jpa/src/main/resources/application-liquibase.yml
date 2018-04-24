@@ -1,6 +1,7 @@
-liquibase:
-  enabled: true
-  change-log: classpath:/db/migration/liquibase/changelog.yml
+spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/migration/liquibase/changelog.yml
 
-flyway:
-  enabled: false
+  flyway:
+    enabled: false
