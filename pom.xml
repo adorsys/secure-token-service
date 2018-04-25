@@ -53,9 +53,7 @@
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZZ</maven.build.timestamp.format>
 		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
 		<cryptoutils.version>0.12.0</cryptoutils.version>
-		<lock-persistence.version>0.2.0</lock-persistence.version>
-
-		<!-- jackson buggy 2.8.x version https://github.com/FasterXML/jackson-databind/issues/1595 -->
+		<lock-persistence.version>0.3.0</lock-persistence.version>
 		<jackson.version>2.9.5</jackson.version>
 		<scmBranch />
 	</properties>
