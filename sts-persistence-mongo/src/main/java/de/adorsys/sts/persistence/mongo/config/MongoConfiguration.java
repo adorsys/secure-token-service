@@ -6,7 +6,9 @@ import de.adorsys.lockpersistence.client.LockClient;
 import de.adorsys.lockpersistence.client.SimpleLockClient;
 import de.adorsys.lockpersistence.service.LockService;
 import de.adorsys.sts.keymanagement.KeyManagementConfiguration;
+import de.adorsys.sts.keymanagement.bouncycastle.BouncyCastleProviderConfiguration;
 import de.adorysys.lockpersistence.mongo.config.EnableMongoLockPersistence;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.*;
@@ -18,7 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan(basePackages = {
         "de.adorsys.sts.persistence.mongo",
 })
-@Import(KeyManagementConfiguration.class)
+@Import({KeyManagementConfiguration.class, BouncyCastleProviderConfiguration.class})
 @EnableTransactionManagement
 @EnableMongoRepositories(basePackages = "de.adorsys.sts.persistence.mongo.repository")
 @EnableMongoLockPersistence
@@ -27,6 +29,9 @@ public class MongoConfiguration extends AbstractMongoConfiguration {
 
     @Value("${spring.data.mongodb.database:sts}")
     private String databaseName;
+
+    @Autowired(required = false)
+    private MongoClient mongoClient;
 
     @Bean
     LockClient lockClient(LockService lockService) {
@@ -40,6 +45,10 @@ public class MongoConfiguration extends AbstractMongoConfiguration {
 
     @Override
     public MongoClient mongoClient() {
-        return new MongoClient();
+        if(mongoClient == null) {
+            return new MongoClient();
+        }
+
+        return mongoClient;
     }
 }

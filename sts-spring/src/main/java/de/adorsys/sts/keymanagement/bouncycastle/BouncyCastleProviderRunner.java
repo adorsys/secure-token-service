@@ -1,4 +1,4 @@
-package de.adorsys.sts.persistence.jpa;
+package de.adorsys.sts.keymanagement.bouncycastle;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.boot.ApplicationArguments;

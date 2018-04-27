@@ -6,11 +6,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 
 import java.time.Clock;
 
 @Configuration
-@ComponentScan("de.adorsys.sts.keymanagement")
+@ComponentScan(
+        basePackages = {"de.adorsys.sts.keymanagement"},
+        excludeFilters = @ComponentScan.Filter(
+                pattern = "de.adorsys.sts.keymanagement.bouncycastle.*",
+                type = FilterType.REGEX
+        )
+)
 public class KeyManagementConfiguration {
 
     @Bean
