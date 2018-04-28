@@ -1,5 +1,6 @@
 package de.adorsys.sts.persistence;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -46,13 +47,13 @@ public class FsResourceServerRepository extends FsBasedService implements Resour
     public void add(ResourceServer resourceServer) {
         if(!isValid(resourceServer)) 
             throw new BaseException("Resource server not valid");
-        List<ResourceServer> resourceServers = loadAll();
+        ArrayList<ResourceServer> resourceServers = new ArrayList<>(loadAll());
         add(resourceServer, resourceServers);
     }
     
     @Override
     public void addAll(Iterable<ResourceServer> serversIn) {
-        List<ResourceServer> existingServers = loadAll();
+    	ArrayList<ResourceServer> existingServers = new ArrayList<>(loadAll());
         boolean persist = false;
         for (ResourceServer resourceServer : serversIn) {
             add(resourceServer, existingServers);
@@ -65,13 +66,13 @@ public class FsResourceServerRepository extends FsBasedService implements Resour
         return resourceServers.stream().collect(Collectors.toMap(ResourceServer::getAudience, Function.identity()));
     }
 
-    private void add(ResourceServer resourceServer, final List<ResourceServer> existingServers) {
+    private void add(ResourceServer resourceServer, final ArrayList<ResourceServer> existingServers) {
         addInternal(resourceServer, existingServers);
         persist(existingServers);
     }
     
     // Add without persisting.
-    private void addInternal(ResourceServer resourceServer, final List<ResourceServer> existingServers) {
+    private void addInternal(ResourceServer resourceServer, final ArrayList<ResourceServer> existingServers) {
         Map<String, ResourceServer> resourceServerMap = mapResourceServers(existingServers);
 
         String audience = resourceServer.getAudience();
