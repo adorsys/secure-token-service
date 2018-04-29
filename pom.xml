@@ -53,7 +53,7 @@
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZZ</maven.build.timestamp.format>
 		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
 		<docusafe.version>0.3.4-SNAPSHOT</docusafe.version>
-		<cryptoutils.version>0.18.2-SNAPSHOT</cryptoutils.version>
+		<cryptoutils.version>0.18.4-SNAPSHOT</cryptoutils.version>
 		<lock-persistence.version>0.2.0</lock-persistence.version>
 
 		<!-- jackson buggy 2.8.x version https://github.com/FasterXML/jackson-databind/issues/1595 -->
