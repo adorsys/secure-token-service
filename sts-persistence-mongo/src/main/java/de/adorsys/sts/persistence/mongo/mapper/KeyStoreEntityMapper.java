@@ -12,6 +12,8 @@ import org.adorsys.jkeygen.pwd.PasswordCallbackHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 @Component
 public class KeyStoreEntityMapper {
 
+    private static final ZonedDateTime DEFAULT_LAST_UPDATE = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneOffset.UTC);
     private final PasswordCallbackHandler keyPassHandler;
     private final String keystoreName;
 
@@ -49,6 +52,7 @@ public class KeyStoreEntityMapper {
         persistentKeyStore.setName(keystoreName);
         persistentKeyStore.setKeystore(bytes);
         persistentKeyStore.setType(keyStore.getKeyStore().getType());
+        persistentKeyStore.setLastUpdate(convert(keyStore.getLastUpdate()));
 
         Map<String, KeyEntryAttributesEntity> mappedEntryAttributes = mapToEntityMap(keyStore.getKeyEntries());
         persistentKeyStore.setEntries(mappedEntryAttributes);
@@ -127,10 +131,25 @@ public class KeyStoreEntityMapper {
         java.security.KeyStore keyStore = KeyStoreService.loadKeyStore(persistentKeyStore.getKeystore(), keystoreName, new KeyStoreType(persistentKeyStore.getType()), keyPassHandler);
 
         Map<String, StsKeyEntry> mappedKeyEntries = mapFromEntities(keyStore, persistentKeyStore.getEntries());
+        Date lastUpdate = persistentKeyStore.getLastUpdate();
 
         return StsKeyStore.builder()
                 .keyStore(keyStore)
                 .keyEntries(mappedKeyEntries)
+                .lastUpdate(mapLastUpdate(lastUpdate))
                 .build();
+    }
+
+    public ZonedDateTime mapLastUpdate(KeyStoreEntity keyStoreEntityWithLastUpdate) {
+        Date lastUpdate = keyStoreEntityWithLastUpdate.getLastUpdate();
+        return mapLastUpdate(lastUpdate);
+    }
+
+    private ZonedDateTime mapLastUpdate(Date lastUpdateAsDate) {
+        if(lastUpdateAsDate == null) {
+            return DEFAULT_LAST_UPDATE;
+        }
+
+        return convert(lastUpdateAsDate);
     }
 }

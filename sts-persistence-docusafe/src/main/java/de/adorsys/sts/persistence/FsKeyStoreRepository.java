@@ -1,13 +1,9 @@
 package de.adorsys.sts.persistence;
 
-import java.security.KeyStore;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.security.auth.callback.CallbackHandler;
-
+import de.adorsys.sts.keymanagement.model.StsKeyEntry;
+import de.adorsys.sts.keymanagement.model.StsKeyStore;
+import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
+import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
 import org.adorsys.docusafe.business.DocumentSafeService;
 import org.adorsys.docusafe.business.types.complex.DSDocument;
 import org.adorsys.docusafe.business.types.complex.DSDocumentMetaInfo;
@@ -20,13 +16,20 @@ import org.adorsys.jkeygen.keystore.KeyStoreService;
 import org.adorsys.jkeygen.keystore.KeyStoreType;
 import org.adorsys.jkeygen.pwd.PasswordCallbackHandler;
 
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
-import de.adorsys.sts.keymanagement.model.StsKeyStore;
-import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
-import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
+import javax.security.auth.callback.CallbackHandler;
+import java.security.KeyStore;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class FsKeyStoreRepository implements KeyStoreRepository {
 	private final static String KEYSTORE_TYPE_KEY = "INTERNAL_SERVER_KEYSTORE_PERSISTENCE_TYPE_KEY";
+	private final static String KEYSTORE_LAST_UPDATE_KEY = "INTERNAL_SERVER_KEYSTORE_PERSISTENCE_LAST_UPDATE_KEY";
+	private static final ZonedDateTime DEFAULT_LAST_UPDATE = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneOffset.UTC);
 
 	private final DocumentFQN keystoreFileFQN;
 	private final DocumentSafeService documentSafeService;
@@ -66,7 +69,33 @@ public class FsKeyStoreRepository implements KeyStoreRepository {
 
 		Map<String, StsKeyEntry> loadedKeyEntries = loadKeyEntries(keyStore, attributesMap);
 
-		return StsKeyStore.builder().keyStore(keyStore).keyEntries(loadedKeyEntries).build();
+		return StsKeyStore.builder()
+				.lastUpdate(readLastUpdateFromMetaInfo(metaInfo))
+				.keyStore(keyStore)
+				.keyEntries(loadedKeyEntries)
+				.build();
+	}
+
+	private ZonedDateTime readLastUpdateFromMetaInfo(UserMetaData metaInfo) {
+		String lastUpdateAsText = metaInfo.get(KEYSTORE_LAST_UPDATE_KEY);
+
+		if(lastUpdateAsText == null) {
+			return DEFAULT_LAST_UPDATE;
+		}
+
+		return ZonedDateTime.parse(lastUpdateAsText);
+	}
+
+	private void writeLastUpdateIntoMetaInfo(ZonedDateTime lastUpdate, UserMetaData metaInfo) {
+		String lastUpdateAsText;
+
+		if (lastUpdate == null) {
+			lastUpdateAsText = DEFAULT_LAST_UPDATE.toString();
+		} else {
+			lastUpdateAsText = lastUpdate.toString();
+		}
+
+		metaInfo.put(KEYSTORE_LAST_UPDATE_KEY, lastUpdateAsText);
 	}
 
 	private Map<String, StsKeyEntry> loadKeyEntries(KeyStore keyStore, Map<String, String> attributesMap) {
@@ -102,6 +131,18 @@ public class FsKeyStoreRepository implements KeyStoreRepository {
 		documentSafeService.storeDocument(userIDAuth, dsDocument);
 	}
 
+	@Override
+	public ZonedDateTime lastUpdate() {
+		if(documentSafeService.documentExists(userIDAuth, keystoreFileFQN)) {
+			DSDocument dsDocument = documentSafeService.readDocument(userIDAuth, keystoreFileFQN);
+			DSDocumentMetaInfo metaInfo = dsDocument.getDsDocumentMetaInfo();
+
+			return readLastUpdateFromMetaInfo(metaInfo);
+		} else {
+			return DEFAULT_LAST_UPDATE;
+		}
+	}
+
 	private UserMetaData buildAttributes(StsKeyStore keyStore) {
 		UserMetaData attributes = new UserMetaData();
 		for (Map.Entry<String, StsKeyEntry> entry : keyStore.getKeyEntries().entrySet()) {
@@ -112,6 +153,8 @@ public class FsKeyStoreRepository implements KeyStoreRepository {
 
 			attributes.put(alias, valuesAsString);
 		}
+
+		writeLastUpdateIntoMetaInfo(keyStore.getLastUpdate(), attributes);
 
 		return attributes;
 	}

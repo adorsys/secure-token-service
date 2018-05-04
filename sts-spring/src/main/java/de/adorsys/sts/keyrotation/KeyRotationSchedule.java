@@ -8,9 +8,13 @@ import de.adorsys.sts.keymanagement.service.KeyRotationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.Clock;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,16 +29,20 @@ public class KeyRotationSchedule {
 
     private final String rotationLockName;
 
+    private final Clock clock;
+
     @Autowired
     public KeyRotationSchedule(
             KeyRotationService keyRotationService,
-            KeyStoreRepository keyStoreRepository,
+            @Qualifier("cached") KeyStoreRepository keyStoreRepository,
             LockClient lockClient,
-            KeyManagementProperties properties
+            KeyManagementProperties properties,
+            Clock clock
     ) {
         this.keyRotationService = keyRotationService;
         this.keyStoreRepository = keyStoreRepository;
         this.lockClient = lockClient;
+        this.clock = clock;
 
         String keyStoreName = properties.getKeystore().getName();
         this.rotationLockName = "key-rotation -- " + keyStoreName;
@@ -63,18 +71,23 @@ public class KeyRotationSchedule {
         StsKeyStore keyStore = keyStoreRepository.load();
         KeyRotationService.KeyRotationResult keyRotationResult = keyRotationService.rotate(keyStore);
 
+        List<String> removedKeys = keyRotationResult.getRemovedKeys();
+        List<String> futureKeys = keyRotationResult.getFutureKeys();
+        List<String> generatedKeys = keyRotationResult.getGeneratedKeys();
+
         if(LOG.isDebugEnabled()) {
-
-            List<String> removedKeys = keyRotationResult.getRemovedKeys();
             LOG.debug(removedKeys.size() + " keys removed: [" + removedKeys.stream().collect(Collectors.joining(",")) + "]");
-
-            List<String> futureKeys = keyRotationResult.getFutureKeys();
             LOG.debug(futureKeys.size() + " future keys generated: [" + futureKeys.stream().collect(Collectors.joining(",")) + "]");
-
-            List<String> generatedKeys = keyRotationResult.getGeneratedKeys();
             LOG.debug(generatedKeys.size() + " keys generated: [" + generatedKeys.stream().collect(Collectors.joining(",")) + "]");
         }
 
-        keyStoreRepository.save(keyStore);
+        if(removedKeys.size() + futureKeys.size() + generatedKeys.size() > 0) {
+            keyStore.setLastUpdate(now());
+            keyStoreRepository.save(keyStore);
+        }
+    }
+
+    private ZonedDateTime now() {
+        return clock.instant().atZone(ZoneOffset.UTC);
     }
 }

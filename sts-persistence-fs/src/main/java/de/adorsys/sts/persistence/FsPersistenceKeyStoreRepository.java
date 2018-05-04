@@ -1,6 +1,7 @@
 package de.adorsys.sts.persistence;
 
 import java.security.KeyStore;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +103,11 @@ public class FsPersistenceKeyStoreRepository implements KeyStoreRepository {
 
         UserMetaData attributes = buildAttributes(keyStore);
         keystorePersistence.saveKeyStoreWithAttributes(keyStore.getKeyStore(), attributes, keyPassHandler, handle);
+    }
+
+    @Override
+    public ZonedDateTime lastUpdate() {
+        throw new RuntimeException("not yet implemented");
     }
 
     private UserMetaData buildAttributes(StsKeyStore keyStore) {

@@ -40,50 +40,11 @@ services:
     - KEYCLOAK_URL=http://keycloak:8080/auth
     - KEYCLOAK_ADMIN=admin
     - KEYCLOAK_ADMIN_PASSWORD=admin123
-  sts-db:
-    image: postgres:9.6-alpine
-    container_name: sts_db
-    environment:
-      POSTGRES_USER: db_user
-      POSTGRES_PASSWORD: db_user@123
-      POSTGRES_DB: sts
-    volumes:
-    - "./.docker/sts-db/postgres:/var/lib/postgresql/data"
-    ports:
-    - 5432:5432
-    networks:
-    - sts_network
-#  sts-db:
-#    image: mysql:8.0
-#    container_name: sts_db
-#    environment:
-#      MYSQL_ROOT_PASSWORD: db_root@123
-#      MYSQL_USER: db_user
-#      MYSQL_PASSWORD: db_user@123
-#      MYSQL_DATABASE: sts
-#    volumes:
-#    - "./.docker/sts-db/mysql8:/var/lib/mysql"
-#    ports:
-#    - 3306:3306
-#    networks:
-#    - sts_network
-#  sts-db:
-#    image: mysql:5.7
-#    container_name: sts_db
-#    environment:
-#      MYSQL_ROOT_PASSWORD: db_root@123
-#      MYSQL_USER: db_user
-#      MYSQL_PASSWORD: db_user@123
-#      MYSQL_DATABASE: sts
-#    volumes:
-#    - "./.docker/sts-db/mysql57:/var/lib/mysql"
-#    ports:
-#    - 3306:3306
-#    networks:
-#    - sts_network
   sts-mongo:
-    image: mongo:3.0
+    image: mongo:3.6.5
     container_name: sts_mongo
+    environment:
+      MONGO_INITDB_DATABASE: sts
     volumes:
     - "./.docker/sts-mongo:/data/db"
     ports:
@@ -95,13 +56,13 @@ services:
     build: ./sts-example
     image: "local/sts-example:latest"
     depends_on:
-    - sts-db
+    - sts-mongo
     networks:
     - sts_network
     environment:
-    - SPRING_PROFILES_ACTIVE=postgres
-    - SPRING_DATASOURCE_URL=jdbc:postgresql://sts-db:5432/sts
-#    - SPRING_DATASOURCE_URL=jdbc:mysql://sts-db:3306/sts
+    - SPRING_PROFILES_ACTIVE=mongo
+    - SPRING_DATA_MONGODB_DATABASE=sts
+    - SPRING_DATA_MONGODB_URI=mongodb://sts-mongo/sts
     - logging_level_de_adorsys_sts_keyrotation_KeyRotationSchedule=debug
     - SPRING_APPLICATION_JSON={"sts":{"resource-server-management":{"resource-retriever":{"http-connect-timeout":10000,"http-read-timeout":60000,"http-size-limit":512000},"resource-servers":[{"audience":"sts","jwks-url":"http://localhost:8888/pop"},{"audience":"sts-service-component","jwks-url":"http://sts-service-component:8887/pop"}]}}}
     ports:
@@ -113,13 +74,13 @@ services:
     - "8887:8887"
     environment:
     - sts_audience_name=sts-service-component
-    - SPRING_PROFILES_ACTIVE=postgres
-    - SPRING_DATASOURCE_URL=jdbc:postgresql://sts-db:5432/sts
-#    - SPRING_DATASOURCE_URL=jdbc:mysql://sts-db:3306/sts
+    - SPRING_PROFILES_ACTIVE=mongo
+    - SPRING_DATA_MONGODB_DATABASE=sts
+    - SPRING_DATA_MONGODB_URI=mongodb://sts-mongo/sts
     - logging_level_de_adorsys_sts_keyrotation_KeyRotationSchedule=debug
     - SPRING_APPLICATION_JSON={"sts":{"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}]}}
     depends_on:
-    - sts-db
+    - sts-mongo
     networks:
     - sts_network
   sts-service-component_2:
@@ -129,13 +90,13 @@ services:
     - "8886:8887"
     environment:
     - sts_audience_name=sts-service-component
-    - SPRING_PROFILES_ACTIVE=postgres
-    - SPRING_DATASOURCE_URL=jdbc:postgresql://sts-db:5432/sts
-#    - SPRING_DATASOURCE_URL=jdbc:mysql://sts-db:3306/sts
+    - SPRING_PROFILES_ACTIVE=mongo
+    - SPRING_DATA_MONGODB_DATABASE=sts
+    - SPRING_DATA_MONGODB_URI=mongodb://sts-mongo/sts
     - logging_level_de_adorsys_sts_keyrotation_KeyRotationSchedule=debug
     - SPRING_APPLICATION_JSON={"sts":{"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}]}}
     depends_on:
-    - sts-db
+    - sts-mongo
     networks:
     - sts_network
   sts-client:

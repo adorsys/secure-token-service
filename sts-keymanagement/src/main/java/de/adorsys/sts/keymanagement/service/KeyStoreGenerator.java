@@ -107,6 +107,7 @@ public class KeyStoreGenerator {
             return StsKeyStore.builder()
                     .keyEntries(keyEntries)
                     .keyStore(keystoreBuilder.build())
+                    .lastUpdate(now())
                     .build();
         } catch (Exception e) {
             throw new IllegalStateException(e);

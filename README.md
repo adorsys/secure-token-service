@@ -206,8 +206,22 @@ docker-compose --file build.docker-compose.yml down --remove-orphans && docker-c
 
 ## Run example application
 
+### with postgres database
+
 ```
-docker-compose --file docker-compose.yml down --remove-orphans && docker-compose --file docker-compose.yml up --build
+docker-compose --file postgres.docker-compose.yml down --remove-orphans && docker-compose --file postgres.docker-compose.yml up --build
+```
+
+### with mysql 8 database
+
+```
+docker-compose --file mysql8.docker-compose.yml down --remove-orphans && docker-compose --file mysql8.docker-compose.yml up --build
+```
+
+### with mongo database
+
+```
+docker-compose --file mongo.docker-compose.yml down --remove-orphans && docker-compose --file mongo.docker-compose.yml up --build
 ```
 
 | Container | URL |

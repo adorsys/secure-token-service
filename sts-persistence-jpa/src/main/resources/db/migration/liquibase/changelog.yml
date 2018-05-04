@@ -9,3 +9,5 @@ databaseChangeLog:
     file: db/migration/liquibase/changelogs/03-create-table-keyentry.yml
 - include:
     file: db/migration/liquibase/changelogs/04-create-table-lock_persistence.yml
+- include:
+    file: db/migration/liquibase/changelogs/05-add-lastupdate-to-keystore.yml

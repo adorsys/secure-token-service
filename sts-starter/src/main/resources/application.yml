@@ -3,6 +3,10 @@ logging:
         org.springframework.web: DEBUG
         de.adorsys.sts.keyrotation.KeyRotationSchedule: DEBUG
 
+docusafe.system.user:
+  name: my_docusafe_user
+  password: 1234567890
+
 sts:
   resource-server-management:
     resource-retriever:

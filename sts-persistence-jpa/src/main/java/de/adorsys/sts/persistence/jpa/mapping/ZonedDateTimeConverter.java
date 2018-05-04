@@ -12,6 +12,10 @@ public class ZonedDateTimeConverter implements AttributeConverter<ZonedDateTime,
 
     @Override
     public java.sql.Timestamp convertToDatabaseColumn(ZonedDateTime entityValue) {
+        return convert(entityValue);
+    }
+
+    public static Timestamp convert(ZonedDateTime entityValue) {
         if(entityValue == null) {
             return null;
         }
@@ -21,6 +25,10 @@ public class ZonedDateTimeConverter implements AttributeConverter<ZonedDateTime,
 
     @Override
     public ZonedDateTime convertToEntityAttribute(java.sql.Timestamp databaseValue) {
+        return convert(databaseValue);
+    }
+
+    public static ZonedDateTime convert(Timestamp databaseValue) {
         if(databaseValue == null) {
             return null;
         }

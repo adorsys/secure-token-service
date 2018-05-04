@@ -46,6 +46,7 @@ public class KeyStoreEntityMapper {
         persistentKeyStore.setName(keystoreName);
         persistentKeyStore.setKeystore(bytes);
         persistentKeyStore.setType(keyStore.getKeyStore().getType());
+        persistentKeyStore.setLastUpdate(keyStore.getLastUpdate());
     }
 
     public StsKeyStore mapFromEntity(JpaKeyStore persistentKeyStore, List<JpaKeyEntryAttributes> persistentKeyEntries) {
@@ -56,6 +57,7 @@ public class KeyStoreEntityMapper {
         return StsKeyStore.builder()
                 .keyStore(keyStore)
                 .keyEntries(mappedKeyEntries)
+                .lastUpdate(persistentKeyStore.getLastUpdate())
                 .build();
     }
 

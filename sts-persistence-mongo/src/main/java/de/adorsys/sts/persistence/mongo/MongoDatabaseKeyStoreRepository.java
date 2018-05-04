@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
+import java.util.List;
+
 @Service
 @Transactional
 public class MongoDatabaseKeyStoreRepository implements KeyStoreRepository {
@@ -52,5 +55,18 @@ public class MongoDatabaseKeyStoreRepository implements KeyStoreRepository {
             keyStoreEntityMapper.mapIntoEntity(keyStore, foundKeyStore);
             keyStoreRepository.save(foundKeyStore);
         }
+    }
+
+    @Override
+    public ZonedDateTime lastUpdate() {
+        List<KeyStoreEntity> foundKeyStoresWithLastUpdate = keyStoreRepository.findLastUpdate(keyStoreName);
+
+        if(foundKeyStoresWithLastUpdate.size() > 0) {
+            KeyStoreEntity keyStoreWithLastUpdate = foundKeyStoresWithLastUpdate.get(0);
+
+            return keyStoreEntityMapper.mapLastUpdate(keyStoreWithLastUpdate);
+        }
+
+        throw new RuntimeException("No keystore found");
     }
 }
