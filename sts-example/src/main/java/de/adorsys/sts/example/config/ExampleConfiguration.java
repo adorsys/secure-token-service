@@ -18,8 +18,6 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 @EnableEncryption
 @EnablePOP
 @EnableKeyRotation
-@EnableJpaPersistence
-@EnableMongoPersistence
 public class ExampleConfiguration {
 
     @Bean

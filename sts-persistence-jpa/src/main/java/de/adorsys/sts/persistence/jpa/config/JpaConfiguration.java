@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         basePackageClasses = {Jsr310JpaConverters.class}
 )
 @EnableJpaLockPersistence
-@Profile({"!mongo"})
 public class JpaConfiguration {
 
     @Bean

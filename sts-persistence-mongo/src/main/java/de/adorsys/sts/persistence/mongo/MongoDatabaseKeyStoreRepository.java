@@ -1,18 +1,14 @@
 package de.adorsys.sts.persistence.mongo;
 
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
-import de.adorsys.sts.persistence.mongo.entity.KeyEntryAttributesEntity;
 import de.adorsys.sts.persistence.mongo.entity.KeyStoreEntity;
 import de.adorsys.sts.persistence.mongo.mapper.KeyStoreEntityMapper;
 import de.adorsys.sts.persistence.mongo.repository.MongoKeyStoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Map;
 
 @Service
 @Transactional
