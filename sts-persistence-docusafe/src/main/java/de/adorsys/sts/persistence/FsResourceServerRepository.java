@@ -91,7 +91,7 @@ public class FsResourceServerRepository extends FsBasedService implements Resour
     private List<ResourceServer> loadAll() {
     	if(!super.documentExists(userIDAuth, dataFileFQN))
     		return new ArrayList<>();
-    	return load(userIDAuth, dataFileFQN, RESOURCE_SERVER_LIST_TYPE).orElse(Collections.emptyList());
+    	return load(userIDAuth, dataFileFQN, RESOURCE_SERVER_LIST_TYPE).orElse(new ArrayList<>());
     }
 
     private void persist(List<ResourceServer> existingServers) {
