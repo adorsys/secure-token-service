@@ -1,13 +1,10 @@
 package de.adorsys.sts.persistence.mongo.mapper;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
+import de.adorsys.sts.keymanagement.model.StsKeyEntry;
+import de.adorsys.sts.keymanagement.model.StsKeyStore;
+import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
+import de.adorsys.sts.persistence.mongo.entity.KeyEntryAttributesEntity;
+import de.adorsys.sts.persistence.mongo.entity.KeyStoreEntity;
 import org.adorsys.jkeygen.keystore.KeyEntry;
 import org.adorsys.jkeygen.keystore.KeyStoreService;
 import org.adorsys.jkeygen.keystore.KeyStoreType;
@@ -15,11 +12,13 @@ import org.adorsys.jkeygen.pwd.PasswordCallbackHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
-import de.adorsys.sts.keymanagement.model.StsKeyStore;
-import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
-import de.adorsys.sts.persistence.mongo.entity.KeyEntryAttributesEntity;
-import de.adorsys.sts.persistence.mongo.entity.KeyStoreEntity;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class KeyStoreEntityMapper {

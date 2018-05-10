@@ -89,6 +89,8 @@ services:
     ports:
     - 27017:27017
     command: --smallfiles
+    networks:
+    - sts_network
   sts:
     build: ./sts-example
     image: "local/sts-example:latest"
