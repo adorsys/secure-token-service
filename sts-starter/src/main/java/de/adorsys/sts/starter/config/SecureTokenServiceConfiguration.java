@@ -1,19 +1,26 @@
 package de.adorsys.sts.starter.config;
 
-import org.adorsys.encobject.service.api.ExtendedStoreConnection;
-import org.adorsys.encobject.userdata.ObjectMapperSPI;
+import javax.annotation.PostConstruct;
+
+import org.adorsys.docusafe.business.DocumentSafeService;
+import org.adorsys.docusafe.business.types.UserID;
+import org.adorsys.docusafe.business.types.complex.UserIDAuth;
+import org.adorsys.encobject.domain.ReadKeyPassword;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.adorsys.sts.admin.EnableAdmin;
 import de.adorsys.sts.keymanagement.KeyManagementConfigurationProperties;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
-import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.keyrotation.EnableKeyRotation;
-import de.adorsys.sts.persistence.FsPersistenceKeyStoreRepository;
+import de.adorsys.sts.persistence.FsKeyStoreRepository;
+import de.adorsys.sts.persistence.FsResourceServerRepository;
 import de.adorsys.sts.persistence.KeyEntryMapper;
 import de.adorsys.sts.pop.EnablePOP;
-import de.adorsys.sts.resourceserver.persistence.FsPersistenceResourceServerRepository;
 import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
 import de.adorsys.sts.resourceserver.provider.EnvironmentVariableResourceServersProvider;
 import de.adorsys.sts.resourceserver.provider.ResourceServersProvider;
@@ -31,6 +38,24 @@ import de.adorsys.sts.worksheetloader.LoginLoader;
 @EnableKeyRotation
 @EnableServerInfo
 public class SecureTokenServiceConfiguration {
+	
+	@Autowired
+	private ObjectMapper objectMapper;
+	
+	@Autowired
+	private DocumentSafeService documentSafeService;
+	
+    @Value("${docusafe.system.user.name}")
+    String docusafeSystemUserName;
+    @Value("${docusafe.system.user.password}")
+    String docusafeSystemUserPassword;
+    
+    private UserIDAuth systemIdAuth;
+    
+    @PostConstruct
+    public void postConstruct(){
+    	systemIdAuth = new UserIDAuth(new UserID(docusafeSystemUserName), new ReadKeyPassword(docusafeSystemUserPassword));    	
+    }
 
     @Bean
     public DataSheetLoader dataSheetLoader() {
@@ -48,30 +73,12 @@ public class SecureTokenServiceConfiguration {
     }
 
     @Bean
-    ResourceServerRepository resourceServerRepository(
-    		ExtendedStoreConnection storeConnection,
-            KeyManagementService keyManagementService
-    ) {
-        return new FsPersistenceResourceServerRepository(storeConnection, keyManagementService);
+    ResourceServerRepository resourceServerRepository() {
+        return new FsResourceServerRepository(systemIdAuth, documentSafeService, objectMapper);
     }
 
     @Bean
-    KeyEntryMapper keyEntryMapper(
-            ObjectMapperSPI objectMapper
-    ) {
-        return new KeyEntryMapper(objectMapper);
-    }
-
-    @Bean
-    KeyStoreRepository keyStoreRepository(
-    		ExtendedStoreConnection storeConnection,
-            KeyManagementConfigurationProperties keyManagementProperties,
-            KeyEntryMapper keyEntryMapper
-    ) {
-        return new FsPersistenceKeyStoreRepository(
-        		storeConnection,
-                keyManagementProperties,
-                keyEntryMapper
-        );
-    }
+    KeyStoreRepository keyStoreRepository(KeyManagementConfigurationProperties keyManagementProperties) {
+        return new FsKeyStoreRepository(systemIdAuth, documentSafeService, keyManagementProperties, new KeyEntryMapper(objectMapper));
+    }    
 }

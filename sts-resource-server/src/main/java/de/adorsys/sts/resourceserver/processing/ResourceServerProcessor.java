@@ -17,7 +17,7 @@ import de.adorsys.sts.resourceserver.model.UserCredentials;
 import de.adorsys.sts.resourceserver.service.EncryptionService;
 import de.adorsys.sts.resourceserver.service.ResourceServerService;
 import de.adorsys.sts.resourceserver.service.SecretEncryptionException;
-import de.adorsys.sts.resourceserver.service.UserDataService;
+import de.adorsys.sts.resourceserver.service.UserDataRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 /**
  * Processes information specific to a resoruce server.
@@ -33,7 +34,7 @@ import java.util.Optional;
  *
  */
 public class ResourceServerProcessor {
-
+	private static final Logger LOGGER = Logger.getLogger(ResourceServerProcessor.class.getName());
 	/**
 	 * The default HTTP connect timeout for JWK set retrieval, in
 	 * milliseconds. Set to 250 milliseconds.
@@ -75,9 +76,11 @@ public class ResourceServerProcessor {
 	 * @param audiences
 	 * @param resources
 	 * @param userDataService
+     * @param user 
+     * @param password 
 	 * @return
 	 */
-	public List<ResourceServerAndSecret> processResources(String[] audiences, String[] resources, UserDataService userDataService){
+	public List<ResourceServerAndSecret> processResources(String[] audiences, String[] resources, UserDataRepository userDataService, String user, String password){
 
 		// Result
 		List<ResourceServerAndSecret> resurceServers = new ArrayList<>();
@@ -91,7 +94,7 @@ public class ResourceServerProcessor {
 		if(resurceServers.isEmpty()) return resurceServers;
 
 		// If Resources are set, we can get or create the corresponding user secrets and have them included in the token.
-		loadUserCredentials(userDataService, resurceServers);
+		loadUserCredentials(userDataService, resurceServers, user, password);
 
 		// Encrypt credentials for token
 		for (ResourceServerAndSecret resourceServerAndSecret : resurceServers) {
@@ -125,7 +128,7 @@ public class ResourceServerProcessor {
 	private void encryptSecret(ResourceServerAndSecret resourceServerAndSecret) {
 		ResourceServer resourceServer = resourceServerAndSecret.getResourceServer();
 
-		if(StringUtils.isBlank(resourceServer.getUserSecretClaimName())) return;
+		if(StringUtils.isBlank(resourceServer.getUserSecretClaimName()) && StringUtils.isBlank(resourceServer.getAudience())) return;
 
 		Optional<String> encryptedSecret = tryToEncrypt(resourceServerAndSecret);
 
@@ -145,8 +148,7 @@ public class ResourceServerProcessor {
 		try {
 			keys = jwkSource.get(encKeySelector, null);
 		} catch (RemoteKeySourceException e) {
-			// TODO. Log Warn
-			e.printStackTrace();
+			LOGGER.warning("Can not access resource server encryption key. Secret will not be transmitted.");
 			return encryptedSecret;
 		}
 		if(keys==null ||  keys.isEmpty()) return encryptedSecret;
@@ -157,8 +159,7 @@ public class ResourceServerProcessor {
 		try {
 			encrypted = encryptionService.encrypt(jwk, resourceServerAndSecret.getRawSecret());
 		} catch(SecretEncryptionException e) {
-			// TODO log.warn
-			e.printStackTrace();
+			LOGGER.warning("Can not encrypt secret encryption key. Secret will not be transmitted.");
 			return encryptedSecret;
 		}
 
@@ -189,12 +190,17 @@ public class ResourceServerProcessor {
 		return result;
 	}
 
-	private void loadUserCredentials(UserDataService userDataService, List<ResourceServerAndSecret> resurceServers){
+	private void loadUserCredentials(UserDataRepository userDataService, List<ResourceServerAndSecret> resurceServers, String user, String password){
 		if(userDataService==null) return;
 		// If Resources are set, we can get or create the corresponding user secrets and have them included in the token.
-		UserCredentials userCredentials = userDataService.loadUserCredentials();
+		UserCredentials userCredentials = userDataService.loadUserCredentials(user, password);
 
 		boolean store = false;
+		
+		if(userCredentials==null){
+			userCredentials = new UserCredentials();
+			store = true;
+		}
 		for (ResourceServerAndSecret resourceServer : resurceServers) {
 			String credentialForResourceServer = userCredentials.getCredentialForResourceServer(resourceServer.getResourceServer().getAudience());
 			if(credentialForResourceServer==null){
@@ -206,11 +212,11 @@ public class ResourceServerProcessor {
 			resourceServer.setRawSecret(credentialForResourceServer);
 		}
 		if(store){
-			userDataService.storeUserCredentials(userCredentials);
+			userDataService.storeUserCredentials(user, password, userCredentials);
 		}
 	}
 
-	public void storeUserCredentials(UserDataService userDataService, String credentialForResourceServer, String resurceServerAudience){
+	public void storeUserCredentials(UserDataRepository userDataService, String credentialForResourceServer, String resurceServerAudience, String user, String password){
 		if(userDataService==null) return;
 		// Result
 		List<ResourceServerAndSecret> resurceServers = new ArrayList<>();
@@ -220,7 +226,7 @@ public class ResourceServerProcessor {
 		List<ResourceServerAndSecret> filterServersByAudience = filterServersByAudience(resurceServerAudiences, resourceServersMultiMap, resurceServers);
 
 		// If Resources are set, we can get or create the corresponding user secrets and have them included in the token.
-		UserCredentials userCredentials = userDataService.loadUserCredentials();
+		UserCredentials userCredentials = userDataService.loadUserCredentials(user, password);
 
 		if(filterServersByAudience.isEmpty()) return;
 
@@ -228,7 +234,7 @@ public class ResourceServerProcessor {
 		String oldCredentialForResourceServer = userCredentials.getCredentialForResourceServer(resourceServer.getResourceServer().getAudience());
 		if(oldCredentialForResourceServer!=null) return;
 		userCredentials.setCredentialForResourceServer(resourceServer.getResourceServer().getAudience(), credentialForResourceServer);
-		userDataService.storeUserCredentials(userCredentials);
+		userDataService.storeUserCredentials(user, password, userCredentials);
 	}
 
 }

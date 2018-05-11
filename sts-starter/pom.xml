@@ -35,7 +35,7 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-persistence-fs</artifactId>
+            <artifactId>sts-persistence-docusafe</artifactId>
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
@@ -79,6 +79,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        
+        <!-- Docusafe Connection -->
+        <dependency>
+            <groupId>de.adorsys.cryptoutils</groupId>
+            <artifactId>storeconnectionfactory</artifactId>
         </dependency>
     </dependencies>
 

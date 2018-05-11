@@ -4,6 +4,8 @@ package de.adorsys.sts.token.authentication;
 import com.nimbusds.jwt.JWTClaimsSet;
 import de.adorsys.sts.tokenauth.BearerToken;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,8 +29,9 @@ public class TokenAuthenticationService {
 
     public Authentication getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(BearerTokenValidator.HEADER_KEY);
+        if(StringUtils.isBlank(token)) return null;
+        
         BearerToken bearerToken = bearerTokenValidator.extract(token);
-
         // TODO log invalid token
         if (!bearerToken.isValid()) return null;
 

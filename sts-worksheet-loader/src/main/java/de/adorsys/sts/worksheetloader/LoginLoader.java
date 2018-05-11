@@ -1,6 +1,9 @@
 package de.adorsys.sts.worksheetloader;
 
-import de.adorsys.sts.resourceserver.processing.ResourceServerProcessorService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -9,9 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import de.adorsys.sts.resourceserver.processing.ResourceServerProcessorService;
 
 @Service
 public class LoginLoader {
