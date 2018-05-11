@@ -54,9 +54,7 @@
 		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
 		<docusafe.version>0.3.4-1</docusafe.version>
 		<cryptoutils.version>0.18.4</cryptoutils.version>
-		<lock-persistence.version>0.2.0</lock-persistence.version>
-
-		<!-- jackson buggy 2.8.x version https://github.com/FasterXML/jackson-databind/issues/1595 -->
+		<lock-persistence.version>0.3.1</lock-persistence.version>
 		<jackson.version>2.9.5</jackson.version>
 		<scmBranch />
 	</properties>
@@ -221,8 +219,8 @@
 	            <artifactId>storeconnectionfactory</artifactId>
 				<version>${cryptoutils.version}</version>
 	        </dependency>
-			
-			
+
+
 			<dependency>
 				<groupId>de.adorsys.lock-persistence</groupId>
 				<artifactId>lock-persistence-jpa</artifactId>
