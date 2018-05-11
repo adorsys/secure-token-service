@@ -15,6 +15,8 @@ import de.adorsys.sts.token.MissingParameterException;
 import de.adorsys.sts.token.api.TokenResponse;
 import de.adorsys.sts.tokenauth.BearerToken;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
+
+import org.adorsys.encobject.userdata.ObjectMapperSPI;
 import org.adorsys.jjwk.serverkey.KeyAndJwk;
 import org.adorsys.jjwk.serverkey.KeyConverter;
 import org.apache.commons.lang3.StringUtils;
@@ -26,11 +28,15 @@ public class TokenExchangeService {
     private final ResourceServerProcessor resourceServerProcessor;
     private final KeyManagementService keyManager;
     private final BearerTokenValidator bearerTokenValidator;
+	private ObjectMapperSPI mapper;
 
-    public TokenExchangeService(ResourceServerProcessor resourceServerProcessor, KeyManagementService keyManager, BearerTokenValidator bearerTokenValidator) {
+    public TokenExchangeService(ResourceServerProcessor resourceServerProcessor, 
+    		KeyManagementService keyManager, BearerTokenValidator bearerTokenValidator,
+    		ObjectMapperSPI mapper) {
         this.resourceServerProcessor = resourceServerProcessor;
         this.keyManager = keyManager;
         this.bearerTokenValidator = bearerTokenValidator;
+        this.mapper = mapper;
     }
 
     public TokenResponse exchangeToken(TokenExchangeRequest tokenExchange) {
@@ -140,7 +146,7 @@ public class TokenExchangeService {
         // TODO produce user data service from controller
         List<ResourceServerAndSecret> processedResources = resourceServerProcessor.processResources(audiences, resources);
         // Resources or audiances
-        claimSetBuilder = JwtClaimSetHelper.handleResources(claimSetBuilder, processedResources);
+        claimSetBuilder = JwtClaimSetHelper.handleResources(claimSetBuilder, processedResources, mapper);
 
         for (ResourceServerAndSecret resourceServerAndSecret : processedResources) {
             if (!resourceServerAndSecret.hasEncryptedSecret()) continue;

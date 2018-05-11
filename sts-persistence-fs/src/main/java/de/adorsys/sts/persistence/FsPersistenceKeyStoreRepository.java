@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.security.auth.callback.CallbackHandler;
 
+import org.adorsys.encobject.complextypes.BucketDirectory;
 import org.adorsys.encobject.domain.ObjectHandle;
 import org.adorsys.encobject.domain.Tuple;
 import org.adorsys.encobject.domain.UserMetaData;
@@ -50,8 +51,9 @@ public class FsPersistenceKeyStoreRepository implements KeyStoreRepository {
 
     @PostConstruct
     public void postConstruct() {
-        if (!storageConnection.containerExists(keystoreContainerName)) {
-        	storageConnection.createContainer(keystoreContainerName);
+    	BucketDirectory containerDir = new BucketDirectory(keystoreContainerName);
+        if (!storageConnection.containerExists(containerDir)) {
+        	storageConnection.createContainer(containerDir);
         }
     }
 

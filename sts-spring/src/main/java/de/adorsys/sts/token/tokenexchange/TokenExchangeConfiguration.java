@@ -1,6 +1,7 @@
 package de.adorsys.sts.token.tokenexchange;
 
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
+import de.adorsys.sts.objectmapper.JacksonObjectMapper;
 import de.adorsys.sts.resourceserver.processing.ResourceServerProcessor;
 import de.adorsys.sts.token.TokenCoreConfiguration;
 import de.adorsys.sts.token.authentication.TokenAuthenticationConfiguration;
@@ -23,6 +24,6 @@ public class TokenExchangeConfiguration {
             KeyManagementService keyManagementService,
             BearerTokenValidator bearerTokenValidator
     ) {
-        return new TokenExchangeService(resourceServerProcessor, keyManagementService, bearerTokenValidator);
+        return new TokenExchangeService(resourceServerProcessor, keyManagementService, bearerTokenValidator, new JacksonObjectMapper());
     }
 }

@@ -1,17 +1,16 @@
 package de.adorsys.sts.token.passwordgrant;
 
-import de.adorsys.sts.keymanagement.service.KeyManagementService;
-import de.adorsys.sts.resourceserver.processing.ResourceServerProcessor;
-import de.adorsys.sts.resourceserver.processing.ResourceServerProcessorService;
-import de.adorsys.sts.token.TokenCoreConfiguration;
-import org.adorsys.encobject.service.api.EncryptionService;
-import org.adorsys.encobject.service.api.ExtendedStoreConnection;
-import org.adorsys.encobject.userdata.ObjectMapperSPI;
-import org.adorsys.encobject.userdata.UserDataNamingPolicy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+
+import de.adorsys.sts.keymanagement.service.KeyManagementService;
+import de.adorsys.sts.objectmapper.JacksonObjectMapper;
+import de.adorsys.sts.resourceserver.processing.ResourceServerProcessor;
+import de.adorsys.sts.resourceserver.processing.ResourceServerProcessorService;
+import de.adorsys.sts.resourceserver.service.UserDataRepository;
+import de.adorsys.sts.token.TokenCoreConfiguration;
 
 @Configuration
 @ComponentScan(basePackages = {
@@ -26,17 +25,14 @@ public class PasswordGrantConfiguration {
             KeyManagementService keyManagementService,
             ResourceServerProcessorService resourceServerProcessorService
     ) {
-        return new PasswordGrantService(keyManagementService, resourceServerProcessorService);
+        return new PasswordGrantService(keyManagementService, resourceServerProcessorService, new JacksonObjectMapper());
     }
 
     @Bean
     public ResourceServerProcessorService resourceServerProcessorService(
             ResourceServerProcessor resourceServerProcessor,
-            UserDataNamingPolicy namingPolicy,
-            EncryptionService encryptionService,
-            ExtendedStoreConnection storeConnection,
-            ObjectMapperSPI objectMapper
+            UserDataRepository userDataRepository
     ) {
-    	return new ResourceServerProcessorService(resourceServerProcessor, namingPolicy, encryptionService, storeConnection, objectMapper);
+    	return new ResourceServerProcessorService(resourceServerProcessor, userDataRepository);
     }
 }
