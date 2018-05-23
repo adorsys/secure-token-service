@@ -12,6 +12,7 @@ import org.adorsys.jkeygen.pwd.PasswordCallbackHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -47,6 +48,7 @@ public class KeyStoreEntityMapper {
         byte[] bytes = KeyStoreService.toByteArray(keyStore.getKeyStore(), keystoreName, keyPassHandler);
 
         persistentKeyStore.setName(keystoreName);
+        persistentKeyStore.setLastChangeDate(keyStore.getLastChangeDate() != null ? keyStore.getLastChangeDate() : LocalDateTime.now());
         persistentKeyStore.setKeystore(bytes);
         persistentKeyStore.setType(keyStore.getKeyStore().getType());
 
@@ -77,7 +79,7 @@ public class KeyStoreEntityMapper {
     }
 
     private Date convert(ZonedDateTime zonedDateTime) {
-        if(zonedDateTime == null) {
+        if (zonedDateTime == null) {
             return null;
         }
 
@@ -85,7 +87,7 @@ public class KeyStoreEntityMapper {
     }
 
     private ZonedDateTime convert(Date date) {
-        if(date == null) {
+        if (date == null) {
             return null;
         }
 
@@ -129,6 +131,7 @@ public class KeyStoreEntityMapper {
         Map<String, StsKeyEntry> mappedKeyEntries = mapFromEntities(keyStore, persistentKeyStore.getEntries());
 
         return StsKeyStore.builder()
+                .lastChangeDate(persistentKeyStore.getLastChangeDate() != null ? persistentKeyStore.getLastChangeDate() : LocalDateTime.now())
                 .keyStore(keyStore)
                 .keyEntries(mappedKeyEntries)
                 .build();

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @Transactional
 public class MongoDatabaseKeyStoreRepository implements KeyStoreRepository {
@@ -18,6 +20,8 @@ public class MongoDatabaseKeyStoreRepository implements KeyStoreRepository {
     private final KeyStoreEntityMapper keyStoreEntityMapper;
 
     private final String keyStoreName;
+
+    private StsKeyStore keyStore;
 
     @Autowired
     public MongoDatabaseKeyStoreRepository(
@@ -32,8 +36,16 @@ public class MongoDatabaseKeyStoreRepository implements KeyStoreRepository {
 
     @Override
     public StsKeyStore load() {
-        KeyStoreEntity persistentKeyStore = keyStoreRepository.findByName(keyStoreName);
-        return keyStoreEntityMapper.mapFromEntity(persistentKeyStore);
+        if (keyStore != null) {
+            keyStoreRepository.findByNameAndLastChangeDateGreaterThan(keyStoreName, keyStore.getLastChangeDate())
+                    .ifPresent(keyStoreEntity -> {
+                        keyStore = keyStoreEntityMapper.mapFromEntity(keyStoreEntity);
+                    });
+        } else {
+            KeyStoreEntity persistentKeyStore = keyStoreRepository.findByName(keyStoreName);
+            keyStore = keyStoreEntityMapper.mapFromEntity(persistentKeyStore);
+        }
+        return keyStore;
     }
 
     @Override
@@ -43,14 +55,17 @@ public class MongoDatabaseKeyStoreRepository implements KeyStoreRepository {
 
     @Override
     public void save(StsKeyStore keyStore) {
-        KeyStoreEntity foundKeyStore = keyStoreRepository.findByName(keyStoreName);
+        keyStore.setLastChangeDate(LocalDateTime.now());
 
-        if(foundKeyStore == null) {
-            foundKeyStore = keyStoreEntityMapper.mapToEntity(keyStore);
-            keyStoreRepository.save(foundKeyStore);
+        KeyStoreEntity keyStoreEntity = keyStoreRepository.findByName(keyStoreName);
+
+        if (keyStoreEntity == null) {
+            keyStoreEntity = keyStoreEntityMapper.mapToEntity(keyStore);
         } else {
-            keyStoreEntityMapper.mapIntoEntity(keyStore, foundKeyStore);
-            keyStoreRepository.save(foundKeyStore);
+            keyStoreEntityMapper.mapIntoEntity(keyStore, keyStoreEntity);
         }
+        keyStoreRepository.save(keyStoreEntity);
+
+        this.keyStore = keyStore;
     }
 }

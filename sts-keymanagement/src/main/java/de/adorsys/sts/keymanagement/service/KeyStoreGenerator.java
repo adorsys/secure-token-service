@@ -13,6 +13,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.security.auth.callback.CallbackHandler;
 import java.time.Clock;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
@@ -105,6 +106,7 @@ public class KeyStoreGenerator {
             }
 
             return StsKeyStore.builder()
+                    .lastChangeDate(LocalDateTime.now())
                     .keyEntries(keyEntries)
                     .keyStore(keystoreBuilder.build())
                     .build();
