@@ -42,7 +42,7 @@
 	</scm>
 
 	<properties>
-		<spring-boot.version>2.0.1.RELEASE</spring-boot.version>
+		<spring-boot.version>2.0.2.RELEASE</spring-boot.version>
 		<swagger.version>2.6.1</swagger.version>
 		<java.version>1.8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
@@ -178,20 +178,6 @@
 				<version>0.2</version>
 			</dependency>
 
-			<!-- commons -->
-			<dependency>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok</artifactId>
-				<version>1.16.18</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-lang3</artifactId>
-				<version>3.5</version>
-				<scope>compile</scope>
-			</dependency>
-
 			<!-- Environment -->
 			<dependency>
 				<groupId>de.adorsys.cryptoutils</groupId>
@@ -220,7 +206,6 @@
 				<version>${cryptoutils.version}</version>
 	        </dependency>
 
-
 			<dependency>
 				<groupId>de.adorsys.lock-persistence</groupId>
 				<artifactId>lock-persistence-jpa</artifactId>
@@ -235,12 +220,6 @@
 				<groupId>de.adorsys.lock-persistence</groupId>
 				<artifactId>lock-persistence-core</artifactId>
 				<version>${lock-persistence.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.google.code.gson</groupId>
-				<artifactId>gson</artifactId>
-				<version>2.5</version>
 			</dependency>
 
 			<dependency>
@@ -295,30 +274,11 @@
 
 			<!-- Testing Libraries -->
 			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.12</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
 				<groupId>com.nitorcreations</groupId>
 				<artifactId>junit-runners</artifactId>
 				<version>1.3</version>
 				<scope>test</scope>
 			</dependency>
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-core</artifactId>
-				<version>2.13.0</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.hamcrest</groupId>
-				<artifactId>hamcrest-all</artifactId>
-				<version>1.3</version>
-				<scope>test</scope>
-			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 
