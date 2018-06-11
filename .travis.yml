@@ -23,7 +23,10 @@ deploy:
   -
     skip_cleanup: true
     provider: script
-    script: /bin/bash .travis/deploy.sh
+    script:
+      - .travis/deploy.sh
+      - echo "waiting..."
+      - .travis/travis_wait.bash -l 43200 -i 60 .travis/wait_until_maven_deployment.sh
     on:
       tags: true
       # matches: vX.Y.Z, vX.Y.Z-A, vX.Y.Z-RCA, vX.Y.Z-A-B.C.D, vX.Y.Z-A-B.C.D-E, vX.Y.Z-RCA-B.C.D-E
