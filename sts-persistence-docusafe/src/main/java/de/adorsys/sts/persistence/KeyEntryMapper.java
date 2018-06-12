@@ -3,15 +3,13 @@ package de.adorsys.sts.persistence;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 
+import lombok.*;
 import org.adorsys.jkeygen.keystore.KeyEntry;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.adorsys.sts.keymanagement.model.KeyUsage;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 
 public class KeyEntryMapper {
 
@@ -68,6 +66,8 @@ public class KeyEntryMapper {
 
     @Getter
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     private static class KeyEntryAttributes {
         private ZonedDateTime createdAt;

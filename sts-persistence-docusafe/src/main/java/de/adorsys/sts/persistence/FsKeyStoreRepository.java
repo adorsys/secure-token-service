@@ -77,7 +77,7 @@ public class FsKeyStoreRepository implements KeyStoreRepository {
 	}
 
 	private ZonedDateTime readLastUpdateFromMetaInfo(UserMetaData metaInfo) {
-		String lastUpdateAsText = metaInfo.get(KEYSTORE_LAST_UPDATE_KEY);
+		String lastUpdateAsText = metaInfo.find(KEYSTORE_LAST_UPDATE_KEY);
 
 		if(lastUpdateAsText == null) {
 			return DEFAULT_LAST_UPDATE;
