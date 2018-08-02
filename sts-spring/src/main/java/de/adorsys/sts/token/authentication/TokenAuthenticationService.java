@@ -6,6 +6,8 @@ import de.adorsys.sts.tokenauth.BearerToken;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +21,7 @@ import java.util.List;
 
 @Service
 public class TokenAuthenticationService {
+    private final Logger logger = LoggerFactory.getLogger(TokenAuthenticationService.class);
 
     private final BearerTokenValidator bearerTokenValidator;
 
@@ -29,11 +32,17 @@ public class TokenAuthenticationService {
 
     public Authentication getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(BearerTokenValidator.HEADER_KEY);
-        if(StringUtils.isBlank(token)) return null;
+        if(StringUtils.isBlank(token)) {
+            if(logger.isDebugEnabled()) logger.debug("Token is blank.");
+            return null;
+        }
         
         BearerToken bearerToken = bearerTokenValidator.extract(token);
-        // TODO log invalid token
-        if (!bearerToken.isValid()) return null;
+
+        if (!bearerToken.isValid()) {
+            if(logger.isDebugEnabled()) logger.debug("Token {} is not valid.", token);
+            return null;
+        }
 
         JWTClaimsSet jwtClaimsSet = bearerToken.getClaims();
 
