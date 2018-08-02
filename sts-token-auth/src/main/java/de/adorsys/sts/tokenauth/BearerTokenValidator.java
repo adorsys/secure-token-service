@@ -41,10 +41,15 @@ public class BearerTokenValidator {
                     .build();
         }
 
+        onInvalidToken(headerValue);
+
         return BearerToken.builder()
                 .token(headerValue)
                 .isValid(false)
                 .build();
+    }
+
+    protected void onInvalidToken(String headerValue) {
     }
 
     private List<String> extractRoles(JWTClaimsSet claims) {
@@ -58,10 +63,25 @@ public class BearerTokenValidator {
         return results;
     }
 
+    protected void onTokenIsNull() {
+    }
+
+    protected void onAlgorithmIsNone(String token) {
+    }
+
+    protected void onAuthServerIsNull(String token, String issuer) {
+    }
+
+    protected void onErrorWhileExtractClaims(String token, Throwable e) {
+    }
+
     private Optional<JWTClaimsSet> extractClaims(String token) {
         Optional<JWTClaimsSet> jwtClaimsSet = Optional.empty();
 
-        if(token==null) return jwtClaimsSet;
+        if(token == null) {
+            onTokenIsNull();
+            return jwtClaimsSet;
+        }
 
         // Accepts only Bearer token
         if(!StringUtils.startsWithIgnoreCase(token, TOKEN_PREFIX)) return jwtClaimsSet;
@@ -74,13 +94,19 @@ public class BearerTokenValidator {
 
             // Check check algorithm
             JWSAlgorithm algorithm = signedJWT.getHeader().getAlgorithm();
-            if(JWSAlgorithm.NONE.equals(algorithm)) return jwtClaimsSet;// TODO log no alg
+            if(JWSAlgorithm.NONE.equals(algorithm)) {
+                onAlgorithmIsNone(token);
+                return jwtClaimsSet;
+            }
 
             String issuer = signedJWT.getJWTClaimsSet().getIssuer();
             AuthServer authServer = authServersProvider.get(issuer);
 
             // Accept only registered servers
-            if(authServer==null) return jwtClaimsSet;
+            if(authServer == null){
+                onAuthServerIsNull(token, issuer);
+                return jwtClaimsSet;
+            }
 
             MultiAuthJWSKeySelector<SecurityContext> jwsKeySelector = new MultiAuthJWSKeySelector<>(authServer);
 
@@ -94,7 +120,7 @@ public class BearerTokenValidator {
 
             jwtClaimsSet = Optional.of(jwtClaims);
         } catch (ParseException | BadJOSEException | JOSEException e) {
-            // TODO log invalid token
+            onErrorWhileExtractClaims(token, e);
             return jwtClaimsSet;
         }
 

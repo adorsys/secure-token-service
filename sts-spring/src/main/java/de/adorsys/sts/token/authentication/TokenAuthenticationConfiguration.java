@@ -19,6 +19,6 @@ public class TokenAuthenticationConfiguration {
 
     @Bean
     BearerTokenValidator bearerTokenValidator(AuthServersProvider authServersProvider) {
-        return new BearerTokenValidator(authServersProvider);
+        return new LoggingBearerTokenValidator(authServersProvider);
     }
 }
