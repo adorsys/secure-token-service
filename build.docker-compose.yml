@@ -1,13 +1,14 @@
 version: '3.1'
 services:
   sts-maven:
-    build:
-      context: ./
-      dockerfile: build.Dockerfile
-    image: local/build__sts-maven:latest
+    image: adorsys/ci-build:latest
     volumes:
       - ./:/opt/src
       - ./.docker-build/.m2:/root/.m2
+    working_dir: /opt/src
+    entrypoint: ""
+    command:
+      - /opt/src/docker/build.cmd.bash
   sts-client:
     image: adorsys/ci-build:latest
     volumes:
