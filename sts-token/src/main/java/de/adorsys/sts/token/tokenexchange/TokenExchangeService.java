@@ -145,7 +145,7 @@ public class TokenExchangeService {
 
         // TODO produce user data service from controller
         List<ResourceServerAndSecret> processedResources = resourceServerProcessor.processResources(audiences, resources);
-        // Resources or audiances
+        // Resources or audiences
         claimSetBuilder = JwtClaimSetHelper.handleResources(claimSetBuilder, processedResources, mapper);
 
         for (ResourceServerAndSecret resourceServerAndSecret : processedResources) {
