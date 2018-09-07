@@ -76,6 +76,8 @@
 		<module>sts-persistence-mongo</module>
 		<module>sts-persistence-fs</module>
 		<module>sts-persistence-docusafe</module>
+		<module>sts-secret-server</module>
+		<module>sts-secret</module>
 	</modules>
 
 	<dependencyManagement>
@@ -158,7 +160,12 @@
 	            <groupId>de.adorsys.sts</groupId>
 	            <artifactId>sts-persistence-docusafe</artifactId>
 				<version>${project.version}</version>
-	        </dependency>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-secret</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>com.nimbusds</groupId>
@@ -187,6 +194,11 @@
 			<dependency>
 				<groupId>de.adorsys.cryptoutils</groupId>
 				<artifactId>encobject</artifactId>
+				<version>${cryptoutils.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.cryptoutils</groupId>
+				<artifactId>basetypes</artifactId>
 				<version>${cryptoutils.version}</version>
 			</dependency>
 	        <dependency>
@@ -236,6 +248,12 @@
 				<groupId>com.fasterxml.jackson.datatype</groupId>
 				<artifactId>jackson-datatype-jsr310</artifactId>
 				<version>${jackson.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>26.0-jre</version>
 			</dependency>
 
 			<!-- Database -->

@@ -46,6 +46,16 @@ export class AppComponent implements OnInit {
       });
   }
 
+  getSecret() {
+    this.http.request(this.clientConfig.getSecretUrl())
+      .subscribe(response => {
+        this.sampleData = {
+          status: response.status,
+          text: response.text()
+        };
+      });
+  }
+
   getSecretClaims() {
     if (this.keycloak.tokenParsed) {
       return this.keycloak.tokenParsed.secretClaim;

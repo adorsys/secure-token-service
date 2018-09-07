@@ -1,0 +1,29 @@
+version: '3.1'
+services:
+  keycloak:
+    image: "adorsys/keycloak-sts-adapter:latest"
+    environment:
+      KEYCLOAK_PASSWORD: admin123
+      KEYCLOAK_USER: admin
+    ports:
+    - "8080:8080"
+    - "8787:8787"
+    networks:
+    - sts_network
+    command:
+    - "-b"
+    - "0.0.0.0"
+    - "--debug"
+  post_process:
+    image: adorsys/keycloak-config-cli:latest
+    networks:
+    - sts_network
+    volumes:
+    - ./keycloak-config/dev:/opt/keycloak-config-cli/configs
+    environment:
+    - KEYCLOAK_URL=http://keycloak:8080/auth
+    - KEYCLOAK_ADMIN=admin
+    - KEYCLOAK_ADMIN_PASSWORD=admin123
+
+networks:
+  sts_network:

@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,6 +22,9 @@ import java.util.List;
 public class TokenAuthenticationService {
     private final Logger logger = LoggerFactory.getLogger(TokenAuthenticationService.class);
 
+    private static final String TOKEN_PREFIX = "Bearer ";
+    private static final String HEADER_KEY = "Authorization";
+
     private final BearerTokenValidator bearerTokenValidator;
 
     @Autowired
@@ -31,16 +33,25 @@ public class TokenAuthenticationService {
     }
 
     public Authentication getAuthentication(HttpServletRequest request) {
-        String token = request.getHeader(BearerTokenValidator.HEADER_KEY);
-        if(StringUtils.isBlank(token)) {
-            if(logger.isDebugEnabled()) logger.debug("Token is blank.");
+        String headerValue = request.getHeader(HEADER_KEY);
+        if(StringUtils.isBlank(headerValue)) {
+            if(logger.isDebugEnabled()) logger.debug("Header value '{}' is blank.", HEADER_KEY);
             return null;
         }
-        
-        BearerToken bearerToken = bearerTokenValidator.extract(token);
+
+        // Accepts only Bearer token
+        if(!StringUtils.startsWithIgnoreCase(headerValue, TOKEN_PREFIX)) {
+            if(logger.isDebugEnabled()) logger.debug("Header value does not start with '{}'.", TOKEN_PREFIX);
+            return null;
+        }
+
+        // Strip prefix
+        String strippedToken = StringUtils.substringAfterLast(headerValue, " ");
+
+        BearerToken bearerToken = bearerTokenValidator.extract(strippedToken);
 
         if (!bearerToken.isValid()) {
-            if(logger.isDebugEnabled()) logger.debug("Token {} is not valid.", token);
+            if(logger.isDebugEnabled()) logger.debug("Token is not valid.");
             return null;
         }
 
@@ -56,7 +67,6 @@ public class TokenAuthenticationService {
             }
         }
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(jwtClaimsSet.getSubject(), jwtClaimsSet, authorities);
-        return authenticationToken;
+        return new BearerTokenAuthentication(jwtClaimsSet.getSubject(), jwtClaimsSet, authorities, bearerToken.getToken());
     }
 }

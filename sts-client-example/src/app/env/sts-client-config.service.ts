@@ -25,4 +25,8 @@ export class StsClientConfig {
   public getServiceUrl(): string {
     return this.appConfig.getValue('NG_SERVICE_URL')
   }
+
+  public getSecretUrl(): string {
+    return this.appConfig.getValue('NG_SECRET_URL')
+  }
 }

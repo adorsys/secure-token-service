@@ -1,4 +1,4 @@
-FROM adorsys/openjdk-jre-base:8-minideb
+FROM adorsys/java:8
 
 WORKDIR /opt/
 COPY ./target/sts-service-component-example.jar .

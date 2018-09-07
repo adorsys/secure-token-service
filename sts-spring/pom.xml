@@ -41,5 +41,10 @@
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-token-auth</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
     </dependencies>
 </project>

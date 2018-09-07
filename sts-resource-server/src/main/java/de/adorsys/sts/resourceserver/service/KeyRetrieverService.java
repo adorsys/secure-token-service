@@ -11,7 +11,6 @@ import java.net.URL;
 import java.util.Optional;
 
 public class KeyRetrieverService {
-
     /**
      * The default HTTP connect timeout for JWK set retrieval, in
      * milliseconds. Set to 250 milliseconds.
@@ -52,7 +51,6 @@ public class KeyRetrieverService {
 
     public JWKSet retrieve(String audience) {
         ResourceServer resourceServer = resourceServerService.getForAudience(audience);
-
         return retrieveJwkSet(resourceServer.getJwksUrl());
     }
 

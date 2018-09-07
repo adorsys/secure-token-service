@@ -1,12 +1,13 @@
 package de.adorsys.sts.token.api;
 
 
+import de.adorsys.sts.token.tokenexchange.TokenExchangeConstants;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(description="Carries the response of a token request", value="TokenResponse" )
 public class TokenResponse  {
-    public static final String TOKEN_EXCHANGE_GRANT_TYPE="urn:ietf:params:oauth:grant-type:token-exchange";
+    public static final String TOKEN_EXCHANGE_GRANT_TYPE = TokenExchangeConstants.TOKEN_EXCHANGE_OAUTH_GRANT_TYPE;
     public static final String PASSWORD_GRANT_TYPE="password";
     public static final String ISSUED_TOKEN_TYPE_ACCESS_TOKEN="urn:ietf:params:oauth:token-type:access_token";
     public static final String ISSUED_TOKEN_TYPE_REFRESH_TOKEN="urn:ietf:params:oauth:grant-type:refresh_token";

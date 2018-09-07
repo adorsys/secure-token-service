@@ -42,6 +42,8 @@ You can easily use features by adding following annotations to your spring `@Con
 | `@EnableTokenAuthentication`          | Enables token-authentication-service bean        |
 | `@EnableSecurityContextSecretProviding` | Enables the security-context secret provider bean |
 | `@EnableJacksonObjectMapping`           | Enables jackson object mapper SPI bean            |
+| `@EnableSecretServer`                   | Enables the secret-server functionality in your application |
+| `@EnableSecretServerClient`             | Enables the secret-server client bean                       |
 
 ## Features
 
@@ -194,6 +196,61 @@ sts:
     iss-url: <(text, url) the issuer-url of your identity-provider's token, like "https://your-idp-hostname/auth/realms/your-realm">
     jwks-url: <(text, url) the jwks-endpoint url of your identity provider, like "https://your-idp-hostname/auth/realms/your-realm/protocol/openid-connect/certs">
     refresh-interval-seconds: <(integer) --- unused >
+```
+
+### Secret-server and its client
+
+Provides server and client functionality to store secrets in a separate database. Only registered clients are able to
+ get the secrets via a token-exchange endpoint. The delivered token has to be valid and the client has to be known as a
+ resource server, its pop-endpoint have to be accessible for the secret-server.
+
+#### Server side
+
+You can provide the secret-server functionality while using the `@EnableSecretServer` annotation in your spring configuration.
+ This annotation enables the token-exchange endpoint with the needed services in the background. It needs a
+ `SecretRepository` instance which is used to persist the secrets. For example you can store your secrets in a RDBMS
+ like postgres or mysql if you use the additional annotation `@EnableJpaPersistence` in your configuration.
+
+Alternatively you may deploy a ready-to-run secret-server provided by the *sts-secret-server* submodule and which
+ you can run via docker: the image name is `adorsys/sts-secret-server` and can be found on
+ [docker-hub](https://hub.docker.com/r/adorsys/sts-secret-server/).
+
+##### Configuration
+
+```
+sts:
+  secret-server:
+    secret-length: <(integer, optional) secret length in bits (not the length of the base64 encoded string!) default: 256>
+    endpoint: <(url as string, optional) the endpoint path of the secret-server's token-exchange endpoint. default: /secret-server/token-exchange >
+
+# You need to configure the same IDP instance(s) and its pop-entpoint(s) as authserver(s) as the clients are using to authenticate.
+# Here is an example:
+  authservers:
+  - name: "local keycloak"
+    iss-url : "http://localhost:8080/auth/realms/moped"
+    jwks-url: "http://localhost:8080/auth/realms/moped/protocol/openid-connect/certs"
+
+# You need to configure the clients as resource-servers with its pop-endpoints:
+# Here is an example:
+  resource-server-management:
+    resource-servers:
+    - audience: "moped-client"
+      jwks-url: "http://my-moped-application:8080/pop"
+```
+
+#### Client side
+
+On client-side you can communicate with a secret-server via the `SecretServerClient` bean. The interface is quite
+ simple: there is a `getSecret` method without parameters which delivers the decrypted and BASE64 encoded secret for
+ the current user.
+
+##### Configuration
+
+```
+sts:
+  secret-server-client:
+    audience: <(string, mandatory, no default) The audience name of your application which is used to communicate with the secret-server>
+    secret-server-uri: <(url as string, mandatory, no default) The url of the secret-server's token-exchange endpoint (Example: http://your-secret-server:8080/token/token-exchange)> 
 ```
 
 ## Build this solution

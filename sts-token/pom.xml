@@ -28,6 +28,10 @@
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-keymanagement</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.adorsys.sts</groupId>
+            <artifactId>sts-secret</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

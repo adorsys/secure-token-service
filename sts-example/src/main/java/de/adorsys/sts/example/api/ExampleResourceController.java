@@ -1,17 +1,15 @@
 package de.adorsys.sts.example.api;
 
-import java.util.ArrayList;
-import java.util.Map;
-
-import javax.validation.Valid;
-
+import de.adorsys.sts.example.service.ExampleLoginAdapter;
+import de.adorsys.sts.resourceserver.service.EncryptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.adorsys.sts.example.service.ExampleLoginAdapter;
-import de.adorsys.sts.resourceserver.service.EncryptionService;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Map;
 
 @RestController
 public class ExampleResourceController {

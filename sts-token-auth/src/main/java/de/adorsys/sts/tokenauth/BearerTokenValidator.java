@@ -16,9 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class BearerTokenValidator {
-    static final String TOKEN_PREFIX = "Bearer ";
-    public static final String HEADER_KEY = "Authorization";
-
     private final AuthServersProvider authServersProvider;
 
     private final KeycloakTokenRolesParser keycloakTokenRolesParser = new KeycloakTokenRolesParser();
@@ -28,23 +25,23 @@ public class BearerTokenValidator {
         this.authServersProvider = authServersProvider;
     }
 
-    public BearerToken extract(String headerValue) {
-        Optional<JWTClaimsSet> jwtClaimsSet = extractClaims(headerValue);
+    public BearerToken extract(String token) {
+        Optional<JWTClaimsSet> jwtClaimsSet = extractClaims(token);
         if(jwtClaimsSet.isPresent()) {
             List<String> roles = extractRoles(jwtClaimsSet.get());
 
             return BearerToken.builder()
-                    .token(headerValue)
+                    .token(token)
                     .claims(jwtClaimsSet.get())
                     .isValid(true)
                     .roles(roles)
                     .build();
         }
 
-        onInvalidToken(headerValue);
+        onInvalidToken(token);
 
         return BearerToken.builder()
-                .token(headerValue)
+                .token(token)
                 .isValid(false)
                 .build();
     }
@@ -83,14 +80,8 @@ public class BearerTokenValidator {
             return jwtClaimsSet;
         }
 
-        // Accepts only Bearer token
-        if(!StringUtils.startsWithIgnoreCase(token, TOKEN_PREFIX)) return jwtClaimsSet;
-
-        // Strip prefix
-        String strippedToken = StringUtils.substringAfterLast(token, " ");
-
         try {
-            SignedJWT signedJWT = SignedJWT.parse(strippedToken);
+            SignedJWT signedJWT = SignedJWT.parse(token);
 
             // Check check algorithm
             JWSAlgorithm algorithm = signedJWT.getHeader().getAlgorithm();

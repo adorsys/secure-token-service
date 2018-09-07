@@ -1,10 +1,11 @@
-package de.adorsys.sts.token.tokenexchange;
+package de.adorsys.sts.token.tokenexchange.server;
 
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
-import de.adorsys.sts.objectmapper.JacksonObjectMapper;
-import de.adorsys.sts.resourceserver.processing.ResourceServerProcessor;
 import de.adorsys.sts.token.TokenCoreConfiguration;
 import de.adorsys.sts.token.authentication.TokenAuthenticationConfiguration;
+import de.adorsys.sts.token.tokenexchange.JwtTokenExchangeService;
+import de.adorsys.sts.token.tokenexchange.TokenExchangeClaimsService;
+import de.adorsys.sts.token.tokenexchange.TokenExchangeService;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,17 +14,21 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @ComponentScan(basePackages = {
-        "de.adorsys.sts.token.tokenexchange"
+        "de.adorsys.sts.token.tokenexchange.server"
 })
 @Import({TokenCoreConfiguration.class, TokenAuthenticationConfiguration.class})
-public class TokenExchangeConfiguration {
+public class TokenExchangeServerConfiguration {
 
     @Bean
     public TokenExchangeService tokenExchangeService(
-            ResourceServerProcessor resourceServerProcessor,
+            TokenExchangeClaimsService tokenExchangeClaimsService,
             KeyManagementService keyManagementService,
             BearerTokenValidator bearerTokenValidator
     ) {
-        return new TokenExchangeService(resourceServerProcessor, keyManagementService, bearerTokenValidator, new JacksonObjectMapper());
+        return new JwtTokenExchangeService(
+                tokenExchangeClaimsService,
+                keyManagementService,
+                bearerTokenValidator
+        );
     }
 }

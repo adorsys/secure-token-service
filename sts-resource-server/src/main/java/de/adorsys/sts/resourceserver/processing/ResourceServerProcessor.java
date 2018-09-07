@@ -166,16 +166,29 @@ public class ResourceServerProcessor {
 		return Optional.of(encrypted);
 	}
 
-	private List<ResourceServerAndSecret> filterServersByResources(String[] resources, Map<String, Map<String, ResourceServer>> resourceServersMultiMap, final List<ResourceServerAndSecret> result){
+	private List<ResourceServerAndSecret> filterServersByResources(
+			String[] resources,
+			Map<String, Map<String, ResourceServer>> resourceServersMultiMap,
+			final List<ResourceServerAndSecret> result
+	){
 		Map<String, ResourceServer> map = resourceServersMultiMap.get(ResourceServers.ENDPOINT);
 		return filterServers0(resources, map, result);
 	}
-	private List<ResourceServerAndSecret> filterServersByAudience(String[] audiences, Map<String, Map<String, ResourceServer>> resourceServersMultiMap, final List<ResourceServerAndSecret> result){
+
+	private List<ResourceServerAndSecret> filterServersByAudience(
+			String[] audiences,
+			Map<String, Map<String, ResourceServer>> resourceServersMultiMap,
+			final List<ResourceServerAndSecret> result
+	){
 		Map<String, ResourceServer> map = resourceServersMultiMap.get(ResourceServers.AUDIENCE);
 		return filterServers0(audiences, map, result);
 	}
 
-	private List<ResourceServerAndSecret> filterServers0(String[] keys, Map<String, ResourceServer> map, final List<ResourceServerAndSecret> result){
+	private List<ResourceServerAndSecret> filterServers0(
+			String[] keys,
+			Map<String, ResourceServer> map,
+			final List<ResourceServerAndSecret> result
+	){
 		for (String key : keys) {
 			ResourceServer resourceServer = map.get(key);
 			if(resourceServer==null) continue;

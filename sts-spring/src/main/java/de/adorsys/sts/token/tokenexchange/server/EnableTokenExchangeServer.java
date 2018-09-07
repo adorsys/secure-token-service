@@ -1,4 +1,4 @@
-package de.adorsys.sts.token.tokenexchange;
+package de.adorsys.sts.token.tokenexchange.server;
 
 import org.springframework.context.annotation.Import;
 
@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 @Target(value = {java.lang.annotation.ElementType.TYPE})
 @Documented
 @Import({
-        TokenExchangeConfiguration.class
+        TokenExchangeServerConfiguration.class
 })
-public @interface EnableTokenExchange {
+public @interface EnableTokenExchangeServer {
 }

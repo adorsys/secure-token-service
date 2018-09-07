@@ -3,7 +3,7 @@ package de.adorsys.sts.serverinfo;
 
 import de.adorsys.sts.admin.EnableAdmin;
 import de.adorsys.sts.pop.EnablePOP;
-import de.adorsys.sts.token.tokenexchange.EnableTokenExchange;
+import de.adorsys.sts.token.tokenexchange.server.EnableTokenExchangeServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -47,7 +47,7 @@ public class ServerInfoController {
             serverInfoResponse.setAdmin_url(urlBase + "/admin");
         }
 
-        if(isConfigurationEnabled(EnableTokenExchange.class)) {
+        if(isConfigurationEnabled(EnableTokenExchangeServer.class)) {
             serverInfoResponse.setToken_exchange(urlBase + "/token");
         }
 

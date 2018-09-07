@@ -13,12 +13,10 @@ import de.adorsys.sts.persistence.FsUserDataRepository;
 import de.adorsys.sts.persistence.KeyEntryMapper;
 import de.adorsys.sts.pop.EnablePOP;
 import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
-import de.adorsys.sts.resourceserver.provider.EnvironmentVariableResourceServersProvider;
-import de.adorsys.sts.resourceserver.provider.ResourceServersProvider;
 import de.adorsys.sts.resourceserver.service.UserDataRepository;
 import de.adorsys.sts.serverinfo.EnableServerInfo;
 import de.adorsys.sts.token.passwordgrant.EnablePasswordGrant;
-import de.adorsys.sts.token.tokenexchange.EnableTokenExchange;
+import de.adorsys.sts.token.tokenexchange.server.EnableTokenExchangeServer;
 import de.adorsys.sts.worksheetloader.DataSheetLoader;
 import de.adorsys.sts.worksheetloader.LoginLoader;
 import org.adorsys.docusafe.business.DocumentSafeService;
@@ -34,7 +32,7 @@ import javax.annotation.PostConstruct;
 
 @Configuration
 @EnablePOP
-@EnableTokenExchange
+@EnableTokenExchangeServer
 @EnablePasswordGrant
 @EnableAdmin
 @EnableKeyRotation

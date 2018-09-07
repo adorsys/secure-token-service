@@ -35,7 +35,7 @@ services:
     networks:
     - sts_network
     volumes:
-    - ./keycloak-config:/opt/keycloak-config-cli/configs
+    - ./keycloak-config/docker:/opt/keycloak-config-cli/configs
     environment:
     - KEYCLOAK_URL=http://keycloak:8080/auth
     - KEYCLOAK_ADMIN=admin
@@ -65,7 +65,7 @@ services:
     - SPRING_PROFILES_ACTIVE=mysql
     - SPRING_DATASOURCE_URL=jdbc:mysql://sts-db:3306/sts
     - logging_level_de_adorsys_sts_keyrotation_KeyRotationSchedule=debug
-    - SPRING_APPLICATION_JSON={"sts":{"resource-server-management":{"resource-retriever":{"http-connect-timeout":10000,"http-read-timeout":60000,"http-size-limit":512000},"resource-servers":[{"audience":"sts","jwks-url":"http://localhost:8888/pop"},{"audience":"sts-service-component","jwks-url":"http://sts-service-component:8887/pop"}]}}}
+    - SPRING_APPLICATION_JSON={"sts":{"secret-server-client":{"audience":"moped-client","secret-server-uri":"http://sts-secret-server:8080/secret-server/token-exchange","cache":{"enabled":true,"maximum-size":1000,"expire-after-access":10}},"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"},{"name":"secret-server","iss-url":"http://sts-secret-server:8080","jwks-url":"http://sts-secret-server:8080/pop"}],"resource-server-management":{"resource-retriever":{"http-connect-timeout":10000,"http-read-timeout":60000,"http-size-limit":512000},"resource-servers":[{"audience":"sts","jwks-url":"http://localhost:8888/pop"},{"audience":"sts-service-component","jwks-url":"http://sts-service-component:8887/pop"}]}}}
     ports:
     - "8888:8888"
   sts-service-component:
@@ -107,10 +107,24 @@ services:
     - NG_KEYCLOAK_CLIENT_ID=moped-client
     - NG_KEYCLOAK_SCOPE=sts-service-component
     - NG_SERVICE_URL=http://localhost:8887/helloworld
+    - NG_SECRET_URL=http://localhost:8888/secret
     networks:
     - sts_network
     ports:
     - 8090:8080
+  sts-secret-server:
+    build: ./sts-secret-server
+    image: "local/sts-secret-server:latest"
+    depends_on:
+    - sts-db
+    networks:
+    - sts_network
+    environment:
+    - SPRING_PROFILES_ACTIVE=mysql
+    - SPRING_DATASOURCE_URL=jdbc:mysql://sts-db:3306/sts
+    - SPRING_APPLICATION_JSON={"sts":{"secret-server":{"secret-length":8192,"endpoint":"/secret-server/token-exchange"},"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}],"resource-server-management":{"resource-retriever":{"http-connect-timeout":10000,"http-read-timeout":60000,"http-size-limit":512000},"resource-servers":[{"audience":"moped-client","jwks-url":"http://sts:8888/pop"}]}}}
+    ports:
+    - "8885:8080"
 
 networks:
   sts_network:

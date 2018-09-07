@@ -4,11 +4,13 @@ services:
     image: adorsys/ci-build:latest
     volumes:
       - ./:/opt/src
-      - ./.docker-build/.m2:/root/.m2
+      - ./.docker-build/.m2:/tmp/m2
+    environment:
+      - MAVEN_OPTS=-Dmaven.repo.local=/tmp/m2/repository
     working_dir: /opt/src
     entrypoint: ""
     command:
-      - /opt/src/docker/build.cmd.bash
+      - /opt/src/docker/build.cmd.sh
   sts-client:
     image: adorsys/ci-build:latest
     volumes:

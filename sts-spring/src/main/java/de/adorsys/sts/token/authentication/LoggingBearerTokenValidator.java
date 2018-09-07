@@ -14,7 +14,7 @@ public class LoggingBearerTokenValidator extends BearerTokenValidator {
 
     @Override
     protected void onInvalidToken(String headerValue) {
-        if(logger.isDebugEnabled()) logger.debug("Token {} in header is invalid", headerValue);
+        if(logger.isDebugEnabled()) logger.debug("Token in header is invalid");
     }
 
     @Override
@@ -29,11 +29,11 @@ public class LoggingBearerTokenValidator extends BearerTokenValidator {
 
     @Override
     protected void onAuthServerIsNull(String token, String issuer) {
-        if(logger.isDebugEnabled()) logger.debug("Auth server with issuer {} for token {} not not allowed", issuer, token);
+        if(logger.isDebugEnabled()) logger.debug("Auth server with issuer {} for token not not allowed", issuer);
     }
 
     @Override
     protected void onErrorWhileExtractClaims(String token, Throwable e) {
-        if(logger.isDebugEnabled()) logger.debug("Error occured while extracting claims from token {}", token, e);
+        if(logger.isDebugEnabled()) logger.debug("Error occured while extracting claims from token", e);
     }
 }

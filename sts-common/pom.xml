@@ -77,4 +77,10 @@
 		</profile>
 	</profiles>
 
+	<dependencies>
+		<dependency>
+			<groupId>de.adorsys.cryptoutils</groupId>
+			<artifactId>basetypes</artifactId>
+		</dependency>
+	</dependencies>
 </project>

@@ -1,0 +1,75 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: db_user
+    password: db_user@123
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        default_schema: sts
+  flyway:
+    enabled: false
+    locations:
+    - db/migration/flyway/h2
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/migration/liquibase/changelog.yml
+    default-schema: public
+
+sts:
+  secret:
+    secret-length: 2048
+  resource-server-management:
+    resource-retriever:
+      http-connect-timeout: 10000
+      http-read-timeout: 60000
+      http-size-limit: 512000
+  persistence:
+    lock-expiry: 30000
+  keymanagement:
+    rotation:
+      check-interval: 60000
+      enc-key-pairs:
+        min-keys: 5
+        enabled: true
+      sign-key-pairs:
+        min-keys: 5
+        enabled: true
+      secret-keys:
+        min-keys: 5
+        enabled: true
+    persistence:
+      container-name: sts-secret-server-container
+      password: uqu7Reehie0Yaipohfi6pie2eiTh6sie
+    keystore:
+      password: feizohHoonahsoh0phiechomeiphooNg
+      type: UBER
+      name: sts-secret-server-keystore
+      alias-prefix: sts-secret-server-
+      keys:
+        enc-key-pairs:
+          initial-count: 5
+          algo: RSA
+          sig-algo: SHA256withRSA
+          size: 2048
+          name: Adorsys STS Secret Server
+          validity-interval: 3600000
+          legacy-interval: 86400000
+        sign-key-pairs:
+          initial-count: 5
+          algo: RSA
+          sig-algo: SHA256withRSA
+          size: 2048
+          name: Adorsys STS Secret Server
+          validity-interval: 3600000
+          legacy-interval: 86400000
+        secret-keys:
+          initial-count: 5
+          algo: AES
+          size: 256
+          validity-interval: 3600000
+          legacy-interval: 86400000
