@@ -12,8 +12,7 @@ services:
     image: adorsys/ci-build:latest
     volumes:
       - ./sts-client-example:/opt/src
-      - ./.docker-build/node_modules:/opt/src/node_modules
     working_dir: /opt/src
     entrypoint: ""
     command:
-      - /opt/src/docker/build.cmd.bash
+      - /opt/src/docker/compile/build.cmd.bash

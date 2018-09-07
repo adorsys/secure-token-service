@@ -11,4 +11,4 @@ docker run \
   --entrypoint="" \
   -w /opt/src \
   adorsys/ci-build:latest \
-  /opt/src/docker/build.cmd.bash
+  /opt/src/docker/compile/build.cmd.bash
