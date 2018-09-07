@@ -1,19 +1,23 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {KeycloakService} from "./keycloak/keycloak.service";
 import {KeycloakHttp} from "./keycloak/keycloak.http";
-import {environment} from "../environments/environment";
 import 'rxjs/add/operator/map';
+import {StsClientConfig} from "./env/sts-client-config.service";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   sampleData: any;
 
-  constructor(private http: KeycloakHttp, private keycloak: KeycloakService) {
+  constructor(private http: KeycloakHttp, private keycloak: KeycloakService, private clientConfig: StsClientConfig) {
+  }
+
+  ngOnInit(): void {
+    this.keycloak.init();
   }
 
   login() {
@@ -33,7 +37,7 @@ export class AppComponent {
   }
 
   getSampleData() {
-    this.http.request(environment.serviceUrl)
+    this.http.request(this.clientConfig.getServiceUrl())
       .subscribe(response => {
         this.sampleData = {
           status: response.status,

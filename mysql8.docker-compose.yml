@@ -116,15 +116,15 @@ services:
     build: ./sts-client-example
     image: local/sts-client-example:latest
     environment:
-    - "KEYCLOAK_AUTH_URL=http://localhost:8080/auth"
-    - KEYCLOAK_REALM=moped
-    - KEYCLOAK_CLIENT_ID=moped-client
-    - KEYCLOAK_SCOPE=sts-service-component
-    - SERVICE_URL=http://localhost:8887/helloworld
+    - "NG_KEYCLOAK_AUTH_URL=http://localhost:8080/auth"
+    - NG_KEYCLOAK_REALM=moped
+    - NG_KEYCLOAK_CLIENT_ID=moped-client
+    - NG_KEYCLOAK_SCOPE=sts-service-component
+    - NG_SERVICE_URL=http://localhost:8887/helloworld
     networks:
     - sts_network
     ports:
-    - 8090:8090
+    - 8090:8080
 
 networks:
   sts_network:
