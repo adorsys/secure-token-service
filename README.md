@@ -241,8 +241,10 @@ sts:
 #### Client side
 
 On client-side you can communicate with a secret-server via the `SecretServerClient` bean. The interface is quite
- simple: there is a `getSecret` method without parameters which delivers the decrypted and BASE64 encoded secret for
- the current user.
+ simple: there is a `String getSecret(String token)` method which delivers the decrypted and BASE64 encoded secret for
+ the specified. Quite easier is the usage of the `SecretServerClientSecretProvider` bean. It provides the secret without
+ the need to pass the token as parameter. Both beans are injectable after the usage of `@EnableSecretServerClient`
+ annotation in your spring configuration.
 
 ##### Configuration
 
@@ -250,7 +252,12 @@ On client-side you can communicate with a secret-server via the `SecretServerCli
 sts:
   secret-server-client:
     audience: <(string, mandatory, no default) The audience name of your application which is used to communicate with the secret-server>
-    secret-server-uri: <(url as string, mandatory, no default) The url of the secret-server's token-exchange endpoint (Example: http://your-secret-server:8080/token/token-exchange)> 
+    secret-server-uri: <(url as string, mandatory, no default) The url of the secret-server's token-exchange endpoint (Example: http://your-secret-server:8080/token/token-exchange)>
+# cache settings:
+    cache:
+      enabled: <(boolean, optional, default: false) defines if the secret-server client uses a internal cache for the secrets>
+      maximum-size: <(integer, optional, default: 1000) defines the maximum cache size>
+      expire-after-access: <(integer, optional, default: 10) defines the expiration time in minutes>
 ```
 
 ## Build this solution
