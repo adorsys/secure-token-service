@@ -35,3 +35,14 @@ docker tag $IMAGE_NAME $LATEST_IMAGE_NAME
 
 docker push $IMAGE_NAME
 docker push $LATEST_IMAGE_NAME
+
+# ----- push sts-secret-server -----
+
+IMAGE_NAME="${STS_SECRET_SERVER_DOCKER_IMAGE_NAME}:${TRAVIS_TAG}"
+LATEST_IMAGE_NAME="${STS_SECRET_SERVER_DOCKER_IMAGE_NAME}:latest"
+
+docker build -t $IMAGE_NAME ./sts-secret-server
+docker tag $IMAGE_NAME $LATEST_IMAGE_NAME
+
+docker push $IMAGE_NAME
+docker push $LATEST_IMAGE_NAME
