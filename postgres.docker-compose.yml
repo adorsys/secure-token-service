@@ -121,7 +121,7 @@ services:
     environment:
     - SPRING_PROFILES_ACTIVE=postgres
     - SPRING_DATASOURCE_URL=jdbc:postgresql://sts-db:5432/sts
-    - SPRING_APPLICATION_JSON={"sts":{"secret-server":{"secret-length":8192,"endpoint":"/secret-server/token-exchange"},"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}],"resource-server-management":{"resource-retriever":{"http-connect-timeout":10000,"http-read-timeout":60000,"http-size-limit":512000},"resource-servers":[{"audience":"moped-client","jwks-url":"http://sts:8888/pop"}]}}}
+    - SPRING_APPLICATION_JSON={"sts":{"secret-server":{"secret-length":8192,"endpoint":"/secret-server/token-exchange"},"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}],"resource-server-management":{"resource-retriever":{"http-connect-timeout":10000,"http-read-timeout":60000,"http-size-limit":512000,"cache":{"enabled":true,"maximum-size":1000,"expire-after-access":10}},"resource-servers":[{"audience":"moped-client","jwks-url":"http://sts:8888/pop"}]}}}
     ports:
     - "8885:8080"
 

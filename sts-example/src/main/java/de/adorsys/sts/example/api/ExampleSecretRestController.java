@@ -1,8 +1,6 @@
 package de.adorsys.sts.example.api;
 
 import de.adorsys.sts.keymanagement.service.SecretProvider;
-import de.adorsys.sts.resourceserver.service.KeyRetrieverService;
-import de.adorsys.sts.secretserverclient.SecretServerClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
