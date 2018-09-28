@@ -69,6 +69,11 @@ sts:
       http-connect-timeout: <http connect timeout for JWK set retrieval in milliseconds, default: 250>
       http-read-timeout: <http read timeout for JWK set retrieval in milliseconds, default: 250>
       http-size-limit: <http entity size limit for JWK set retrieval in bytes, default: 50 * 1024>
+# cache settings
+      cache:
+        enabled: <(boolean, optional, default: false) defines if the secret-server client uses a internal cache for the secrets>
+        maximum-size: <(integer, optional, default: 1000) defines the maximum cache size>
+        expire-after-access: <(integer, optional, default: 10) defines the expiration time in minutes>
     resource-servers:
     - audience: <(text) the name of your resource server / the audience key>
       jwks-url: <(text, url) the jwks-url of the resource-server, like "http://localhost:8888/pop">
