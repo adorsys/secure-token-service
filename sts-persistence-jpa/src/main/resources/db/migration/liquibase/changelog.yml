@@ -13,3 +13,5 @@ databaseChangeLog:
     file: db/migration/liquibase/changelogs/05-add-lastupdate-to-keystore.yml
 - include:
     file: db/migration/liquibase/changelogs/06-create-table-secret.yml
+- include:
+    file: db/migration/liquibase/changelogs/07-enlarge-secret-column_in-table-secret.yml
