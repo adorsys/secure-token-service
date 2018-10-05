@@ -37,7 +37,7 @@ class TokenExchangeSecretServerClient implements SecretServerClient {
         BearerToken bearerToken = bearerTokenValidator.extract(exchangedAccessToken);
 
         if(!bearerToken.isValid()) {
-            throw new RuntimeException("Exchanged token is invalid");
+            throw new IllegalArgumentException("Exchanged token is invalid");
         }
 
         JSONObject claims = bearerToken.getClaims().toJSONObject();

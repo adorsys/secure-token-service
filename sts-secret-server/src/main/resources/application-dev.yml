@@ -15,6 +15,11 @@ sts:
   secret-server:
     secret-length: 8192
     endpoint: /secret-server/token-exchange
+    encryption:
+      enabled: true
+      algorithm: A256GCMKW
+      encryption-method: A256GCM
+      key: "{\"kty\":\"oct\",\"kid\":\"63efe27c-6e37-464d-bd6a-1a7640888f62\",\"k\":\"7KmFL-k9Sib6Llt4CZnwHfxjIfAgbAbOdwbemIGhO6U\",\"alg\":\"A256GCM\"}"
   authservers:
   - name: local keycloak
     iss-url : http://localhost:8080/auth/realms/moped

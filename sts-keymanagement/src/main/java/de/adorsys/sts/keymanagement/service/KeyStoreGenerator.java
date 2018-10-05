@@ -126,7 +126,7 @@ public class KeyStoreGenerator {
         else if(keyUsage == KeyUsage.SecretKey) {
             generatedKeyEntry = generateSecretKeyEntryForFutureUsage(notBefore);
         } else {
-            throw new RuntimeException("unknown KeyUsage: " + keyUsage.name());
+            throw new IllegalArgumentException("unknown KeyUsage: " + keyUsage.name());
         }
 
         return generatedKeyEntry;

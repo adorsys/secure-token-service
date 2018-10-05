@@ -49,7 +49,7 @@ public class JweEncryptionService implements EncryptionService {
     public String encrypt(JWK jwk, String rawSecret) throws SecretEncryptionException {
         JWEEncrypter jweEncrypter;
 
-        jweEncrypter = JWEEncryptedSelector.geEncrypter(jwk, null, null);
+        jweEncrypter = JWEEncryptedSelector.getEncrypter(jwk, null, null);
         Payload payload = new Payload(rawSecret);
         // JWE encrypt secret.
         JWEObject jweObj;
