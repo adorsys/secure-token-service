@@ -2,6 +2,10 @@ package de.adorsys.sts.secretserverclient;
 
 import de.adorsys.sts.decryption.DecryptionConfiguration;
 import de.adorsys.sts.keymanagement.service.DecryptionService;
+import de.adorsys.sts.secret.CachingSecretServerClient;
+import de.adorsys.sts.secret.LoggingSecretServerClient;
+import de.adorsys.sts.secret.SecretServerClient;
+import de.adorsys.sts.token.secretserver.TokenExchangeSecretServerClient;
 import de.adorsys.sts.token.tokenexchange.TokenExchangeClient;
 import de.adorsys.sts.token.tokenexchange.client.TokenExchangeClientConfiguration;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;

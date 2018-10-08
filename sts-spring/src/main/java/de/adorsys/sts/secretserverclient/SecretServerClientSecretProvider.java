@@ -1,6 +1,7 @@
 package de.adorsys.sts.secretserverclient;
 
 import de.adorsys.sts.keymanagement.service.SecretProvider;
+import de.adorsys.sts.secret.SecretServerClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

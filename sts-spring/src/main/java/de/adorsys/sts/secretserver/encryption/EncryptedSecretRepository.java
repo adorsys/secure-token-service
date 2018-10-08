@@ -1,6 +1,7 @@
 package de.adorsys.sts.secretserver.encryption;
 
 import de.adorsys.sts.secret.Secret;
+import de.adorsys.sts.secret.SecretEncryptionException;
 import de.adorsys.sts.secret.SecretReadException;
 import de.adorsys.sts.secret.SecretRepository;
 import de.adorsys.sts.simpleencryption.ObjectEncryption;

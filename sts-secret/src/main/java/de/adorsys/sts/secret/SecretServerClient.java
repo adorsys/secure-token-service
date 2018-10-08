@@ -1,4 +1,4 @@
-package de.adorsys.sts.secretserverclient;
+package de.adorsys.sts.secret;
 
 public interface SecretServerClient {
 

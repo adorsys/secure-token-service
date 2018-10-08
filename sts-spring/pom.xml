@@ -43,6 +43,10 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
+            <artifactId>sts-secret</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-simple-encryption</artifactId>
         </dependency>
 
