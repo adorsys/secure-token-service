@@ -1,5 +1,6 @@
 package de.adorsys.sts.token.authentication;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -20,6 +21,8 @@ public class BearerTokenAuthentication extends UsernamePasswordAuthenticationTok
         this.token = token;
     }
 
+    // security issue if you export the token
+    @JsonIgnore
     public String getToken() {
         return token;
     }
