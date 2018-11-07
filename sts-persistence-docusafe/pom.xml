@@ -23,7 +23,7 @@
 
 		<dependency>
 			<groupId>de.adorsys</groupId>
-			<artifactId>docusafe-business</artifactId>
+			<artifactId>docusafe-cached-transactional</artifactId>
 		</dependency>
 
 		<dependency>

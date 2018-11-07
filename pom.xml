@@ -52,8 +52,8 @@
 
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZZ</maven.build.timestamp.format>
 		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
-		<docusafe.version>0.3.5</docusafe.version>
-		<cryptoutils.version>0.18.6</cryptoutils.version>
+		<docusafe.version>0.5.0</docusafe.version>
+		<cryptoutils.version>0.21.1</cryptoutils.version>
 		<lock-persistence.version>0.3.1</lock-persistence.version>
 		<jackson.version>2.9.5</jackson.version>
 		<scmBranch />
@@ -278,7 +278,7 @@
 	        <!-- Persistence -->
 	        <dependency>
 	            <groupId>de.adorsys</groupId>
-	            <artifactId>docusafe-business</artifactId>
+	            <artifactId>docusafe-cached-transactional</artifactId>
 	            <version>${docusafe.version}</version>
 				<scope>compile</scope>
 	        </dependency>
