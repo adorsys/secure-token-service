@@ -3,6 +3,7 @@ package de.adorsys.sts.keymanagement.service;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import de.adorsys.sts.common.util.ImmutableLists;
+import de.adorsys.sts.cryptoutils.StsServerKeyMap;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
@@ -56,7 +57,7 @@ public class KeyManagementService implements ServerKeyMapProvider {
 
     @Override
     public Key getKey(String keyId) {
-        ServerKeyMap serverKeyMap = new ServerKeyMap(loadKeys().getPrivateKeySet());
+        StsServerKeyMap serverKeyMap = new StsServerKeyMap(loadKeys().getPrivateKeySet());
 
         return serverKeyMap.getKey(keyId);
     }
@@ -97,12 +98,12 @@ public class KeyManagementService implements ServerKeyMapProvider {
         }
     }
 
-    private ServerKeyMap getPrivateKeys() {
-        return new ServerKeyMap(getFilteredPrivateKeys(this::hasUsablePrivateKey));
+    private StsServerKeyMap getPrivateKeys() {
+        return new StsServerKeyMap(getFilteredPrivateKeys(this::hasUsablePrivateKey));
     }
 
-    private ServerKeyMap getSecretKeys() {
-        return new ServerKeyMap(getFilteredPrivateKeys(this::isUsableSecretKey));
+    private StsServerKeyMap getSecretKeys() {
+        return new StsServerKeyMap(getFilteredPrivateKeys(this::isUsableSecretKey));
     }
 
     private JWKSet getFilteredPrivateKeys(Predicate<StsKeyEntry> predicate) {

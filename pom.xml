@@ -42,7 +42,7 @@
 	</scm>
 
 	<properties>
-		<spring-boot.version>2.0.2.RELEASE</spring-boot.version>
+		<spring-boot.version>2.0.5.RELEASE</spring-boot.version>
 		<swagger.version>2.6.1</swagger.version>
 		<java.version>1.8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
@@ -52,8 +52,8 @@
 
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZZ</maven.build.timestamp.format>
 		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
-		<docusafe.version>0.3.5</docusafe.version>
-		<cryptoutils.version>0.21.2</cryptoutils.version>
+		<docusafe.version>0.5.8</docusafe.version>
+		<cryptoutils.version>0.23.5</cryptoutils.version>
 		<lock-persistence.version>0.3.1</lock-persistence.version>
 		<jackson.version>2.9.5</jackson.version>
 		<scmBranch />
@@ -79,6 +79,7 @@
 		<module>sts-secret-server</module>
 		<module>sts-secret</module>
 		<module>sts-simple-encryption</module>
+		<module>sts-crypto-utils</module>
 	</modules>
 
 	<dependencyManagement>
@@ -172,11 +173,16 @@
 				<artifactId>sts-simple-encryption</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
+				<artifactId>crypto-utils</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>com.nimbusds</groupId>
 				<artifactId>nimbus-jose-jwt</artifactId>
-				<version>4.34.1</version>
+				<version>6.3</version>
 			</dependency>
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
@@ -260,6 +266,13 @@
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
 				<version>26.0-jre</version>
+			</dependency>
+
+			<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.8.1</version>
 			</dependency>
 
 			<!-- Database -->

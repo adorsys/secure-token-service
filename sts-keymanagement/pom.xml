@@ -15,6 +15,10 @@
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.adorsys.sts</groupId>
+            <artifactId>crypto-utils</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>de.adorsys.lock-persistence</groupId>

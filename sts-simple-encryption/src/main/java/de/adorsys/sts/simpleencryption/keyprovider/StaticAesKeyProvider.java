@@ -1,8 +1,8 @@
 package de.adorsys.sts.simpleencryption.keyprovider;
 
 import com.nimbusds.jose.jwk.JWK;
+import de.adorsys.sts.cryptoutils.KeyConverter;
 import de.adorsys.sts.simpleencryption.KeyProvider;
-import org.adorsys.jjwk.serverkey.KeyConverter;
 
 import java.security.Key;
 import java.text.ParseException;

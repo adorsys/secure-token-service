@@ -13,6 +13,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>de.adorsys.sts</groupId>
+            <artifactId>crypto-utils</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>de.adorsys.cryptoutils</groupId>
             <artifactId>encobject</artifactId>
         </dependency>

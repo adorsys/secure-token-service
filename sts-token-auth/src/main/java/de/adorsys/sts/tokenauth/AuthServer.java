@@ -61,9 +61,9 @@ public class AuthServer {
         }
         if (list.isEmpty()) return null;
         JWK jwk = list.iterator().next();
-        if (jwk instanceof AssymetricJWK) {
+        if (jwk instanceof RSAKey) {
             try {
-                return ((AssymetricJWK) jwk).toPublicKey();
+                return ((RSAKey) jwk).toPublicKey();
             } catch (JOSEException e) {
                 // Log key source exception
                 return null;
