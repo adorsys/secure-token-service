@@ -55,7 +55,7 @@
 		<docusafe.version>0.5.8</docusafe.version>
 		<cryptoutils.version>0.23.5</cryptoutils.version>
 		<lock-persistence.version>0.3.1</lock-persistence.version>
-		<jackson.version>2.9.5</jackson.version>
+		<jackson.version>2.9.7</jackson.version>
 		<scmBranch />
 	</properties>
 	
@@ -175,7 +175,7 @@
 			</dependency>
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
-				<artifactId>crypto-utils</artifactId>
+				<artifactId>sts-crypto-utils</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
@@ -187,7 +187,7 @@
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
 				<artifactId>bcprov-jdk15on</artifactId>
-				<version>1.58</version>
+				<version>1.60</version>
 			</dependency>
 
 			<!-- Environment -->
@@ -265,7 +265,7 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>26.0-jre</version>
+				<version>27.0-jre</version>
 			</dependency>
 
 			<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
@@ -279,13 +279,13 @@
 			<dependency>
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-core</artifactId>
-				<version>5.0.7</version>
+				<version>5.2.1</version>
 				<scope>runtime</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.postgresql</groupId>
 				<artifactId>postgresql</artifactId>
-				<version>42.2.2</version>
+				<version>42.2.5</version>
 				<scope>runtime</scope>
 			</dependency>
 			<dependency>
@@ -306,7 +306,7 @@
 			<dependency>
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi</artifactId>
-				<version>3.16</version>
+				<version>3.17</version>
 			</dependency>
 
 			<!-- Testing Libraries -->

@@ -17,7 +17,7 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>crypto-utils</artifactId>
+            <artifactId>sts-crypto-utils</artifactId>
         </dependency>
 
         <dependency>
