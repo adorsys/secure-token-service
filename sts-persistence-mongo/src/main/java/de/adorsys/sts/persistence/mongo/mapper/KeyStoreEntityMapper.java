@@ -1,19 +1,18 @@
 package de.adorsys.sts.persistence.mongo.mapper;
 
+import de.adorsys.sts.cryptoutils.KeyEntry;
+import de.adorsys.sts.cryptoutils.KeyStoreService;
+import de.adorsys.sts.cryptoutils.KeyStoreType;
+import de.adorsys.sts.cryptoutils.PasswordCallbackHandler;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
 import de.adorsys.sts.persistence.mongo.entity.KeyEntryAttributesEntity;
 import de.adorsys.sts.persistence.mongo.entity.KeyStoreEntity;
-import org.adorsys.jkeygen.keystore.KeyEntry;
-import org.adorsys.jkeygen.keystore.KeyStoreService;
-import org.adorsys.jkeygen.keystore.KeyStoreType;
-import org.adorsys.jkeygen.pwd.PasswordCallbackHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Date;

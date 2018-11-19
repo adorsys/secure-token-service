@@ -1,8 +1,8 @@
 package de.adorsys.sts.token.authentication.securitycontext;
 
 import com.nimbusds.jwt.JWTClaimsSet;
+import de.adorsys.sts.cryptoutils.ObjectMapperSPI;
 import de.adorsys.sts.keymanagement.service.SecretProvider;
-import org.adorsys.encobject.userdata.ObjectMapperSPI;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,5 @@
 package de.adorsys.sts.resourceserver.service;
 
-import org.adorsys.encobject.exceptions.KeystoreNotFoundException;
-
 import de.adorsys.sts.resourceserver.model.UserCredentials;
 
 public interface UserDataRepository {

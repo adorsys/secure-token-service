@@ -1,7 +1,5 @@
 package de.adorsys.sts.common.model;
 
-import org.adorsys.cryptoutils.basetypes.BaseTypeByteArray;
-
 
 public class ByteArray extends BaseTypeByteArray {
     public ByteArray(byte[] value) {

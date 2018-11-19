@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.adorsys.encobject.userdata.ObjectMapperSPI;
-import org.adorsys.jjwk.serverkey.KeyAndJwk;
-import org.adorsys.jjwk.serverkey.KeyConverter;
+import de.adorsys.sts.common.model.KeyAndJwk;
+import de.adorsys.sts.cryptoutils.KeyConverter;
+import de.adorsys.sts.cryptoutils.ObjectMapperSPI;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 

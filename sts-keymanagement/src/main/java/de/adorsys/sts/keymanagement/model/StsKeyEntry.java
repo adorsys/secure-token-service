@@ -1,9 +1,9 @@
 package de.adorsys.sts.keymanagement.model;
 
+import de.adorsys.sts.cryptoutils.KeyEntry;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.adorsys.jkeygen.keystore.KeyEntry;
 
 import java.time.ZonedDateTime;
 

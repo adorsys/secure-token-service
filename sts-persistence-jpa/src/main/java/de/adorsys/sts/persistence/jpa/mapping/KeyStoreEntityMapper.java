@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.adorsys.jkeygen.keystore.KeyEntry;
-import org.adorsys.jkeygen.keystore.KeyStoreService;
-import org.adorsys.jkeygen.keystore.KeyStoreType;
-import org.adorsys.jkeygen.pwd.PasswordCallbackHandler;
+import de.adorsys.sts.cryptoutils.KeyEntry;
+import de.adorsys.sts.cryptoutils.KeyStoreService;
+import de.adorsys.sts.cryptoutils.KeyStoreType;
+import de.adorsys.sts.cryptoutils.PasswordCallbackHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

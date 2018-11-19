@@ -1,5 +1,6 @@
 package de.adorsys.sts.secretserver;
 
+import de.adorsys.sts.cryptoutils.ObjectMapperSPI;
 import de.adorsys.sts.encryption.EncryptionConfiguration;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.objectmapper.JacksonConfiguration;
@@ -12,7 +13,6 @@ import de.adorsys.sts.simpleencryption.StaticKeyEncryptionFactory;
 import de.adorsys.sts.token.authentication.TokenAuthenticationConfiguration;
 import de.adorsys.sts.token.tokenexchange.*;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
-import org.adorsys.encobject.userdata.ObjectMapperSPI;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -6,14 +6,14 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import de.adorsys.sts.common.model.KeyAndJwk;
+import de.adorsys.sts.cryptoutils.KeyConverter;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.token.InvalidParameterException;
 import de.adorsys.sts.token.MissingParameterException;
 import de.adorsys.sts.token.api.TokenResponse;
 import de.adorsys.sts.tokenauth.BearerToken;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
-import org.adorsys.jjwk.serverkey.KeyAndJwk;
-import org.adorsys.jjwk.serverkey.KeyConverter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;

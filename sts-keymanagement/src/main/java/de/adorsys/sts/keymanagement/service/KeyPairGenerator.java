@@ -1,10 +1,6 @@
 package de.adorsys.sts.keymanagement.service;
 
-import org.adorsys.jjwk.serverkey.SingleKeyUsageSelfSignedCertBuilder;
-import org.adorsys.jkeygen.keypair.KeyPairBuilder;
-import org.adorsys.jkeygen.keypair.SelfSignedKeyPairData;
-import org.adorsys.jkeygen.keystore.KeyPairData;
-import org.adorsys.jkeygen.keystore.KeyPairEntry;
+import de.adorsys.sts.cryptoutils.*;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;

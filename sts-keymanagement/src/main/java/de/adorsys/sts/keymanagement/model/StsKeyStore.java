@@ -5,8 +5,7 @@ import java.security.KeyStoreException;
 import java.time.ZonedDateTime;
 import java.util.Map;
 
-import org.adorsys.jkeygen.keystore.KeyStoreService;
-
+import de.adorsys.sts.cryptoutils.KeyStoreService;
 import lombok.Builder;
 import lombok.Getter;
 

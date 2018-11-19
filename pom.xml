@@ -52,8 +52,6 @@
 
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZZ</maven.build.timestamp.format>
 		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
-		<docusafe.version>0.5.8</docusafe.version>
-		<cryptoutils.version>0.23.5</cryptoutils.version>
 		<lock-persistence.version>0.3.1</lock-persistence.version>
 		<jackson.version>2.9.7</jackson.version>
 		<scmBranch />
@@ -61,7 +59,6 @@
 	
 	<modules>
 		<module>sts-common</module>
-		<module>sts-starter</module>
 		<module>sts-pop</module>
 		<module>sts-token</module>
 		<module>sts-server-info</module>
@@ -74,8 +71,6 @@
 		<module>sts-service-component-example</module>
 		<module>sts-persistence-jpa</module>
 		<module>sts-persistence-mongo</module>
-		<module>sts-persistence-fs</module>
-		<module>sts-persistence-docusafe</module>
 		<module>sts-secret-server</module>
 		<module>sts-secret</module>
 		<module>sts-simple-encryption</module>
@@ -158,11 +153,6 @@
 				<artifactId>sts-persistence-mongo</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-	        <dependency>
-	            <groupId>de.adorsys.sts</groupId>
-	            <artifactId>sts-persistence-docusafe</artifactId>
-				<version>${project.version}</version>
-			</dependency>
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-secret</artifactId>
@@ -190,45 +180,12 @@
 				<version>1.60</version>
 			</dependency>
 
-			<!-- Environment -->
+			<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk15on -->
 			<dependency>
-				<groupId>de.adorsys.envutils</groupId>
-				<artifactId>envutils4j</artifactId>
-				<version>0.2</version>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcpkix-jdk15on</artifactId>
+				<version>1.60</version>
 			</dependency>
-
-			<!-- Environment -->
-			<dependency>
-				<groupId>de.adorsys.cryptoutils</groupId>
-				<artifactId>jkeyutils</artifactId>
-				<version>${cryptoutils.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>de.adorsys.cryptoutils</groupId>
-				<artifactId>encobject</artifactId>
-				<version>${cryptoutils.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>de.adorsys.cryptoutils</groupId>
-				<artifactId>basetypes</artifactId>
-				<version>${cryptoutils.version}</version>
-			</dependency>
-	        <dependency>
-	            <groupId>de.adorsys.cryptoutils</groupId>
-	            <artifactId>filesystemstoreconnection</artifactId>
-				<version>${cryptoutils.version}</version>
-	        </dependency>
-			<dependency>
-				<groupId>de.adorsys.cryptoutils</groupId>
-				<artifactId>jjwk</artifactId>
-				<version>${cryptoutils.version}</version>
-			</dependency>
-	        <!-- Minio Connection -->
-	        <dependency>
-	            <groupId>de.adorsys.cryptoutils</groupId>
-	            <artifactId>storeconnectionfactory</artifactId>
-				<version>${cryptoutils.version}</version>
-	        </dependency>
 
 			<dependency>
 				<groupId>de.adorsys.lock-persistence</groupId>
@@ -260,6 +217,13 @@
 				<groupId>com.fasterxml.jackson.datatype</groupId>
 				<artifactId>jackson-datatype-jsr310</artifactId>
 				<version>${jackson.version}</version>
+			</dependency>
+
+			<!-- https://mvnrepository.com/artifact/io.swagger/swagger-annotations -->
+			<dependency>
+				<groupId>io.swagger</groupId>
+				<artifactId>swagger-annotations</artifactId>
+				<version>1.5.21</version>
 			</dependency>
 
 			<dependency>
@@ -294,13 +258,6 @@
 				<version>1.4.197</version>
 				<scope>runtime</scope>
 			</dependency>
-	        <!-- Persistence -->
-	        <dependency>
-	            <groupId>de.adorsys</groupId>
-	            <artifactId>docusafe-business</artifactId>
-	            <version>${docusafe.version}</version>
-				<scope>compile</scope>
-	        </dependency>
 
 			<!-- Excel Parsing -->
 			<dependency>

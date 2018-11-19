@@ -78,9 +78,13 @@
 	</profiles>
 
 	<dependencies>
+		<!--<dependency>-->
+			<!--<groupId>de.adorsys.cryptoutils</groupId>-->
+			<!--<artifactId>basetypes</artifactId>-->
+		<!--</dependency>-->
 		<dependency>
-			<groupId>de.adorsys.cryptoutils</groupId>
-			<artifactId>basetypes</artifactId>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>nimbus-jose-jwt</artifactId>
 		</dependency>
 	</dependencies>
 </project>
