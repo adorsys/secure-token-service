@@ -227,7 +227,11 @@ sts:
   secret-server:
     secret-length: <(integer, optional) secret length in bits (not the length of the base64 encoded string!) default: 256>
     endpoint: <(url as string, optional) the endpoint path of the secret-server's token-exchange endpoint. default: /secret-server/token-exchange >
-
+    encryption:
+      enabled: <(boolean, optional) defines if the secret encryption is enabled. default: false >
+      algorithm: <(string, optional) defines the encryption algorithm. default: A256GCMKW >
+      encryption-method: <(string, optional) defines the encryption method. default: A256GCM >
+      key: <(string, optional) defines the encryption key in json format. default: none >
 # You need to configure the same IDP instance(s) and its pop-entpoint(s) as authserver(s) as the clients are using to authenticate.
 # Here is an example:
   authservers:

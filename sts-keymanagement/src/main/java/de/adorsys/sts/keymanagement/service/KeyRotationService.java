@@ -287,7 +287,7 @@ public class KeyRotationService {
         } else if(keyUsage == KeyUsage.SecretKey) {
             stsKeyEntry = keyStoreGenerator.generateSecretKeyEntryForInstantUsage();
         } else {
-            throw new RuntimeException("Unknown KeyUsage: " + keyUsage);
+            throw new IllegalArgumentException("Unknown KeyUsage: " + keyUsage);
         }
 
         return stsKeyEntry;

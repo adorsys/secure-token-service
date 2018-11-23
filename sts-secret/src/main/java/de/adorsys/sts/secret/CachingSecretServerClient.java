@@ -1,4 +1,4 @@
-package de.adorsys.sts.secretserverclient;
+package de.adorsys.sts.secret;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -6,11 +6,11 @@ import com.google.common.cache.LoadingCache;
 
 import java.util.concurrent.TimeUnit;
 
-class CachingSecretServerClient implements SecretServerClient {
+public class CachingSecretServerClient implements SecretServerClient {
 
     private final LoadingCache<String, String> secrets;
 
-    CachingSecretServerClient(
+    public CachingSecretServerClient(
             SecretServerClient decoratedSecretServerClient,
             int maximumSize,
             int expireAfterAccessInMinutes

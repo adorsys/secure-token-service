@@ -1,23 +1,20 @@
 package de.adorsys.sts.persistence;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.adorsys.sts.resourceserver.model.ResourceServer;
+import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
+import org.adorsys.cryptoutils.exceptions.BaseException;
+import org.adorsys.docusafe.business.types.complex.DocumentFQN;
+import org.adorsys.docusafe.business.types.complex.UserIDAuth;
+import org.adorsys.docusafe.cached.transactional.CachedTransactionalDocumentSafeService;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import org.adorsys.cryptoutils.exceptions.BaseException;
-import org.adorsys.docusafe.business.DocumentSafeService;
-import org.adorsys.docusafe.business.types.complex.DocumentFQN;
-import org.adorsys.docusafe.business.types.complex.UserIDAuth;
-import org.apache.commons.lang3.StringUtils;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import de.adorsys.sts.resourceserver.model.ResourceServer;
-import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
 
 /**
  * Stores the list of resource servers known to this application.
@@ -33,8 +30,8 @@ public class FsResourceServerRepository extends FsBasedService implements Resour
 	// The identity of this server instance.
 	private final UserIDAuth userIDAuth;
 
-	public FsResourceServerRepository(UserIDAuth userIDAuth, DocumentSafeService documentSafeService, ObjectMapper objectMapper) {
-		super(documentSafeService, objectMapper);
+	public FsResourceServerRepository(UserIDAuth userIDAuth, CachedTransactionalDocumentSafeService cachedTransactionalDocumentSafeService, ObjectMapper objectMapper) {
+		super(cachedTransactionalDocumentSafeService, objectMapper);
     	this.userIDAuth = userIDAuth;
     }
 

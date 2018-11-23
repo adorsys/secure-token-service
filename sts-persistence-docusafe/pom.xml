@@ -19,13 +19,12 @@
 			<groupId>de.adorsys.sts</groupId>
 			<artifactId>sts-resource-server</artifactId>
 		</dependency>
-
-
 		<dependency>
 			<groupId>de.adorsys</groupId>
 			<artifactId>docusafe-cached-transactional</artifactId>
+			<scope>provided</scope>
 		</dependency>
-
+<!--
 		<dependency>
 			<groupId>de.adorsys.cryptoutils</groupId>
 			<artifactId>filesystemstoreconnection</artifactId>
@@ -34,6 +33,7 @@
 			<groupId>de.adorsys.cryptoutils</groupId>
 			<artifactId>encobject</artifactId>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>

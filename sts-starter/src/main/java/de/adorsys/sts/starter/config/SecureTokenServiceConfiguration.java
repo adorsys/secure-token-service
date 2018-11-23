@@ -19,9 +19,9 @@ import de.adorsys.sts.token.passwordgrant.EnablePasswordGrant;
 import de.adorsys.sts.token.tokenexchange.server.EnableTokenExchangeServer;
 import de.adorsys.sts.worksheetloader.DataSheetLoader;
 import de.adorsys.sts.worksheetloader.LoginLoader;
-import org.adorsys.docusafe.business.DocumentSafeService;
 import org.adorsys.docusafe.business.types.UserID;
 import org.adorsys.docusafe.business.types.complex.UserIDAuth;
+import org.adorsys.docusafe.cached.transactional.CachedTransactionalDocumentSafeService;
 import org.adorsys.encobject.domain.ReadKeyPassword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,10 +43,11 @@ public class SecureTokenServiceConfiguration {
 	private ObjectMapper objectMapper;
 	
 	@Autowired
-	private DocumentSafeService documentSafeService;
+	private CachedTransactionalDocumentSafeService cachedTransactionalDocumentSafeService;
 	
     @Value("${docusafe.system.user.name}")
     String docusafeSystemUserName;
+
     @Value("${docusafe.system.user.password}")
     String docusafeSystemUserPassword;
     
@@ -69,17 +70,17 @@ public class SecureTokenServiceConfiguration {
 
     @Bean
     ResourceServerRepository resourceServerRepository() {
-        return new FsResourceServerRepository(systemIdAuth, documentSafeService, objectMapper);
+        return new FsResourceServerRepository(systemIdAuth, cachedTransactionalDocumentSafeService, objectMapper);
     }
 
     @Bean
     KeyStoreRepository keyStoreRepository(KeyManagementConfigurationProperties keyManagementProperties) {
-        return new FsKeyStoreRepository(systemIdAuth, documentSafeService, keyManagementProperties, new KeyEntryMapper(objectMapper));
+        return new FsKeyStoreRepository(systemIdAuth, cachedTransactionalDocumentSafeService, keyManagementProperties, new KeyEntryMapper(objectMapper));
     }
 
     @Bean
     UserDataRepository userDataRepository() {
-        return new FsUserDataRepository(documentSafeService, objectMapper);
+        return new FsUserDataRepository(cachedTransactionalDocumentSafeService, objectMapper);
     }
 
     @Bean

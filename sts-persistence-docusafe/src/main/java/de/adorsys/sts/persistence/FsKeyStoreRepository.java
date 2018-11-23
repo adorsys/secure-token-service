@@ -4,11 +4,11 @@ import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
-import org.adorsys.docusafe.business.DocumentSafeService;
 import org.adorsys.docusafe.business.types.complex.DSDocument;
 import org.adorsys.docusafe.business.types.complex.DSDocumentMetaInfo;
 import org.adorsys.docusafe.business.types.complex.DocumentFQN;
 import org.adorsys.docusafe.business.types.complex.UserIDAuth;
+import org.adorsys.docusafe.cached.transactional.CachedTransactionalDocumentSafeService;
 import org.adorsys.docusafe.service.types.DocumentContent;
 import org.adorsys.encobject.domain.UserMetaData;
 import org.adorsys.jkeygen.keystore.KeyEntry;
@@ -32,17 +32,17 @@ public class FsKeyStoreRepository implements KeyStoreRepository {
 	private static final ZonedDateTime DEFAULT_LAST_UPDATE = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneOffset.UTC);
 
 	private final DocumentFQN keystoreFileFQN;
-	private final DocumentSafeService documentSafeService;
+	private final CachedTransactionalDocumentSafeService cachedTransactionalDocumentSafeService;
 	// The identity of this server instance.
 	private final UserIDAuth userIDAuth;
 	private final String keystoreName;
 	private final CallbackHandler keyPassHandler;
 	private final KeyEntryMapper keyEntryMapper;
 
-	public FsKeyStoreRepository(UserIDAuth userIDAuth, DocumentSafeService documentSafeService,
+	public FsKeyStoreRepository(UserIDAuth userIDAuth, CachedTransactionalDocumentSafeService cachedTransactionalDocumentSafeService,
 			KeyManagementProperties keyManagementProperties, KeyEntryMapper keyEntryMapper) {
 		this.userIDAuth = userIDAuth;
-		this.documentSafeService = documentSafeService;
+		this.cachedTransactionalDocumentSafeService = cachedTransactionalDocumentSafeService;
 		this.keystoreName = keyManagementProperties.getKeystore().getName();
 		this.keystoreFileFQN = new DocumentFQN(this.keystoreName);
 		this.keyEntryMapper = keyEntryMapper;
@@ -53,10 +53,10 @@ public class FsKeyStoreRepository implements KeyStoreRepository {
 	@Override
 	public StsKeyStore load() {
 
-		if (!documentSafeService.documentExists(userIDAuth, keystoreFileFQN))
+		if (!cachedTransactionalDocumentSafeService.nonTxDocumentExists(userIDAuth, keystoreFileFQN))
 			return null;
 
-		DSDocument dsDocument = documentSafeService.readDocument(userIDAuth, keystoreFileFQN);
+		DSDocument dsDocument = cachedTransactionalDocumentSafeService.nonTxReadDocument(userIDAuth, keystoreFileFQN);
 		KeyStore keyStore = initKeystore(dsDocument, keystoreFileFQN.getValue(), keyPassHandler);
 		DSDocumentMetaInfo metaInfo = dsDocument.getDsDocumentMetaInfo();
 
@@ -117,7 +117,7 @@ public class FsKeyStoreRepository implements KeyStoreRepository {
 
 	@Override
 	public boolean exists() {
-		return documentSafeService.documentExists(userIDAuth, keystoreFileFQN);
+		return cachedTransactionalDocumentSafeService.nonTxDocumentExists(userIDAuth, keystoreFileFQN);
 	}
 
 	@Override
@@ -128,13 +128,13 @@ public class FsKeyStoreRepository implements KeyStoreRepository {
 		DSDocumentMetaInfo dsDocumentMetaInfo = new DSDocumentMetaInfo(attributes);
 		dsDocumentMetaInfo.put(KEYSTORE_TYPE_KEY, storeType);
 		DSDocument dsDocument = new DSDocument(keystoreFileFQN, new DocumentContent(bs), dsDocumentMetaInfo);
-		documentSafeService.storeDocument(userIDAuth, dsDocument);
+		cachedTransactionalDocumentSafeService.nonTxStoreDocument(userIDAuth, dsDocument);
 	}
 
 	@Override
 	public ZonedDateTime lastUpdate() {
-		if(documentSafeService.documentExists(userIDAuth, keystoreFileFQN)) {
-			DSDocument dsDocument = documentSafeService.readDocument(userIDAuth, keystoreFileFQN);
+		if(cachedTransactionalDocumentSafeService.nonTxDocumentExists(userIDAuth, keystoreFileFQN)) {
+			DSDocument dsDocument = cachedTransactionalDocumentSafeService.nonTxReadDocument(userIDAuth, keystoreFileFQN);
 			DSDocumentMetaInfo metaInfo = dsDocument.getDsDocumentMetaInfo();
 
 			return readLastUpdateFromMetaInfo(metaInfo);

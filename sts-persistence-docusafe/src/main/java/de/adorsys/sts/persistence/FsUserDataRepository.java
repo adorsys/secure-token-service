@@ -1,16 +1,14 @@
 package de.adorsys.sts.persistence;
 
-import org.adorsys.docusafe.business.DocumentSafeService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.adorsys.sts.resourceserver.model.UserCredentials;
+import de.adorsys.sts.resourceserver.service.UserDataRepository;
 import org.adorsys.docusafe.business.types.UserID;
 import org.adorsys.docusafe.business.types.complex.DocumentFQN;
 import org.adorsys.docusafe.business.types.complex.UserIDAuth;
+import org.adorsys.docusafe.cached.transactional.CachedTransactionalDocumentSafeService;
 import org.adorsys.encobject.domain.ReadKeyPassword;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import de.adorsys.sts.resourceserver.model.UserCredentials;
-import de.adorsys.sts.resourceserver.service.UserDataRepository;
 
 public class FsUserDataRepository extends FsBasedService implements UserDataRepository {
 
@@ -18,8 +16,8 @@ public class FsUserDataRepository extends FsBasedService implements UserDataRepo
 	private static final TypeReference<UserCredentials> VALUE_TYPE = new TypeReference<UserCredentials>() {}; 
 	private final DocumentFQN dataFileFQN = new DocumentFQN(RESOURCE_SERVERS_FILE_NAME);
 
-	public FsUserDataRepository(DocumentSafeService documentSafeService, ObjectMapper objectMapper) {
-		super(documentSafeService, objectMapper);
+	public FsUserDataRepository(CachedTransactionalDocumentSafeService cachedTransactionalDocumentSafeService, ObjectMapper objectMapper) {
+		super(cachedTransactionalDocumentSafeService, objectMapper);
 	}
 
 	@Override

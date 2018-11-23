@@ -15,6 +15,10 @@
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-resource-server</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.adorsys.sts</groupId>
+            <artifactId>sts-keymanagement</artifactId>
+        </dependency>
     </dependencies>
 
 

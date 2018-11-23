@@ -1,11 +1,8 @@
 package de.adorsys.sts.starter.config;
 
-import org.adorsys.cryptoutils.storeconnectionfactory.ExtendedStoreConnectionFactory;
-import org.adorsys.docusafe.business.DocumentSafeService;
-import org.adorsys.docusafe.business.impl.DocumentSafeServiceImpl;
-import org.adorsys.docusafe.business.impl.WithCache;
-import org.adorsys.encobject.service.api.ExtendedStoreConnection;
-import org.springframework.context.annotation.Bean;
+import org.adorsys.docusafe.spring.annotation.UseDocusafeSpringConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -14,10 +11,10 @@ import org.springframework.context.annotation.Configuration;
  *
  */
 @Configuration
+@UseDocusafeSpringConfiguration
 public class DocuSafeConfig {
-	@Bean
-	public DocumentSafeService docusafe(){
-		ExtendedStoreConnection extendedStorageConnection = ExtendedStoreConnectionFactory.get();
-		return new DocumentSafeServiceImpl(WithCache.TRUE, extendedStorageConnection);
+	private final static Logger LOGGER = LoggerFactory.getLogger(DocuSafeConfig.class);
+	public DocuSafeConfig(){
+		LOGGER.info("@UseDocusafeSpringConfig");
 	}
 }
