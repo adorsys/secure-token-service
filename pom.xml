@@ -53,7 +53,7 @@
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZZ</maven.build.timestamp.format>
 		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
 		<cryptoutils.version>0.23.6</cryptoutils.version>
-		<docusafe.version>0.5.11-SNAPSHOT</docusafe.version>
+		<docusafe.version>0.5.11</docusafe.version>
 		<lock-persistence.version>0.3.1</lock-persistence.version>
 		<jackson.version>2.9.5</jackson.version>
 		<scmBranch />
