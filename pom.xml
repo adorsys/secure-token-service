@@ -52,7 +52,7 @@
 
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZZ</maven.build.timestamp.format>
 		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
-		<lock-persistence.version>0.3.1</lock-persistence.version>
+		<lock-persistence.version>0.3.2</lock-persistence.version>
 		<jackson.version>2.9.7</jackson.version>
 		<bouncycastle.version>1.61</bouncycastle.version>
 		<scmBranch />
