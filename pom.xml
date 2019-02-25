@@ -65,7 +65,6 @@
 		<module>sts-server-info</module>
 		<module>sts-token-auth</module>
 		<module>sts-resource-server</module>
-		<module>sts-worksheet-loader</module>
 		<module>sts-example</module>
 		<module>sts-keymanagement</module>
 		<module>sts-spring</module>
@@ -260,13 +259,6 @@
 				<artifactId>h2</artifactId>
 				<version>1.4.197</version>
 				<scope>runtime</scope>
-			</dependency>
-
-			<!-- Excel Parsing -->
-			<dependency>
-				<groupId>org.apache.poi</groupId>
-				<artifactId>poi</artifactId>
-				<version>3.17</version>
 			</dependency>
 
 			<!-- Testing Libraries -->
