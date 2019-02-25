@@ -13,15 +13,6 @@
     <artifactId>sts-crypto-utils</artifactId>
 
     <dependencies>
-        <!--<dependency>-->
-            <!--<groupId>de.adorsys.cryptoutils</groupId>-->
-            <!--<artifactId>basetypes</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>de.adorsys.cryptoutils</groupId>-->
-            <!--<artifactId>jjwk</artifactId>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
