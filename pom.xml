@@ -54,6 +54,7 @@
 		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
 		<lock-persistence.version>0.3.1</lock-persistence.version>
 		<jackson.version>2.9.7</jackson.version>
+		<bouncycastle.version>1.61</bouncycastle.version>
 		<scmBranch />
 	</properties>
 	
@@ -174,17 +175,19 @@
 				<artifactId>nimbus-jose-jwt</artifactId>
 				<version>6.3</version>
 			</dependency>
+
+			<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
 				<artifactId>bcprov-jdk15on</artifactId>
-				<version>1.60</version>
+				<version>${bouncycastle.version}</version>
 			</dependency>
 
 			<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk15on -->
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
 				<artifactId>bcpkix-jdk15on</artifactId>
-				<version>1.60</version>
+				<version>${bouncycastle.version}</version>
 			</dependency>
 
 			<dependency>
