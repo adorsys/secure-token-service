@@ -2,16 +2,16 @@ package de.adorsys.sts.keymanagement.service;
 
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
+import de.adorsys.sts.common.model.KeyAndJwk;
 import de.adorsys.sts.common.util.ImmutableLists;
+import de.adorsys.sts.cryptoutils.ServerKeyMap;
+import de.adorsys.sts.cryptoutils.ServerKeyMapProvider;
+import de.adorsys.sts.cryptoutils.ServerKeysHolder;
 import de.adorsys.sts.cryptoutils.StsServerKeyMap;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
-import org.adorsys.jjwk.serverkey.KeyAndJwk;
-import org.adorsys.jjwk.serverkey.ServerKeyMap;
-import org.adorsys.jjwk.serverkey.ServerKeyMapProvider;
-import org.adorsys.jjwk.serverkey.ServerKeysHolder;
 
 import java.security.Key;
 import java.util.List;

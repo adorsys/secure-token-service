@@ -4,8 +4,6 @@ import de.adorsys.sts.decryption.DecryptionConfiguration;
 import de.adorsys.sts.keymanagement.service.DecryptionService;
 import de.adorsys.sts.keymanagement.service.SecretDecryptionService;
 import de.adorsys.sts.keymanagement.service.SecretProvider;
-import org.adorsys.encobject.userdata.ObjectMapperSPI;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 
 @Configuration

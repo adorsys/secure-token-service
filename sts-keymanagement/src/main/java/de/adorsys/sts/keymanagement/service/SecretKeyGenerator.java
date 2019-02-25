@@ -1,8 +1,8 @@
 package de.adorsys.sts.keymanagement.service;
 
-import org.adorsys.jkeygen.keystore.SecretKeyData;
-import org.adorsys.jkeygen.keystore.SecretKeyEntry;
-import org.adorsys.jkeygen.secretkey.SecretKeyBuilder;
+import de.adorsys.sts.cryptoutils.SecretKeyBuilder;
+import de.adorsys.sts.cryptoutils.SecretKeyData;
+import de.adorsys.sts.cryptoutils.SecretKeyEntry;
 
 import javax.crypto.SecretKey;
 import javax.security.auth.callback.CallbackHandler;

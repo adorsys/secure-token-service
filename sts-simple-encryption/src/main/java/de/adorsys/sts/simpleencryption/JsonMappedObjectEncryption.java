@@ -1,8 +1,8 @@
 package de.adorsys.sts.simpleencryption;
 
+import de.adorsys.sts.cryptoutils.ObjectMapperSPI;
 import de.adorsys.sts.simpleencryption.decrypt.Decrypter;
 import de.adorsys.sts.simpleencryption.encrypt.Encrypter;
-import org.adorsys.encobject.userdata.ObjectMapperSPI;
 
 import java.io.IOException;
 import java.util.Optional;

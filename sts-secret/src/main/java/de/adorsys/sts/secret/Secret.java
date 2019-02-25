@@ -1,7 +1,7 @@
 package de.adorsys.sts.secret;
 
 import de.adorsys.sts.common.util.RandomBase64Generator;
-import org.adorsys.cryptoutils.basetypes.BaseTypeString;
+import de.adorsys.sts.cryptoutils.BaseTypeString;
 
 public class Secret extends BaseTypeString {
     private static final RandomBase64Generator RANDOM_BASE_64_GENERATOR = new RandomBase64Generator();

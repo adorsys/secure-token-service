@@ -2,8 +2,8 @@ package de.adorsys.sts.resourceserver.service;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.jwk.*;
+import de.adorsys.sts.cryptoutils.JWEEncryptedSelector;
 import de.adorsys.sts.resourceserver.exception.NoJwkFoundException;
-import org.adorsys.jjwk.selector.JWEEncryptedSelector;
 
 import java.util.Collections;
 import java.util.HashMap;

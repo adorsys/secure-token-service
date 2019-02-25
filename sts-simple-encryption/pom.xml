@@ -17,14 +17,14 @@
             <artifactId>sts-crypto-utils</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>de.adorsys.cryptoutils</groupId>
-            <artifactId>encobject</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.cryptoutils</groupId>
-            <artifactId>jjwk</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>de.adorsys.cryptoutils</groupId>-->
+            <!--<artifactId>encobject</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>de.adorsys.cryptoutils</groupId>-->
+            <!--<artifactId>jjwk</artifactId>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>

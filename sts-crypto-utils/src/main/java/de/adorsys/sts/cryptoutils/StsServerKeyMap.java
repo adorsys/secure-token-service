@@ -1,7 +1,7 @@
 package de.adorsys.sts.cryptoutils;
 
 import com.nimbusds.jose.jwk.*;
-import org.adorsys.jjwk.serverkey.KeyAndJwk;
+import de.adorsys.sts.common.model.KeyAndJwk;
 import org.apache.commons.lang3.RandomUtils;
 
 import java.security.Key;

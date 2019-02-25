@@ -4,7 +4,7 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEDecrypter;
 import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jose.crypto.factories.DefaultJWEDecrypterFactory;
-import org.adorsys.jjwk.serverkey.ServerKeyMapProvider;
+import de.adorsys.sts.cryptoutils.ServerKeyMapProvider;
 
 import java.security.Key;
 import java.text.ParseException;

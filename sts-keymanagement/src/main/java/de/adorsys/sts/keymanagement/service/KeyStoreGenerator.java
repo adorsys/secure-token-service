@@ -1,14 +1,10 @@
 package de.adorsys.sts.keymanagement.service;
 
+import de.adorsys.sts.cryptoutils.*;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.util.DateTimeUtils;
-import org.adorsys.jkeygen.keystore.KeyPairEntry;
-import org.adorsys.jkeygen.keystore.KeyStoreType;
-import org.adorsys.jkeygen.keystore.KeystoreBuilder;
-import org.adorsys.jkeygen.keystore.SecretKeyEntry;
-import org.adorsys.jkeygen.pwd.PasswordCallbackHandler;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.security.auth.callback.CallbackHandler;

@@ -69,7 +69,6 @@
 						<artifactId>spring-boot-maven-plugin</artifactId>
 						<configuration>
 							<jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=10022</jvmArguments>
-							<!--<jvmArguments>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8787</jvmArguments> -->
 						</configuration>
 					</plugin>
 				</plugins>
@@ -79,8 +78,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>de.adorsys.cryptoutils</groupId>
-			<artifactId>basetypes</artifactId>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>nimbus-jose-jwt</artifactId>
 		</dependency>
 	</dependencies>
 </project>

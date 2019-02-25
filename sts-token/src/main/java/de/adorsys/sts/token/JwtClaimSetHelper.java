@@ -5,8 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.adorsys.cryptoutils.exceptions.BaseException;
-import org.adorsys.encobject.userdata.ObjectMapperSPI;
+import de.adorsys.sts.cryptoutils.ObjectMapperSPI;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -33,7 +32,7 @@ public class JwtClaimSetHelper {
         try {
             return claimSetBuilder.claim("user-secret", mapper.writeValueAsString(map));
         } catch (IOException e) {
-            throw new BaseException(e);
+            throw new RuntimeException(e);
         }
     }
 }
