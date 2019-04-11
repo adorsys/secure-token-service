@@ -26,11 +26,6 @@ public class KeyManagementConfiguration {
             KeyManagementConfigurationProperties keyManagementProperties
     ) {
         KeyManagementProperties.KeyStoreProperties keystore = keyManagementProperties.getKeystore();
-
-        if(keystore == null) {
-            throw new RuntimeException("SHIT");
-        }
-
         return new KeyConversionService(keystore.getPassword());
     }
 
