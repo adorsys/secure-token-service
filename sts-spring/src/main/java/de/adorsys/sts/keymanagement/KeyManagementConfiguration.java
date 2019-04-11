@@ -25,7 +25,13 @@ public class KeyManagementConfiguration {
     KeyConversionService keyConversionService(
             KeyManagementConfigurationProperties keyManagementProperties
     ) {
-        return new KeyConversionService(keyManagementProperties.getKeystore().getPassword());
+        KeyManagementProperties.KeyStoreProperties keystore = keyManagementProperties.getKeystore();
+
+        if(keystore == null) {
+            throw new RuntimeException("SHIT");
+        }
+
+        return new KeyConversionService(keystore.getPassword());
     }
 
     @Bean(name = "cached")

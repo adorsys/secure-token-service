@@ -55,6 +55,7 @@
 		<lock-persistence.version>0.3.2</lock-persistence.version>
 		<jackson.version>2.9.8</jackson.version>
 		<bouncycastle.version>1.61</bouncycastle.version>
+		<keycloak.version>5.0.0</keycloak.version>
 		<scmBranch />
 	</properties>
 	
@@ -371,6 +372,13 @@
 					<groupId>org.projectlombok</groupId>
 					<artifactId>lombok-maven-plugin</artifactId>
 					<version>1.16.18.1</version>
+				</plugin>
+
+				<!-- https://mvnrepository.com/artifact/io.fabric8/docker-maven-plugin -->
+				<plugin>
+					<groupId>io.fabric8</groupId>
+					<artifactId>docker-maven-plugin</artifactId>
+					<version>0.28.0</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

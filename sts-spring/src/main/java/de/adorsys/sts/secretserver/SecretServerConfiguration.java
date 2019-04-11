@@ -15,10 +15,12 @@ import de.adorsys.sts.token.tokenexchange.*;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
+@ComponentScan(basePackages = "de.adorsys.sts.secretserver")
 @Import({
         TokenAuthenticationConfiguration.class,
         EncryptionConfiguration.class,

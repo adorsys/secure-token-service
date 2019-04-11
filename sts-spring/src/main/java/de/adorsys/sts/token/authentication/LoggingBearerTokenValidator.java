@@ -29,7 +29,7 @@ public class LoggingBearerTokenValidator extends BearerTokenValidator {
 
     @Override
     protected void onAuthServerIsNull(String token, String issuer) {
-        if(logger.isDebugEnabled()) logger.debug("Auth server with issuer {} for token not not allowed", issuer);
+        if(logger.isDebugEnabled()) logger.debug("Auth server with issuer {} for token not allowed", issuer);
     }
 
     @Override
