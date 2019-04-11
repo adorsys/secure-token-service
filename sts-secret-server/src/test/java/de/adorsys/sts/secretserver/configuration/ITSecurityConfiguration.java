@@ -32,7 +32,7 @@ public class ITSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .and()
                 .authorizeRequests()
                     .antMatchers(HttpMethod.GET,
-                        "/pop", "/secret-server/token-exchange"
+                        "/pop"
                     )
                     .permitAll()
                     .anyRequest().authenticated()
