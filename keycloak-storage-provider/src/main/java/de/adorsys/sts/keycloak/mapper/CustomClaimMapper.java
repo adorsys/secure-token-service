@@ -1,7 +1,7 @@
 package de.adorsys.sts.keycloak.mapper;
 
 import de.adorsys.sts.keycloak.Constants;
-import org.keycloak.models.AuthenticatedClientSessionModel;
+import org.keycloak.models.ClientSessionContext;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.ProtocolMapperModel;
 import org.keycloak.models.UserSessionModel;
@@ -47,8 +47,8 @@ public class CustomClaimMapper extends AbstractOIDCProtocolMapper implements OID
     }
 
     @Override
-    public AccessToken transformAccessToken(AccessToken token, ProtocolMapperModel mappingModel, KeycloakSession session, UserSessionModel userSession, AuthenticatedClientSessionModel clientSession) {
-        AccessToken accessToken = super.transformAccessToken(token, mappingModel, session, userSession, clientSession);
+    public AccessToken transformAccessToken(AccessToken token, ProtocolMapperModel mappingModel, KeycloakSession session, UserSessionModel userSession, ClientSessionContext clientSessionCtx) {
+        AccessToken accessToken = super.transformAccessToken(token, mappingModel, session, userSession, clientSessionCtx);
 
         // Put the note into the access token
         // Hint: it might have been interesting to distinguish between the different type of notes

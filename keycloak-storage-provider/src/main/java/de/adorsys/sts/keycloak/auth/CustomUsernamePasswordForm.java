@@ -54,7 +54,7 @@ public class CustomUsernamePasswordForm extends UsernamePasswordForm {
         } else {
             context.getEvent().user(user);
             context.getEvent().error(Errors.INVALID_USER_CREDENTIALS);
-            Response challengeResponse = invalidCredentials(context);
+            Response challengeResponse = challenge(context, Errors.INVALID_USER_CREDENTIALS);
             context.failureChallenge(AuthenticationFlowError.INVALID_CREDENTIALS, challengeResponse);
             context.clearUser();
             return false;
