@@ -122,7 +122,7 @@ public class SecretServerApplicationIT {
         Exception caughtException = caughtException();
 
         assertThat(caughtException, instanceOf(HttpClientErrorException.class));
-        assertThat(((HttpClientErrorException)caughtException).getStatusCode(), is(equalTo(HttpStatus.FORBIDDEN)));
+        assertThat(((HttpClientErrorException) caughtException).getStatusCode(), is(equalTo(HttpStatus.FORBIDDEN)));
     }
 
     @Test
@@ -134,7 +134,17 @@ public class SecretServerApplicationIT {
         Exception caughtException = caughtException();
 
         assertThat(caughtException, instanceOf(HttpClientErrorException.class));
-        assertThat(((HttpClientErrorException)caughtException).getStatusCode(), is(equalTo(HttpStatus.FORBIDDEN)));
+        assertThat(((HttpClientErrorException) caughtException).getStatusCode(), is(equalTo(HttpStatus.FORBIDDEN)));
+    }
+
+    @Test
+    public void shouldGetEmptySecretsForUnknownAudience() throws Exception {
+        Authentication.AuthenticationToken authToken = authentication.login(USERNAME_ONE, PASSWORD_ONE);
+
+        TokenResponse secretServerToken = client.exchangeToken("/secret-server/token-exchange", "unknown audience", authToken.getAccessToken());
+
+        Map<String, String> secrets = extractSecretsFromToken(secretServerToken.getAccess_token());
+        assertThat(secrets.size(), is(equalTo(0)));
     }
 
     private String getDecryptedSecret(String username, String password) {
@@ -143,14 +153,17 @@ public class SecretServerApplicationIT {
     }
 
     private String extractSecretFromToken(String secretServerAccessToken) {
+        Map<String, String> secrets = extractSecretsFromToken(secretServerAccessToken);
+        return decryptionService.decrypt(secrets.get(MOPED_CLIENT_AUDIENCE));
+    }
+
+    private Map<String, String> extractSecretsFromToken(String secretServerAccessToken) {
         BearerToken exchangedToken = bearerTokenValidator.extract(secretServerAccessToken);
         JWTClaimsSet claims = exchangedToken.getClaims();
 
         Object secretClaimAsObject = claims.getClaim("secret");
 
-        Map<String, String> secret = (Map) secretClaimAsObject;
-
-        return decryptionService.decrypt(secret.get(MOPED_CLIENT_AUDIENCE));
+        return (Map) secretClaimAsObject;
     }
 
     private TokenResponse getSecretServerToken(String username, String password) {
