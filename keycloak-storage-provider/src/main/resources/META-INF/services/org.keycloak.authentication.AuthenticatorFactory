@@ -1,0 +1,2 @@
+de.adorsys.sts.keycloak.auth.CustomUsernamePasswordFormFactory
+de.adorsys.sts.keycloak.auth.CustomDirectAccessAuthenticator

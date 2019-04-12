@@ -1,0 +1,21 @@
+<assembly>
+	<id>module</id>
+	<formats>
+		<format>tar.gz</format>
+		<format>dir</format>
+	</formats>
+
+	<includeBaseDirectory>false</includeBaseDirectory>
+
+	<files>
+		<file>
+			<source>src/install/keycloak-storage-provider.cli</source>
+			<outputDirectory>/install</outputDirectory>
+			<filtered>true</filtered>
+		</file>
+		<file>
+			<source>${project.build.directory}/${project.build.finalName}.${project.packaging}</source>
+			<outputDirectory>/install</outputDirectory>
+		</file>
+	</files>
+</assembly>

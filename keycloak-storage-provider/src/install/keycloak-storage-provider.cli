@@ -1,0 +1,22 @@
+#embed-server --server-config=standalone.xml
+
+# Add and register storage provider module
+module add --name=de.adorsys.sts.keycloak-storage-provider --resources=keycloak-storage-provider.jar --dependencies=org.keycloak.keycloak-core,org.keycloak.keycloak-services,org.keycloak.keycloak-server-spi,org.keycloak.keycloak-server-spi-private,javax.api,javax.ws.rs.api,org.keycloak.keycloak-common
+/subsystem=keycloak-server:list-add(name=providers, value="module:de.adorsys.sts.keycloak-storage-provider")
+
+# Activate the custom storage provider in the spi
+/subsystem=keycloak-server/spi=storage:add()
+/subsystem=keycloak-server/spi=storage/provider=custom-user-storage-provider:add(enabled=true)
+
+# Activate Protocol mapper
+/subsystem=keycloak-server/spi=protocol-mapper:add()
+/subsystem=keycloak-server/spi=protocol-mapper/provider=custom-claim-mapper:add(enabled=true)
+
+/subsystem=keycloak-server/spi=authenticator:add()
+# register user name password form with keycloak
+/subsystem=keycloak-server/spi=authenticator/provider=custom-auth-username-password-form:add(enabled=true)
+
+# register direct grant form with keycloak
+/subsystem=keycloak-server/spi=authenticator/provider=custom-direct-access-authenticator:add(enabled=true)
+
+#stop-embedded-server
