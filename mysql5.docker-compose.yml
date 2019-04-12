@@ -8,7 +8,8 @@ services:
     volumes:
     - "./.docker/keycloak-db/data:/var/lib/postgresql/data"
   keycloak:
-    image: "adorsys/keycloak-sts-adapter:latest"
+    build: ./keycloak-storage-provider
+    image: "local/keycloak-sts-adapter:latest"
     environment:
       KEYCLOAK_PASSWORD: admin123
       KEYCLOAK_USER: admin

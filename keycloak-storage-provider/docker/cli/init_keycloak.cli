@@ -1,0 +1,4 @@
+embed-server --server-config=standalone.xml --std-out=echo
+run-batch --file=/install/keycloak-storage-provider.cli
+#run-batch --file=/install/keycloak-auth-provider.cli
+stop-embedded-server
