@@ -1,9 +1,8 @@
-FROM jboss/keycloak:3.2.1.Final
+FROM jboss/keycloak:5.0.0
 
-ADD docker/cli/init_keycloak.cli /install/init_keycloak.cli
+COPY docker/root /
 
-ADD target/keycloak-storage-provider.tar.gz /
+RUN /opt/jboss/keycloak/bin/jboss-cli.sh --file=/install.cli \
+    && rm -rf /opt/jboss/keycloak/standalone/log/server* /opt/jboss/keycloak/standalone/configuration/standalone_xml_history
 
-RUN cd /install && /opt/jboss/keycloak/bin/jboss-cli.sh --file=/install/init_keycloak.cli
-
-RUN rm -rf /opt/jboss/keycloak/standalone/configuration/standalone_xml_history
+COPY target/keycloak-storage-provider.jar /opt/jboss/keycloak/modules/de/adorsys/sts/keycloak/storageprovider/main/

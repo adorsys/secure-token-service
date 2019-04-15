@@ -1,5 +1,6 @@
 package de.adorsys.sts.keycloak.storageprovider;
 
+import de.adorsys.sts.keycloak.util.ImmutableList;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CustomUser extends AbstractUserAdapter {
+    private static final List<String> EMPTY = new ImmutableList<>();
 
     private final String username;
 
@@ -45,6 +47,11 @@ public class CustomUser extends AbstractUserAdapter {
 
     public void setSecrets(Map<String, String> secrets) {
         this.secrets = secrets;
+    }
+
+    @Override
+    public List<String> getAttribute(String name) {
+        return EMPTY;
     }
 
     public static Builder builder() {

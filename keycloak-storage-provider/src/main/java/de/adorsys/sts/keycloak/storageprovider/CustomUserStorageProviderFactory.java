@@ -5,7 +5,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.storage.UserStorageProviderFactory;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CustomUserStorageProviderFactory implements UserStorageProviderFactory<CustomUserStorageProvider> {
@@ -22,7 +22,7 @@ public class CustomUserStorageProviderFactory implements UserStorageProviderFact
 
     @Override
     public List<ProviderConfigProperty> getConfigProperties() {
-        return Arrays.asList(
+        return Collections.singletonList(
                 Properties.stsAuthEndpointProperty
         );
     }
