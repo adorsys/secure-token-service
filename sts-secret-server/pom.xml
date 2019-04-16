@@ -59,6 +59,8 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <!--https://stackoverflow.com/questions/49363222/maven-failsafe-plugin-surefirebooterforkexception-there-was-an-error-in-the-f-->
+                <version>2.18.1</version>
                 <configuration>
                     <includes>
                         <include>**/*IT.java</include>
