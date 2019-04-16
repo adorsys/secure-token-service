@@ -1,0 +1,111 @@
+server:
+  port: 8885
+
+logging:
+  level:
+    de.adorsys: 'debug'
+    de.adorsys.sts: 'trace'
+    de.adorsys.sts.keyrotation: 'error'
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: db_user
+    password: db_user@123
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        default_schema: sts
+  flyway:
+    enabled: false
+    locations:
+      - db/migration/flyway/h2
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/migration/liquibase/changelog.yml
+    default-schema: public
+
+# Properties for test utils
+tests:
+  authentication:
+    client-id: moped-client
+    client-secret: my-special-client-secret
+    # the docker.host.ip and host.port placeholder is set by copy-resources-for-integration-tests execution defined in pom.xml
+    access-token-uri: http://@docker.host.ip@:@docker.port@/auth/realms/moped/protocol/openid-connect/token
+    user-info-uri: http://@docker.host.ip@:@docker.port@/auth/realms/moped/protocol/openid-connect/userinfo
+    end-session-endpoint: http://@docker.host.ip@:@docker.port@/auth/realms/moped/protocol/openid-connect/logout
+    use-secure-cookies: false
+
+sts:
+  secret-server:
+    secret-length: 8192
+    endpoint: /secret-server/token-exchange
+    encryption:
+      enabled: true
+      algorithm: A256GCMKW
+      encryption-method: A256GCM
+      key: "{\"kty\":\"oct\",\"kid\":\"63efe27c-6e37-464d-bd6a-1a7640888f62\",\"k\":\"7KmFL-k9Sib6Llt4CZnwHfxjIfAgbAbOdwbemIGhO6U\",\"alg\":\"A256GCM\"}"
+  authservers:
+    - name: local keycloak
+      # the docker.host.ip and host.port placeholder is set by copy-resources-for-integration-tests execution defined in pom.xml
+      iss-url: http://@docker.host.ip@:@docker.port@/auth/realms/moped
+      jwks-url: http://@docker.host.ip@:@docker.port@/auth/realms/moped/protocol/openid-connect/certs
+    - name: local sts secret server
+      iss-url:  http://localhost:8885
+      jwks-url:  http://localhost:8885/pop
+  resource-server-management:
+    resource-retriever:
+      http-connect-timeout: 10000
+      http-read-timeout: 60000
+      http-size-limit: 512000
+      cache:
+        enabled: true
+        maximum-size: 1000
+        expire-after-access: 10
+    resource-servers:
+      - audience: moped-client
+        jwks-url: http://localhost:8885/pop
+  keymanagement:
+    rotation:
+      check-interval: 500000
+      enc-key-pairs:
+        min-keys: 1
+        enabled: false
+      sign-key-pairs:
+        min-keys: 1
+        enabled: false
+      secret-keys:
+        min-keys: 1
+        enabled: false
+    persistence:
+      container-name: sts-secret-server-dev-container
+      password: 0123456789ABCDEF
+    keystore:
+      password: FEDCBA9876543210
+      type: UBER
+      name: sts-secret-server-dev-keystore
+      alias-prefix: sts-secret-server-dev-
+      keys:
+        enc-key-pairs:
+          initial-count: 1
+          algo: RSA
+          sig-algo: SHA256withRSA
+          size: 2048
+          name: Adorsys STS Secret Server DEV
+          validity-interval: 60000
+          legacy-interval: 120000
+        sign-key-pairs:
+          initial-count: 1
+          algo: RSA
+          sig-algo: SHA256withRSA
+          size: 2048
+          name: Adorsys STS Secret Server DEV
+          validity-interval: 60000
+          legacy-interval: 120000
+        secret-keys:
+          initial-count: 1
+          algo: AES
+          size: 256
+          validity-interval: 60000
+          legacy-interval: 120000

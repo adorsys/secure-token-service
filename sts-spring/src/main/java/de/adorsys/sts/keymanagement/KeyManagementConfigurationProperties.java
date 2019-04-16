@@ -1,7 +1,6 @@
 package de.adorsys.sts.keymanagement;
 
 import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -9,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Component
 @ConfigurationProperties(prefix = "sts.keymanagement")
@@ -32,6 +32,8 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
     }
 
     @Override
+    @NotNull
+    @Valid
     public KeyStoreProperties getKeystore() {
         return keystore;
     }
@@ -44,11 +46,11 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
     public static class PersistenceConfigurationProperties implements PersistenceProperties {
 
         @NotNull
-        @NotEmpty
+        @Size(min = 1)
         private String containerName;
 
         @NotNull
-        @NotEmpty
+        @Size(min = 1)
         private String password;
 
         @Override
@@ -74,19 +76,19 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
     public static class KeyStoreConfigurationProperties implements KeyStoreProperties {
 
         @NotNull
-        @NotEmpty
+        @Size(min = 1)
         private String password;
 
         @NotNull
-        @NotEmpty
+        @Size(min = 1)
         private String type;
 
         @NotNull
-        @NotEmpty
+        @Size(min = 1)
         private String name;
 
         @NotNull
-        @NotEmpty
+        @Size(min = 1)
         private String aliasPrefix;
 
         @Valid
@@ -187,11 +189,11 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
                 private Integer initialCount = 1;
 
                 @NotNull
-                @NotEmpty
+                @Size(min = 1)
                 private String algo;
 
                 @NotNull
-                @NotEmpty
+                @Size(min = 1)
                 private String sigAlgo;
 
                 @NotNull
@@ -199,7 +201,7 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
                 private Integer size;
 
                 @NotNull
-                @NotEmpty
+                @Size(min = 1)
                 private String name;
 
                 @NotNull
@@ -281,7 +283,7 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
                 private Integer initialCount = 1;
 
                 @NotNull
-                @NotEmpty
+                @Size(min = 1)
                 private String algo;
 
                 @NotNull

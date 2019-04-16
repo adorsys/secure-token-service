@@ -24,9 +24,6 @@ public class TokenExchangeController {
     private static final Logger logger = LoggerFactory.getLogger(TokenExchangeController.class);
 
     @Autowired
-    private HttpServletRequest servletRequest;
-
-    @Autowired
     private TokenExchangeService tokenExchangeService;
 
     @PostMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -113,7 +110,8 @@ public class TokenExchangeController {
                     required = false,
                     allowMultiple = false,
                     example = TokenExchangeConstants.JWT_OAUTH_TOKEN_TYPE)
-            @RequestParam(name = "actor_token_type", required = false) String actorTokenType
+            @RequestParam(name = "actor_token_type", required = false) String actorTokenType,
+            HttpServletRequest servletRequest
     ) {
         if(logger.isTraceEnabled()) logger.trace("POST tokenExchange started...");
 

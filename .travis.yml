@@ -10,8 +10,8 @@ cache:
   directories:
   - $HOME/.m2
 
-install:
-  - mvn --settings .travis/settings.xml clean install -DskipTests -Dmaven.javadoc.skip=true -B -V
+# skip `mvn install` command
+install: true
 
 script:
   - /bin/bash .travis/build.sh
