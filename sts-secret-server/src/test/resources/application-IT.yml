@@ -3,8 +3,8 @@ server:
 
 logging:
   level:
-    de.adorsys: 'debug'
-    de.adorsys.sts: 'trace'
+    de.adorsys: 'error'
+    de.adorsys.sts: 'error'
     de.adorsys.sts.keyrotation: 'error'
 
 spring:
