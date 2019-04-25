@@ -76,6 +76,7 @@
 		<module>sts-secret</module>
 		<module>sts-simple-encryption</module>
 		<module>sts-crypto-utils</module>
+		<module>keycloak-storage-provider</module>
 	</modules>
 
 	<dependencyManagement>
@@ -168,6 +169,37 @@
 				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-crypto-utils</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.keycloak</groupId>
+				<artifactId>keycloak-core</artifactId>
+				<version>${keycloak.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.keycloak</groupId>
+				<artifactId>keycloak-server-spi</artifactId>
+				<version>${keycloak.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.keycloak</groupId>
+				<artifactId>keycloak-server-spi-private</artifactId>
+				<version>${keycloak.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.keycloak</groupId>
+				<artifactId>keycloak-services</artifactId>
+				<version>${keycloak.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.keycloak</groupId>
+				<artifactId>keycloak-model-infinispan</artifactId>
+				<version>${keycloak.version}</version>
+				<scope>provided</scope>
 			</dependency>
 
 			<dependency>

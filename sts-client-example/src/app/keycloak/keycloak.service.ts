@@ -1,8 +1,8 @@
 import {Injectable} from "@angular/core";
-import {isNullOrUndefined, isUndefined} from "util";
 import {StsClientConfig} from "../env/sts-client-config.service";
 
-declare let Keycloak: any;
+import * as Keycloak_ from 'keycloak-js';
+export const Keycloak = Keycloak_;
 
 @Injectable()
 export class KeycloakService {
@@ -15,7 +15,7 @@ export class KeycloakService {
   }
 
   public init(): void {
-    const keycloak = new Keycloak({
+    const keycloak = Keycloak({
       "url": this.clientConfig.getKeycloakAuthUrl(),
       "realm": this.clientConfig.getKeycloakRealm(),
       "clientId": this.clientConfig.getKeycloakClientId()
@@ -29,8 +29,9 @@ export class KeycloakService {
         this.initSuccess = true;
         this.isAuthenticated = authenticated;
       })
-      .error(function () {
+      .error(e => {
         this.initSuccess = false;
+        console.log(e);
       });
 
     this.keycloak = keycloak;
@@ -53,7 +54,7 @@ export class KeycloakService {
   }
 
   get hasToken(): boolean {
-    return !isNullOrUndefined(this.keycloak.token);
+    return this.keycloak.token !== null && this.keycloak.token !== undefined;
   }
 
   private onTokenExpired() {
