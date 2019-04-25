@@ -46,3 +46,14 @@ docker tag $IMAGE_NAME $LATEST_IMAGE_NAME
 
 docker push $IMAGE_NAME
 docker push $LATEST_IMAGE_NAME
+
+# ----- push keycloak-storage-provider -----
+
+IMAGE_NAME="${STS_KEYCLOAK_ADAPTER_DOCKER_IMAGE_NAME}:${TRAVIS_TAG}"
+LATEST_IMAGE_NAME="${STS_KEYCLOAK_ADAPTER_DOCKER_IMAGE_NAME}:latest"
+
+docker build -t $IMAGE_NAME ./keycloak-storage-provider
+docker tag $IMAGE_NAME $LATEST_IMAGE_NAME
+
+docker push $IMAGE_NAME
+docker push $LATEST_IMAGE_NAME

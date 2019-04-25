@@ -6,9 +6,10 @@ services:
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: keycloak
     volumes:
-    - "./.docker/keycloak-db/data:/var/lib/postgresql/data"
+      - "./.docker/keycloak-db/data:/var/lib/postgresql/data"
   keycloak:
-    image: "adorsys/keycloak-sts-adapter:latest"
+    build: ./keycloak-storage-provider
+    image: "local/keycloak-sts-adapter:latest"
     environment:
       KEYCLOAK_PASSWORD: admin123
       KEYCLOAK_USER: admin
@@ -16,117 +17,120 @@ services:
       POSTGRES_PASSWORD: keycloak
       POSTGRES_PORT_5432_TCP_ADDR: keycloak_db
     ports:
-    - "8080:8080"
-    - "8787:8787"
+      - "8080:8080"
+      - "8787:8787"
     volumes:
-    - "./.docker/keycloak/data:/opt/jboss/keycloak/standalone/data"
+      - "./.docker/keycloak/data:/opt/jboss/keycloak/standalone/data"
     links:
-    - keycloak_db
+      - keycloak_db
     networks:
-    - sts_network
+      - sts_network
     command:
-    - "-b"
-    - "0.0.0.0"
-    - "--debug"
+      - "-b"
+      - "0.0.0.0"
+      - "--debug"
   post_process:
-    image: adorsys/keycloak-config-cli:latest
+    image: adorsys/keycloak-config-cli:v0.5.1-1-5.0.0
     depends_on:
-    - keycloak
+      - keycloak
     networks:
-    - sts_network
+      - sts_network
     volumes:
-    - ./keycloak-config/docker:/opt/keycloak-config-cli/configs
+      - ./keycloak-config/docker:/tmp/keycloak-config-cli/configs
     environment:
-    - KEYCLOAK_URL=http://keycloak:8080/auth
-    - KEYCLOAK_ADMIN=admin
-    - KEYCLOAK_ADMIN_PASSWORD=admin123
+      - KEYCLOAK_URL=http://keycloak:8080/auth
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin123
+      - WAIT_TIME_IN_SECONDS=300
+      - SPRING_PROFILES_INCLUDE=debug
+    command: config-cli
   sts-mongo:
     image: mongo:3.6.5
     container_name: sts_mongo
     environment:
       MONGO_INITDB_DATABASE: sts
     volumes:
-    - "./.docker/sts-mongo:/data/db"
+      - "./.docker/sts-mongo:/data/db"
     ports:
-    - 27017:27017
+      - 27017:27017
     command: --smallfiles
     networks:
-    - sts_network
+      - sts_network
   sts:
     build: ./sts-example
     image: "local/sts-example:latest"
     depends_on:
-    - sts-mongo
+      - sts-mongo
     networks:
-    - sts_network
+      - sts_network
     environment:
-    - SPRING_PROFILES_ACTIVE=mongo
-    - SPRING_DATA_MONGODB_DATABASE=sts
-    - SPRING_DATA_MONGODB_URI=mongodb://sts-mongo/sts
-    - logging_level_de_adorsys_sts_keyrotation_KeyRotationSchedule=debug
-    - SPRING_APPLICATION_JSON={"sts":{"secret-server-client":{"audience":"moped-client","secret-server-uri":"http://sts-secret-server:8080/secret-server/token-exchange","cache":{"enabled":true,"maximum-size":1000,"expire-after-access":10}},"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"},{"name":"secret-server","iss-url":"http://sts-secret-server:8080","jwks-url":"http://sts-secret-server:8080/pop"}],"resource-server-management":{"resource-retriever":{"http-connect-timeout":10000,"http-read-timeout":60000,"http-size-limit":512000},"resource-servers":[{"audience":"sts","jwks-url":"http://localhost:8888/pop"},{"audience":"sts-service-component","jwks-url":"http://sts-service-component:8887/pop"}]}}}
+      - SPRING_PROFILES_ACTIVE=mongo
+      - SPRING_DATA_MONGODB_DATABASE=sts
+      - SPRING_DATA_MONGODB_URI=mongodb://sts-mongo/sts
+      - logging_level_de_adorsys_sts_keyrotation_KeyRotationSchedule=debug
+      - SPRING_APPLICATION_JSON={"sts":{"secret-server-client":{"audience":"moped-client","secret-server-uri":"http://sts-secret-server:8080/secret-server/token-exchange","cache":{"enabled":true,"maximum-size":1000,"expire-after-access":10}},"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"},{"name":"secret-server","iss-url":"http://sts-secret-server:8080","jwks-url":"http://sts-secret-server:8080/pop"}],"resource-server-management":{"resource-retriever":{"http-connect-timeout":10000,"http-read-timeout":60000,"http-size-limit":512000},"resource-servers":[{"audience":"sts","jwks-url":"http://localhost:8888/pop"},{"audience":"sts-service-component","jwks-url":"http://sts-service-component:8887/pop"}]}}}
     ports:
-    - "8888:8888"
+      - "8888:8888"
   sts-service-component:
     build: ./sts-service-component-example
     image: "local/sts-service-component-example:latest"
     ports:
-    - "8887:8887"
+      - "8887:8887"
     environment:
-    - sts_audience_name=sts-service-component
-    - SPRING_PROFILES_ACTIVE=mongo
-    - SPRING_DATA_MONGODB_DATABASE=sts
-    - SPRING_DATA_MONGODB_URI=mongodb://sts-mongo/sts
-    - logging_level_de_adorsys_sts_keyrotation_KeyRotationSchedule=debug
-    - SPRING_APPLICATION_JSON={"sts":{"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}]}}
+      - sts_audience_name=sts-service-component
+      - SPRING_PROFILES_ACTIVE=mongo
+      - SPRING_DATA_MONGODB_DATABASE=sts
+      - SPRING_DATA_MONGODB_URI=mongodb://sts-mongo/sts
+      - logging_level_de_adorsys_sts_keyrotation_KeyRotationSchedule=debug
+      - SPRING_APPLICATION_JSON={"sts":{"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}]}}
     depends_on:
-    - sts-mongo
+      - sts-mongo
     networks:
-    - sts_network
+      - sts_network
   sts-service-component_2:
     build: ./sts-service-component-example
     image: "local/sts-service-component-example:latest"
     ports:
-    - "8886:8887"
+      - "8886:8887"
     environment:
-    - sts_audience_name=sts-service-component
-    - SPRING_PROFILES_ACTIVE=mongo
-    - SPRING_DATA_MONGODB_DATABASE=sts
-    - SPRING_DATA_MONGODB_URI=mongodb://sts-mongo/sts
-    - logging_level_de_adorsys_sts_keyrotation_KeyRotationSchedule=debug
-    - SPRING_APPLICATION_JSON={"sts":{"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}]}}
+      - sts_audience_name=sts-service-component
+      - SPRING_PROFILES_ACTIVE=mongo
+      - SPRING_DATA_MONGODB_DATABASE=sts
+      - SPRING_DATA_MONGODB_URI=mongodb://sts-mongo/sts
+      - logging_level_de_adorsys_sts_keyrotation_KeyRotationSchedule=debug
+      - SPRING_APPLICATION_JSON={"sts":{"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}]}}
     depends_on:
-    - sts-mongo
+      - sts-mongo
     networks:
-    - sts_network
+      - sts_network
   sts-client:
     build: ./sts-client-example
     image: local/sts-client-example:latest
     environment:
-    - "NG_KEYCLOAK_AUTH_URL=http://localhost:8080/auth"
-    - NG_KEYCLOAK_REALM=moped
-    - NG_KEYCLOAK_CLIENT_ID=moped-client
-    - NG_KEYCLOAK_SCOPE=sts-service-component
-    - NG_SERVICE_URL=http://localhost:8887/helloworld
-    - NG_SECRET_URL=http://localhost:8888/secret
+      - "NG_KEYCLOAK_AUTH_URL=http://localhost:8080/auth"
+      - NG_KEYCLOAK_REALM=moped
+      - NG_KEYCLOAK_CLIENT_ID=moped-client
+      - NG_KEYCLOAK_SCOPE=sts-service-component
+      - NG_SERVICE_URL=http://localhost:8887/helloworld
+      - NG_SECRET_URL=http://localhost:8888/secret
     networks:
-    - sts_network
+      - sts_network
     ports:
-    - 8090:8080
+      - 8090:8080
   sts-secret-server:
     build: ./sts-secret-server
     image: "local/sts-secret-server:latest"
     depends_on:
-    - sts-mongo
+      - sts-mongo
     networks:
-    - sts_network
+      - sts_network
     environment:
-    - SPRING_PROFILES_ACTIVE=mongo
-    - SPRING_DATA_MONGODB_DATABASE=sts
-    - SPRING_DATA_MONGODB_URI=mongodb://sts-mongo/sts
-    - SPRING_APPLICATION_JSON={"sts":{"secret-server":{"secret-length":8192,"endpoint":"/secret-server/token-exchange","encryption":{"enabled":true,"algorithm":"A256GCMKW","encryption-method":"A256GCM","key":"{\"kty\":\"oct\",\"kid\":\"63efe27c-6e37-464d-bd6a-1a7640888f62\",\"k\":\"7KmFL-k9Sib6Llt4CZnwHfxjIfAgbAbOdwbemIGhO6U\",\"alg\":\"A256GCM\"}"}},"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}],"resource-server-management":{"resource-retriever":{"http-connect-timeout":10000,"http-read-timeout":60000,"http-size-limit":512000,"cache":{"enabled":true,"maximum-size":1000,"expire-after-access":10}},"resource-servers":[{"audience":"moped-client","jwks-url":"http://sts:8888/pop"}]}}}
+      - SPRING_PROFILES_ACTIVE=mongo
+      - SPRING_DATA_MONGODB_DATABASE=sts
+      - SPRING_DATA_MONGODB_URI=mongodb://sts-mongo/sts
+      - SPRING_APPLICATION_JSON={"sts":{"secret-server":{"secret-length":8192,"endpoint":"/secret-server/token-exchange","encryption":{"enabled":true,"algorithm":"A256GCMKW","encryption-method":"A256GCM","key":"{\"kty\":\"oct\",\"kid\":\"63efe27c-6e37-464d-bd6a-1a7640888f62\",\"k\":\"7KmFL-k9Sib6Llt4CZnwHfxjIfAgbAbOdwbemIGhO6U\",\"alg\":\"A256GCM\"}"}},"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}],"resource-server-management":{"resource-retriever":{"http-connect-timeout":10000,"http-read-timeout":60000,"http-size-limit":512000,"cache":{"enabled":true,"maximum-size":1000,"expire-after-access":10}},"resource-servers":[{"audience":"moped-client","jwks-url":"http://sts:8888/pop"}]}}}
     ports:
-    - "8885:8080"
+      - "8885:8080"
 
 networks:
   sts_network:

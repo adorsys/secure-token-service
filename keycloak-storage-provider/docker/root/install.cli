@@ -1,0 +1,13 @@
+embed-server --std-out=echo
+
+run-batch --file=/install_sts_keycloak-storage-provider.cli
+
+stop-embedded-server
+
+
+
+embed-server --server-config=standalone-ha.xml --std-out=echo
+
+run-batch --file=/install_sts_keycloak-storage-provider.cli
+
+stop-embedded-server
