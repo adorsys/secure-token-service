@@ -42,16 +42,16 @@
 	</scm>
 
 	<properties>
-		<spring-boot.version>2.1.2.RELEASE</spring-boot.version>
-		<swagger.version>2.6.1</swagger.version>
 		<java.version>1.8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZZ</maven.build.timestamp.format>
+		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZZ</maven.build.timestamp.format>
-		<maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
+		<spring-boot.version>2.1.2.RELEASE</spring-boot.version>
+		<springfox-swagger.version>2.9.2</springfox-swagger.version>
 		<lock-persistence.version>0.3.2</lock-persistence.version>
 		<jackson.version>2.9.8</jackson.version>
 		<bouncycastle.version>1.61</bouncycastle.version>
@@ -93,12 +93,12 @@
 			<dependency>
 				<groupId>io.springfox</groupId>
 				<artifactId>springfox-swagger2</artifactId>
-				<version>${swagger.version}</version>
+				<version>${springfox-swagger.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>io.springfox</groupId>
 				<artifactId>springfox-swagger-ui</artifactId>
-				<version>${swagger.version}</version>
+				<version>${springfox-swagger.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
@@ -205,7 +205,7 @@
 			<dependency>
 				<groupId>com.nimbusds</groupId>
 				<artifactId>nimbus-jose-jwt</artifactId>
-				<version>7.0</version>
+				<version>7.1</version>
 			</dependency>
 
 			<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
@@ -258,27 +258,27 @@
 			<dependency>
 				<groupId>io.swagger</groupId>
 				<artifactId>swagger-annotations</artifactId>
-				<version>1.5.21</version>
+				<version>1.5.22</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>27.0.1-jre</version>
+				<version>27.1-jre</version>
 			</dependency>
 
 			<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
-				<version>3.8.1</version>
+				<version>3.9</version>
 			</dependency>
 
 			<!-- Database -->
 			<dependency>
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-core</artifactId>
-				<version>5.2.1</version>
+				<version>5.2.4</version>
 				<scope>runtime</scope>
 			</dependency>
 			<dependency>
@@ -290,7 +290,7 @@
 			<dependency>
 				<groupId>com.h2database</groupId>
 				<artifactId>h2</artifactId>
-				<version>1.4.197</version>
+				<version>1.4.199</version>
 				<scope>runtime</scope>
 			</dependency>
 
