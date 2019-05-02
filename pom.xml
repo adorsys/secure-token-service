@@ -55,10 +55,11 @@
 		<lock-persistence.version>0.3.2</lock-persistence.version>
 		<jackson.version>2.9.8</jackson.version>
 		<bouncycastle.version>1.61</bouncycastle.version>
-		<keycloak.version>5.0.0</keycloak.version>
+		<keycloak.version>6.0.1</keycloak.version>
+		<keycloak-config-cli.version>v0.6.2</keycloak-config-cli.version>
 		<scmBranch />
 	</properties>
-	
+
 	<modules>
 		<module>sts-common</module>
 		<module>sts-pop</module>

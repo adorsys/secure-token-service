@@ -124,7 +124,7 @@
 
                         <image>
                             <alias>it-keycloak-import</alias>
-                            <name>adorsys/keycloak-config-cli:v0.5.1-1-${keycloak.version}</name>
+                            <name>adorsys/keycloak-config-cli:${keycloak-config-cli.version}-${keycloak.version}</name>
 
                             <run>
                                 <env>
