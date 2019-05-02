@@ -1,4 +1,4 @@
-FROM jboss/keycloak:5.0.0
+FROM jboss/keycloak:6.0.1
 
 COPY docker/root /
 

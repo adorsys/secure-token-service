@@ -16,7 +16,7 @@ services:
     networks:
       - sts_network
   post_process:
-    image: adorsys/keycloak-config-cli:v0.5.1-1-5.0.0
+    image: adorsys/keycloak-config-cli:v0.6.2-6.0.1
     volumes:
       - ./keycloak-config/dev:/tmp/keycloak-config-cli/configs
     environment:
