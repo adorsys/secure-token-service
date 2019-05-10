@@ -247,6 +247,8 @@ sts:
       jwks-url: "http://my-moped-application:8080/pop"
 ```
 
+For further information consider the [standalone secret-server documentation](https://github.com/adorsys/secure-token-service/tree/master/sts-secret-server).
+
 #### Client side
 
 On client-side you can communicate with a secret-server via the `SecretServerClient` bean. The interface is quite
