@@ -271,6 +271,12 @@ sts:
       expire-after-access: <(integer, optional, default: 10) defines the expiration time in minutes>
 ```
 
+#### Standalone secret-server
+
+You can find a standalone, fully-configurable secret-server in submodule `sts-secret-server`. Please consider 
+ [the standalone secret-server documentation](https://github.com/adorsys/secure-token-service/tree/master/sts-secret-server)
+ for further information.
+
 ## Build this solution
 
 ### Within docker
