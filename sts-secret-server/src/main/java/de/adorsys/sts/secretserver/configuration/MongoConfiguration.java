@@ -1,4 +1,4 @@
-package de.adorsys.sts.secretserver;
+package de.adorsys.sts.secretserver.configuration;
 
 import de.adorsys.sts.persistence.mongo.config.EnableMongoPersistence;
 import org.springframework.context.annotation.Configuration;
