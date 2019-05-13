@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    include: jpa
+
   liquibase:
     default-schema: public
 
@@ -13,8 +16,3 @@ spring:
     hibernate:
       ddl-auto: none
     database-platform: org.hibernate.dialect.H2Dialect
-
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration

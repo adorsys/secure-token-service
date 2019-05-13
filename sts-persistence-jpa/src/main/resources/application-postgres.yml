@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    include: jpa
+
   liquibase:
     default-schema: public
 
@@ -12,8 +15,3 @@ spring:
     show-sql: false
     database-platform: org.hibernate.dialect.PostgreSQL94Dialect
     properties.hibernate.temp.use_jdbc_metadata_defaults: false
-
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
