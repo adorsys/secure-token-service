@@ -16,20 +16,8 @@ import javax.validation.constraints.Size;
 public class KeyManagementConfigurationProperties implements KeyManagementProperties {
 
     @Valid
-    private PersistenceConfigurationProperties persistence;
-
-    @Valid
     @NotNull
     private KeyStoreConfigurationProperties keystore;
-
-    @Override
-    public PersistenceProperties getPersistence() {
-        return persistence;
-    }
-
-    public void setPersistence(PersistenceConfigurationProperties persistence) {
-        this.persistence = persistence;
-    }
 
     @Override
     @NotNull
@@ -40,36 +28,6 @@ public class KeyManagementConfigurationProperties implements KeyManagementProper
 
     public void setKeystore(KeyStoreConfigurationProperties keystore) {
         this.keystore = keystore;
-    }
-
-    @Validated
-    public static class PersistenceConfigurationProperties implements PersistenceProperties {
-
-        @NotNull
-        @Size(min = 1)
-        private String containerName;
-
-        @NotNull
-        @Size(min = 1)
-        private String password;
-
-        @Override
-        public String getContainerName() {
-            return containerName;
-        }
-
-        public void setContainerName(String containerName) {
-            this.containerName = containerName;
-        }
-
-        @Override
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
     }
 
     @Validated

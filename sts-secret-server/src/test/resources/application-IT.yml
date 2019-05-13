@@ -83,9 +83,6 @@ sts:
       secret-keys:
         min-keys: 1
         enabled: false
-    persistence:
-      container-name: sts-secret-server-dev-container
-      password: 0123456789ABCDEF
     keystore:
       password: FEDCBA9876543210
       type: UBER
