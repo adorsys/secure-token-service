@@ -2,6 +2,25 @@
 
 Provides a standalone configurable secret-server instance.
 
+## Run the application
+
+By default the secret-server is listening on port 8080 and is fully configurable via the [spring-boot mechanism](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html).
+
+### Java environment
+
+You can run the spring-boot application via its `jar`-file easily:
+```bash
+$ java -jar sts-secret-server.jar
+```
+
+### Docker environment
+
+You also can use the Docker-image pulled from Docker-Hub:
+
+```bash
+$ docker run adorsys/sts-secret-server:latest
+```
+
 ## Configuration
 
 ```
@@ -55,8 +74,8 @@ sts:
 # Here is an example:
   resource-server-management:
     resource-servers:
-    - audience: "moped-client"
-      jwks-url: "http://your-client-service/pop"
+      - audience: <(text) the name of your resource server / the audience key>
+        jwks-url: <(text, url) the jwks-url of the resource-server, like "http://localhost:8888/pop">
     resource-retriever:
       http-connect-timeout: <http connect timeout for JWK set retrieval in milliseconds, default: 250>
       http-read-timeout: <http read timeout for JWK set retrieval in milliseconds, default: 250>
@@ -83,22 +102,3 @@ The secret server is able to store secrets in different types of databases:
 
 Please use the corresponding spring profile.
 You also may consider the persistence documentation for [JPA](https://github.com/adorsys/secure-token-service/tree/master/sts-persistence-jpa#sts-persistence-jpa) and [mongo](https://github.com/adorsys/secure-token-service/tree/master/sts-persistence-mongo#sts-persistence-mongo) for further information.
-
-## Run the application
-
-By default the secret-server is listening on port 8080 and is fully configurable via the [spring-boot mechanism](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html).
-
-### Java environment
-
-You can run the spring-boot application via its `jar`-file easily:
-```bash
-$ java -jar sts-secret-server.jar
-```
-
-### Docker environment
-
-You also can use the Docker-image pulled from Docker-Hub:
-
-```bash
-$ docker run adorsys/sts-secret-server:latest
-```
