@@ -128,7 +128,23 @@ services:
       - SPRING_PROFILES_ACTIVE=mongo
       - SPRING_DATA_MONGODB_DATABASE=sts
       - SPRING_DATA_MONGODB_URI=mongodb://sts-mongo/sts
-      - SPRING_APPLICATION_JSON={"sts":{"secret-server":{"secret-length":8192,"endpoint":"/secret-server/token-exchange","encryption":{"enabled":true,"algorithm":"A256GCMKW","encryption-method":"A256GCM","key":"{\"kty\":\"oct\",\"kid\":\"63efe27c-6e37-464d-bd6a-1a7640888f62\",\"k\":\"7KmFL-k9Sib6Llt4CZnwHfxjIfAgbAbOdwbemIGhO6U\",\"alg\":\"A256GCM\"}"}},"authservers":[{"name":"local keycloak","iss-url":"http://localhost:8080/auth/realms/moped","jwks-url":"http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs"}],"resource-server-management":{"resource-retriever":{"http-connect-timeout":10000,"http-read-timeout":60000,"http-size-limit":512000,"cache":{"enabled":true,"maximum-size":1000,"expire-after-access":10}},"resource-servers":[{"audience":"moped-client","jwks-url":"http://sts:8888/pop"}]}}}
+      - sts_secret-server_secret-length=8192
+      - sts_secret-server_endpoint=/secret-server/token-exchange
+      - sts_secret-server_encryption_enabled=true
+      - sts_secret-server_encryption_algorithm=A256GCMKW
+      - sts_secret-server_encryption_encryption-method=A256GCM
+      - sts_secret-server_encryption_key={"kty":"oct","k":"7KmFL-k9Sib6Llt4CZnwHfxjIfAgbAbOdwbemIGhO6U"}
+      - sts_authservers_0_name=local keycloak
+      - sts_authservers_0_iss-url=http://localhost:8080/auth/realms/moped
+      - sts_authservers_0_jwks-url=http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs
+      - sts_resource-server-management_resource-retriever_http-read-timeout=60000
+      - sts_resource-server-management_resource-retriever_http-size-limit=512000
+      - sts_resource-server-management_resource-retriever_cache_enabled=true
+      - sts_resource-server-management_resource-retriever_cache_maximum-size=1000
+      - sts_resource-server-management_resource-retriever_cache_expire-after-access=10
+      - sts_resource-server-management_resourceservers_0_audience=moped-client
+      - sts_resource-server-management_resourceservers_0_jwks-url=http://sts:8888/pop
+      - sts_keymanagement_keystore_password=NiPae6AiOoto2Eeyaode9LeeOhngi4Ao
     ports:
       - "8885:8080"
 
