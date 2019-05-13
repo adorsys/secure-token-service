@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class KeyRotationSchedule {
-    private final static Logger LOG = LoggerFactory.getLogger(KeyRotationSchedule.class);
+    private static final Logger LOG = LoggerFactory.getLogger(KeyRotationSchedule.class);
 
     private final KeyRotationService keyRotationService;
     private final KeyStoreRepository keyStoreRepository;

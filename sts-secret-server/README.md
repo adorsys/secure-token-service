@@ -89,6 +89,66 @@ sts:
 
 Please consider [Resource-Server-Configuration](https://github.com/adorsys/secure-token-service#resource-server-configuration) for further configuration.
 
+### Key-Management
+
+The secret-server has an own [Proof-Of-Possession](https://github.com/adorsys/secure-token-service#proof-of-possession) endpoint including key-management feature.
+Following section describes the configuration for the key-management/keystore:
+
+```
+sts:
+  keymanagement:
+    keystore:
+      password: <(text*) the key-store encryption password, mandatory>
+      type: <(text) the key-store type, default: "UBER">
+      name: <(text) the key-store name, default: "sts-secret-server-keystore">
+      alias-prefix: <(text) the prefix of your generated key-aliases in this key-store, default: "sts-secret-server-">
+      keys:
+        enc-key-pairs:
+          initial-count: <(integer) initial count of generated encryption key-pairs, default: 5>
+          algo: <(text) the key-pair algorithm, default: "RSA">
+          sig-algo: <(text) the key-pair signature algorithm, default: "SHA256withRSA">
+          size: <(integer) the key size, default: 2048>
+          name: <(text) the string-representation of your key-pair, default: Adorsys STS Secret Server>
+          validity-interval: <(long) the interval in milliseconds the keys can be used for encryption, default: 3600000>
+          legacy-interval: <(long) the interval in milliseconds the keys can be used for decryption, default: 86400000>
+        sign-key-pairs:
+          initial-count: <(integer) initial count of generated signature key-pairs, default: 5>
+          algo: <(text) the key-pair algorithm, default: "RSA">
+          sig-algo: <(text) the key-pair signature algorithm, default: "SHA256withRSA">
+          size: <(integer) the key size, default: 2048>
+          name: <(text) the string-representation of your key-pair, default: Adorsys STS Secret Server>
+          validity-interval: <(long) the interval in milliseconds the keys can be used for signature creation, default: 3600000>
+          legacy-interval: <(long) the interval in milliseconds the keys can be used for signature check, default: 86400000>
+        secret-keys:
+          initial-count: <(integer) initial count of generated secret-keys, default: 5>
+          algo: <(text) the key algorithm, default "AES">
+          size: <(integer) the key size, default: 256>
+          validity-interval: <(long) the interval in milliseconds the keys can be used for encryption, default: 3600000>
+          legacy-interval: <(long) the interval in milliseconds the keys can be used for decryption, default: 86400000>
+```
+
+The value for `sts.keymanagement.keystore.password` can be any string with minimum length of 1.
+
+#### Key-Rotation
+
+The following section describes the key-management/key-rotation configuration:
+
+```
+sts:
+  keymanagement:
+    rotation:
+      check-interval: <(long) the time interval in milliseconds the key-rotation will check the keys, default: 60000>
+      enc-key-pairs:
+        min-keys: <(integer) minimal count of stored encryption key-pairs, default: 5>
+        enabled: <(boolean) defines if the key-rotation is enabled for encryption key-pairs, default: true>
+      sign-key-pairs:
+        min-keys: <(integer) minimal count of stored signature key-pairs, default: 5>
+        enabled: <(boolean) defines if the key-rotation is enabled for signature key-pairs, default: true>
+      secret-keys:
+        min-keys: <(integer) minimal count of stored secret keys, default: 5>
+        enabled: <(boolean) defines if the key-rotation is enabled for secret-keys, default: true>
+```
+
 ### Persistence
 
 The secret server is able to store secrets in different types of databases:

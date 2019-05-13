@@ -132,16 +132,16 @@ You may enable the key-rotation feature by adding the `@EnableKeyRotation` annot
 sts:
   keymanagement:
     rotation:
-      check-interval: <(long) the time interval in milliseconds the key-rotation will check the keys>
+      check-interval: <(long) the time interval in milliseconds the key-rotation will check the keys, default: 60000>
       enc-key-pairs:
-        min-keys: <(integer) minimal count of stored encryption key-pairs>
-        enabled: <(boolean) defines if the key-rotation is enabled for encryption key-pairs>
+        min-keys: <(integer) minimal count of stored encryption key-pairs, default: 5>
+        enabled: <(boolean) defines if the key-rotation is enabled for encryption key-pairs, default: false>
       sign-key-pairs:
-        min-keys: <(integer) minimal count of stored signature key-pairs>
-        enabled: <(boolean) defines if the key-rotation is enabled for signature key-pairs>
+        min-keys: <(integer) minimal count of stored signature key-pairs, default: 5>
+        enabled: <(boolean) defines if the key-rotation is enabled for signature key-pairs, default: false>
       secret-keys:
-        min-keys: <(integer) minimal count of stored secret keys>
-        enabled: <(boolean) defines if the key-rotation is enabled for secret-keys>
+        min-keys: <(integer) minimal count of stored secret keys, default: 5>
+        enabled: <(boolean) defines if the key-rotation is enabled for secret-keys, default: false>
 ```
 
 #### Key-generation
@@ -152,7 +152,7 @@ You have to configure the properties of the key-generation in your `application.
 sts:
   keymanagement:
     keystore:
-      password: <(text) the key-store password>
+      password: <(text) the key-store encryption password>
       type: <(text) the key-store type, like "UBER">
       name: <(text) the key-store name>
       alias-prefix: <(text) the prefix of your generated key-aliases in this key-store>

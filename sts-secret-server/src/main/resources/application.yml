@@ -42,11 +42,7 @@ sts:
       secret-keys:
         min-keys: 5
         enabled: true
-    persistence:
-      container-name: sts-secret-server-container
-      password: uqu7Reehie0Yaipohfi6pie2eiTh6sie
     keystore:
-      password: feizohHoonahsoh0phiechomeiphooNg
       type: UBER
       name: sts-secret-server-keystore
       alias-prefix: sts-secret-server-
