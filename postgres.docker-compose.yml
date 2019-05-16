@@ -65,6 +65,7 @@ services:
     networks:
       - sts_network
     environment:
+      - JAVA_OPTS=-Xmx256m
       - SPRING_PROFILES_ACTIVE=postgres
       - SPRING_DATASOURCE_URL=jdbc:postgresql://sts-db:5432/sts
       - logging_level_de_adorsys_sts_keyrotation_KeyRotationSchedule=debug
@@ -77,6 +78,7 @@ services:
     ports:
       - "8887:8887"
     environment:
+      - JAVA_OPTS=-Xmx256m
       - sts_audience_name=sts-service-component
       - SPRING_PROFILES_ACTIVE=postgres
       - SPRING_DATASOURCE_URL=jdbc:postgresql://sts-db:5432/sts
@@ -92,6 +94,7 @@ services:
     ports:
       - "8886:8887"
     environment:
+      - JAVA_OPTS=-Xmx256m
       - sts_audience_name=sts-service-component
       - SPRING_PROFILES_ACTIVE=postgres
       - SPRING_DATASOURCE_URL=jdbc:postgresql://sts-db:5432/sts
@@ -123,6 +126,7 @@ services:
     networks:
       - sts_network
     environment:
+      - JAVA_OPTS=-Xmx256m
       - SPRING_PROFILES_ACTIVE=postgres
       - SPRING_DATASOURCE_URL=jdbc:postgresql://sts-db:5432/sts
       - sts_secret-server_secret-length=8192
