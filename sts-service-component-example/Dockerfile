@@ -1,4 +1,4 @@
-FROM adorsys/java:8
+FROM amazoncorretto:8
 
 WORKDIR /opt/
 COPY ./target/sts-service-component-example.jar .
