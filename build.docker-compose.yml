@@ -6,6 +6,7 @@ services:
       - ./:/opt/src
       - ./.docker-build/.m2:/tmp/m2
     environment:
+      - JAVA_TOOL_OPTIONS=-Xmx2048m
       - MAVEN_OPTS=-Dmaven.repo.local=/tmp/m2/repository
     working_dir: /opt/src
     entrypoint: ""
