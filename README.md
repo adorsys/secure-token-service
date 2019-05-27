@@ -305,6 +305,12 @@ docker-compose --file mysql8.docker-compose.yml down --remove-orphans && docker-
 docker-compose --file mongo.docker-compose.yml down --remove-orphans && docker-compose --file mongo.docker-compose.yml up --build
 ```
 
+### without building locally and pulling images from Docker-Hub
+
+```
+docker-compose --file hub.docker-compose.yml down --remove-orphans && docker-compose --file hub.docker-compose.yml pull && docker-compose --file hub.docker-compose.yml up
+```
+
 | Container | URL |
 |-----------|-----|
 | keycloak  | http://localhost:8080 |
