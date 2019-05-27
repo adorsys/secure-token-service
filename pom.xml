@@ -53,10 +53,10 @@
 		<spring-boot.version>2.1.2.RELEASE</spring-boot.version>
 		<springfox-swagger.version>2.9.2</springfox-swagger.version>
 		<lock-persistence.version>0.3.2</lock-persistence.version>
-		<jackson.version>2.9.8</jackson.version>
+		<jackson.version>2.9.9</jackson.version>
 		<bouncycastle.version>1.61</bouncycastle.version>
 		<keycloak.version>6.0.1</keycloak.version>
-		<keycloak-config-cli.version>v0.6.2</keycloak-config-cli.version>
+		<keycloak-config-cli.version>v0.6.6</keycloak-config-cli.version>
 		<scmBranch />
 	</properties>
 
@@ -206,7 +206,7 @@
 			<dependency>
 				<groupId>com.nimbusds</groupId>
 				<artifactId>nimbus-jose-jwt</artifactId>
-				<version>7.1</version>
+				<version>7.2.1</version>
 			</dependency>
 
 			<!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
