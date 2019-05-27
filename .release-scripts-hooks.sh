@@ -72,3 +72,46 @@ function set_modules_version {
   cd $SCRIPT_PATH/.. && mvn -B versions:set -DnewVersion=$1
   cd $SCRIPT_PATH/../sts-client-example && npm version --no-git-tag-version $1
 }
+
+# Builds the commit message used for your commit which setups the next snapshot version
+# Parameter $1 - release version as text
+function get_next_snapshot_commit_message {
+  echo "[skip ci] Start next iteration with $1"
+}
+
+# Builds the commit message for your commit which setups the hotfix branch
+# Parameter $1 - hotfix snapshot version
+function get_start_hotfix_commit_message {
+  echo "[skip ci] Start hotfix $1"
+}
+
+# Builds the commit message used for setup the next snapshot version after hotfix is released
+# Parameter $1 - next snapshot version
+# Parameter $2 - released hotfix version
+function get_next_snapshot_commit_message_after_hotfix {
+  echo "[skip ci] Start next iteration with $1 after hotfix $2"
+}
+
+# Builds the commit message used for your release commit
+# Parameter $1 - release version as text
+function get_release_commit_message {
+  echo "[release] Prepare release $1"
+}
+
+# Builds the tag message used for your release tag
+# Parameter $1 - release version as text
+function get_release_tag_message {
+  echo "[release] Release $1"
+}
+
+# Builds the chommit message for your hotfix release commit
+# Parameter $1 - hotfix release version
+function get_release_hotfix_commit_message {
+  echo "[release] Release hotfix $1"
+}
+
+# Builds the tag message used for your hotfix release tag
+# Parameter $1 - hotfix release version
+function get_hotfix_relesae_tag_message {
+  echo "[release] Release $1"
+}
