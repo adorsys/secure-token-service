@@ -170,3 +170,7 @@ You also may consider the persistence documentation for [JPA](https://github.com
 | `/secret-server/token-exchange` | `sts.secret-server.endpoint` | The actual endpoint to get the secret via token-exchange |
 | `/swagger-ui.html`              | | [Swagger UI](https://swagger.io/tools/swagger-ui/) to document and test endpoints |
 | `/actuator`                     | | [Spring boot's actuator endpoints](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html) |
+
+### Secret server's behaviour
+
+![image](doc/secret-server.draw.io.png)
