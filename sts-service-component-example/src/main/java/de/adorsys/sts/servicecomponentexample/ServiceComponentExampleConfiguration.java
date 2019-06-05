@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 @EnablePOP
 @EnableDecryption
 @EnableKeyRotation
-@EnableJpaPersistence
 @EnableSecretDecryption
 @EnableSecurityContextSecretProviding
 @EnableJacksonObjectMapping

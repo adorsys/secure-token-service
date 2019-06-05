@@ -19,6 +19,10 @@ spring:
     enabled: true
     change-log: classpath:/db/migration/liquibase/changelog.yml
     default-schema: public
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
 
 sts:
   secret:
