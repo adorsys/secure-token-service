@@ -299,6 +299,12 @@ docker-compose --file postgres.docker-compose.yml down --remove-orphans && docke
 docker-compose --file mysql8.docker-compose.yml down --remove-orphans && docker-compose --file mysql8.docker-compose.yml up --build
 ```
 
+### with mysql 5 database
+
+```
+docker-compose --file mysql5.docker-compose.yml down --remove-orphans && docker-compose --file mysql5.docker-compose.yml up --build
+```
+
 ### with mongo database
 
 ```
