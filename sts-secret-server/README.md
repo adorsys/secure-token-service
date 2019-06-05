@@ -162,3 +162,11 @@ The secret server is able to store secrets in different types of databases:
 
 Please use the corresponding spring profile.
 You also may consider the persistence documentation for [JPA](https://github.com/adorsys/secure-token-service/tree/master/sts-persistence-jpa#sts-persistence-jpa) and [mongo](https://github.com/adorsys/secure-token-service/tree/master/sts-persistence-mongo#sts-persistence-mongo) for further information.
+
+### Available endpoints
+
+| Endpoint | is adjustable via property | Description |
+|----------|----------------------------|-------------|
+| `/secret-server/token-exchange` | `sts.secret-server.endpoint` | The actual endpoint to get the secret via token-exchange |
+| `/swagger-ui.html`              | | [Swagger UI](https://swagger.io/tools/swagger-ui/) to document and test endpoints |
+| `/actuator`                     | | [Spring boot's actuator endpoints](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html) |
