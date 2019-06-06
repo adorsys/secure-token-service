@@ -1,6 +1,6 @@
 {
   "name": "sts-client-example",
-  "version": "0.29.5-2",
+  "version": "0.30.0-SNAPSHOT",
   "license": "MIT",
   "scripts": {
     "ng": "npx ng ",
