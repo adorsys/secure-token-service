@@ -8,7 +8,6 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
-import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;
 import java.util.ArrayList;

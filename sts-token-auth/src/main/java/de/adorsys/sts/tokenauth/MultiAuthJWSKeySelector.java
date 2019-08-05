@@ -11,22 +11,20 @@ import java.util.Collections;
 import java.util.List;
 
 public class MultiAuthJWSKeySelector<C extends SecurityContext> implements JWSKeySelector<C> {
+    private AuthServer authServer;
 
-	private AuthServer authServer;
-	
-	@Override
-	public List<? extends Key> selectJWSKeys(JWSHeader header, C context) throws KeySourceException {
-		// Check signature
-		String keyID = header.getKeyID();
-		if(StringUtils.isBlank(keyID)) return Collections.emptyList();
-		
-		Key key = authServer.getJWK(keyID);
-		if(key==null)return Collections.emptyList();
-		
-		return Collections.singletonList(key);
-	}
+    @Override
+    public List<? extends Key> selectJWSKeys(JWSHeader header, C context) throws KeySourceException {
+        // Check signature
+        String keyID = header.getKeyID();
+        if (StringUtils.isBlank(keyID)) return Collections.emptyList();
 
-	public MultiAuthJWSKeySelector(AuthServer authServer) {
-		this.authServer = authServer;
-	}
+        Key key = authServer.getJWK(keyID);
+
+        return Collections.singletonList(key);
+    }
+
+    public MultiAuthJWSKeySelector(AuthServer authServer) {
+        this.authServer = authServer;
+    }
 }

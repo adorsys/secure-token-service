@@ -38,41 +38,39 @@ public class AuthServer {
         this.refreshIntervalSeconds = refreshIntervalSeconds;
     }
 
-    public Key getJWK(String keyID) {
+    public Key getJWK(String keyID) throws JsonWebKeyRetrievalException {
         Date now = new Date();
         if (refreshExp == null || now.after(refreshExp)) {
-            // Refresh
             refreshExp = DateUtils.addSeconds(now, refreshIntervalSeconds);
+
             try {
                 jwkSource = new RemoteJWKSet<>(new URL(this.jwksUrl));
             } catch (MalformedURLException e) {
-                // Log exception
-                return null;
+                throw new JsonWebKeyRetrievalException(e);
             }
         }
         JWKSelector jwkSelector = new JWKSelector(new JWKMatcher.Builder().keyID(keyID).build());
-        SecurityContext context = null;
+
         List<JWK> list;
         try {
-            list = jwkSource.get(jwkSelector, context);
+            list = jwkSource.get(jwkSelector, null);
         } catch (KeySourceException e) {
-            // Log key source exception
-            return null;
+            throw new JsonWebKeyRetrievalException(e);
         }
-        if (list.isEmpty()) return null;
+
+        if (list.isEmpty()) throw new JsonWebKeyRetrievalException("Unable to retrieve keys: received JWKSet is empty");
+
         JWK jwk = list.iterator().next();
         if (jwk instanceof RSAKey) {
             try {
                 return ((RSAKey) jwk).toPublicKey();
             } catch (JOSEException e) {
-                // Log key source exception
-                return null;
+                throw new JsonWebKeyRetrievalException(e);
             }
         } else if (jwk instanceof SecretJWK) {
             return ((SecretJWK) jwk).toSecretKey();
         } else {
-            // log unknown key type
-            return null;
+            throw new JsonWebKeyRetrievalException("unknown key type " + jwk.getClass());
         }
     }
 
@@ -106,5 +104,15 @@ public class AuthServer {
 
     public void setRefreshIntervalSeconds(int refreshIntervalSeconds) {
         this.refreshIntervalSeconds = refreshIntervalSeconds;
+    }
+
+    public class JsonWebKeyRetrievalException extends RuntimeException {
+        public JsonWebKeyRetrievalException(Throwable cause) {
+            super(cause);
+        }
+
+        public JsonWebKeyRetrievalException(String message) {
+            super(message);
+        }
     }
 }
