@@ -54,6 +54,7 @@ public class AuthServer {
         List<JWK> list;
         try {
             list = jwkSource.get(jwkSelector, null);
+            onJsonWebKeySetRetrieved(list);
         } catch (KeySourceException e) {
             throw new JsonWebKeyRetrievalException(e);
         }
@@ -104,6 +105,9 @@ public class AuthServer {
 
     public void setRefreshIntervalSeconds(int refreshIntervalSeconds) {
         this.refreshIntervalSeconds = refreshIntervalSeconds;
+    }
+
+    protected void onJsonWebKeySetRetrieved(List<JWK> jwks) {
     }
 
     public class JsonWebKeyRetrievalException extends RuntimeException {

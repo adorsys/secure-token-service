@@ -1,5 +1,6 @@
 package de.adorsys.sts.token.authentication;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.sts.tokenauth.AuthServer;
 import de.adorsys.sts.tokenauth.AuthServersProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,17 @@ import java.util.stream.Collectors;
 public class ConfigurationPropertiesAuthServerProvider implements AuthServersProvider {
 
     private final AuthServerConfigurationProperties authServerConfigurationProperties;
+    private final ObjectMapper objectMapper;
 
     private Map<String, AuthServer> authServers;
 
     @Autowired
-    public ConfigurationPropertiesAuthServerProvider(AuthServerConfigurationProperties authServerConfigurationProperties) {
+    public ConfigurationPropertiesAuthServerProvider(
+            AuthServerConfigurationProperties authServerConfigurationProperties,
+            ObjectMapper objectMapper
+    ) {
         this.authServerConfigurationProperties = authServerConfigurationProperties;
+        this.objectMapper = objectMapper;
     }
 
 
@@ -34,7 +40,7 @@ public class ConfigurationPropertiesAuthServerProvider implements AuthServersPro
     }
 
     private Map<String, AuthServer> getOrReadAuthServers() {
-        if(authServers == null) {
+        if (authServers == null) {
             List<AuthServerConfigurationProperties.AuthServerProperties> authServersProperties = authServerConfigurationProperties.getAuthservers();
             authServers = authServersProperties.stream()
                     .map(this::mapFromProperties)
@@ -45,11 +51,12 @@ public class ConfigurationPropertiesAuthServerProvider implements AuthServersPro
     }
 
     private AuthServer mapFromProperties(AuthServerConfigurationProperties.AuthServerProperties properties) {
-        return new AuthServer(
+        return new LoggingAuthServer(
                 properties.getName(),
                 properties.getIssUrl(),
                 properties.getJwksUrl(),
-                properties.getRefreshIntervalSeconds()
+                properties.getRefreshIntervalSeconds(),
+                objectMapper
         );
     }
 }
