@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Api(value = "/pop", tags={"Proof of Pocession RFC7800"}, description = "Public key distribution endpoint")
+@Api(value = "/pop", tags={"Proof of Possession RFC7800"}, description = "Public key distribution endpoint")
 @RequestMapping("/pop")
 @TokenResource
 public class PopController {
@@ -26,8 +26,12 @@ public class PopController {
         this.popService = popService;
     }
 
-    @GetMapping(produces={MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value = "Read server public keys", response=JWKSet.class, notes = "Fetches publick keys of the target server. Keys are used to encrypt data sent to the server and also send a response encrytpion key to the server. See RFC7800")
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ApiOperation(
+            value = "Read server public keys",
+            response = JWKSet.class,
+            notes = "Fetches public keys of the target server. Keys are used to encrypt data sent to the server and " +
+                    "also send a response encryption key to the server. See RFC7800")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok")})
     public ResponseEntity<String> getPublicKeys(){
         JWKSet publicKeys = popService.getPublicKeys();
