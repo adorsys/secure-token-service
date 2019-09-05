@@ -33,10 +33,6 @@
             <groupId>de.adorsys.lock-persistence</groupId>
             <artifactId>lock-persistence-jpa</artifactId>
         </dependency>
-        <dependency>
-            <groupId>de.adorsys.lock-persistence</groupId>
-            <artifactId>lock-persistence-mongo</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.flywaydb</groupId>
@@ -79,6 +75,7 @@
         <dependency>
             <groupId>com.nitorcreations</groupId>
             <artifactId>junit-runners</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

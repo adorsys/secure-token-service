@@ -1,14 +1,11 @@
 package de.adorsys.sts.persistence.jpa.repository;
 
 import de.adorsys.sts.persistence.jpa.entity.JpaKeyStore;
-import de.adorsys.sts.persistence.jpa.mapping.ZonedDateTimeConverter;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.Convert;
-import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 
 @Repository

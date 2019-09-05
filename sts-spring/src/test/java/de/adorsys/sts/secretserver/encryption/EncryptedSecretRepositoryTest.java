@@ -1,9 +1,9 @@
 package de.adorsys.sts.secretserver.encryption;
 
+import de.adorsys.sts.common.tests.BaseMockitoTest;
 import de.adorsys.sts.objectmapper.JacksonObjectMapper;
 import de.adorsys.sts.secret.Secret;
 import de.adorsys.sts.secret.SecretRepository;
-import de.adorsys.sts.secretserver.BaseMockitoTest;
 import de.adorsys.sts.simpleencryption.ObjectEncryption;
 import de.adorsys.sts.simpleencryption.StaticKeyEncryptionFactory;
 import org.junit.jupiter.api.BeforeEach;

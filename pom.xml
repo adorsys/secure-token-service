@@ -79,6 +79,7 @@
 		<module>sts-simple-encryption</module>
 		<module>sts-crypto-utils</module>
 		<module>keycloak-storage-provider</module>
+		<module>sts-e2e-tests</module>
 	</modules>
 
 	<dependencyManagement>

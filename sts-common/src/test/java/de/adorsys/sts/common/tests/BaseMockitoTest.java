@@ -1,4 +1,4 @@
-package de.adorsys.sts.secretserver;
+package de.adorsys.sts.common.tests;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
