@@ -9,50 +9,20 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>sts-spring</artifactId>
+    <artifactId>sts-e2e-tests</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-common</artifactId>
+            <artifactId>sts-spring</artifactId>
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-keymanagement</artifactId>
+            <artifactId>sts-persistence-jpa</artifactId>
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-pop</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-token</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-token-auth</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-secret</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-simple-encryption</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
+            <artifactId>sts-persistence-mongo</artifactId>
         </dependency>
 
         <dependency>
@@ -76,6 +46,16 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

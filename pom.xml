@@ -57,6 +57,7 @@
 		<bouncycastle.version>1.61</bouncycastle.version>
 		<keycloak.version>6.0.1</keycloak.version>
 		<keycloak-config-cli.version>v0.6.6</keycloak-config-cli.version>
+		<junit.jupiter.version>5.4.1</junit.jupiter.version>
 		<scmBranch />
 	</properties>
 
@@ -78,6 +79,7 @@
 		<module>sts-simple-encryption</module>
 		<module>sts-crypto-utils</module>
 		<module>keycloak-storage-provider</module>
+		<module>sts-e2e-tests</module>
 	</modules>
 
 	<dependencyManagement>
@@ -309,9 +311,15 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.12</version>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter</artifactId>
+				<version>${junit.jupiter.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>${junit.jupiter.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
