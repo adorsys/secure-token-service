@@ -5,6 +5,7 @@ import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.cert.X509CertificateHolder;
 
 import java.security.KeyPair;
+import java.util.Date;
 import java.util.List;
 
 public class SingleKeyUsageSelfSignedCertBuilder {
@@ -16,6 +17,7 @@ public class SingleKeyUsageSelfSignedCertBuilder {
 	private GeneralNames subjectAltNames;
 	private boolean ca;
 	private int[] keyUsages;
+	private Date creationDate;
 
 	boolean dirty = false;
 
@@ -52,7 +54,9 @@ public class SingleKeyUsageSelfSignedCertBuilder {
 			.withNotBeforeInDays(notBeforeInDays)
 			.withNotAfterInDays(notAfterInDays)
 			.withSubjectDN(subjectDN)
-			.withSubjectPublicKey(keyPair.getPublic());
+			.withSubjectPublicKey(keyPair.getPublic())
+			.withCreationDate(creationDate);
+
 		if(keyUsages!=null)
 			for (int keyUsage : keyUsages) builder = builder.withKeyUsage(keyUsage);
 
@@ -97,5 +101,10 @@ public class SingleKeyUsageSelfSignedCertBuilder {
 	public  SingleKeyUsageSelfSignedCertBuilder withKeyUsages(int[] keyUsages) {
 		this.keyUsages = keyUsages;
 		return this;
-	}	
+	}
+
+	public SingleKeyUsageSelfSignedCertBuilder withCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+		return this;
+	}
 }
