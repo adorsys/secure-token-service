@@ -17,6 +17,8 @@ spring:
     enabled: true
     change-log: classpath:/db/migration/liquibase/changelog.yml
     default-schema: public
+  main:
+    allow-bean-definition-overriding: true
 
 sts:
   keymanagement:
@@ -24,13 +26,13 @@ sts:
       check-interval: 500000
       enc-key-pairs:
         min-keys: 1
-        enabled: false
+        enabled: true
       sign-key-pairs:
         min-keys: 1
-        enabled: false
+        enabled: true
       secret-keys:
         min-keys: 1
-        enabled: false
+        enabled: true
     keystore:
       password: FEDCBA9876543210
       type: UBER
