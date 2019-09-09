@@ -69,21 +69,21 @@ public class KeyManagementConfiguration {
 
     @Bean(name = "enc")
     KeyPairGenerator encKeyPairGenerator(
-            KeyManagementConfigurationProperties keyManagementProperties
+            KeyManagementConfigurationProperties keyManagementProperties, Clock clock
     ) {
-        return new KeyPairGenerator(keyManagementProperties.getKeystore().getKeys().getEncKeyPairs());
+        return new KeyPairGenerator(clock, keyManagementProperties.getKeystore().getKeys().getEncKeyPairs());
     }
 
     @Bean(name = "sign")
     KeyPairGenerator signKeyPairGenerator(
-            KeyManagementConfigurationProperties keyManagementProperties
+            KeyManagementConfigurationProperties keyManagementProperties, Clock clock
     ) {
-        return new KeyPairGenerator(keyManagementProperties.getKeystore().getKeys().getSignKeyPairs());
+        return new KeyPairGenerator(clock, keyManagementProperties.getKeystore().getKeys().getSignKeyPairs());
     }
 
     @Bean
     SecretKeyGenerator secretKeyGenerator(
-            KeyManagementConfigurationProperties keyManagementProperties
+            KeyManagementConfigurationProperties keyManagementProperties, Clock clock
     ) {
         return new SecretKeyGenerator(
                 keyManagementProperties.getKeystore().getKeys().getSecretKeys()

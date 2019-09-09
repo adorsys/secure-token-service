@@ -8,18 +8,23 @@ import org.bouncycastle.asn1.x509.KeyUsage;
 
 import javax.security.auth.callback.CallbackHandler;
 import java.security.KeyPair;
+import java.time.Clock;
+import java.util.Date;
 
 public class KeyPairGenerator {
 
-    private final static int[] keyUsageSignature = {KeyUsage.nonRepudiation};
-    private final static int[] keyUsageEncryption = {KeyUsage.keyEncipherment, KeyUsage.dataEncipherment, KeyUsage.keyAgreement};
+    private static final int[] keyUsageSignature = {KeyUsage.nonRepudiation};
+    private static final int[] keyUsageEncryption = {KeyUsage.keyEncipherment, KeyUsage.dataEncipherment, KeyUsage.keyAgreement};
 
+    private final Clock clock;
     private final String keyAlgo;
     private final Integer keySize;
     private final String serverSigAlgo;
     private final String serverKeyPairName;
 
-    public KeyPairGenerator(KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyPairProperties keyProperties) {
+    public KeyPairGenerator(Clock clock,
+                            KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyPairProperties keyProperties) {
+        this.clock = clock;
         this.keyAlgo = keyProperties.getAlgo();
         this.keySize = keyProperties.getSize();
         this.serverSigAlgo = keyProperties.getSigAlgo();
@@ -44,6 +49,7 @@ public class KeyPairGenerator {
                 .withNotAfterInDays(900)
                 .withCa(false)
                 .withKeyUsages(keyUsages)
+                .withCreationDate(new Date(clock.instant().toEpochMilli()))
                 .build(keyPair);
 
         return KeyPairData.builder()

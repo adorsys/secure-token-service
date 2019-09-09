@@ -15,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.isIn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,6 +33,7 @@ class PopControllerJpaTest extends BaseEndpointTest {
         StsKeyStore keyStore = repository.load();
 
         mvc.perform(get("/pop"))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.keys.length()").value(2))
                 .andExpect(jsonPath("$.keys[*].use").value(containsInAnyOrder("sig", "enc")))

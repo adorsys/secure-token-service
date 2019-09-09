@@ -23,10 +23,9 @@ public class CertVerifier {
 		}
 	}
 
-	public static boolean isValid(X509CertificateHolder certificateHolder) {
+	public static boolean isValid(X509CertificateHolder certificateHolder, Date now) {
 		Date notBefore = certificateHolder.getNotBefore();
 		Date notAfter = certificateHolder.getNotAfter();
-		Date now = new Date();
 		return now.after(notBefore) && now.before(notAfter);
 	}
 

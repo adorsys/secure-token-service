@@ -44,6 +44,8 @@ public class CaSignedCertificateBuilder {
 	
 	private PublicKey subjectPublicKey;
 
+	private Date creationDate;
+
 	boolean dirty = false;
 	public X509CertificateHolder build(PrivateKey issuerPrivatekey) {
 		if(dirty)throw new IllegalStateException("Builder can not be reused");
@@ -59,7 +61,7 @@ public class CaSignedCertificateBuilder {
 			}
 		}
 		
-		Date now = new Date();
+		Date now = this.creationDate != null ? this.creationDate : new Date();
 		Date notAfter = notAfterInDays!=null? DateUtils.addDays(now, notAfterInDays):null;
 		Date notBefore = notBeforeInDays!=null?DateUtils.addDays(now, notBeforeInDays):null;;
 		
@@ -318,6 +320,9 @@ public class CaSignedCertificateBuilder {
 		this.subjectOnlyInAlternativeName = subjectOnlyInAlternativeName;
 		return this;
 	}
-	
-	
+
+	public CaSignedCertificateBuilder withCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+		return this;
+	}
 }
