@@ -5,6 +5,7 @@ import com.nimbusds.jose.JWEDecrypter;
 import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jose.crypto.factories.DefaultJWEDecrypterFactory;
 import de.adorsys.sts.cryptoutils.ServerKeyMapProvider;
+import de.adorsys.sts.keymanagement.exceptions.SecretDecryptionException;
 
 import java.security.Key;
 import java.text.ParseException;

@@ -1,4 +1,4 @@
-package de.adorsys.sts.keymanagement.service;
+package de.adorsys.sts.keymanagement.exceptions;
 
 public class SecretDecryptionException extends RuntimeException {
 
