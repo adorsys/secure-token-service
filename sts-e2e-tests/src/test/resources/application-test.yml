@@ -73,3 +73,8 @@ sts:
         jwks-url: "http://localhost:8887/pop"
       - audience: "sts-service-component"
         jwks-url: "http://sts-service-component:8887/service-component/pop"
+  authservers:
+    - name: test
+      iss-url: "https://your-idp-hostname/auth/realms/your-realm"
+      jwks-url: "https://your-idp-hostname/auth/realms/your-realm/protocol/openid-connect/certs"
+      refresh-interval-seconds: 60

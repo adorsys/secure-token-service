@@ -19,25 +19,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {WithTokenExchangeConfig.class, WithoutWebSecurityConfig.class})
 class TokenExchangeControllerJpaTest extends BaseEndpointTest {
 
+    private static final String token =
+            "eyJraWQiOiJhYmMiLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3lvdXItaWRwLWhvc3RuYW1lL2F1d" +
+                    "GgvcmVhbG1zL3lvdXItcmVhbG0iLCJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZSwic3ViIjoiZGV2IiwibmFtZSI6ImU" +
+                    "yZSB0ZXN0IiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE2MDA4MTkzODB9._S742nPRhcog8sDXPgy94pwVYcqgHiGEPn-jn2YEQbY";
+
     @Test
     @SneakyThrows
     void tokenExchangeTest() {
-
         mvc.perform(post(TokenExchangeRestController.DEFAULT_PATH)
-            .accept(MediaType.APPLICATION_JSON_VALUE)
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-            .param("grant_type", TokenExchangeConstants.TOKEN_EXCHANGE_OAUTH_GRANT_TYPE)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .param("grant_type", TokenExchangeConstants.TOKEN_EXCHANGE_OAUTH_GRANT_TYPE)
                         .param("resource", "1, 2, 3")
-                        .param("audiences", "")
+                        .param("audience", "sts")
                         .param("scope", "")
                         .param("requested_token_type", "")
-            .param("subject_token", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNYXhNdXN0ZXJtYW4iLCJyb2xlIjoiVVNFUiIsImV4cCI6MTQ5NTM5MTAxM30.mN9eFMnEuYgh_KCULI8Gpm1X49wWaA67Ps1M7EFV0BQ")
-            .param("subject_token_type", TokenExchangeConstants.JWT_OAUTH_TOKEN_TYPE)
+                        .param("subject_token", token)
+                        .param("subject_token_type", TokenExchangeConstants.JWT_OAUTH_TOKEN_TYPE)
                         .param("actor_token", "")
                         .param("actor_token_type", "")
         )
-        .andDo(print())
-            .andExpect(status().isOk())
-            .andReturn();
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
     }
 }
