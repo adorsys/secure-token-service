@@ -7,19 +7,20 @@ import de.adorsys.sts.tokenauth.AuthServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Clock;
 import java.util.List;
 
 public class LoggingAuthServer extends AuthServer {
     private static final Logger LOG = LoggerFactory.getLogger(LoggingBearerTokenValidator.class);
     private final ObjectMapper objectMapper;
 
-    public LoggingAuthServer(String name, String issUrl, String jwksUrl, ObjectMapper objectMapper) {
-        super(name, issUrl, jwksUrl);
+    public LoggingAuthServer(String name, String issUrl, String jwksUrl, ObjectMapper objectMapper, Clock clock) {
+        super(name, issUrl, jwksUrl, clock);
         this.objectMapper = objectMapper;
     }
 
-    public LoggingAuthServer(String name, String issUrl, String jwksUrl, int refreshIntervalSeconds, ObjectMapper objectMapper) {
-        super(name, issUrl, jwksUrl, refreshIntervalSeconds);
+    public LoggingAuthServer(String name, String issUrl, String jwksUrl, int refreshIntervalSeconds, ObjectMapper objectMapper, Clock clock) {
+        super(name, issUrl, jwksUrl, refreshIntervalSeconds, clock);
         this.objectMapper = objectMapper;
     }
 

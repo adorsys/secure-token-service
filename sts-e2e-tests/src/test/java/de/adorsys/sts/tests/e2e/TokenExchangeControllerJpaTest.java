@@ -2,22 +2,32 @@ package de.adorsys.sts.tests.e2e;
 
 import de.adorsys.sts.persistence.jpa.config.EnableJpaPersistence;
 import de.adorsys.sts.tests.BaseEndpointTest;
+import de.adorsys.sts.tests.config.WithControllableClock;
 import de.adorsys.sts.tests.config.WithTokenExchangeConfig;
 import de.adorsys.sts.tests.config.WithoutWebSecurityConfig;
 import de.adorsys.sts.token.tokenexchange.TokenExchangeConstants;
 import de.adorsys.sts.token.tokenexchange.server.TokenExchangeRestController;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+
+import java.time.Instant;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @EnableJpaPersistence
-@ContextConfiguration(classes = {WithTokenExchangeConfig.class, WithoutWebSecurityConfig.class})
+@ContextConfiguration(classes = {
+        WithTokenExchangeConfig.class,
+        WithControllableClock.class,
+        WithoutWebSecurityConfig.class})
 class TokenExchangeControllerJpaTest extends BaseEndpointTest {
+
+    @Autowired
+    private WithControllableClock.ClockTestable clock;
 
     private static final String token =
             "eyJraWQiOiJhYmMiLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3lvdXItaWRwLWhvc3RuYW1lL2F1d" +
@@ -27,6 +37,9 @@ class TokenExchangeControllerJpaTest extends BaseEndpointTest {
     @Test
     @SneakyThrows
     void tokenExchangeTest() {
+
+        clock.setInstant(Instant.ofEpochMilli(1516239022000L));
+
         mvc.perform(post(TokenExchangeRestController.DEFAULT_PATH)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
