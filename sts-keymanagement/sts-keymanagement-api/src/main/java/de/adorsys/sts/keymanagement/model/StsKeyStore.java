@@ -1,13 +1,13 @@
 package de.adorsys.sts.keymanagement.model;
 
+import de.adorsys.sts.cryptoutils.KeyStoreService;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.time.ZonedDateTime;
 import java.util.Map;
-
-import de.adorsys.sts.cryptoutils.KeyStoreService;
-import lombok.Builder;
-import lombok.Getter;
 
 @Getter
 @Builder
