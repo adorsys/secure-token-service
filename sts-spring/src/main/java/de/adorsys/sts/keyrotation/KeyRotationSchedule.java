@@ -1,6 +1,6 @@
 package de.adorsys.sts.keyrotation;
 
-import de.adorsys.lockpersistence.client.LockClient;
+import de.adorsys.sts.common.lock.LockClient;
 import de.adorsys.sts.keymanagement.model.KeyRotationResult;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
