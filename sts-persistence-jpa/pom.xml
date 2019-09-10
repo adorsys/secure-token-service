@@ -19,7 +19,7 @@
 
         <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-keymanagement</artifactId>
+            <artifactId>sts-keymanagement-api</artifactId>
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
