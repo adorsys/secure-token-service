@@ -17,7 +17,6 @@ import java.time.Clock;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class KeyRotationSchedule {
@@ -76,11 +75,9 @@ public class KeyRotationSchedule {
         List<String> futureKeys = keyRotationResult.getFutureKeys();
         List<String> generatedKeys = keyRotationResult.getGeneratedKeys();
 
-        if(LOG.isDebugEnabled()) {
-            LOG.debug(removedKeys.size() + " keys removed: [" + removedKeys.stream().collect(Collectors.joining(",")) + "]");
-            LOG.debug(futureKeys.size() + " future keys generated: [" + futureKeys.stream().collect(Collectors.joining(",")) + "]");
-            LOG.debug(generatedKeys.size() + " keys generated: [" + generatedKeys.stream().collect(Collectors.joining(",")) + "]");
-        }
+        LOG.debug("{} keys removed: {}", removedKeys.size(), removedKeys);
+        LOG.debug("{} future keys generated: {}", futureKeys.size(), futureKeys);
+        LOG.debug("{} keys generated: {}", generatedKeys.size(), generatedKeys);
 
         if(removedKeys.size() + futureKeys.size() + generatedKeys.size() > 0) {
             keyStore.setLastUpdate(now());
