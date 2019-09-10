@@ -1,6 +1,7 @@
 package de.adorsys.sts.keyrotation;
 
 import de.adorsys.lockpersistence.client.LockClient;
+import de.adorsys.sts.keymanagement.model.KeyRotationResult;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
@@ -69,7 +70,7 @@ public class KeyRotationSchedule {
 
     private void performKeyRotation() {
         StsKeyStore keyStore = keyStoreRepository.load();
-        KeyRotationService.KeyRotationResult keyRotationResult = keyRotationService.rotate(keyStore);
+        KeyRotationResult keyRotationResult = keyRotationService.rotate(keyStore);
 
         List<String> removedKeys = keyRotationResult.getRemovedKeys();
         List<String> futureKeys = keyRotationResult.getFutureKeys();

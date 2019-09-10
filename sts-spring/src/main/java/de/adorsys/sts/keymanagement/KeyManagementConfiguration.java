@@ -26,7 +26,7 @@ public class KeyManagementConfiguration {
             KeyManagementConfigurationProperties keyManagementProperties
     ) {
         KeyManagementProperties.KeyStoreProperties keystore = keyManagementProperties.getKeystore();
-        return new KeyConversionService(keystore.getPassword());
+        return new KeyConversionServiceImpl(keystore.getPassword());
     }
 
     @Bean(name = "cached")
@@ -58,7 +58,7 @@ public class KeyManagementConfiguration {
             SecretKeyGenerator secretKeyGenerator,
             KeyManagementConfigurationProperties keyManagementProperties
     ) {
-        return new KeyStoreGenerator(
+        return new KeyStoreGeneratorImpl(
                 clock,
                 encKeyPairGenerator,
                 signKeyPairGenerator,
@@ -71,21 +71,21 @@ public class KeyManagementConfiguration {
     KeyPairGenerator encKeyPairGenerator(
             KeyManagementConfigurationProperties keyManagementProperties, Clock clock
     ) {
-        return new KeyPairGenerator(clock, keyManagementProperties.getKeystore().getKeys().getEncKeyPairs());
+        return new KeyPairGeneratorImpl(clock, keyManagementProperties.getKeystore().getKeys().getEncKeyPairs());
     }
 
     @Bean(name = "sign")
     KeyPairGenerator signKeyPairGenerator(
             KeyManagementConfigurationProperties keyManagementProperties, Clock clock
     ) {
-        return new KeyPairGenerator(clock, keyManagementProperties.getKeystore().getKeys().getSignKeyPairs());
+        return new KeyPairGeneratorImpl(clock, keyManagementProperties.getKeystore().getKeys().getSignKeyPairs());
     }
 
     @Bean
     SecretKeyGenerator secretKeyGenerator(
             KeyManagementConfigurationProperties keyManagementProperties, Clock clock
     ) {
-        return new SecretKeyGenerator(
+        return new SecretKeyGeneratorImpl(
                 keyManagementProperties.getKeystore().getKeys().getSecretKeys()
         );
     }
@@ -95,6 +95,6 @@ public class KeyManagementConfiguration {
             @Qualifier("cached") KeyStoreRepository keyStoreRepository,
             KeyStoreGenerator keyStoreGenerator
     ) {
-        return new KeyStoreInitializer(keyStoreRepository, keyStoreGenerator);
+        return new KeyStoreInitializerImpl(keyStoreRepository, keyStoreGenerator);
     }
 }

@@ -3,12 +3,12 @@ package de.adorsys.sts.keymanagement.service;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 
-public class KeyStoreInitializer {
+public class KeyStoreInitializerImpl implements KeyStoreInitializer {
 
     private final KeyStoreRepository repository;
     private final KeyStoreGenerator generator;
 
-    public KeyStoreInitializer(
+    public KeyStoreInitializerImpl(
             KeyStoreRepository repository,
             KeyStoreGenerator generator
     ) {
@@ -16,6 +16,7 @@ public class KeyStoreInitializer {
         this.generator = generator;
     }
 
+    @Override
     public boolean initialize() {
         if (!repository.exists()) {
             StsKeyStore keyStore = generator.generate();

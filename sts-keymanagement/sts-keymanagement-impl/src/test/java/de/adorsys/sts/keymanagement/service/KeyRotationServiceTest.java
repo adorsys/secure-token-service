@@ -2,6 +2,7 @@ package de.adorsys.sts.keymanagement.service;
 
 import com.nitorcreations.junit.runners.NestedRunner;
 import de.adorsys.sts.keymanagement.config.KeyManagementRotationProperties;
+import de.adorsys.sts.keymanagement.model.KeyRotationResult;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
@@ -131,7 +132,7 @@ public class KeyRotationServiceTest {
         when(rotationProperties.getSignKeyPairs()).thenReturn(signatureKeyPairRotationProperties);
         when(rotationProperties.getSecretKeys()).thenReturn(secretKeyRotationProperties);
 
-        keyRotationService = new KeyRotationService(
+        keyRotationService = new KeyRotationServiceImpl(
                 keyStoreGenerator,
                 clock,
                 rotationProperties
@@ -140,7 +141,7 @@ public class KeyRotationServiceTest {
 
     public class KeyStoreWithExpiredSignatureKeyPair {
 
-        private KeyRotationService.KeyRotationResult keyRotationResult;
+        private KeyRotationResult keyRotationResult;
 
         @Before
         public void setup() throws Exception {
@@ -177,7 +178,7 @@ public class KeyRotationServiceTest {
 
     public class KeyStoreWithExpiredEncryptionKeyPair {
 
-        private KeyRotationService.KeyRotationResult keyRotationResult;
+        private KeyRotationResult keyRotationResult;
 
         @Before
         public void setup() throws Exception {
@@ -215,7 +216,7 @@ public class KeyRotationServiceTest {
 
     public class KeyStoreWithExpiredSecretKey {
 
-        private KeyRotationService.KeyRotationResult keyRotationResult;
+        private KeyRotationResult keyRotationResult;
 
         @Before
         public void setup() throws Exception {

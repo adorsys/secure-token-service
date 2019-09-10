@@ -11,7 +11,7 @@ import java.security.KeyPair;
 import java.time.Clock;
 import java.util.Date;
 
-public class KeyPairGenerator {
+public class KeyPairGeneratorImpl implements KeyPairGenerator {
 
     private static final int[] keyUsageSignature = {KeyUsage.nonRepudiation};
     private static final int[] keyUsageEncryption = {KeyUsage.keyEncipherment, KeyUsage.dataEncipherment, KeyUsage.keyAgreement};
@@ -22,8 +22,8 @@ public class KeyPairGenerator {
     private final String serverSigAlgo;
     private final String serverKeyPairName;
 
-    public KeyPairGenerator(Clock clock,
-                            KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyPairProperties keyProperties) {
+    public KeyPairGeneratorImpl(Clock clock,
+                                KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyPairProperties keyProperties) {
         this.clock = clock;
         this.keyAlgo = keyProperties.getAlgo();
         this.keySize = keyProperties.getSize();
@@ -31,10 +31,12 @@ public class KeyPairGenerator {
         this.serverKeyPairName = keyProperties.getName();
     }
 
+    @Override
     public KeyPairEntry generateSignatureKey(String alias, CallbackHandler keyPassHandler) {
         return generate(keyUsageSignature, alias, keyPassHandler);
     }
 
+    @Override
     public KeyPairEntry generateEncryptionKey(String alias, CallbackHandler keyPassHandler) {
         return generate(keyUsageEncryption, alias, keyPassHandler);
     }

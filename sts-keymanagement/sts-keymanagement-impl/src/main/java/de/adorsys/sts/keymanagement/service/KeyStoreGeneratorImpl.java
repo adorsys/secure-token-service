@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class KeyStoreGenerator {
+public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
 
     private final Clock clock;
 
@@ -32,7 +32,7 @@ public class KeyStoreGenerator {
     private final KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyPairProperties signKeyPairsProperties;
     private final KeyManagementProperties.KeyStoreProperties.KeysProperties.SecretKeyProperties secretKeyProperties;
 
-    public KeyStoreGenerator(
+    public KeyStoreGeneratorImpl(
             Clock clock,
             KeyPairGenerator encKeyPairGenerator,
             KeyPairGenerator signKeyPairGenerator,
@@ -58,6 +58,7 @@ public class KeyStoreGenerator {
         keyPassHandler = new PasswordCallbackHandler(password.toCharArray());
     }
 
+    @Override
     public StsKeyStore generate() {
         Map<String, StsKeyEntry> keyEntries = new HashMap<>();
 
@@ -110,6 +111,7 @@ public class KeyStoreGenerator {
         }
     }
 
+    @Override
     public StsKeyEntry generateKeyEntryForFutureUsage(KeyUsage keyUsage, ZonedDateTime notBefore) {
         StsKeyEntry generatedKeyEntry;
 
@@ -128,6 +130,7 @@ public class KeyStoreGenerator {
         return generatedKeyEntry;
     }
 
+    @Override
     public StsKeyEntry generateSignatureKeyEntryForInstantUsage() {
         KeyPairEntry signatureKeyPair = generateSignKeyPair();
         ZonedDateTime now = now();
@@ -146,6 +149,7 @@ public class KeyStoreGenerator {
                 .build();
     }
 
+    @Override
     public StsKeyEntry generateSignatureKeyEntryForFutureUsage(ZonedDateTime notBefore) {
         KeyPairEntry signatureKeyPair = generateSignKeyPair();
         ZonedDateTime now = now();
@@ -170,6 +174,7 @@ public class KeyStoreGenerator {
         );
     }
 
+    @Override
     public StsKeyEntry generateEncryptionKeyEntryForInstantUsage() {
         KeyPairEntry signatureKeyPair = generateEncryptionKeyPair();
         ZonedDateTime now = now();
@@ -188,6 +193,7 @@ public class KeyStoreGenerator {
                 .build();
     }
 
+    @Override
     public StsKeyEntry generateEncryptionKeyEntryForFutureUsage(ZonedDateTime notBefore) {
         KeyPairEntry encryptionKeyPair = generateEncryptionKeyPair();
         ZonedDateTime now = now();
@@ -212,6 +218,7 @@ public class KeyStoreGenerator {
         );
     }
 
+    @Override
     public StsKeyEntry generateSecretKeyEntryForInstantUsage() {
         SecretKeyEntry secretKeyData = generateSecretKey();
         ZonedDateTime now = now();
@@ -230,6 +237,7 @@ public class KeyStoreGenerator {
                 .build();
     }
 
+    @Override
     public StsKeyEntry generateSecretKeyEntryForFutureUsage(ZonedDateTime notBefore) {
         SecretKeyEntry secretKeyData = generateSecretKey();
         ZonedDateTime now = now();

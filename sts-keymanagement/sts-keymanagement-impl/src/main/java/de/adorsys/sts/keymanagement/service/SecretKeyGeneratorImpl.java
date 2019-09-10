@@ -7,21 +7,22 @@ import de.adorsys.sts.cryptoutils.SecretKeyEntry;
 import javax.crypto.SecretKey;
 import javax.security.auth.callback.CallbackHandler;
 
-public class SecretKeyGenerator {
+public class SecretKeyGeneratorImpl implements SecretKeyGenerator {
 
     private final String secretKeyAlgo;
     private final Integer keySize;
 
-    public SecretKeyGenerator(String secretKeyAlgo, Integer keySize) {
+    public SecretKeyGeneratorImpl(String secretKeyAlgo, Integer keySize) {
         this.secretKeyAlgo = secretKeyAlgo;
         this.keySize = keySize;
     }
 
-    public SecretKeyGenerator(KeyManagementProperties.KeyStoreProperties.KeysProperties.SecretKeyProperties secretKeyProperties) {
+    public SecretKeyGeneratorImpl(KeyManagementProperties.KeyStoreProperties.KeysProperties.SecretKeyProperties secretKeyProperties) {
         this.secretKeyAlgo = secretKeyProperties.getAlgo();
         this.keySize = secretKeyProperties.getSize();
     }
 
+    @Override
     public SecretKeyEntry generate(String alias, CallbackHandler secretKeyPassHandler) {
         SecretKey secretKey = new SecretKeyBuilder()
                 .withKeyAlg(secretKeyAlgo)

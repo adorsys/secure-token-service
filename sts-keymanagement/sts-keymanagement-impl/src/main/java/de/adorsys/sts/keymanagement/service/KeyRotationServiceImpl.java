@@ -1,12 +1,11 @@
 package de.adorsys.sts.keymanagement.service;
 
 import de.adorsys.sts.keymanagement.config.KeyManagementRotationProperties;
+import de.adorsys.sts.keymanagement.model.KeyRotationResult;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.util.DateTimeUtils;
-import lombok.Builder;
-import lombok.Getter;
 
 import java.time.Clock;
 import java.time.ZoneOffset;
@@ -16,7 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class KeyRotationService {
+public class KeyRotationServiceImpl implements KeyRotationService {
 
     private final KeyStoreGenerator keyStoreGenerator;
     private final Clock clock;
@@ -24,7 +23,7 @@ public class KeyRotationService {
     private final KeyManagementRotationProperties.KeyRotationProperties signatureKeyPairRotationProperties;
     private final KeyManagementRotationProperties.KeyRotationProperties secretKeyRotationProperties;
 
-    public KeyRotationService(
+    public KeyRotationServiceImpl(
             KeyStoreGenerator keyStoreGenerator,
             Clock clock,
             KeyManagementRotationProperties rotationProperties
@@ -37,6 +36,7 @@ public class KeyRotationService {
         this.secretKeyRotationProperties = rotationProperties.getSecretKeys();
     }
 
+    @Override
     public KeyRotationResult rotate(StsKeyStore stsKeyStore) {
         KeyStateUpdates keyStateUpdates = updateKeyStates(stsKeyStore);
         List<String> createdFutureKeys = createKeysForFutureUsage(stsKeyStore, keyStateUpdates);
@@ -295,19 +295,5 @@ public class KeyRotationService {
 
     private ZonedDateTime now() {
         return clock.instant().atZone(ZoneOffset.UTC);
-    }
-
-    @Getter
-    @Builder
-    public static class KeyRotationResult {
-
-        @Builder.Default
-        private List<String> removedKeys = new ArrayList<>();
-
-        @Builder.Default
-        private List<String> futureKeys = new ArrayList<>();
-
-        @Builder.Default
-        private List<String> generatedKeys = new ArrayList<>();
     }
 }

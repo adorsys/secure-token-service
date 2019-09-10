@@ -10,17 +10,18 @@ import de.adorsys.sts.keymanagement.exceptions.SecretDecryptionException;
 import java.security.Key;
 import java.text.ParseException;
 
-public class DecryptionService {
+public class DecryptionServiceImpl implements DecryptionService {
 
     private final ServerKeyMapProvider keyMapProvider;
     private final DefaultJWEDecrypterFactory decrypterFactory = new DefaultJWEDecrypterFactory();
 
 
-    public DecryptionService(ServerKeyMapProvider keyMapProvider) {
+    public DecryptionServiceImpl(ServerKeyMapProvider keyMapProvider) {
         this.keyMapProvider = keyMapProvider;
     }
 
-    public String decrypt(String encrypted) throws SecretDecryptionException {
+    @Override
+    public String decrypt(String encrypted) {
         JWEObject jweObject;
         try {
             jweObject = JWEObject.parse(encrypted);

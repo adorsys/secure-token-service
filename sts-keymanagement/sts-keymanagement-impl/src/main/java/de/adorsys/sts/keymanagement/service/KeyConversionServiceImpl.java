@@ -6,14 +6,15 @@ import de.adorsys.sts.cryptoutils.ServerKeysHolder;
 
 import java.security.KeyStore;
 
-public class KeyConversionService {
+public class KeyConversionServiceImpl implements KeyConversionService {
 
     private final String keyStorePassword;
 
-    public KeyConversionService(String keyStorePassword) {
+    public KeyConversionServiceImpl(String keyStorePassword) {
         this.keyStorePassword = keyStorePassword;
     }
 
+    @Override
     public ServerKeysHolder export(KeyStore keyStore) {
         JWKSet privateKeys = KeyConverter.exportPrivateKeys(keyStore, keyStorePassword.toCharArray());
         JWKSet publicKeys = privateKeys.toPublicJWKSet();
