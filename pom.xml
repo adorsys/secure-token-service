@@ -58,6 +58,7 @@
 		<keycloak.version>6.0.1</keycloak.version>
 		<keycloak-config-cli.version>v0.6.6</keycloak-config-cli.version>
 		<surefire.version>2.22.1</surefire.version>
+		<jacoco.version>0.8.4</jacoco.version>
 		<junit.jupiter.version>5.4.1</junit.jupiter.version>
 		<scmBranch />
 	</properties>
@@ -351,6 +352,37 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report-aggregate</id>
+						<phase>package</phase>
+						<goals>
+							<goal>report-aggregate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<append>true</append>
+					<propertyName>surefireArgLine</propertyName>
+				</configuration>
+			</plugin>
 		</plugins>
 
 		<pluginManagement>
@@ -368,6 +400,12 @@
 					<configuration>
 						<argLine>${surefireArgLine}</argLine>
 					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco.version}</version>
 				</plugin>
 
 				<!-- Maven Release Build fails if javadoc comments are invalid. http://stackoverflow.com/questions/15886209/maven-is-not-working-in-java-8-when-javadoc-tags-are-incomplete -->
