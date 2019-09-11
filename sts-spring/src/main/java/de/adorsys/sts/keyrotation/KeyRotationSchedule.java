@@ -1,6 +1,7 @@
 package de.adorsys.sts.keyrotation;
 
 import de.adorsys.lockpersistence.client.LockClient;
+import de.adorsys.sts.keymanagement.model.KeyRotationResult;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
@@ -16,7 +17,6 @@ import java.time.Clock;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class KeyRotationSchedule {
@@ -69,17 +69,15 @@ public class KeyRotationSchedule {
 
     private void performKeyRotation() {
         StsKeyStore keyStore = keyStoreRepository.load();
-        KeyRotationService.KeyRotationResult keyRotationResult = keyRotationService.rotate(keyStore);
+        KeyRotationResult keyRotationResult = keyRotationService.rotate(keyStore);
 
         List<String> removedKeys = keyRotationResult.getRemovedKeys();
         List<String> futureKeys = keyRotationResult.getFutureKeys();
         List<String> generatedKeys = keyRotationResult.getGeneratedKeys();
 
-        if(LOG.isDebugEnabled()) {
-            LOG.debug(removedKeys.size() + " keys removed: [" + removedKeys.stream().collect(Collectors.joining(",")) + "]");
-            LOG.debug(futureKeys.size() + " future keys generated: [" + futureKeys.stream().collect(Collectors.joining(",")) + "]");
-            LOG.debug(generatedKeys.size() + " keys generated: [" + generatedKeys.stream().collect(Collectors.joining(",")) + "]");
-        }
+        LOG.debug("{} keys removed: {}", removedKeys.size(), removedKeys);
+        LOG.debug("{} future keys generated: {}", futureKeys.size(), futureKeys);
+        LOG.debug("{} keys generated: {}", generatedKeys.size(), generatedKeys);
 
         if(removedKeys.size() + futureKeys.size() + generatedKeys.size() > 0) {
             keyStore.setLastUpdate(now());

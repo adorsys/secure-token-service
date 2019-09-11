@@ -10,36 +10,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>sts-keymanagement</artifactId>
-    <dependencies>
-        <dependency>
-            <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-crypto-utils</artifactId>
-        </dependency>
+    <packaging>pom</packaging>
 
-        <dependency>
-            <groupId>de.adorsys.lock-persistence</groupId>
-            <artifactId>lock-persistence-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-        <!-- test -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.nitorcreations</groupId>
-            <artifactId>junit-runners</artifactId>
-        </dependency>
-
-    </dependencies>
+    <modules>
+        <module>sts-keymanagement-api</module>
+        <module>sts-keymanagement-impl</module>
+    </modules>
 </project>

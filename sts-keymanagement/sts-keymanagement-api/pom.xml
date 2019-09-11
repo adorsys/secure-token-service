@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>sts-keymanagement</artifactId>
+        <groupId>de.adorsys.sts</groupId>
+        <version>0.30.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>sts-keymanagement-api</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>de.adorsys.sts</groupId>
+            <artifactId>sts-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.sts</groupId>
+            <artifactId>sts-crypto-utils</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.adorsys.lock-persistence</groupId>
+            <artifactId>lock-persistence-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!-- test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.nitorcreations</groupId>
+            <artifactId>junit-runners</artifactId>
+        </dependency>
+
+    </dependencies>
+</project>

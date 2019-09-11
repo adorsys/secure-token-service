@@ -19,6 +19,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import java.time.Clock;
+
 @Configuration
 @ComponentScan(basePackages = "de.adorsys.sts.secretserver")
 @Import({
@@ -32,12 +34,14 @@ public class SecretServerConfiguration {
     public TokenExchangeService tokenExchangeService(
             TokenExchangeClaimsService tokenExchangeClaimsService,
             KeyManagementService keyManagementService,
-            BearerTokenValidator bearerTokenValidator
+            BearerTokenValidator bearerTokenValidator,
+            Clock clock
     ) {
         TokenExchangeService tokenExchangeService = new JwtTokenExchangeService(
                 tokenExchangeClaimsService,
                 keyManagementService,
-                bearerTokenValidator
+                bearerTokenValidator,
+                clock
         );
 
         return new LoggingTokenExchangeService(tokenExchangeService);

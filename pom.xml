@@ -146,6 +146,16 @@
 			</dependency>
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-keymanagement-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-keymanagement-impl</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-spring</artifactId>
 				<version>${project.version}</version>
 			</dependency>
