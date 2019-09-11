@@ -1,5 +1,6 @@
 package de.adorsys.sts.tests.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.sts.cryptoutils.ObjectMapperSPI;
 import de.adorsys.sts.objectmapper.JacksonConfiguration;
 import de.adorsys.sts.resourceserver.persistence.InMemoryResourceServerRepository;
@@ -9,10 +10,14 @@ import de.adorsys.sts.resourceserver.service.ResourceServerService;
 import de.adorsys.sts.secret.SecretRepository;
 import de.adorsys.sts.secretserver.encryption.EncryptedSecretRepository;
 import de.adorsys.sts.simpleencryption.StaticKeyEncryptionFactory;
+import de.adorsys.sts.tests.AuthServersProviderTestable;
+import de.adorsys.sts.token.authentication.AuthServerConfigurationProperties;
 import de.adorsys.sts.token.tokenexchange.LoggingTokenExchangeClaimsService;
 import de.adorsys.sts.token.tokenexchange.TokenExchangeClaimsService;
 import de.adorsys.sts.token.tokenexchange.TokenExchangeSecretClaimsService;
 import de.adorsys.sts.token.tokenexchange.server.EnableTokenExchangeServer;
+import de.adorsys.sts.tokenauth.AuthServersProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
@@ -65,5 +70,15 @@ public class WithTokenExchangeConfig {
     @Bean
     ResourceServerRepository resourceServerRepository() {
         return new InMemoryResourceServerRepository();
+    }
+
+    @Autowired
+    AuthServerConfigurationProperties authServerConfigurationProperties;
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @Bean
+    AuthServersProvider authServersProvider() {
+        return new AuthServersProviderTestable(authServerConfigurationProperties, objectMapper);
     }
 }

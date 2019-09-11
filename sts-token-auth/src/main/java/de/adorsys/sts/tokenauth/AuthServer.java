@@ -11,8 +11,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Key;
-import java.time.Clock;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -21,30 +19,27 @@ public class AuthServer {
     private String issUrl;
     private String jwksUrl;
     private int refreshIntervalSeconds = 600;
-    private Clock clock;
 
     private Date refreshExp = null;
     private JWKSource<SecurityContext> jwkSource = null;
 
-    public AuthServer(String name, String issUrl, String jwksUrl, Clock clock) {
+    public AuthServer(String name, String issUrl, String jwksUrl) {
         super();
         this.name = name;
         this.issUrl = issUrl;
         this.jwksUrl = jwksUrl;
-        this.clock = clock;
     }
 
-    public AuthServer(String name, String issUrl, String jwksUrl, int refreshIntervalSeconds, Clock clock) {
+    public AuthServer(String name, String issUrl, String jwksUrl, int refreshIntervalSeconds) {
         super();
         this.name = name;
         this.issUrl = issUrl;
         this.jwksUrl = jwksUrl;
         this.refreshIntervalSeconds = refreshIntervalSeconds;
-        this.clock = clock;
     }
 
     public Key getJWK(String keyID) throws JsonWebKeyRetrievalException {
-        Date now = new Date(clock.instant().toEpochMilli());
+        Date now = new Date();
         if (refreshExp == null || now.after(refreshExp)) {
             refreshExp = DateUtils.addSeconds(now, refreshIntervalSeconds);
 
@@ -56,7 +51,13 @@ public class AuthServer {
         }
         JWKSelector jwkSelector = new JWKSelector(new JWKMatcher.Builder().keyID(keyID).build());
 
-        List<JWK> list = getJWKList(jwkSelector);
+        List<JWK> list;
+        try {
+            list = jwkSource.get(jwkSelector, null);
+            onJsonWebKeySetRetrieved(list);
+        } catch (KeySourceException e) {
+            throw new JsonWebKeyRetrievalException(e);
+        }
 
         if (list.isEmpty()) throw new JsonWebKeyRetrievalException("Unable to retrieve keys: received JWKSet is empty");
 
@@ -116,21 +117,6 @@ public class AuthServer {
 
         public JsonWebKeyRetrievalException(String message) {
             super(message);
-        }
-    }
-
-    private List<JWK> getJWKList(JWKSelector jwkSelector) {
-        if ("test".equals(name)) {
-            JWK jwk = new OctetSequenceKey.Builder("12345678901234567890123456789012".getBytes()).build();
-            return Collections.singletonList(jwk);
-        }
-
-        try {
-            List<JWK> list = jwkSource.get(jwkSelector, null);
-            onJsonWebKeySetRetrieved(list);
-            return list;
-        } catch (KeySourceException e) {
-            throw new JsonWebKeyRetrievalException(e);
         }
     }
 }
