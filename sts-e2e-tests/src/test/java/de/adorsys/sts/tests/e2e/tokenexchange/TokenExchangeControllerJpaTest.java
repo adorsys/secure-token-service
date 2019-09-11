@@ -30,14 +30,10 @@ class TokenExchangeControllerJpaTest extends BaseEndpointTest {
     @Autowired
     private WithControllableClock.ClockTestable clock;
 
-    private static final String token =
-            "eyJraWQiOiJhYmMiLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3lvdXItaWRwLWhvc3RuYW1lL2F1d" +
-                    "GgvcmVhbG1zL3lvdXItcmVhbG0iLCJodHRwOi8vZXhhbXBsZS5jb20vaXNfcm9vdCI6dHJ1ZSwic3ViIjoiZGV2IiwibmFtZSI6ImU" +
-                    "yZSB0ZXN0IiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE2MDA4MTkzODB9._S742nPRhcog8sDXPgy94pwVYcqgHiGEPn-jn2YEQbY";
-
     @Test
     @SneakyThrows
     void tokenExchangeTest() {
+        String token = readFromResource("fixture/test_token.txt");
 
         clock.setInstant(Instant.ofEpochMilli(1516239022000L));
 

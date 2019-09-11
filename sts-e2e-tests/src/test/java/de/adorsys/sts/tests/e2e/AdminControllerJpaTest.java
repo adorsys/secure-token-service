@@ -1,7 +1,5 @@
 package de.adorsys.sts.tests.e2e;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
 import de.adorsys.sts.persistence.jpa.config.EnableJpaPersistence;
 import de.adorsys.sts.tests.BaseEndpointTest;
 import de.adorsys.sts.tests.config.WithAdminConfig;
@@ -10,8 +8,6 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
-
-import java.net.URL;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -45,11 +41,5 @@ class AdminControllerJpaTest extends BaseEndpointTest {
                 .andExpect(status().is(204))
         .andReturn();
 
-    }
-
-    @SneakyThrows
-    private String readFromResource(String path) {
-        URL url = Resources.getResource(path);
-        return Resources.toString(url, Charsets.UTF_8);
     }
 }
