@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/sts
-    username: root
-    password: root
+    url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: db_user
+    password: db_user@123
   jpa:
     show-sql: false
     properties:
@@ -10,13 +10,13 @@ spring:
         default_schema: sts
     open-in-view: false
   flyway:
-    enabled: true
+    enabled: false
     locations:
       - classpath:/db/migration/flyway/mysql
   liquibase:
-    enabled: false
+    enabled: true
     change-log: classpath:/db/migration/liquibase/changelog.yml
-    default-schema: sts
+    default-schema: public
   main:
     allow-bean-definition-overriding: true
 
