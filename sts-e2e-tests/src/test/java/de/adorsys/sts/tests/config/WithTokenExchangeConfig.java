@@ -1,51 +1,37 @@
-package de.adorsys.sts.secretserver;
+package de.adorsys.sts.tests.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.sts.cryptoutils.ObjectMapperSPI;
-import de.adorsys.sts.encryption.EncryptionConfiguration;
-import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.objectmapper.JacksonConfiguration;
-import de.adorsys.sts.pop.PopConfiguration;
+import de.adorsys.sts.resourceserver.persistence.InMemoryResourceServerRepository;
+import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
 import de.adorsys.sts.resourceserver.service.EncryptionService;
+import de.adorsys.sts.resourceserver.service.KeyRetrieverService;
 import de.adorsys.sts.resourceserver.service.ResourceServerService;
 import de.adorsys.sts.secret.SecretRepository;
 import de.adorsys.sts.secretserver.encryption.EncryptedSecretRepository;
 import de.adorsys.sts.simpleencryption.StaticKeyEncryptionFactory;
-import de.adorsys.sts.token.authentication.TokenAuthenticationConfiguration;
-import de.adorsys.sts.token.tokenexchange.*;
-import de.adorsys.sts.tokenauth.BearerTokenValidator;
+import de.adorsys.sts.tests.e2e.tokenexchange.AuthServersProviderTestable;
+import de.adorsys.sts.tests.e2e.tokenexchange.KeyRetrieverServiceTestable;
+import de.adorsys.sts.token.authentication.AuthServerConfigurationProperties;
+import de.adorsys.sts.token.tokenexchange.LoggingTokenExchangeClaimsService;
+import de.adorsys.sts.token.tokenexchange.TokenExchangeClaimsService;
+import de.adorsys.sts.token.tokenexchange.TokenExchangeSecretClaimsService;
+import de.adorsys.sts.token.tokenexchange.server.EnableTokenExchangeServer;
+import de.adorsys.sts.tokenauth.AuthServersProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import java.time.Clock;
-
-@Configuration
-@ComponentScan(basePackages = "de.adorsys.sts.secretserver")
+@EnableAutoConfiguration(exclude = MongoAutoConfiguration.class)
+@EnableTokenExchangeServer
 @Import({
-        TokenAuthenticationConfiguration.class,
-        EncryptionConfiguration.class,
-        PopConfiguration.class,
         JacksonConfiguration.class
 })
-public class SecretServerConfiguration {
-    @Bean
-    public TokenExchangeService tokenExchangeService(
-            TokenExchangeClaimsService tokenExchangeClaimsService,
-            KeyManagementService keyManagementService,
-            BearerTokenValidator bearerTokenValidator,
-            Clock clock
-    ) {
-        TokenExchangeService tokenExchangeService = new JwtTokenExchangeService(
-                tokenExchangeClaimsService,
-                keyManagementService,
-                bearerTokenValidator,
-                clock
-        );
-
-        return new LoggingTokenExchangeService(tokenExchangeService);
-    }
+public class WithTokenExchangeConfig {
 
     @Bean
     public StaticKeyEncryptionFactory StaticKeyEncryptionFactory(
@@ -81,5 +67,25 @@ public class SecretServerConfiguration {
         );
 
         return new LoggingTokenExchangeClaimsService(tokenExchangeSecretClaimsService);
+    }
+
+    @Bean
+    ResourceServerRepository resourceServerRepository() {
+        return new InMemoryResourceServerRepository();
+    }
+
+    @Autowired
+    AuthServerConfigurationProperties authServerConfigurationProperties;
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @Bean
+    AuthServersProvider authServersProvider() {
+        return new AuthServersProviderTestable(authServerConfigurationProperties, objectMapper);
+    }
+
+    @Bean
+    public KeyRetrieverService keyRetrieverService() {
+        return new KeyRetrieverServiceTestable();
     }
 }
