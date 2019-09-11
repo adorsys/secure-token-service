@@ -6,6 +6,7 @@ import de.adorsys.sts.resourceserver.persistence.InMemoryResourceServerRepositor
 import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
 @EnableAutoConfiguration(exclude = MongoAutoConfiguration.class)
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Primary;
 public class WithAdminConfig {
 
     @Primary
+    @Bean
     ResourceServerRepository resourceServerRepository() {
         return new InMemoryResourceServerRepository();
     }

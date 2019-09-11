@@ -17,8 +17,7 @@ import java.time.Instant;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @EnableJpaPersistence
 @ContextConfiguration(classes = {
@@ -56,22 +55,8 @@ class TokenExchangeControllerJpaTest extends BaseEndpointTest {
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string("{" +
-                        "\"access_token\":\"eyJraWQiOiJzdHMtc2VjcmV0LXNlcnZlci1kZXYtZmYwMGZkNzgtMWQyNC00NDQxLWIzYjYtZGYxYWUxY2FlOTRiIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ." +
-                        "eyJzdWIiOiJkZXYiLCJyb2xlIjoiVVNFUiIsImlzcyI6Imh0dHA6XC9cL2xvY2FsaG9zdCIsInR5cCI6IkJlYXJlciIsInNlY3JldCI6eyJzdHMiOiJleUpyYVdRaU9pSnpkSE10WlhoaGJYQ" +
-                        "nNaUzFQVmxOR1FpSXNJbVZ1WXlJNklrRXhNamhIUTAwaUxDSmhiR2NpT2lKU1UwRXRUMEZGVUNKOS5UMy1PX0VKX3JiVldjck85bmpjMElwZXNNc1VDVHdCQkcyVy1hOC1hYXU2cmV5WEpsRl" +
-                        "FQenZEa2czMlN3ZkhLb08zeW1LNWNOcUk5WkQ3RXJjWmxaS1NId0J1QzVRQlRZU3RSREc2NTUyOUtoQXhhbHJIM01FQTFwSW5HVDNGeWJVLVVLM0VWTVlZY21XLTlfWXZ4bXc5VjVLTVZiSlo" +
-                        "3WDV2TjhCRm4wbUMwNFNvYkRNdTBtdkdQNGYzZ3RvZUh1cXlDTTZzdURzSDFlMVdCa3FZQm9iQ2xQdlcySWFjWkt1TFVjVFM3bFdaOTlJajJycjdDR2tVR2ExdDBrT19rOVlQRkY5MkMyQXlR" +
-                        "RmhTdGswMUIwQXNQNXI2S3hJdGR0d3FyS3VtSEFBY0tvakpaSUtQVlRITUE5cGNNNXJUZHdPM3czbm5ta0RLRnFUT1dLV1B5bWcuOEpyMlZWM1VGY3RpX1RGei5TSjVyR205a2lFWTl6ZjlNM" +
-                        "XdfVnNqOFp4VlZ5S2RISUFrUkg4S2E2YzRlMllpTnB4cmRFV2tJdnlRLllLTzlidlRVTVdMZ0tuTHhsUHRzOXcifSwiZXhwIjoxNjAwODE5MzgwLCJpYXQiOjE1MTYyMzkwMjIsImp0aSI6Ij" +
-                        "c1NDk3ZTU1LTY1NTgtNDk2MS05OTQ0LTllYjdkZmJhNTJiMiJ9.8Urq0or-A_FI40lSZwuzWXgpreUNxdM1yBUUHHs1lYGX5wyWfWzrQuUtzQzWzXfLDblT65vxMvVB-u7tn-O8aZEMUuV3kT" +
-                        "Vx5V_6BZ3qYzZ-CcVq79JK9jpPyKzec5Ez2wOcFoXv_0TYzRVRLpF13yWWikS0Pr8v8UJ6ASCDcNtRfPE8PgjsaidSBCI9Mm-Zkh3q6L5qH7-Bh3ktsB6YF_C_C4u24P5tfnjCl03nScLQNoT" +
-                        "tCRMRx0byZODudSGelCMtOWqubmBRPQklm7ymTJc9IkTOSXnGXTWkSURNb3-Tnrfu7nlyb9IVFP1wVa8Cr36kxfDGt5rbXwspDXd4Og\"," +
-                        "\"issued_token_type\":\"urn:ietf:params:oauth:token-type:access_token\"," +
-                        "\"token_type\":\"Bearer\"," +
-                        "\"expires_in\":84580358," +
-                        "\"scope\":\"\"," +
-                        "\"refresh_token\":null}\n"))
-                .andReturn();
+                .andExpect(jsonPath("$.issued_token_type").value("urn:ietf:params:oauth:token-type:access_token"))
+                .andExpect(jsonPath("$.token_type").value("Bearer"))
+                .andExpect(jsonPath("$.expires_in").value("84580358"));
     }
 }
