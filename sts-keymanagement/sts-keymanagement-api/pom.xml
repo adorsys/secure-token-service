@@ -21,6 +21,11 @@
         </dependency>
 
         <dependency>
+            <groupId>de.adorsys.lock-persistence</groupId>
+            <artifactId>lock-persistence-core</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>

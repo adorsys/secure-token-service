@@ -58,6 +58,7 @@
 		<bouncycastle.version>1.61</bouncycastle.version>
 		<keycloak.version>6.0.1</keycloak.version>
 		<keycloak-config-cli.version>v0.6.6</keycloak-config-cli.version>
+		<surefire.version>2.22.1</surefire.version>
 		<junit.jupiter.version>5.4.1</junit.jupiter.version>
 		<scmBranch />
 	</properties>
@@ -346,12 +347,29 @@
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+		</plugins>
+
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-project-info-reports-plugin</artifactId>
 					<version>2.7</version>
+				</plugin>
+				<!-- For Junit5 -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${surefire.version}</version>
+					<configuration>
+						<argLine>${surefireArgLine}</argLine>
+					</configuration>
 				</plugin>
 
 				<!-- Maven Release Build fails if javadoc comments are invalid. http://stackoverflow.com/questions/15886209/maven-is-not-working-in-java-8-when-javadoc-tags-are-incomplete -->
