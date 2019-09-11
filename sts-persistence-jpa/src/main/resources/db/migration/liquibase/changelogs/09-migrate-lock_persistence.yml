@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - property:
+      name: schemaName
+      value: sts
+  - changeSet:
+      id: 10
+      author: sts
+      changes:
+        - sql:
+            schemaName: sts
+            sql: INSERT INTO ${schemaName}.sts_lock
+              (name, lock_until, locked_at, locked_by)
+              (SELECT name, exp, NULL, 'lock_persistence' FROM (SELECT name, MAX(expires) AS exp FROM ${schemaName}.lock_persistence GROUP BY name))

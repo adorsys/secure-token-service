@@ -14,7 +14,7 @@ import java.time.Instant;
 @Configuration
 public class ExecutionLockConfiguration {
 
-    public static final String DEFAULT_TABLE_KEY = "${de.adorsys.sts.lock.table:sts-lock}";
+    public static final String DEFAULT_TABLE_KEY = "${de.adorsys.sts.lock.table:sts.sts_lock}";
 
     @Value("${de.adorsys.sts.lock.expiryS:600}")
     private int expiryS;
