@@ -66,6 +66,10 @@ sts:
       http-connect-timeout: 10000
       http-read-timeout: 60000
       http-size-limit: 512000
+      cache:
+        enabled: false
+        maximum-size: 1000
+        expire-after-access: 10
     resource-servers:
       - audience: "sts"
         jwks-url: "http://localhost:8888/pop"

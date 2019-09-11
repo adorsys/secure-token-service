@@ -6,11 +6,13 @@ import de.adorsys.sts.objectmapper.JacksonConfiguration;
 import de.adorsys.sts.resourceserver.persistence.InMemoryResourceServerRepository;
 import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
 import de.adorsys.sts.resourceserver.service.EncryptionService;
+import de.adorsys.sts.resourceserver.service.KeyRetrieverService;
 import de.adorsys.sts.resourceserver.service.ResourceServerService;
 import de.adorsys.sts.secret.SecretRepository;
 import de.adorsys.sts.secretserver.encryption.EncryptedSecretRepository;
 import de.adorsys.sts.simpleencryption.StaticKeyEncryptionFactory;
 import de.adorsys.sts.tests.e2e.tokenexchange.AuthServersProviderTestable;
+import de.adorsys.sts.tests.e2e.tokenexchange.KeyRetrieverServiceTestable;
 import de.adorsys.sts.token.authentication.AuthServerConfigurationProperties;
 import de.adorsys.sts.token.tokenexchange.LoggingTokenExchangeClaimsService;
 import de.adorsys.sts.token.tokenexchange.TokenExchangeClaimsService;
@@ -80,5 +82,10 @@ public class WithTokenExchangeConfig {
     @Bean
     AuthServersProvider authServersProvider() {
         return new AuthServersProviderTestable(authServerConfigurationProperties, objectMapper);
+    }
+
+    @Bean
+    public KeyRetrieverService keyRetrieverService() {
+        return new KeyRetrieverServiceTestable();
     }
 }
