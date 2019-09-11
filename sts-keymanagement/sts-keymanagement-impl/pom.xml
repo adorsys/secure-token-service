@@ -3,37 +3,42 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>secure-token-service</artifactId>
+        <artifactId>sts-keymanagement</artifactId>
         <groupId>de.adorsys.sts</groupId>
         <version>0.30.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>sts-persistence-mongo</artifactId>
-
+    <artifactId>sts-keymanagement-impl</artifactId>
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>de.adorsys.lock-persistence</groupId>
-            <artifactId>lock-persistence-mongo</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-keymanagement-api</artifactId>
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-spring</artifactId>
+            <artifactId>sts-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.sts</groupId>
+            <artifactId>sts-crypto-utils</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+
+        <!-- test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.nitorcreations</groupId>
+            <artifactId>junit-runners</artifactId>
+        </dependency>
+
     </dependencies>
 </project>
