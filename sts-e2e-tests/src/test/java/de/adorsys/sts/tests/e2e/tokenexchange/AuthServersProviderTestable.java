@@ -1,4 +1,4 @@
-package de.adorsys.sts.tests;
+package de.adorsys.sts.tests.e2e.tokenexchange;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.sts.token.authentication.AuthServerConfigurationProperties;

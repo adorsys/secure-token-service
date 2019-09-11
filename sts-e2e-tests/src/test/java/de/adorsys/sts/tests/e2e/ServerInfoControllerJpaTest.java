@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @EnableJpaPersistence
 @ContextConfiguration(classes = {
@@ -26,12 +25,10 @@ class ServerInfoControllerJpaTest extends BaseEndpointTest {
     void serverInfoTest() {
         mvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("{" +
-                        "\"jwks_url\":\"http://localhost/pop\"," +
-                        "\"token_exchange\":\"http://localhost/token\"," +
-                        "\"admin_url\":\"http://localhost/admin\"," +
-                        "\"api_docs_url\":\"http://localhost/api-docs/index.html\"" +
-                        "}"))
+                .andExpect(jsonPath("$.jwks_url").value("http://localhost/pop"))
+                .andExpect(jsonPath("$.token_exchange").value("http://localhost/token"))
+                .andExpect(jsonPath("$.admin_url").value("http://localhost/admin"))
+                .andExpect(jsonPath("$.api_docs_url").value("http://localhost/api-docs/index.html"))
                 .andReturn();
     }
 }

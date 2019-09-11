@@ -10,7 +10,7 @@ import de.adorsys.sts.resourceserver.service.ResourceServerService;
 import de.adorsys.sts.secret.SecretRepository;
 import de.adorsys.sts.secretserver.encryption.EncryptedSecretRepository;
 import de.adorsys.sts.simpleencryption.StaticKeyEncryptionFactory;
-import de.adorsys.sts.tests.AuthServersProviderTestable;
+import de.adorsys.sts.tests.e2e.tokenexchange.AuthServersProviderTestable;
 import de.adorsys.sts.token.authentication.AuthServerConfigurationProperties;
 import de.adorsys.sts.token.tokenexchange.LoggingTokenExchangeClaimsService;
 import de.adorsys.sts.token.tokenexchange.TokenExchangeClaimsService;

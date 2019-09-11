@@ -1,4 +1,4 @@
-package de.adorsys.sts.tests.e2e;
+package de.adorsys.sts.tests.e2e.tokenexchange;
 
 import de.adorsys.sts.persistence.jpa.config.EnableJpaPersistence;
 import de.adorsys.sts.tests.BaseEndpointTest;
