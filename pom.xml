@@ -51,6 +51,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<spring-boot.version>2.1.4.RELEASE</spring-boot.version>
+		<schedlock.version>2.5.0</schedlock.version>
 		<springfox-swagger.version>2.9.2</springfox-swagger.version>
 		<lock-persistence.version>0.3.2</lock-persistence.version>
 		<jackson.version>2.9.9</jackson.version>
@@ -238,20 +239,21 @@
 			</dependency>
 
 			<dependency>
-				<groupId>de.adorsys.lock-persistence</groupId>
-				<artifactId>lock-persistence-jpa</artifactId>
-				<version>${lock-persistence.version}</version>
+				<groupId>net.javacrumbs.shedlock</groupId>
+				<artifactId>shedlock-core</artifactId>
+				<version>${schedlock.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>de.adorsys.lock-persistence</groupId>
-				<artifactId>lock-persistence-mongo</artifactId>
-				<version>${lock-persistence.version}</version>
+				<groupId>net.javacrumbs.shedlock</groupId>
+				<artifactId>shedlock-provider-jdbc-template</artifactId>
+				<version>${schedlock.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>de.adorsys.lock-persistence</groupId>
-				<artifactId>lock-persistence-core</artifactId>
-				<version>${lock-persistence.version}</version>
+				<groupId>net.javacrumbs.shedlock</groupId>
+				<artifactId>shedlock-provider-mongo</artifactId>
+				<version>${schedlock.version}</version>
 			</dependency>
+
 
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>

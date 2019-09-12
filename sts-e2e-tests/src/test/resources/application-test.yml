@@ -12,7 +12,7 @@ spring:
   flyway:
     enabled: false
     locations:
-      - db/migration/flyway/h2
+      - classpath:/db/migration/flyway/mysql
   liquibase:
     enabled: true
     change-log: classpath:/db/migration/liquibase/changelog.yml

@@ -5,7 +5,6 @@ import com.nimbusds.jose.jwk.JWKSet;
 import de.adorsys.sts.common.model.KeyAndJwk;
 import de.adorsys.sts.common.util.ImmutableLists;
 import de.adorsys.sts.cryptoutils.ServerKeyMap;
-import de.adorsys.sts.cryptoutils.ServerKeyMapProvider;
 import de.adorsys.sts.cryptoutils.ServerKeysHolder;
 import de.adorsys.sts.cryptoutils.StsServerKeyMap;
 import de.adorsys.sts.keymanagement.model.KeyUsage;

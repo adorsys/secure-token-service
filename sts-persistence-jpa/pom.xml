@@ -25,13 +25,10 @@
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-spring</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>de.adorsys.lock-persistence</groupId>
-            <artifactId>lock-persistence-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.lock-persistence</groupId>
-            <artifactId>lock-persistence-jpa</artifactId>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-provider-jdbc-template</artifactId>
         </dependency>
 
         <dependency>
