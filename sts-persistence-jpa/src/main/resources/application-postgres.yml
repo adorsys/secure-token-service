@@ -3,7 +3,7 @@ spring:
     include: jpa
 
   liquibase:
-    default-schema: public
+    default-schema: sts
 
   flyway:
     locations:

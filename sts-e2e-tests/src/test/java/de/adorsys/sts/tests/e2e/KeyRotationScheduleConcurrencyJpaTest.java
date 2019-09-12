@@ -33,11 +33,11 @@ import static org.mockito.Mockito.when;
  */
 @EnableJpaPersistence
 @ContextConfiguration(classes = {
-        KeyRotationScheduleConcurrencyPreventedJpaTest.KeyRotationScheduleTestable.class,
+        KeyRotationScheduleConcurrencyJpaTest.KeyRotationScheduleTestable.class,
         WithControllableClock.class,
         WithRotation.class
 })
-class KeyRotationScheduleConcurrencyPreventedJpaTest extends BaseSpringTest {
+class KeyRotationScheduleConcurrencyJpaTest extends BaseSpringTest {
 
     private static final Duration RUNNING_WINDOW = Duration.ofSeconds(10);
     private static final int THREAD_COUNT = Math.max(10, Runtime.getRuntime().availableProcessors());
