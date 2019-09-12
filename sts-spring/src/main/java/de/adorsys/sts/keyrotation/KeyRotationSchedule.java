@@ -1,5 +1,6 @@
 package de.adorsys.sts.keyrotation;
 
+import com.google.common.annotations.VisibleForTesting;
 import de.adorsys.sts.common.lock.LockClient;
 import de.adorsys.sts.keymanagement.model.KeyRotationResult;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
@@ -54,17 +55,20 @@ public class KeyRotationSchedule {
     )
     public void scheduledRotation() {
 
-        lockClient.executeIfOwned(rotationLockName, () -> {
-            if(keyStoreRepository.exists()) {
-                LOG.debug("Perform key rotation...");
+        lockClient.executeIfOwned(rotationLockName, this::doRotate);
+    }
 
-                performKeyRotation();
+    @VisibleForTesting
+    protected void doRotate() {
+        if (keyStoreRepository.exists()) {
+            LOG.debug("Perform key rotation...");
 
-                LOG.debug("Key rotation finished.");
-            } else {
-                LOG.debug("No key rotation needed. Keystore repository is (still) empty.");
-            }
-        });
+            performKeyRotation();
+
+            LOG.debug("Key rotation finished.");
+        } else {
+            LOG.debug("No key rotation needed. Keystore repository is (still) empty.");
+        }
     }
 
     private void performKeyRotation() {
