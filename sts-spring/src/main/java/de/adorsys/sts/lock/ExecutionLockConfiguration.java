@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.Duration;
 import java.time.Instant;
 
 @Configuration
@@ -16,13 +17,13 @@ public class ExecutionLockConfiguration {
 
     public static final String DEFAULT_TABLE_KEY = "${de.adorsys.sts.lock.table:sts.sts_lock}";
 
-    @Value("${de.adorsys.sts.lock.expiryS:600}")
-    private int expiryS;
+    @Value("${de.adorsys.sts.lock.expiry:600s}")
+    private Duration expiry;
 
     @Bean
     LockClient lockClient(LockProvider lockProvider) {
         LockingTaskExecutor executor = new DefaultLockingTaskExecutor(lockProvider);
-        Instant lockAtMostUntil = Instant.now().plusSeconds(expiryS);
+        Instant lockAtMostUntil = Instant.now().plus(expiry);
 
         return (rotationLockName, toExecute) ->
                 executor.executeWithLock(toExecute, new LockConfiguration(rotationLockName, lockAtMostUntil));
