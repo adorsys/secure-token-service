@@ -1,4 +1,4 @@
-package de.adorsys.sts.tests.e2e.alldbsanity.rdbms.rotation;
+package de.adorsys.sts.tests.e2e.alldbsanity;
 
 import de.adorsys.sts.tests.config.WithControllableClock;
 import de.adorsys.sts.tests.config.WithPopConfig;

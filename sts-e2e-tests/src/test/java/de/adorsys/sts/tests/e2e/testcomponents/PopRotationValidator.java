@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -44,7 +45,7 @@ public class PopRotationValidator {
 
         // Expire keys using validity interval
         clock.setInstant(clock.instant().plusMillis(
-                props.getKeystore().getKeys().getEncKeyPairs().getLegacyInterval() + 10)
+                props.getKeystore().getKeys().getEncKeyPairs().getLegacyInterval() + TimeUnit.SECONDS.toMillis(60))
         );
         rotationSchedule.scheduledRotation();
 

@@ -1,7 +1,7 @@
 package de.adorsys.sts.tests.e2e;
 
-import de.adorsys.sts.persistence.jpa.config.EnableJpaPersistence;
 import de.adorsys.sts.tests.BaseEndpointTest;
+import de.adorsys.sts.tests.JpaPersistenceAutoConfiguration;
 import de.adorsys.sts.tests.Resource;
 import de.adorsys.sts.tests.config.WithAdminConfig;
 import de.adorsys.sts.tests.config.WithoutWebSecurityConfig;
@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@EnableJpaPersistence
+@JpaPersistenceAutoConfiguration
 @ContextConfiguration(classes = {WithAdminConfig.class, WithoutWebSecurityConfig.class})
 class AdminControllerJpaTest extends BaseEndpointTest {
 

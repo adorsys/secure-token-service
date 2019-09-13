@@ -1,16 +1,17 @@
 package de.adorsys.sts.tests.e2e;
 
-import de.adorsys.sts.persistence.jpa.config.EnableJpaPersistence;
 import de.adorsys.sts.tests.BaseEndpointTest;
+import de.adorsys.sts.tests.JpaPersistenceAutoConfiguration;
 import de.adorsys.sts.tests.config.*;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@EnableJpaPersistence
+@JpaPersistenceAutoConfiguration
 @ContextConfiguration(classes = {
         WithServerInfo.class,
         WithAdminConfig.class,

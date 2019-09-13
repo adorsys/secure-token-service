@@ -1,4 +1,4 @@
-package de.adorsys.sts.tests.e2e.tokenexchange;
+package de.adorsys.sts.tests.e2e.testcomponents;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.OctetSequenceKey;

@@ -5,8 +5,8 @@ import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
 import de.adorsys.sts.keymanagement.service.KeyRotationService;
 import de.adorsys.sts.keyrotation.KeyRotationSchedule;
-import de.adorsys.sts.persistence.jpa.config.EnableJpaPersistence;
 import de.adorsys.sts.tests.BaseSpringTest;
+import de.adorsys.sts.tests.JpaPersistenceAutoConfiguration;
 import de.adorsys.sts.tests.config.WithControllableClock;
 import de.adorsys.sts.tests.config.WithRotation;
 import lombok.SneakyThrows;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests that multiple key-rotation executions are prevented (allows clustered execution).
  */
-@EnableJpaPersistence
+@JpaPersistenceAutoConfiguration
 @ContextConfiguration(classes = {
         KeyRotationScheduleConcurrencyJpaTest.KeyRotationScheduleTestable.class,
         WithControllableClock.class,

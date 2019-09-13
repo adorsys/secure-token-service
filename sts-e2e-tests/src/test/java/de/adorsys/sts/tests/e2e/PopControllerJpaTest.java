@@ -4,6 +4,7 @@ import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.persistence.jpa.config.EnableJpaPersistence;
 import de.adorsys.sts.tests.BaseEndpointTest;
+import de.adorsys.sts.tests.JpaPersistenceAutoConfiguration;
 import de.adorsys.sts.tests.config.WithPopConfig;
 import de.adorsys.sts.tests.config.WithoutWebSecurityConfig;
 import lombok.SneakyThrows;
@@ -19,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@EnableJpaPersistence
+@JpaPersistenceAutoConfiguration
 @ContextConfiguration(classes = {WithPopConfig.class, WithoutWebSecurityConfig.class})
 class PopControllerJpaTest extends BaseEndpointTest {
 

@@ -2,6 +2,7 @@ package de.adorsys.sts.tests.e2e;
 
 import de.adorsys.sts.persistence.jpa.config.EnableJpaPersistence;
 import de.adorsys.sts.tests.BaseEndpointTest;
+import de.adorsys.sts.tests.JpaPersistenceAutoConfiguration;
 import de.adorsys.sts.tests.config.WithPasswordGrantConfig;
 import de.adorsys.sts.tests.config.WithoutWebSecurityConfig;
 import lombok.SneakyThrows;
@@ -13,7 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@EnableJpaPersistence
+@JpaPersistenceAutoConfiguration
 @ContextConfiguration(classes = {WithPasswordGrantConfig.class, WithoutWebSecurityConfig.class})
 class PasswordGrantControllerJpaTest extends BaseEndpointTest {
 

@@ -16,7 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import static de.adorsys.sts.lock.ExecutionLockConfiguration.DEFAULT_TABLE_KEY;
+import static de.adorsys.sts.lock.ExecutionLockConfiguration.DEFAULT_JPA_TABLE_KEY;
 
 @Configuration
 @ComponentScan(basePackages = {
@@ -32,7 +32,7 @@ import static de.adorsys.sts.lock.ExecutionLockConfiguration.DEFAULT_TABLE_KEY;
 public class JpaConfiguration {
 
     @Bean
-    LockProvider lockProvider(JdbcTemplate template, @Value(DEFAULT_TABLE_KEY) String lockTable) {
+    LockProvider lockProvider(JdbcTemplate template, @Value(DEFAULT_JPA_TABLE_KEY) String lockTable) {
         return new JdbcTemplateLockProvider(template, lockTable);
     }
 }
