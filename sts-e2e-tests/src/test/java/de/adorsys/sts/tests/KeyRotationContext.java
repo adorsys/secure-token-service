@@ -1,4 +1,4 @@
-package de.adorsys.sts.tests.e2e.alldbsanity;
+package de.adorsys.sts.tests;
 
 import de.adorsys.sts.tests.config.WithControllableClock;
 import de.adorsys.sts.tests.config.WithPopConfig;

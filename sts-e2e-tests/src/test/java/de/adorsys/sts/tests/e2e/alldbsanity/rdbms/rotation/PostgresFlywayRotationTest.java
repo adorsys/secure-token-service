@@ -1,6 +1,6 @@
 package de.adorsys.sts.tests.e2e.alldbsanity.rdbms.rotation;
 
-import de.adorsys.sts.tests.e2e.alldbsanity.KeyRotationContext;
+import de.adorsys.sts.tests.KeyRotationContext;
 import de.adorsys.sts.tests.e2e.alldbsanity.rdbms.BaseJdbcDbTest;
 import de.adorsys.sts.tests.e2e.testcomponents.PopRotationValidator;
 import org.junit.jupiter.api.Test;
