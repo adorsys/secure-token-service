@@ -5,5 +5,5 @@ CREATE TABLE sts.secret
   value    VARCHAR(2047) NOT NULL,
 
   PRIMARY KEY (id),
-  CONSTRAINT key_store__name__unique UNIQUE (subject)
+  CONSTRAINT secret__name__unique UNIQUE (subject)
 );
