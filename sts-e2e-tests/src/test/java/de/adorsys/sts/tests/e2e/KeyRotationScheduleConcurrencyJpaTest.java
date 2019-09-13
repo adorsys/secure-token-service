@@ -6,6 +6,7 @@ import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
 import de.adorsys.sts.keymanagement.service.KeyRotationService;
 import de.adorsys.sts.keyrotation.KeyRotationSchedule;
 import de.adorsys.sts.tests.BaseSpringTest;
+import de.adorsys.sts.tests.CleanupDbBeforeAfterClass;
 import de.adorsys.sts.tests.JpaPersistenceAutoConfiguration;
 import de.adorsys.sts.tests.config.WithControllableClock;
 import de.adorsys.sts.tests.config.WithRotation;
@@ -37,6 +38,7 @@ import static org.mockito.Mockito.when;
         WithControllableClock.class,
         WithRotation.class
 })
+@CleanupDbBeforeAfterClass
 class KeyRotationScheduleConcurrencyJpaTest extends BaseSpringTest {
 
     private static final Duration RUNNING_WINDOW = Duration.ofSeconds(10);
