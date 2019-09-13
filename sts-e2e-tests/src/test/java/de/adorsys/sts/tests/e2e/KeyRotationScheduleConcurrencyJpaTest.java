@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.time.Clock;
@@ -28,6 +29,7 @@ import java.util.stream.IntStream;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 /**
  * Tests that multiple key-rotation executions are prevented (allows clustered execution).
@@ -38,6 +40,7 @@ import static org.mockito.Mockito.when;
         WithControllableClock.class,
         WithRotation.class
 })
+@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 @CleanupDbBeforeAfterClass
 class KeyRotationScheduleConcurrencyJpaTest extends BaseSpringTest {
 
