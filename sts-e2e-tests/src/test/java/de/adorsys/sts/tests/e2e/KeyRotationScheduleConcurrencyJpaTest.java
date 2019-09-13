@@ -25,6 +25,7 @@ import java.time.Duration;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 import static org.mockito.Mockito.verify;
@@ -72,6 +73,7 @@ class KeyRotationScheduleConcurrencyJpaTest extends BaseSpringTest {
                     rotationSchedule.scheduledRotation();
                 }));
 
+        EXECUTOR.awaitTermination(RUNNING_WINDOW.getSeconds() + 1, TimeUnit.SECONDS);
         // Rotation attempt is done only once
         verify(rotationSchedule).doRotate();
     }
