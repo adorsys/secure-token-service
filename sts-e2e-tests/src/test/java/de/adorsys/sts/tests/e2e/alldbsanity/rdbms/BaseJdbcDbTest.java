@@ -1,4 +1,4 @@
-package de.adorsys.sts.tests.e2e.alldbsanity;
+package de.adorsys.sts.tests.e2e.alldbsanity.rdbms;
 
 import de.adorsys.sts.persistence.jpa.config.EnableJpaPersistence;
 import de.adorsys.sts.tests.BaseSpringTest;

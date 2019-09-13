@@ -60,7 +60,6 @@ public class KeyRotationSchedule {
             fixedDelayString = "${sts.keymanagement.rotation.check-interval:60000}"
     )
     public void scheduledRotation() {
-
         lockClient.executeIfOwned(rotationLockName, this::doRotate);
     }
 
