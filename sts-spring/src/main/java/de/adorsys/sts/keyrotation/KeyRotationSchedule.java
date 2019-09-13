@@ -66,7 +66,6 @@ public class KeyRotationSchedule {
     @VisibleForTesting
     protected void doRotate() {
         if (keyStoreRepository.exists()) {
-            LOG.info("Will perform");
             LOG.debug("Perform key rotation...");
 
             performKeyRotation();
