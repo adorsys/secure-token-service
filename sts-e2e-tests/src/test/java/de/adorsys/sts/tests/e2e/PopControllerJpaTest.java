@@ -2,7 +2,6 @@ package de.adorsys.sts.tests.e2e;
 
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
-import de.adorsys.sts.persistence.jpa.config.EnableJpaPersistence;
 import de.adorsys.sts.tests.BaseEndpointTest;
 import de.adorsys.sts.tests.JpaPersistenceAutoConfiguration;
 import de.adorsys.sts.tests.config.WithPopConfig;
