@@ -5,11 +5,8 @@ import de.adorsys.sts.resourceserver.persistence.InMemoryResourceServerRepositor
 import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;
 import de.adorsys.sts.resourceserver.service.UserDataRepository;
 import de.adorsys.sts.token.passwordgrant.EnablePasswordGrant;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
-@EnableAutoConfiguration(exclude = MongoAutoConfiguration.class)
 @EnablePasswordGrant
 public class WithPasswordGrantConfig {
 

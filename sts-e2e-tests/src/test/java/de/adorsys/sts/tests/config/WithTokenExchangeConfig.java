@@ -11,8 +11,8 @@ import de.adorsys.sts.resourceserver.service.ResourceServerService;
 import de.adorsys.sts.secret.SecretRepository;
 import de.adorsys.sts.secretserver.encryption.EncryptedSecretRepository;
 import de.adorsys.sts.simpleencryption.StaticKeyEncryptionFactory;
-import de.adorsys.sts.tests.e2e.tokenexchange.AuthServersProviderTestable;
-import de.adorsys.sts.tests.e2e.tokenexchange.KeyRetrieverServiceTestable;
+import de.adorsys.sts.tests.e2e.testcomponents.AuthServersProviderTestable;
+import de.adorsys.sts.tests.e2e.testcomponents.KeyRetrieverServiceTestable;
 import de.adorsys.sts.token.authentication.AuthServerConfigurationProperties;
 import de.adorsys.sts.token.tokenexchange.LoggingTokenExchangeClaimsService;
 import de.adorsys.sts.token.tokenexchange.TokenExchangeClaimsService;
@@ -21,12 +21,9 @@ import de.adorsys.sts.token.tokenexchange.server.EnableTokenExchangeServer;
 import de.adorsys.sts.tokenauth.AuthServersProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
-@EnableAutoConfiguration(exclude = MongoAutoConfiguration.class)
 @EnableTokenExchangeServer
 @Import({
         JacksonConfiguration.class

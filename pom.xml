@@ -61,6 +61,7 @@
 		<surefire.version>2.22.1</surefire.version>
 		<jacoco.version>0.8.4</jacoco.version>
 		<junit.jupiter.version>5.4.1</junit.jupiter.version>
+		<testcontainers.version>1.12.1</testcontainers.version>
 		<scmBranch />
 	</properties>
 
@@ -342,7 +343,24 @@
 				<version>1.4.4</version>
 				<scope>test</scope>
 			</dependency>
-
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers</artifactId>
+				<version>${testcontainers.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>mysql</artifactId>
+				<version>${testcontainers.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>${testcontainers.version}</version>
+				<scope>test</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

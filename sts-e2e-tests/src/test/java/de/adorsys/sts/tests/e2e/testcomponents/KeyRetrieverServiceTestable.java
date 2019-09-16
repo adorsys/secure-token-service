@@ -1,4 +1,4 @@
-package de.adorsys.sts.tests.e2e.tokenexchange;
+package de.adorsys.sts.tests.e2e.testcomponents;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;

@@ -15,7 +15,15 @@ import java.time.Instant;
 @Configuration
 public class ExecutionLockConfiguration {
 
-    public static final String DEFAULT_TABLE_KEY = "${de.adorsys.sts.lock.table:sts.sts_lock}";
+    /**
+     * Expects database table to have format database.tableName
+     */
+    public static final String DEFAULT_JPA_TABLE_KEY = "${de.adorsys.sts.lock.table:sts.sts_lock}";
+
+    /**
+     * Expects mongo collection to have format database.collection
+     */
+    public static final String DEFAULT_MONGO_COLLECTION_KEY = "${de.adorsys.sts.lock.collection:sts.sts_lock}";
 
     @Value("${de.adorsys.sts.lock.expiry:600s}")
     private Duration expiry;

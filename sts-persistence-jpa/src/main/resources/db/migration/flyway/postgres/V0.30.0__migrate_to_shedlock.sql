@@ -9,6 +9,6 @@ CREATE TABLE sts.sts_lock
 
 INSERT INTO sts.sts_lock
 (name, lock_until, locked_at, locked_by)
-    (SELECT name, exp, NULL, 'lock_persistence' FROM (SELECT name, MAX(expires) AS exp FROM sts.lock_persistence GROUP BY name));
+    (SELECT tbl.name, tbl.exp, NULL, 'lock_persistence' FROM (SELECT name, MAX(expires) AS exp FROM sts.lock_persistence GROUP BY name) tbl);
 
 DROP TABLE sts.lock_persistence;

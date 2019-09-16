@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-import static de.adorsys.sts.lock.ExecutionLockConfiguration.DEFAULT_TABLE_KEY;
+import static de.adorsys.sts.lock.ExecutionLockConfiguration.DEFAULT_MONGO_COLLECTION_KEY;
 
 @Configuration
 @ComponentScan(basePackages = {
@@ -27,7 +27,9 @@ import static de.adorsys.sts.lock.ExecutionLockConfiguration.DEFAULT_TABLE_KEY;
 public class MongoConfiguration {
 
     @Bean
-    LockProvider lockProvider(MongoClient client, @Value(DEFAULT_TABLE_KEY) String lockTable) {
-        return new MongoLockProvider(client, lockTable);
+    LockProvider lockProvider(MongoClient client, @Value(DEFAULT_MONGO_COLLECTION_KEY) String lockTable) {
+        // mongo does not allow '.', so we assume that provided variable
+        String[] dbAndCollection = lockTable.split("\\.");
+        return new MongoLockProvider(client, dbAndCollection[0], dbAndCollection[1]);
     }
 }

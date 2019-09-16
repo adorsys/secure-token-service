@@ -1,7 +1,8 @@
 package de.adorsys.sts.tests.e2e.tokenexchange;
 
-import de.adorsys.sts.persistence.jpa.config.EnableJpaPersistence;
 import de.adorsys.sts.tests.BaseEndpointTest;
+import de.adorsys.sts.tests.JpaPersistenceAutoConfiguration;
+import de.adorsys.sts.tests.Resource;
 import de.adorsys.sts.tests.config.WithControllableClock;
 import de.adorsys.sts.tests.config.WithTokenExchangeConfig;
 import de.adorsys.sts.tests.config.WithoutWebSecurityConfig;
@@ -20,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@EnableJpaPersistence
+@JpaPersistenceAutoConfiguration
 @ContextConfiguration(classes = {
         WithTokenExchangeConfig.class,
         WithControllableClock.class,
@@ -33,7 +34,7 @@ class TokenExchangeControllerJpaTest extends BaseEndpointTest {
     @Test
     @SneakyThrows
     void tokenExchangeTest() {
-        String token = readFromResource("fixture/test_token.txt");
+        String token = Resource.read("fixture/test_token.txt");
 
         clock.setInstant(Instant.ofEpochMilli(1516239022000L));
 
