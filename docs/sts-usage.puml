@@ -61,7 +61,7 @@ node "Datacenter 2" as DA2 {
     [Secret Server] #lightblue
     [Secret Key Management] as SKM #lightblue
         note right of SKM
-        encrypts the date stored
+        encrypts the data stored
         from the secret server
         to the DFS
         end note
