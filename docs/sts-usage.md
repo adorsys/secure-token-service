@@ -1,24 +1,31 @@
 # STS USAGE
 
-<h3>"The most important functionality of STS is:
+Before going into the detail of the example, reconsider
+the purposes of the STS functionalities.
+
+### first purpose
+The most important functionality of STS is:
 Design a clean key management, so that you can provide POP endpoints, so that you can allow network components 
 to communicate with each other free of the hassle of network topologies we can not control."
-</h3>    
 
-This document gives an example, how components of STS may be used.
-
-Furhter functionionality of the POP is:
+Further functionionality of the POP is:
 - generate key pairs (needed for pop)
-- generate secret keys (for what?)
+- generate secret keys
 - key rotation
 - clustering (so that many servers can share)
 
+### second purpose
 The second functionality of STS is the Secret Server.
+
+### third purpose
 
 The third functionality is tha Token generation. This functionality is 
 less important, befause there exist a lot of frameworks for that.
 
-In the following diagram the following use case is shown:  
+## example use case
+In the following an example is given to show how components of STS may be used.
+
+The following diagram explains the use case:  
 1. user identifies at IDP
 2. user sends JWT to backend
 3. backend asks secret server for users secret key
