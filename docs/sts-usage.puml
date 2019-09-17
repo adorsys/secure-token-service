@@ -29,7 +29,7 @@ node "Reverse Proxy" {
 	[HTTPD / NGINX]  as Proxy
 }
 
-node "Data Center 1" as DA1 {
+node "Datacenter 1" as DA1 {
   node "Business Logic" {
     [Backend Server]
   }
@@ -46,12 +46,12 @@ node "Data Center 1" as DA1 {
 note bottom of [Key Management]
     keeps dynamicly private/public
     key pairs and exposes the public
-    key so that date comming in
+    key so that data comming in
     is encrypted asymetricaly.
 end note
 }
 
-node "Data Center 2" as DA2 {
+node "Datacenter 2" as DA2 {
   node "communication logic" as CL {
   [Registered Resource Server] as RRS  #lightblue
   [Registered IDPs] as RIP #lightblue
@@ -136,7 +136,7 @@ end note
 note bottom of DA2
     Datacenter 2 keeps the users
     secret needed to open keystore
-    of user in Data Center 1
+    of user in datacenter 1
 end note
 
 note bottom of DFS1
