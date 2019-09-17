@@ -2,9 +2,9 @@
 
 legend
 |= color |= meaning |
-|<back:#0000ff>                  </back>| content asymetricaly encrypted |
-|<back:#FF0000>                  </back>| content unencrypted or by protocol |
-|<back:lightblue>                  </back>| component of STS |
+|blue line| content asymetricaly encrypted |
+|red line| content unencrypted or by protocol |
+|light blue background| component of STS |
 endlegend
 
 skinparam linetype ortho
