@@ -32,7 +32,7 @@ The following diagram explains the use case:
 4. secret server retrieves users secret key and returns it
 5. backend can en- and decrypt data of user
 
-![Modules map](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/secure-token-service/v2/documentation/docs/sts-usage.puml&fmt=svg&vvv=1&sanitize=true)
+![Modules map](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/secure-token-service/v2/documentation/docs/sts-usage.puml)
 
 ## POP ##
 The Proof of Posession (POP). 
