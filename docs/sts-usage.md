@@ -19,7 +19,7 @@ The second functionality of STS is the Secret Server.
 
 ### third purpose
 
-The third functionality is tha Token generation. This functionality is 
+The third functionality is the Token generation. This functionality is 
 less important, befause there exist a lot of frameworks for that.
 
 ## example use case
