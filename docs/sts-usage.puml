@@ -1,0 +1,146 @@
+@startuml
+
+legend
+|= color |= meaning |
+|blue line| content asymetricaly encrypted |
+|red line| content unencrypted or by protocol |
+|light blue background| component of STS |
+endlegend
+
+skinparam linetype ortho
+
+
+/' ======================= NODES '/
+node "Frontend" {
+    actor "User"
+    [Gui]
+}
+
+node "IDP" {
+    node Keycloak {
+        [Token Server] #lightblue
+    }
+    node POP as POP2 {
+        [JWKS-URL] #lightblue
+    }
+}
+
+node "Reverse Proxy" {
+	[HTTPD / NGINX]  as Proxy
+}
+
+node "Datacenter 1" as DA1 {
+  node "Business Logic" {
+    [Backend Server]
+  }
+
+  node "Persistence Layer" {
+  [Datasafe]
+  }
+
+  node POP as POP1 {
+    [Key Management] #lightblue
+
+  }
+
+note bottom of [Key Management]
+    keeps dynamicly private/public
+    key pairs and exposes the public
+    key so that data comming in
+    is encrypted asymetricaly.
+end note
+}
+
+node "Datacenter 2" as DA2 {
+  node "communication logic" as CL {
+  [Registered Resource Server] as RRS  #lightblue
+  [Registered IDPs] as RIP #lightblue
+  }
+
+  node "secret logic" as SL {
+    [Secret Server] #lightblue
+    [Secret Key Management] as SKM #lightblue
+        note right of SKM
+        encrypts the data stored
+        from the secret server
+        to the DFS
+        end note
+
+  }
+
+note bottom of SL
+    keeps dynamicly private/public
+    key pairs and exposes the public
+    key so that date comming in
+    is encrypted asymetricaly.
+end note
+
+note bottom of CL
+    knows Datacenter 1
+    by config file. So onyl request from known
+    server are accepted at all.
+end note
+
+}
+
+database "Storage" as DB1{
+  frame "DFS" as DFS1{
+  }
+}
+
+database "Storage" as DB2{
+  frame "DFS" as DFS2{
+  }
+}
+
+/' ======================= RELATIONS '/
+
+[Gui] -[#0000ff]do-> Proxy
+[Gui] -do-> Proxy
+[Gui] -[#0000ff]right-> [JWKS-URL]
+
+[Secret Server] -[hidden]right-> RRS
+[Secret Server] -[#0000ff]do->  DFS2
+[Secret Server] -up->  [JWKS-URL] : Secret server\n verifies authentication of\n signed token\n with public key of IDP\n (Auth0)
+
+Frontend -[hidden]left-> IDP
+
+DA1 -[hidden]-> DA2
+
+User -> [Gui]
+
+[Token Server] --> [Gui]
+
+[Backend Server] --> [Datasafe]
+
+Proxy -[#0000ff]do-> [Backend Server]
+Proxy -do-> [Key Management] : (1)
+
+[Backend Server] --> [Secret Server]
+[Secret Server] -->  [Key Management]
+[Secret Server] -[#0000ff]->  [Backend Server]
+
+
+[Datasafe] -[#0000ff]->  DFS1
+
+RRS -[hidden]left-> [Secret Server]
+
+
+note bottom of DA1
+    Datacenter 1 keeps the
+    encrypted data of the user.
+    Key of encryption kept in
+    Datacenter 2.
+end note
+
+note bottom of DA2
+    Datacenter 2 keeps the users
+    secret needed to open keystore
+    of user in datacenter 1
+end note
+
+note bottom of DFS1
+  S3 compliant DFS
+end note
+
+@enduml
