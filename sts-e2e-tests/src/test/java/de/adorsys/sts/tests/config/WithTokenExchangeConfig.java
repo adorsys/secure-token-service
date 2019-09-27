@@ -1,7 +1,7 @@
 package de.adorsys.sts.tests.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.sts.cryptoutils.ObjectMapperSPI;
+import de.adorsys.sts.common.ObjectMapperSPI;
 import de.adorsys.sts.objectmapper.JacksonConfiguration;
 import de.adorsys.sts.resourceserver.persistence.InMemoryResourceServerRepository;
 import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;

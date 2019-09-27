@@ -28,6 +28,6 @@ public class EnvProperties {
 	}
 	
 	private boolean isBlank(String value) {
-    	return null == value || "".equals(value) || "".equals(value.trim());
+    	return null == value || "".equals(value.trim());
 	}
 }

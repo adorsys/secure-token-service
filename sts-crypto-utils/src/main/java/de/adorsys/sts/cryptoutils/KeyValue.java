@@ -1,22 +1,21 @@
 package de.adorsys.sts.cryptoutils;
 
-public class KeyValue {
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@EqualsAndHashCode
+@RequiredArgsConstructor
+public class KeyValue<T> {
+
+	@NonNull
     private final String key;
-	private final Object value;
-	public KeyValue(String key, Object value) {
-		super();
-		this.key = key;
-		this.value = value;
-	}
-	
-	public boolean isNull(){return value==null;}
 
-	public String getKey() {
-		return key;
-	}
-
-	public Object getValue() {
-		return value;
-	}
+	private final T value;
 	
+	public boolean isNull() {
+		return null == value;
+	}
 }

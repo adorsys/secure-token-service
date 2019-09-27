@@ -17,7 +17,7 @@ class EnvPropertiesTest extends BaseMockitoTest {
 
     private static final String PROP_NAME = "MY_SUPER_DUPER_PROPERTY";
     private static final String DEFAULT_PREFIX = "PREFIX-111-";
-    private static final String[] BLANKS = {"", " ", "   ", "\t", "\t\t\t", "\n"};
+    private static final String[] BLANKS = {null, "", " ", "   ", "\t", "\t\t\t", "\n"};
 
     @AfterEach
     void unsetProperty() {
@@ -27,7 +27,9 @@ class EnvPropertiesTest extends BaseMockitoTest {
     @ParameterizedTest
     @MethodSource("blanks")
     void getEnvOrSysPropAllBlanks(String value) {
-        System.setProperty(PROP_NAME, value);
+        if (null != value) {
+            System.setProperty(PROP_NAME, value);
+        }
 
         assertThat(EnvProperties.getEnvOrSysProp(PROP_NAME, true)).isNull();
         assertThrows(IllegalStateException.class, () -> EnvProperties.getEnvOrSysProp(PROP_NAME, false));
@@ -46,7 +48,9 @@ class EnvPropertiesTest extends BaseMockitoTest {
     @MethodSource("blanks")
     void testGetEnvOrSysPropAllBlanks(String value) {
         String defaultValue = DEFAULT_PREFIX + value;
-        System.setProperty(PROP_NAME, DEFAULT_PREFIX + value);
+        if (null != value) {
+            System.setProperty(PROP_NAME, value);
+        }
 
         assertThat(EnvProperties.getEnvOrSysProp(PROP_NAME, defaultValue)).isEqualTo(defaultValue);
     }

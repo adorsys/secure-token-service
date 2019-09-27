@@ -10,6 +10,5 @@ import javax.security.auth.callback.CallbackHandler;
 abstract class KeyEntryData implements KeyEntry {
 
 	private final CallbackHandler passwordSource;
-
     private final String alias;
 }

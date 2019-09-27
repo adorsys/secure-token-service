@@ -1,34 +1,25 @@
 package de.adorsys.sts.cryptoutils;
 
-import org.apache.commons.lang3.StringUtils;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 
+@EqualsAndHashCode(callSuper = true)
 public class KeyStoreType extends BaseTypeString {
-    public static KeyStoreType DEFAULT = getDefaultKeyStoreType();
+    private static final String KEYSTORE_TYPE = "KEYSTORE_TYPE";
 
-	public KeyStoreType() {}
+    public static final KeyStoreType BOUNCY_CASTLE = new KeyStoreType("UBER");
+    public static final KeyStoreType DEFAULT = getDefaultKeyStoreType();
 
-    public KeyStoreType(String value) {
+    public KeyStoreType(@NonNull String value) {
         super(value);
     }
 
-	@Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        BaseTypeString that = (BaseTypeString) o;
-
-        return StringUtils.equalsAnyIgnoreCase(getValue(), that.getValue());
-    }
-
     private static KeyStoreType getDefaultKeyStoreType() {
-        String server_keystore_type = System.getProperty("SERVER_KEYSTORE_TYPE");
-        if (!StringUtils.isBlank(server_keystore_type )) {
-            return new KeyStoreType(server_keystore_type);
+        String keystoreType = System.getProperty(KEYSTORE_TYPE);
+        if (null == keystoreType || "".equals(keystoreType.trim())) {
+            return BOUNCY_CASTLE;
         }
-        return new KeyStoreType("UBER");
+
+        return new KeyStoreType(keystoreType);
     }
-    
-    
-    
 }

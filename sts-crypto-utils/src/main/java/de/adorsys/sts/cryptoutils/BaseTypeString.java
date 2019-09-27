@@ -1,42 +1,18 @@
 package de.adorsys.sts.cryptoutils;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import java.io.Serializable;
 import java.lang.reflect.Type;
 
+@Getter
+@EqualsAndHashCode
+@RequiredArgsConstructor
 public class BaseTypeString implements Serializable, Type {
 
-    private static final long serialVersionUID = 3569239558130703592L;
-    private String value;
+    private static final long serialVersionUID = -3688536509839905360L;
 
-    protected BaseTypeString() {
-    }
-
-    protected BaseTypeString(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return this.getClass().getSimpleName() + "{\'" + value + "\'}";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        BaseTypeString that = (BaseTypeString) o;
-
-        return value != null ? value.equals(that.value) : that.value == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        return value != null ? value.hashCode() : 0;
-    }
+    private final String value;
 }
