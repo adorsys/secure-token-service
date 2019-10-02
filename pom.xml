@@ -54,6 +54,7 @@
 		<springfox-swagger.version>2.9.2</springfox-swagger.version>
 		<lock-persistence.version>0.3.2</lock-persistence.version>
 		<jackson.version>2.9.9</jackson.version>
+		<jackson-databind.version>2.9.9.3</jackson-databind.version>
 		<bouncycastle.version>1.61</bouncycastle.version>
 		<keycloak.version>7.0.0</keycloak.version>
 		<keycloak-config-cli.version>v0.8.0</keycloak-config-cli.version>
@@ -242,7 +243,7 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
-				<version>${jackson.version}</version>
+				<version>${jackson-databind.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.datatype</groupId>
