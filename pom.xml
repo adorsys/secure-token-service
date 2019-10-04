@@ -53,8 +53,7 @@
 		<spring-boot.version>2.1.4.RELEASE</spring-boot.version>
 		<springfox-swagger.version>2.9.2</springfox-swagger.version>
 		<lock-persistence.version>0.3.2</lock-persistence.version>
-		<jackson.version>2.9.9</jackson.version>
-		<jackson-databind.version>2.9.9.3</jackson-databind.version>
+		<jackson.version>2.10.0</jackson.version>
 		<bouncycastle.version>1.61</bouncycastle.version>
 		<keycloak.version>7.0.0</keycloak.version>
 		<keycloak-config-cli.version>v0.8.0</keycloak-config-cli.version>
@@ -241,18 +240,8 @@
 			</dependency>
 
 			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>${jackson-databind.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.datatype</groupId>
-				<artifactId>jackson-datatype-jdk8</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.datatype</groupId>
-				<artifactId>jackson-datatype-jsr310</artifactId>
+				<groupId>com.fasterxml.jackson</groupId>
+				<artifactId>jackson-bom</artifactId>
 				<version>${jackson.version}</version>
 			</dependency>
 
