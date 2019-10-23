@@ -20,8 +20,8 @@
             <artifactId>sts-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-crypto-utils</artifactId>
+            <groupId>de.adorsys.keymanagement</groupId>
+            <artifactId>juggler-bouncycastle</artifactId>
         </dependency>
 
         <dependency>

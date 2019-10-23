@@ -53,7 +53,7 @@
 		<spring-boot.version>2.1.4.RELEASE</spring-boot.version>
 		<schedlock.version>2.5.0</schedlock.version>
 		<springfox-swagger.version>2.9.2</springfox-swagger.version>
-		<lock-persistence.version>0.3.2</lock-persistence.version>
+		<juggler.version>0.0.1-SNAPSHOT</juggler.version>
 		<jackson.version>2.9.9</jackson.version>
 		<bouncycastle.version>1.61</bouncycastle.version>
 		<keycloak.version>6.0.1</keycloak.version>
@@ -186,6 +186,11 @@
 				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-crypto-utils</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.keymanagement</groupId>
+				<artifactId>juggler-bouncycastle</artifactId>
+				<version>${juggler.version}</version>
 			</dependency>
 
 			<dependency>
