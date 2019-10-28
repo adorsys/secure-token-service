@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.security.KeyStore;
 import java.time.ZonedDateTime;
 
 @Getter
@@ -29,7 +30,7 @@ public class StsKeyEntry {
 
     private final KeyUsage keyUsage;
 
-    private final KeyEntry keyEntry;
+    private final KeyStore.Entry keyEntry;
 
     public void setState(State state) {
         this.state = state;

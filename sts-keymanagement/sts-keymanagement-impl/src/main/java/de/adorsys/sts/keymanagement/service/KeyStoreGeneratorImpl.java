@@ -143,7 +143,7 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
                 .expireAt(DateTimeUtils.addMillis(now, signKeyPairsProperties.getLegacyInterval()))
                 .keyUsage(KeyUsage.Signature)
                 .state(StsKeyEntry.State.VALID)
-                .keyEntry(signatureKeyPair)
+                .keyEntry(null)
                 .build();
     }
 
@@ -160,7 +160,7 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
                 .legacyInterval(signKeyPairsProperties.getLegacyInterval())
                 .keyUsage(KeyUsage.Signature)
                 .state(StsKeyEntry.State.CREATED)
-                .keyEntry(signatureKeyPair)
+                .keyEntry(null)
                 .build();
     }
 
@@ -187,7 +187,7 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
                 .expireAt(DateTimeUtils.addMillis(now, encKeyPairsProperties.getLegacyInterval()))
                 .keyUsage(KeyUsage.Encryption)
                 .state(StsKeyEntry.State.VALID)
-                .keyEntry(signatureKeyPair)
+                .keyEntry(null)
                 .build();
     }
 
@@ -204,7 +204,7 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
                 .legacyInterval(encKeyPairsProperties.getLegacyInterval())
                 .keyUsage(KeyUsage.Encryption)
                 .state(StsKeyEntry.State.CREATED)
-                .keyEntry(encryptionKeyPair)
+                .keyEntry(null)
                 .build();
     }
 
@@ -231,7 +231,7 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
                 .expireAt(DateTimeUtils.addMillis(now, secretKeyProperties.getLegacyInterval()))
                 .keyUsage(KeyUsage.SecretKey)
                 .state(StsKeyEntry.State.VALID)
-                .keyEntry(secretKeyData)
+                .keyEntry(null)
                 .build();
     }
 
@@ -248,7 +248,7 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
                 .legacyInterval(secretKeyProperties.getLegacyInterval())
                 .keyUsage(KeyUsage.SecretKey)
                 .state(StsKeyEntry.State.CREATED)
-                .keyEntry(secretKeyData)
+                .keyEntry(null)
                 .build();
     }
 

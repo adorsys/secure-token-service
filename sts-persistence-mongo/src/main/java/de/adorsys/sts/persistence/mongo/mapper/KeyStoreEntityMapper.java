@@ -1,5 +1,7 @@
 package de.adorsys.sts.persistence.mongo.mapper;
 
+import com.googlecode.cqengine.query.QueryFactory;
+import de.adorsys.keymanagement.api.keystore.KeyStoreView;
 import de.adorsys.keymanagement.juggler.services.Juggler;
 import de.adorsys.sts.keymanagement.model.KeyEntry;
 import de.adorsys.sts.keymanagement.model.PasswordCallbackHandler;
@@ -20,6 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static de.adorsys.keymanagement.core.view.EntryViewImpl.A_ID;
 
 @Component
 public class KeyStoreEntityMapper {
@@ -98,13 +102,15 @@ public class KeyStoreEntityMapper {
         return date.toInstant().atZone(ZoneOffset.UTC);
     }
 
-    private Map<String, StsKeyEntry> mapFromEntities(java.security.KeyStore keyStore, Map<String, KeyEntryAttributesEntity> persistentKeyEntries) {
+    private Map<String, StsKeyEntry> mapFromEntities(KeyStore keyStore, Map<String, KeyEntryAttributesEntity> persistentKeyEntries) {
         Map<String, StsKeyEntry> mappedKeyEntries = new HashMap<>();
-        // FIXME-cleanup
-        Map<String, KeyEntry> keyEntries = null; //KeyStoreService.loadEntryMap(keyStore, new KeyStoreService.SimplePasswordProvider(keyPassHandler));
+        KeyStoreView view = juggler.readKeys().fromKeyStore(keyStore, id -> keyPassHandler.getPassword());
 
         for (Map.Entry<String, KeyEntryAttributesEntity> keyEntryAttributesMapEntry : persistentKeyEntries.entrySet()) {
-            KeyEntry keyEntry = keyEntries.get(keyEntryAttributesMapEntry.getKey());
+            KeyStore.Entry keyEntry = view.entries()
+                    .retrieve(QueryFactory.equal(A_ID, keyEntryAttributesMapEntry.getValue().getAlias()))
+                    .toCollection().first()
+                    .getEntry();
 
             StsKeyEntry mappedKeyEntry = mapFromEntity(keyEntry, keyEntryAttributesMapEntry.getValue());
             mappedKeyEntries.put(mappedKeyEntry.getAlias(), mappedKeyEntry);
@@ -113,7 +119,7 @@ public class KeyStoreEntityMapper {
         return mappedKeyEntries;
     }
 
-    private StsKeyEntry mapFromEntity(KeyEntry keyEntry, KeyEntryAttributesEntity keyEntryAttributes) {
+    private StsKeyEntry mapFromEntity(KeyStore.Entry keyEntry, KeyEntryAttributesEntity keyEntryAttributes) {
         return StsKeyEntry.builder()
                 .alias(keyEntryAttributes.getAlias())
                 .createdAt(convert(keyEntryAttributes.getCreatedAt()))
@@ -124,9 +130,7 @@ public class KeyStoreEntityMapper {
                 .legacyInterval(keyEntryAttributes.getLegacyInterval())
                 .state(keyEntryAttributes.getState())
                 .keyUsage(keyEntryAttributes.getKeyUsage())
-
                 .keyEntry(keyEntry)
-
                 .build();
     }
 
