@@ -10,7 +10,7 @@ import java.time.ZonedDateTime;
 @Getter
 @Builder
 @EqualsAndHashCode
-public class StsKeyEntry {
+public class StsKeyEntry<T> {
 
     private final String alias;
 
@@ -30,7 +30,7 @@ public class StsKeyEntry {
 
     private final KeyUsage keyUsage;
 
-    private final KeyStore.Entry keyEntry;
+    private final T keyEntry;
 
     public void setState(State state) {
         this.state = state;

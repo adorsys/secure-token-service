@@ -1,21 +1,22 @@
 package de.adorsys.sts.keymanagement.service;
 
-import de.adorsys.sts.keymanagement.model.KeyPairEntry;
+import de.adorsys.keymanagement.api.Juggler;
+import de.adorsys.keymanagement.api.types.template.generated.Signing;
+import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyPair;
 
-import javax.security.auth.callback.CallbackHandler;
-import java.time.Clock;
+import java.util.function.Supplier;
 
 public class KeyPairGeneratorImpl implements KeyPairGenerator {
 
-    private final Clock clock;
+    private final Juggler juggler;
     private final String keyAlgo;
     private final Integer keySize;
     private final String serverSigAlgo;
     private final String serverKeyPairName;
 
-    public KeyPairGeneratorImpl(Clock clock,
+    public KeyPairGeneratorImpl(Juggler juggler,
                                 KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyPairProperties keyProperties) {
-        this.clock = clock;
+        this.juggler = juggler;
         this.keyAlgo = keyProperties.getAlgo();
         this.keySize = keyProperties.getSize();
         this.serverSigAlgo = keyProperties.getSigAlgo();
@@ -23,34 +24,32 @@ public class KeyPairGeneratorImpl implements KeyPairGenerator {
     }
 
     @Override
-    public KeyPairEntry generateSignatureKey(String alias, CallbackHandler keyPassHandler) {
-        return generate(new int[]{}, alias, keyPassHandler);
+    public ProvidedKeyPair generateSignatureKey(String alias, Supplier<char[]> keyPassword) {
+        return juggler.generateKeys()
+                .signing(
+                        Signing.with()
+                                .alias(alias)
+                                .algo(keyAlgo)
+                                .keySize(keySize)
+                                .sigAlgo(serverSigAlgo)
+                                .commonName(serverKeyPairName)
+                                .password(keyPassword)
+                                .build()
+                );
     }
 
     @Override
-    public KeyPairEntry generateEncryptionKey(String alias, CallbackHandler keyPassHandler) {
-        return generate(new int[]{}, alias, keyPassHandler);
-    }
-
-    private KeyPairEntry generate(int[] keyUsages, String alias, CallbackHandler keyPassHandler) {
-        // FIXME-cleanup
-        /*KeyPair keyPair = new KeyPairBuilder().withKeyAlg(keyAlgo).withKeyLength(keySize).build();
-        X500Name dn = new X500NameBuilder(BCStyle.INSTANCE).addRDN(BCStyle.CN, serverKeyPairName).build();
-
-        SelfSignedKeyPairData keyPairData = new SingleKeyUsageSelfSignedCertBuilder()
-                .withSubjectDN(dn)
-                .withSignatureAlgo(serverSigAlgo)
-                .withNotAfterInDays(900)
-                .withCa(false)
-                .withKeyUsages(keyUsages)
-                .withCreationDate(new Date(clock.instant().toEpochMilli()))
-                .build(keyPair);
-
-        return KeyPairData.builder()
-                .keyPair(keyPairData)
-                .alias(alias)
-                .passwordSource(keyPassHandler)
-                .build();*/
-        return null;
+    public ProvidedKeyPair generateEncryptionKey(String alias, Supplier<char[]> keyPassword) {
+        return juggler.generateKeys()
+                .signing(
+                        Signing.with()
+                                .alias(alias)
+                                .algo(keyAlgo)
+                                .keySize(keySize)
+                                .sigAlgo(serverSigAlgo)
+                                .commonName(serverKeyPairName)
+                                .password(keyPassword)
+                                .build()
+                );
     }
 }

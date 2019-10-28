@@ -1,16 +1,18 @@
 package de.adorsys.sts.keymanagement;
 
-import de.adorsys.keymanagement.juggler.services.DaggerJuggler;
-import de.adorsys.keymanagement.juggler.services.Juggler;
+import de.adorsys.keymanagement.api.Juggler;
+import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
 import de.adorsys.sts.keymanagement.persistence.CachedKeyStoreRepository;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.*;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 
+import java.security.Security;
 import java.time.Clock;
 
 @Configuration
@@ -54,6 +56,7 @@ public class KeyManagementConfiguration {
 
     @Bean
     KeyStoreGenerator keyStoreGenerator(
+            Juggler juggler,
             Clock clock,
             @Qualifier("enc") KeyPairGenerator encKeyPairGenerator,
             @Qualifier("sign") KeyPairGenerator signKeyPairGenerator,
@@ -61,6 +64,7 @@ public class KeyManagementConfiguration {
             KeyManagementConfigurationProperties keyManagementProperties
     ) {
         return new KeyStoreGeneratorImpl(
+                juggler,
                 clock,
                 encKeyPairGenerator,
                 signKeyPairGenerator,
@@ -71,23 +75,27 @@ public class KeyManagementConfiguration {
 
     @Bean(name = "enc")
     KeyPairGenerator encKeyPairGenerator(
-            KeyManagementConfigurationProperties keyManagementProperties, Clock clock
+            Juggler juggler,
+            KeyManagementConfigurationProperties keyManagementProperties
     ) {
-        return new KeyPairGeneratorImpl(clock, keyManagementProperties.getKeystore().getKeys().getEncKeyPairs());
+        return new KeyPairGeneratorImpl(juggler, keyManagementProperties.getKeystore().getKeys().getEncKeyPairs());
     }
 
     @Bean(name = "sign")
     KeyPairGenerator signKeyPairGenerator(
-            KeyManagementConfigurationProperties keyManagementProperties, Clock clock
+            Juggler juggler,
+            KeyManagementConfigurationProperties keyManagementProperties
     ) {
-        return new KeyPairGeneratorImpl(clock, keyManagementProperties.getKeystore().getKeys().getSignKeyPairs());
+        return new KeyPairGeneratorImpl(juggler, keyManagementProperties.getKeystore().getKeys().getSignKeyPairs());
     }
 
     @Bean
     SecretKeyGenerator secretKeyGenerator(
-            KeyManagementConfigurationProperties keyManagementProperties, Clock clock
+            Juggler juggler,
+            KeyManagementConfigurationProperties keyManagementProperties
     ) {
         return new SecretKeyGeneratorImpl(
+                juggler,
                 keyManagementProperties.getKeystore().getKeys().getSecretKeys()
         );
     }
@@ -102,7 +110,8 @@ public class KeyManagementConfiguration {
 
     @Bean
     Juggler juggler() {
-        return DaggerJuggler.builder()
+        Security.addProvider(new BouncyCastleProvider());
+        return DaggerBCJuggler.builder()
                 .build();
     }
 }

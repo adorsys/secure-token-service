@@ -1,9 +1,8 @@
 package de.adorsys.sts.persistence.jpa.mapping;
 
 import com.googlecode.cqengine.query.QueryFactory;
+import de.adorsys.keymanagement.api.Juggler;
 import de.adorsys.keymanagement.api.keystore.KeyStoreView;
-import de.adorsys.keymanagement.juggler.services.Juggler;
-import de.adorsys.sts.keymanagement.model.KeyEntry;
 import de.adorsys.sts.keymanagement.model.PasswordCallbackHandler;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;

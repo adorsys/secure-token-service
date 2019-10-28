@@ -1,5 +1,9 @@
 package de.adorsys.sts.keymanagement.service;
 
+import de.adorsys.keymanagement.api.Juggler;
+import de.adorsys.keymanagement.api.types.KeySetTemplate;
+import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
+import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyPair;
 import de.adorsys.sts.keymanagement.model.*;
 import de.adorsys.sts.keymanagement.util.DateTimeUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -14,6 +18,7 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
 
     private final Clock clock;
 
+    private final Juggler juggler;
     private final KeyPairGenerator encKeyPairGenerator;
     private final KeyPairGenerator signKeyPairGenerator;
     private final SecretKeyGenerator secretKeyGenerator;
@@ -21,19 +26,21 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
     private final String keyStoreType;
     private final String serverKeyPairAliasPrefix;
 
-    private final CallbackHandler keyPassHandler;
+    private final PasswordCallbackHandler keyPassHandler;
 
     private final KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyPairProperties encKeyPairsProperties;
     private final KeyManagementProperties.KeyStoreProperties.KeysProperties.KeyPairProperties signKeyPairsProperties;
     private final KeyManagementProperties.KeyStoreProperties.KeysProperties.SecretKeyProperties secretKeyProperties;
 
     public KeyStoreGeneratorImpl(
+            Juggler juggler,
             Clock clock,
             KeyPairGenerator encKeyPairGenerator,
             KeyPairGenerator signKeyPairGenerator,
             SecretKeyGenerator secretKeyGenerator,
             KeyManagementProperties keyManagementProperties
     ) {
+        this.juggler = juggler;
         this.clock = clock;
         this.encKeyPairGenerator = encKeyPairGenerator;
         this.signKeyPairGenerator = signKeyPairGenerator;
@@ -55,58 +62,40 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
 
     @Override
     public StsKeyStore generate() {
-        // FIXME-cleanup
-        /*Map<String, StsKeyEntry> keyEntries = new HashMap<>();
 
-        try {
-            KeystoreBuilder keystoreBuilder = new KeystoreBuilder().withStoreType(keyStoreType);
+        KeySetTemplate.KeySetTemplateBuilder builder = KeySetTemplate.builder();
 
-            for (int i = 0; i < signKeyPairsProperties.getInitialCount(); i++) {
-                StsKeyEntry signKeyPair = generateSignatureKeyEntryForInstantUsage();
+        for (int i = 0; i < signKeyPairsProperties.getInitialCount(); i++) {
+            StsKeyEntry<ProvidedKeyPair> signKeyPair = generateSignatureKeyEntryForInstantUsage();
+            builder = builder.providedPair(signKeyPair.getKeyEntry());
 
-                keystoreBuilder = keystoreBuilder.withKeyEntry(signKeyPair.getKeyEntry());
-                keyEntries.put(signKeyPair.getAlias(), signKeyPair);
+            signKeyPair = generateSignatureKeyEntryForFutureUsage(signKeyPair.getNotAfter());
+            builder = builder.providedPair(signKeyPair.getKeyEntry());
+        }
 
-                signKeyPair = generateSignatureKeyEntryForFutureUsage(signKeyPair.getNotAfter());
+        for (int i = 0; i < encKeyPairsProperties.getInitialCount(); i++) {
+            StsKeyEntry<ProvidedKeyPair> encryptionKeyPair = generateEncryptionKeyEntryForInstantUsage();
+            builder = builder.providedPair(encryptionKeyPair.getKeyEntry());
 
-                keystoreBuilder = keystoreBuilder.withKeyEntry(signKeyPair.getKeyEntry());
-                keyEntries.put(signKeyPair.getAlias(), signKeyPair);
-            }
+            encryptionKeyPair = generateEncryptionKeyEntryForFutureUsage(encryptionKeyPair.getNotAfter());
+            builder = builder.providedPair(encryptionKeyPair.getKeyEntry());
+        }
 
-            for (int i = 0; i < encKeyPairsProperties.getInitialCount(); i++) {
-                StsKeyEntry encryptionKeyPair = generateEncryptionKeyEntryForInstantUsage();
+        for (int i = 0; i < secretKeyProperties.getInitialCount(); i++) {
+            StsKeyEntry<ProvidedKey> secretKey = generateSecretKeyEntryForInstantUsage();
+            builder = builder.providedKey(secretKey.getKeyEntry());
 
-                keystoreBuilder = keystoreBuilder.withKeyEntry(encryptionKeyPair.getKeyEntry());
-                keyEntries.put(encryptionKeyPair.getAlias(), encryptionKeyPair);
+            secretKey = generateSecretKeyEntryForFutureUsage(secretKey.getNotAfter());
+            builder = builder.providedKey(secretKey.getKeyEntry());
+        }
 
-                encryptionKeyPair = generateEncryptionKeyEntryForFutureUsage(encryptionKeyPair.getNotAfter());
-
-                keystoreBuilder = keystoreBuilder.withKeyEntry(encryptionKeyPair.getKeyEntry());
-                keyEntries.put(encryptionKeyPair.getAlias(), encryptionKeyPair);
-            }
-
-            for (int i = 0; i < secretKeyProperties.getInitialCount(); i++) {
-                StsKeyEntry secretKey = generateSecretKeyEntryForInstantUsage();
-
-                keystoreBuilder = keystoreBuilder.withKeyEntry(secretKey.getKeyEntry());
-                keyEntries.put(secretKey.getAlias(), secretKey);
-
-                secretKey = generateSecretKeyEntryForFutureUsage(secretKey.getNotAfter());
-
-                keystoreBuilder = keystoreBuilder.withKeyEntry(secretKey.getKeyEntry());
-                keyEntries.put(secretKey.getAlias(), secretKey);
-            }
-
-            return StsKeyStore.builder()
-                    .keyEntries(keyEntries)
-                    .keyStore(keystoreBuilder.build())
-                    .lastUpdate(now())
-                    .build();
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }*/
-
-        return null;
+        return StsKeyStore.builder()
+                .keyEntries(null)
+                .keyStore(
+                        juggler.toKeystore().generate(juggler.generateKeys().fromTemplate(builder.build()))
+                )
+                .lastUpdate(now())
+                .build();
     }
 
     @Override
@@ -129,12 +118,12 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
     }
 
     @Override
-    public StsKeyEntry generateSignatureKeyEntryForInstantUsage() {
-        KeyPairEntry signatureKeyPair = generateSignKeyPair();
+    public StsKeyEntry<ProvidedKeyPair> generateSignatureKeyEntryForInstantUsage() {
+        ProvidedKeyPair signatureKeyPair = generateSignKeyPair();
         ZonedDateTime now = now();
 
-        return StsKeyEntry.builder()
-                .alias(signatureKeyPair.getAlias())
+        return StsKeyEntry.<ProvidedKeyPair>builder()
+                .alias(signatureKeyPair.generateName())
                 .createdAt(now)
                 .notBefore(now)
                 .validityInterval(signKeyPairsProperties.getValidityInterval())
@@ -143,42 +132,42 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
                 .expireAt(DateTimeUtils.addMillis(now, signKeyPairsProperties.getLegacyInterval()))
                 .keyUsage(KeyUsage.Signature)
                 .state(StsKeyEntry.State.VALID)
-                .keyEntry(null)
+                .keyEntry(signatureKeyPair)
                 .build();
     }
 
     @Override
-    public StsKeyEntry generateSignatureKeyEntryForFutureUsage(ZonedDateTime notBefore) {
-        KeyPairEntry signatureKeyPair = generateSignKeyPair();
+    public StsKeyEntry<ProvidedKeyPair> generateSignatureKeyEntryForFutureUsage(ZonedDateTime notBefore) {
+        ProvidedKeyPair signatureKeyPair = generateSignKeyPair();
         ZonedDateTime now = now();
 
-        return StsKeyEntry.builder()
-                .alias(signatureKeyPair.getAlias())
+        return StsKeyEntry.<ProvidedKeyPair>builder()
+                .alias(signatureKeyPair.generateName())
                 .createdAt(now)
                 .notBefore(notBefore)
                 .validityInterval(signKeyPairsProperties.getValidityInterval())
                 .legacyInterval(signKeyPairsProperties.getLegacyInterval())
                 .keyUsage(KeyUsage.Signature)
                 .state(StsKeyEntry.State.CREATED)
-                .keyEntry(null)
+                .keyEntry(signatureKeyPair)
                 .build();
     }
 
-    private KeyPairEntry generateSignKeyPair() {
+    private ProvidedKeyPair generateSignKeyPair() {
         String alias = serverKeyPairAliasPrefix + UUID.randomUUID().toString();
         return signKeyPairGenerator.generateSignatureKey(
                 alias,
-                keyPassHandler
+                keyPassHandler::getPassword
         );
     }
 
     @Override
-    public StsKeyEntry generateEncryptionKeyEntryForInstantUsage() {
-        KeyPairEntry signatureKeyPair = generateEncryptionKeyPair();
+    public StsKeyEntry<ProvidedKeyPair> generateEncryptionKeyEntryForInstantUsage() {
+        ProvidedKeyPair signatureKeyPair = generateEncryptionKeyPair();
         ZonedDateTime now = now();
 
-        return StsKeyEntry.builder()
-                .alias(signatureKeyPair.getAlias())
+        return StsKeyEntry.<ProvidedKeyPair>builder()
+                .alias(signatureKeyPair.generateName())
                 .createdAt(now)
                 .notBefore(now)
                 .validityInterval(encKeyPairsProperties.getValidityInterval())
@@ -187,42 +176,42 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
                 .expireAt(DateTimeUtils.addMillis(now, encKeyPairsProperties.getLegacyInterval()))
                 .keyUsage(KeyUsage.Encryption)
                 .state(StsKeyEntry.State.VALID)
-                .keyEntry(null)
+                .keyEntry(signatureKeyPair)
                 .build();
     }
 
     @Override
-    public StsKeyEntry generateEncryptionKeyEntryForFutureUsage(ZonedDateTime notBefore) {
-        KeyPairEntry encryptionKeyPair = generateEncryptionKeyPair();
+    public StsKeyEntry<ProvidedKeyPair> generateEncryptionKeyEntryForFutureUsage(ZonedDateTime notBefore) {
+        ProvidedKeyPair encryptionKeyPair = generateEncryptionKeyPair();
         ZonedDateTime now = now();
 
-        return StsKeyEntry.builder()
-                .alias(encryptionKeyPair.getAlias())
+        return StsKeyEntry.<ProvidedKeyPair>builder()
+                .alias(encryptionKeyPair.generateName())
                 .createdAt(now)
                 .notBefore(notBefore)
                 .validityInterval(encKeyPairsProperties.getValidityInterval())
                 .legacyInterval(encKeyPairsProperties.getLegacyInterval())
                 .keyUsage(KeyUsage.Encryption)
                 .state(StsKeyEntry.State.CREATED)
-                .keyEntry(null)
+                .keyEntry(encryptionKeyPair)
                 .build();
     }
 
-    private KeyPairEntry generateEncryptionKeyPair() {
+    private ProvidedKeyPair generateEncryptionKeyPair() {
         String alias = serverKeyPairAliasPrefix + RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         return encKeyPairGenerator.generateEncryptionKey(
                 alias,
-                keyPassHandler
+                keyPassHandler::getPassword
         );
     }
 
     @Override
-    public StsKeyEntry generateSecretKeyEntryForInstantUsage() {
-        SecretKeyEntry secretKeyData = generateSecretKey();
+    public StsKeyEntry<ProvidedKey> generateSecretKeyEntryForInstantUsage() {
+        ProvidedKey secretKeyData = generateSecretKey();
         ZonedDateTime now = now();
 
-        return StsKeyEntry.builder()
-                .alias(secretKeyData.getAlias())
+        return StsKeyEntry.<ProvidedKey>builder()
+                .alias(secretKeyData.generateName())
                 .createdAt(now)
                 .notBefore(now)
                 .validityInterval(secretKeyProperties.getValidityInterval())
@@ -231,32 +220,32 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
                 .expireAt(DateTimeUtils.addMillis(now, secretKeyProperties.getLegacyInterval()))
                 .keyUsage(KeyUsage.SecretKey)
                 .state(StsKeyEntry.State.VALID)
-                .keyEntry(null)
+                .keyEntry(secretKeyData)
                 .build();
     }
 
     @Override
-    public StsKeyEntry generateSecretKeyEntryForFutureUsage(ZonedDateTime notBefore) {
-        SecretKeyEntry secretKeyData = generateSecretKey();
+    public StsKeyEntry<ProvidedKey> generateSecretKeyEntryForFutureUsage(ZonedDateTime notBefore) {
+        ProvidedKey secretKeyData = generateSecretKey();
         ZonedDateTime now = now();
 
-        return StsKeyEntry.builder()
-                .alias(secretKeyData.getAlias())
+        return StsKeyEntry.<ProvidedKey>builder()
+                .alias(secretKeyData.generateName())
                 .createdAt(now)
                 .notBefore(notBefore)
                 .validityInterval(secretKeyProperties.getValidityInterval())
                 .legacyInterval(secretKeyProperties.getLegacyInterval())
                 .keyUsage(KeyUsage.SecretKey)
                 .state(StsKeyEntry.State.CREATED)
-                .keyEntry(null)
+                .keyEntry(secretKeyData)
                 .build();
     }
 
-    private SecretKeyEntry generateSecretKey() {
+    private ProvidedKey generateSecretKey() {
         String alias = serverKeyPairAliasPrefix + RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         return secretKeyGenerator.generate(
                 alias,
-                keyPassHandler
+                keyPassHandler::getPassword
         );
     }
 
