@@ -1,5 +1,7 @@
 package de.adorsys.sts.keymanagement;
 
+import de.adorsys.keymanagement.juggler.services.DaggerJuggler;
+import de.adorsys.keymanagement.juggler.services.Juggler;
 import de.adorsys.sts.keymanagement.persistence.CachedKeyStoreRepository;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.*;
@@ -96,5 +98,11 @@ public class KeyManagementConfiguration {
             KeyStoreGenerator keyStoreGenerator
     ) {
         return new KeyStoreInitializerImpl(keyStoreRepository, keyStoreGenerator);
+    }
+
+    @Bean
+    Juggler juggler() {
+        return DaggerJuggler.builder()
+                .build();
     }
 }

@@ -17,6 +17,10 @@ public final class PasswordCallbackHandler implements CallbackHandler {
 		}
 	}
 
+	public char[] getPassword() {
+		return password;
+	}
+
 	public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
 		if (!(callbacks[0] instanceof PasswordCallback)) {
 			throw new UnsupportedCallbackException(callbacks[0]);

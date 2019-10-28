@@ -1,5 +1,6 @@
 package de.adorsys.sts.persistence.mongo.mapper;
 
+import de.adorsys.keymanagement.juggler.services.Juggler;
 import de.adorsys.sts.keymanagement.model.KeyEntry;
 import de.adorsys.sts.keymanagement.model.PasswordCallbackHandler;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
@@ -10,6 +11,7 @@ import de.adorsys.sts.persistence.mongo.entity.KeyStoreEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.security.KeyStore;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -23,13 +25,16 @@ import java.util.stream.Collectors;
 public class KeyStoreEntityMapper {
 
     private static final ZonedDateTime DEFAULT_LAST_UPDATE = ZonedDateTime.ofInstant(Instant.EPOCH, ZoneOffset.UTC);
+    private final Juggler juggler;
     private final PasswordCallbackHandler keyPassHandler;
     private final String keystoreName;
 
     @Autowired
     public KeyStoreEntityMapper(
+            Juggler juggler,
             KeyManagementProperties keyManagementProperties
     ) {
+        this.juggler = juggler;
         String keyStorePassword = keyManagementProperties.getKeystore().getPassword();
         keyPassHandler = new PasswordCallbackHandler(keyStorePassword.toCharArray());
         keystoreName = keyManagementProperties.getKeystore().getName();
@@ -44,8 +49,7 @@ public class KeyStoreEntityMapper {
     }
 
     public void mapIntoEntity(StsKeyStore keyStore, KeyStoreEntity persistentKeyStore) {
-        // FIXME-cleanup
-        byte[] bytes = null;
+        byte[] bytes = juggler.serializeDeserialize().serialize(keyStore.getKeyStore(), keyPassHandler::getPassword);
 
         persistentKeyStore.setName(keystoreName);
         persistentKeyStore.setKeystore(bytes);
@@ -127,8 +131,8 @@ public class KeyStoreEntityMapper {
     }
 
     public StsKeyStore mapFromEntity(KeyStoreEntity persistentKeyStore) {
-        // FIXME-cleanup
-        java.security.KeyStore keyStore = null; // KeyStoreService.loadKeyStore(persistentKeyStore.getKeystore(), keystoreName, new KeyStoreType(persistentKeyStore.getType()), keyPassHandler);
+        KeyStore keyStore = juggler.serializeDeserialize()
+                .deserialize(persistentKeyStore.getKeystore(), keyPassHandler::getPassword);
 
         Map<String, StsKeyEntry> mappedKeyEntries = mapFromEntities(keyStore, persistentKeyStore.getEntries());
         Date lastUpdate = persistentKeyStore.getLastUpdate();

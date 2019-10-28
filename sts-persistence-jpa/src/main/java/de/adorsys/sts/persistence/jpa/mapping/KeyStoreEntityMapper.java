@@ -1,5 +1,6 @@
 package de.adorsys.sts.persistence.jpa.mapping;
 
+import de.adorsys.keymanagement.juggler.services.Juggler;
 import de.adorsys.sts.keymanagement.model.KeyEntry;
 import de.adorsys.sts.keymanagement.model.PasswordCallbackHandler;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
@@ -10,6 +11,7 @@ import de.adorsys.sts.persistence.jpa.entity.JpaKeyStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.security.KeyStore;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,13 +19,16 @@ import java.util.Map;
 @Component
 public class KeyStoreEntityMapper {
 
+    private final Juggler juggler;
     private final PasswordCallbackHandler keyPassHandler;
     private final String keystoreName;
 
     @Autowired
     public KeyStoreEntityMapper(
+            Juggler juggler,
             KeyManagementProperties keyManagementProperties
     ) {
+        this.juggler = juggler;
         String keyStorePassword = keyManagementProperties.getKeystore().getPassword();
         keyPassHandler = new PasswordCallbackHandler(keyStorePassword.toCharArray());
         keystoreName = keyManagementProperties.getKeystore().getName();
@@ -38,8 +43,7 @@ public class KeyStoreEntityMapper {
     }
 
     public void mapIntoEntity(StsKeyStore keyStore, JpaKeyStore persistentKeyStore) {
-        // FIXME-cleanup
-        byte[] bytes = null;// KeyStoreService.toByteArray(keyStore.getKeyStore(), keystoreName, keyPassHandler);
+        byte[] bytes = juggler.serializeDeserialize().serialize(keyStore.getKeyStore(), keyPassHandler::getPassword);
 
         persistentKeyStore.setName(keystoreName);
         persistentKeyStore.setKeystore(bytes);
@@ -48,8 +52,8 @@ public class KeyStoreEntityMapper {
     }
 
     public StsKeyStore mapFromEntity(JpaKeyStore persistentKeyStore, List<JpaKeyEntryAttributes> persistentKeyEntries) {
-        // FIXME-cleanup
-        java.security.KeyStore keyStore = null; //KeyStoreService.loadKeyStore(persistentKeyStore.getKeystore(), keystoreName, new KeyStoreType(persistentKeyStore.getType()), keyPassHandler);
+        KeyStore keyStore = juggler.serializeDeserialize()
+                .deserialize(persistentKeyStore.getKeystore(), keyPassHandler::getPassword);
 
         Map<String, StsKeyEntry> mappedKeyEntries = mapFromEntities(keyStore, persistentKeyEntries);
 
