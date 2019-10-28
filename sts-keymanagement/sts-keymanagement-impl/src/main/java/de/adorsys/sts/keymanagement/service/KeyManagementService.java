@@ -8,6 +8,7 @@ import de.adorsys.sts.cryptoutils.ServerKeyMap;
 import de.adorsys.sts.cryptoutils.ServerKeysHolder;
 import de.adorsys.sts.cryptoutils.StsServerKeyMap;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
+import de.adorsys.sts.keymanagement.model.ServerKeysHolder;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
@@ -32,16 +33,6 @@ public class KeyManagementService implements ServerKeyMapProvider {
     ) {
         this.repository = repository;
         this.keyConversionService = keyConversionService;
-    }
-
-    @Override
-    public ServerKeyMap getKeyMap() {
-        throw new IllegalStateException("Method not supported");
-    }
-
-    @Override
-    public ServerKeysHolder getServerKeysHolder() {
-        throw new IllegalStateException("Method not supported");
     }
 
     @Override

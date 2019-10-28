@@ -1,12 +1,14 @@
 package de.adorsys.sts.keymanagement.service;
 
-import de.adorsys.sts.cryptoutils.KeyPairEntry;
+import de.adorsys.keymanagement.api.types.entity.KeyPairEntry;
+import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyPair;
 
 import javax.security.auth.callback.CallbackHandler;
+import java.util.function.Supplier;
 
 public interface KeyPairGenerator {
 
-    KeyPairEntry generateSignatureKey(String alias, CallbackHandler keyPassHandler);
+    ProvidedKeyPair generateSignatureKey(String alias, Supplier<char[]> keyPassword);
 
-    KeyPairEntry generateEncryptionKey(String alias, CallbackHandler keyPassHandler);
+    ProvidedKeyPair generateEncryptionKey(String alias, Supplier<char[]> keyPassword);
 }
