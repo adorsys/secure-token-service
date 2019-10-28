@@ -1,6 +1,6 @@
 package de.adorsys.sts.keymanagement.service;
 
-import de.adorsys.sts.cryptoutils.ServerKeysHolder;
+import de.adorsys.sts.keymanagement.model.ServerKeysHolder;
 
 import java.security.KeyStore;
 

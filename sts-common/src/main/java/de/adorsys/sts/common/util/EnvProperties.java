@@ -1,14 +1,13 @@
-package de.adorsys.sts.cryptoutils.envutils;
+package de.adorsys.sts.common.util;
 
-import org.apache.commons.lang3.StringUtils;
+public final class EnvProperties {
 
-public class EnvProperties {
     public static String getEnvOrSysProp(String propName, boolean optional) {
 		String propValue = System.getenv(propName);
 
-		if(StringUtils.isBlank(propValue))propValue = System.getProperty(propName);
+		if(isBlank(propValue))propValue = System.getProperty(propName);
 		
-		if(StringUtils.isBlank(propValue)) {
+		if(isBlank(propValue)) {
 			if (optional)return null;
 			throw new IllegalStateException("Missing Environmen property " + propName);
 		}
@@ -18,10 +17,14 @@ public class EnvProperties {
 	public static String getEnvOrSysProp(String propName, String defaultValue) {
 		String propValue = System.getenv(propName);
 		
-		if(StringUtils.isBlank(propValue))propValue = System.getProperty(propName);
+		if(isBlank(propValue))propValue = System.getProperty(propName);
 		
-		if(StringUtils.isBlank(propValue))return defaultValue;
+		if(isBlank(propValue))return defaultValue;
 		
 		return propValue;
+	}
+
+	private static boolean isBlank(String value) {
+    	return null == value || value.isEmpty();
 	}
 }

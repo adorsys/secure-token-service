@@ -16,18 +16,6 @@
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-common</artifactId>
         </dependency>
-        <dependency>
-            <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-crypto-utils</artifactId>
-        </dependency>
-        <!--<dependency>-->
-            <!--<groupId>de.adorsys.cryptoutils</groupId>-->
-            <!--<artifactId>encobject</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>de.adorsys.envutils</groupId>-->
-            <!--<artifactId>envutils4j</artifactId>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -37,6 +25,10 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <dependency>

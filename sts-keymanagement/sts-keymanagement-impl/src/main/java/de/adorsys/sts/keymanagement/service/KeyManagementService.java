@@ -4,13 +4,12 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import de.adorsys.sts.common.model.KeyAndJwk;
 import de.adorsys.sts.common.util.ImmutableLists;
-import de.adorsys.sts.cryptoutils.ServerKeyMap;
-import de.adorsys.sts.cryptoutils.ServerKeysHolder;
-import de.adorsys.sts.cryptoutils.StsServerKeyMap;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
+import de.adorsys.sts.keymanagement.model.ServerKeysHolder;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
+import de.adorsys.sts.keymanagement.util.StsServerKeyMap;
 
 import java.security.Key;
 import java.util.List;
@@ -35,30 +34,26 @@ public class KeyManagementService implements ServerKeyMapProvider {
     }
 
     @Override
-    public ServerKeyMap getKeyMap() {
-        throw new IllegalStateException("Method not supported");
-    }
-
-    @Override
-    public ServerKeysHolder getServerKeysHolder() {
-        throw new IllegalStateException("Method not supported");
-    }
-
-    @Override
     public KeyAndJwk randomSecretKey() {
-        return getSecretKeys().randomSecretKey();
+        //FIXME-cleanup
+        //return getSecretKeys().randomSecretKey();
+        return null;
     }
 
     @Override
     public KeyAndJwk randomSignKey() {
-        return getPrivateKeys().randomSignKey();
+        //FIXME-cleanup
+        //return getPrivateKeys().randomSignKey();
+        return null;
     }
 
     @Override
     public Key getKey(String keyId) {
-        StsServerKeyMap serverKeyMap = new StsServerKeyMap(loadKeys().getPrivateKeySet());
+        //FIXME-cleanup
+        /*StsServerKeyMap serverKeyMap = new StsServerKeyMap(loadKeys().getPrivateKeySet());
 
-        return serverKeyMap.getKey(keyId);
+        return serverKeyMap.getKey(keyId);*/
+        return null;
     }
 
     private ServerKeysHolder loadKeys() {
@@ -98,11 +93,15 @@ public class KeyManagementService implements ServerKeyMapProvider {
     }
 
     private StsServerKeyMap getPrivateKeys() {
-        return new StsServerKeyMap(getFilteredPrivateKeys(this::hasUsablePrivateKey));
+        //FIXME-cleanup
+        //return new StsServerKeyMap(getFilteredPrivateKeys(this::hasUsablePrivateKey));
+        return null;
     }
 
     private StsServerKeyMap getSecretKeys() {
-        return new StsServerKeyMap(getFilteredPrivateKeys(this::isUsableSecretKey));
+        //FIXME-cleanup
+        //return new StsServerKeyMap(getFilteredPrivateKeys(this::isUsableSecretKey));
+        return null;
     }
 
     private JWKSet getFilteredPrivateKeys(Predicate<StsKeyEntry> predicate) {

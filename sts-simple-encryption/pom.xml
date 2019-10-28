@@ -14,17 +14,9 @@
     <dependencies>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-crypto-utils</artifactId>
+            <artifactId>sts-common</artifactId>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>de.adorsys.cryptoutils</groupId>-->
-            <!--<artifactId>encobject</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>de.adorsys.cryptoutils</groupId>-->
-            <!--<artifactId>jjwk</artifactId>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>

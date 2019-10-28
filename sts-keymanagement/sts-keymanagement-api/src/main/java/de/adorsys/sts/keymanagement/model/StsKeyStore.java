@@ -1,6 +1,5 @@
 package de.adorsys.sts.keymanagement.model;
 
-import de.adorsys.sts.cryptoutils.KeyStoreService;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,7 +17,7 @@ public class StsKeyStore {
     private ZonedDateTime lastUpdate;
 
     public void addKey(StsKeyEntry keyEntry) {
-    	KeyStoreService.addToKeyStore(keyStore, keyEntry.getKeyEntry());
+    	// FIXME-cleanup KeyStoreService.addToKeyStore(keyStore, keyEntry.getKeyEntry());
 
         this.keyEntries.put(keyEntry.getAlias(), keyEntry);
     }

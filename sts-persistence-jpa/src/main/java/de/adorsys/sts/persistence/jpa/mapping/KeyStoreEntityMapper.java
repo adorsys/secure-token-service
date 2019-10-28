@@ -1,21 +1,18 @@
 package de.adorsys.sts.persistence.jpa.mapping;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import de.adorsys.sts.cryptoutils.KeyEntry;
-import de.adorsys.sts.cryptoutils.KeyStoreService;
-import de.adorsys.sts.cryptoutils.KeyStoreType;
-import de.adorsys.sts.cryptoutils.PasswordCallbackHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import de.adorsys.sts.keymanagement.model.KeyEntry;
+import de.adorsys.sts.keymanagement.model.PasswordCallbackHandler;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
 import de.adorsys.sts.persistence.jpa.entity.JpaKeyEntryAttributes;
 import de.adorsys.sts.persistence.jpa.entity.JpaKeyStore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class KeyStoreEntityMapper {
@@ -41,7 +38,8 @@ public class KeyStoreEntityMapper {
     }
 
     public void mapIntoEntity(StsKeyStore keyStore, JpaKeyStore persistentKeyStore) {
-        byte[] bytes = KeyStoreService.toByteArray(keyStore.getKeyStore(), keystoreName, keyPassHandler);
+        // FIXME-cleanup
+        byte[] bytes = null;// KeyStoreService.toByteArray(keyStore.getKeyStore(), keystoreName, keyPassHandler);
 
         persistentKeyStore.setName(keystoreName);
         persistentKeyStore.setKeystore(bytes);
@@ -50,7 +48,8 @@ public class KeyStoreEntityMapper {
     }
 
     public StsKeyStore mapFromEntity(JpaKeyStore persistentKeyStore, List<JpaKeyEntryAttributes> persistentKeyEntries) {
-        java.security.KeyStore keyStore = KeyStoreService.loadKeyStore(persistentKeyStore.getKeystore(), keystoreName, new KeyStoreType(persistentKeyStore.getType()), keyPassHandler);
+        // FIXME-cleanup
+        java.security.KeyStore keyStore = null; //KeyStoreService.loadKeyStore(persistentKeyStore.getKeystore(), keystoreName, new KeyStoreType(persistentKeyStore.getType()), keyPassHandler);
 
         Map<String, StsKeyEntry> mappedKeyEntries = mapFromEntities(keyStore, persistentKeyEntries);
 
@@ -63,7 +62,8 @@ public class KeyStoreEntityMapper {
 
     private Map<String, StsKeyEntry> mapFromEntities(java.security.KeyStore keyStore, List<JpaKeyEntryAttributes> persistentKeyEntries) {
         Map<String, StsKeyEntry> mappedKeyEntries = new HashMap<>();
-        Map<String, KeyEntry> keyEntries = KeyStoreService.loadEntryMap(keyStore, new KeyStoreService.SimplePasswordProvider(keyPassHandler));
+        // FIXME-cleanup
+        Map<String, KeyEntry> keyEntries = null; //KeyStoreService.loadEntryMap(keyStore, new KeyStoreService.SimplePasswordProvider(keyPassHandler));
 
         for (JpaKeyEntryAttributes keyEntryAttributes : persistentKeyEntries) {
             KeyEntry keyEntry = keyEntries.get(keyEntryAttributes.getAlias());

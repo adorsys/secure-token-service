@@ -1,6 +1,6 @@
 package de.adorsys.sts.objectmapper;
 
-import de.adorsys.sts.cryptoutils.ObjectMapperSPI;
+import de.adorsys.sts.common.ObjectMapperSPI;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

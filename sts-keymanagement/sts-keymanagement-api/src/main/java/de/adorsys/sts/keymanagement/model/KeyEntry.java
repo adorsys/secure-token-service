@@ -1,4 +1,4 @@
-package de.adorsys.sts.cryptoutils;
+package de.adorsys.sts.keymanagement.model;
 
 import javax.security.auth.callback.CallbackHandler;
 

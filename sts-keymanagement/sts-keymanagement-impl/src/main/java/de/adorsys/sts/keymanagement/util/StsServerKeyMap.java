@@ -1,17 +1,8 @@
-package de.adorsys.sts.cryptoutils;
+package de.adorsys.sts.keymanagement.util;
 
-import com.nimbusds.jose.jwk.*;
-import de.adorsys.sts.common.model.KeyAndJwk;
-import org.apache.commons.lang3.RandomUtils;
-
-import java.security.Key;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-public class StsServerKeyMap {
-    private Map<String, KeyAndJwk> keyMap = new HashMap<>();
+// FIXME-cleanup
+public interface StsServerKeyMap {
+    /*private Map<String, KeyAndJwk> keyMap = new HashMap<>();
     private List<KeyAndJwk> signKeyList = new ArrayList<>();
     private List<KeyAndJwk> encKeyList = new ArrayList<>();
     private List<KeyAndJwk> secretKeyList = new ArrayList<>();
@@ -55,14 +46,15 @@ public class StsServerKeyMap {
         KeyAndJwk keyAndJwk = get(keyID);
         if(keyAndJwk==null) return null;
         return keyAndJwk.key;
-    }
+    }*/
 
-	
+
+    /*
 	/**
 	 * Select a random key by random picking a number between 0 (inclusive) and size exclusive;
      * @return KeyAndJwk keyAndJwk
 	 */
-    public KeyAndJwk randomSignKey(){
+     /* public KeyAndJwk randomSignKey(){
     	int nextInt = RandomUtils.nextInt(0, signKeyList.size());
     	return signKeyList.get(nextInt);
     }
@@ -70,6 +62,5 @@ public class StsServerKeyMap {
 	public KeyAndJwk randomSecretKey() {
     	int nextInt = RandomUtils.nextInt(0, secretKeyList.size());
     	return secretKeyList.get(nextInt);
-	}
-    
+	}*/
 }

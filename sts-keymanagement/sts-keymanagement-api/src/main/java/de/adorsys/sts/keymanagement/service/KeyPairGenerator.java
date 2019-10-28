@@ -1,6 +1,6 @@
 package de.adorsys.sts.keymanagement.service;
 
-import de.adorsys.sts.cryptoutils.KeyPairEntry;
+import de.adorsys.sts.keymanagement.model.KeyPairEntry;
 
 import javax.security.auth.callback.CallbackHandler;
 

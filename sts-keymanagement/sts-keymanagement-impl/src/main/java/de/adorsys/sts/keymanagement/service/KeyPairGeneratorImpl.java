@@ -1,20 +1,11 @@
 package de.adorsys.sts.keymanagement.service;
 
-import de.adorsys.sts.cryptoutils.*;
-import org.bouncycastle.asn1.x500.X500Name;
-import org.bouncycastle.asn1.x500.X500NameBuilder;
-import org.bouncycastle.asn1.x500.style.BCStyle;
-import org.bouncycastle.asn1.x509.KeyUsage;
+import de.adorsys.sts.keymanagement.model.KeyPairEntry;
 
 import javax.security.auth.callback.CallbackHandler;
-import java.security.KeyPair;
 import java.time.Clock;
-import java.util.Date;
 
 public class KeyPairGeneratorImpl implements KeyPairGenerator {
-
-    private static final int[] keyUsageSignature = {KeyUsage.nonRepudiation};
-    private static final int[] keyUsageEncryption = {KeyUsage.keyEncipherment, KeyUsage.dataEncipherment, KeyUsage.keyAgreement};
 
     private final Clock clock;
     private final String keyAlgo;
@@ -33,16 +24,17 @@ public class KeyPairGeneratorImpl implements KeyPairGenerator {
 
     @Override
     public KeyPairEntry generateSignatureKey(String alias, CallbackHandler keyPassHandler) {
-        return generate(keyUsageSignature, alias, keyPassHandler);
+        return generate(new int[]{}, alias, keyPassHandler);
     }
 
     @Override
     public KeyPairEntry generateEncryptionKey(String alias, CallbackHandler keyPassHandler) {
-        return generate(keyUsageEncryption, alias, keyPassHandler);
+        return generate(new int[]{}, alias, keyPassHandler);
     }
 
     private KeyPairEntry generate(int[] keyUsages, String alias, CallbackHandler keyPassHandler) {
-        KeyPair keyPair = new KeyPairBuilder().withKeyAlg(keyAlgo).withKeyLength(keySize).build();
+        // FIXME-cleanup
+        /*KeyPair keyPair = new KeyPairBuilder().withKeyAlg(keyAlgo).withKeyLength(keySize).build();
         X500Name dn = new X500NameBuilder(BCStyle.INSTANCE).addRDN(BCStyle.CN, serverKeyPairName).build();
 
         SelfSignedKeyPairData keyPairData = new SingleKeyUsageSelfSignedCertBuilder()
@@ -58,6 +50,7 @@ public class KeyPairGeneratorImpl implements KeyPairGenerator {
                 .keyPair(keyPairData)
                 .alias(alias)
                 .passwordSource(keyPassHandler)
-                .build();
+                .build();*/
+        return null;
     }
 }

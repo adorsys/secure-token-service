@@ -1,4 +1,4 @@
-package de.adorsys.sts.cryptoutils.exceptions;
+package de.adorsys.sts.common.exceptions;
 
 
 public class KeyExtractionException extends RuntimeException {

@@ -1,6 +1,5 @@
 package de.adorsys.sts.keymanagement.model;
 
-import de.adorsys.sts.cryptoutils.KeyEntry;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

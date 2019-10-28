@@ -1,4 +1,4 @@
-package de.adorsys.sts.cryptoutils;
+package de.adorsys.sts.common.encrypter;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.AESEncrypter;
@@ -9,9 +9,9 @@ import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
 import com.nimbusds.jose.jwk.RSAKey;
-import de.adorsys.sts.cryptoutils.exceptions.KeyExtractionException;
-import de.adorsys.sts.cryptoutils.exceptions.UnsupportedEncAlgorithmException;
-import de.adorsys.sts.cryptoutils.exceptions.UnsupportedKeyLengthException;
+import de.adorsys.sts.common.exceptions.KeyExtractionException;
+import de.adorsys.sts.common.exceptions.UnsupportedEncAlgorithmException;
+import de.adorsys.sts.common.exceptions.UnsupportedKeyLengthException;
 
 import javax.crypto.SecretKey;
 import java.security.Key;

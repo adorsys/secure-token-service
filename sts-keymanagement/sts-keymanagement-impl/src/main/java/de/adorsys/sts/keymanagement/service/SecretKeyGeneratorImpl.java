@@ -1,10 +1,7 @@
 package de.adorsys.sts.keymanagement.service;
 
-import de.adorsys.sts.cryptoutils.SecretKeyBuilder;
-import de.adorsys.sts.cryptoutils.SecretKeyData;
-import de.adorsys.sts.cryptoutils.SecretKeyEntry;
+import de.adorsys.sts.keymanagement.model.SecretKeyEntry;
 
-import javax.crypto.SecretKey;
 import javax.security.auth.callback.CallbackHandler;
 
 public class SecretKeyGeneratorImpl implements SecretKeyGenerator {
@@ -24,7 +21,8 @@ public class SecretKeyGeneratorImpl implements SecretKeyGenerator {
 
     @Override
     public SecretKeyEntry generate(String alias, CallbackHandler secretKeyPassHandler) {
-        SecretKey secretKey = new SecretKeyBuilder()
+        // FIXME-cleanup
+        /*SecretKey secretKey = new SecretKeyBuilder()
                 .withKeyAlg(secretKeyAlgo)
                 .withKeyLength(keySize)
                 .build();
@@ -33,6 +31,7 @@ public class SecretKeyGeneratorImpl implements SecretKeyGenerator {
                 .secretKey(secretKey)
                 .alias(alias)
                 .passwordSource(secretKeyPassHandler)
-                .build();
+                .build();*/
+        return null;
     }
 }

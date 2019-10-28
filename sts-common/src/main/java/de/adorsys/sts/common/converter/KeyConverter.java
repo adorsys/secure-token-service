@@ -1,4 +1,4 @@
-package de.adorsys.sts.cryptoutils;
+package de.adorsys.sts.common.converter;
 
 import com.nimbusds.jose.Algorithm;
 import com.nimbusds.jose.JOSEException;

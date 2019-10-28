@@ -1,22 +1,14 @@
 package de.adorsys.sts.token.passwordgrant;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
-import de.adorsys.sts.common.model.KeyAndJwk;
-import de.adorsys.sts.cryptoutils.KeyConverter;
-import de.adorsys.sts.cryptoutils.ObjectMapperSPI;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
-
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-
+import de.adorsys.sts.common.ObjectMapperSPI;
+import de.adorsys.sts.common.converter.KeyConverter;
+import de.adorsys.sts.common.model.KeyAndJwk;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
 import de.adorsys.sts.resourceserver.processing.ResourceServerProcessorService;
@@ -24,6 +16,12 @@ import de.adorsys.sts.token.InvalidParameterException;
 import de.adorsys.sts.token.JwtClaimSetHelper;
 import de.adorsys.sts.token.MissingParameterException;
 import de.adorsys.sts.token.api.TokenResponse;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 public class PasswordGrantService {
 

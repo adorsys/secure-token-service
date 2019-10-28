@@ -1,4 +1,4 @@
-package de.adorsys.sts.cryptoutils;
+package de.adorsys.sts.common.model;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;

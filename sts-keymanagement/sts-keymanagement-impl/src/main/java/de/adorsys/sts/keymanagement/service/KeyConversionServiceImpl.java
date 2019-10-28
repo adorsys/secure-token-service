@@ -1,8 +1,8 @@
 package de.adorsys.sts.keymanagement.service;
 
 import com.nimbusds.jose.jwk.JWKSet;
-import de.adorsys.sts.cryptoutils.KeyConverter;
-import de.adorsys.sts.cryptoutils.ServerKeysHolder;
+import de.adorsys.sts.common.converter.KeyConverter;
+import de.adorsys.sts.keymanagement.model.ServerKeysHolder;
 
 import java.security.KeyStore;
 

@@ -1,9 +1,6 @@
 package de.adorsys.sts.keymanagement.service;
 
-import de.adorsys.sts.cryptoutils.*;
-import de.adorsys.sts.keymanagement.model.KeyUsage;
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
-import de.adorsys.sts.keymanagement.model.StsKeyStore;
+import de.adorsys.sts.keymanagement.model.*;
 import de.adorsys.sts.keymanagement.util.DateTimeUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -11,8 +8,6 @@ import javax.security.auth.callback.CallbackHandler;
 import java.time.Clock;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
@@ -23,7 +18,7 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
     private final KeyPairGenerator signKeyPairGenerator;
     private final SecretKeyGenerator secretKeyGenerator;
 
-    private final KeyStoreType keyStoreType;
+    private final String keyStoreType;
     private final String serverKeyPairAliasPrefix;
 
     private final CallbackHandler keyPassHandler;
@@ -46,7 +41,7 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
 
         KeyManagementProperties.KeyStoreProperties keystoreProperties = keyManagementProperties.getKeystore();
 
-        this.keyStoreType = new KeyStoreType(keystoreProperties.getType());
+        this.keyStoreType = keystoreProperties.getType();
         this.serverKeyPairAliasPrefix = keystoreProperties.getAliasPrefix();
 
         String password = keystoreProperties.getPassword();
@@ -60,7 +55,8 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
 
     @Override
     public StsKeyStore generate() {
-        Map<String, StsKeyEntry> keyEntries = new HashMap<>();
+        // FIXME-cleanup
+        /*Map<String, StsKeyEntry> keyEntries = new HashMap<>();
 
         try {
             KeystoreBuilder keystoreBuilder = new KeystoreBuilder().withStoreType(keyStoreType);
@@ -108,7 +104,9 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
                     .build();
         } catch (Exception e) {
             throw new IllegalStateException(e);
-        }
+        }*/
+
+        return null;
     }
 
     @Override
