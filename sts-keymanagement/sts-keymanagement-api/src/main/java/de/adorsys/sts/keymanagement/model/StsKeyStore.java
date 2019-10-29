@@ -5,7 +5,10 @@ import de.adorsys.keymanagement.api.types.ResultCollection;
 import de.adorsys.keymanagement.api.types.entity.KeyEntry;
 import de.adorsys.keymanagement.api.view.EntryView;
 import de.adorsys.keymanagement.api.view.QueryResult;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NonNull;
 
 import java.security.KeyStore;
 import java.time.ZonedDateTime;

@@ -4,7 +4,6 @@ import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyPair;
 import de.adorsys.sts.keymanagement.model.GeneratedStsEntry;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 
 import java.time.ZonedDateTime;

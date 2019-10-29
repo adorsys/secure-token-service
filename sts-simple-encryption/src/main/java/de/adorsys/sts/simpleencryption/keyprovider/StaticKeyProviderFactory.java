@@ -2,8 +2,8 @@ package de.adorsys.sts.simpleencryption.keyprovider;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
-import de.adorsys.sts.simpleencryption.KeyProvider;
 import de.adorsys.sts.common.encrypter.JWEEncryptedSelector;
+import de.adorsys.sts.simpleencryption.KeyProvider;
 
 public class StaticKeyProviderFactory {
 

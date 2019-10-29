@@ -1,9 +1,9 @@
 package de.adorsys.sts.simpleencryption.encrypt;
 
 import com.nimbusds.jose.*;
+import de.adorsys.sts.common.encrypter.JWEEncryptedSelector;
 import de.adorsys.sts.simpleencryption.EncryptionException;
 import de.adorsys.sts.simpleencryption.KeyProvider;
-import de.adorsys.sts.common.encrypter.JWEEncryptedSelector;
 
 public class JweEncrypter implements Encrypter {
 
