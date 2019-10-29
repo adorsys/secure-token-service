@@ -1,16 +1,16 @@
 package de.adorsys.sts.keymanagement.model;
 
+import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.security.KeyStore;
 import java.time.ZonedDateTime;
 
 @Getter
 @Builder
 @EqualsAndHashCode
-public class StsKeyEntry<T> {
+public class StsKeyEntry implements KeyMetadata {
 
     private final String alias;
 
@@ -29,8 +29,6 @@ public class StsKeyEntry<T> {
     private State state;
 
     private final KeyUsage keyUsage;
-
-    private final T keyEntry;
 
     public void setState(State state) {
         this.state = state;

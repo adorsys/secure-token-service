@@ -48,7 +48,7 @@ public class MongoDatabaseKeyStoreRepository implements KeyStoreRepository {
     public void save(StsKeyStore keyStore) {
         KeyStoreEntity foundKeyStore = keyStoreRepository.findByName(keyStoreName);
 
-        if(foundKeyStore == null) {
+        if( foundKeyStore == null) {
             foundKeyStore = keyStoreEntityMapper.mapToEntity(keyStore);
             keyStoreRepository.save(foundKeyStore);
         } else {

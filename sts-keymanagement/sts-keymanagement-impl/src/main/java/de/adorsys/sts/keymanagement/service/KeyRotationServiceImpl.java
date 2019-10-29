@@ -1,10 +1,7 @@
 package de.adorsys.sts.keymanagement.service;
 
 import de.adorsys.sts.keymanagement.config.KeyManagementRotationProperties;
-import de.adorsys.sts.keymanagement.model.KeyRotationResult;
-import de.adorsys.sts.keymanagement.model.KeyUsage;
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
-import de.adorsys.sts.keymanagement.model.StsKeyStore;
+import de.adorsys.sts.keymanagement.model.*;
 import de.adorsys.sts.keymanagement.util.DateTimeUtils;
 
 import java.time.Clock;
@@ -54,12 +51,12 @@ public class KeyRotationServiceImpl implements KeyRotationService {
         List<String> generatedKeyAliases = new ArrayList<>();
 
         for(StsKeyEntry keyEntry : keyStateUpdates.newValidKeys) {
-            StsKeyEntry generatedKeyEntry = keyStoreGenerator.generateKeyEntryForFutureUsage(
+            GeneratedStsEntry generatedKeyEntry = keyStoreGenerator.generateKeyEntryForFutureUsage(
                     keyEntry.getKeyUsage(), keyEntry.getNotAfter()
             );
 
-            stsKeyStore.addKey(generatedKeyEntry);
-            generatedKeyAliases.add(generatedKeyEntry.getAlias());
+            stsKeyStore.getView().add(generatedKeyEntry.getKey());
+            generatedKeyAliases.add(generatedKeyEntry.getEntry().getAlias());
         }
 
         return generatedKeyAliases;
@@ -86,7 +83,7 @@ public class KeyRotationServiceImpl implements KeyRotationService {
     }
 
     private KeyStateUpdates updateEncryptionKeyEntryStates(StsKeyStore stsKeyStore, ZonedDateTime now) {
-        List<StsKeyEntry> encryptionKeyEntries = stsKeyStore.getKeyEntries().values().stream()
+        List<StsKeyEntry> encryptionKeyEntries = stsKeyStore.getEntries().values().stream()
                 .filter(k -> k.getKeyUsage() == KeyUsage.Encryption)
                 .collect(Collectors.toList());
 
@@ -94,7 +91,7 @@ public class KeyRotationServiceImpl implements KeyRotationService {
     }
 
     private KeyStateUpdates updateSignatureKeyEntryStates(StsKeyStore stsKeyStore, ZonedDateTime now) {
-        List<StsKeyEntry> encryptionKeyEntries = stsKeyStore.getKeyEntries().values().stream()
+        List<StsKeyEntry> encryptionKeyEntries = stsKeyStore.getEntries().values().stream()
                 .filter(k -> k.getKeyUsage() == KeyUsage.Signature)
                 .collect(Collectors.toList());
 
@@ -102,7 +99,7 @@ public class KeyRotationServiceImpl implements KeyRotationService {
     }
 
     private KeyStateUpdates updateSecretKeyEntryStates(StsKeyStore stsKeyStore, ZonedDateTime now) {
-        List<StsKeyEntry> encryptionKeyEntries = stsKeyStore.getKeyEntries().values().stream()
+        List<StsKeyEntry> encryptionKeyEntries = stsKeyStore.getEntries().values().stream()
                 .filter(k -> k.getKeyUsage() == KeyUsage.SecretKey)
                 .collect(Collectors.toList());
 
@@ -182,7 +179,7 @@ public class KeyRotationServiceImpl implements KeyRotationService {
     }
 
     private List<String> removeExpiredKeys(StsKeyStore stsKeyStore, KeyUsage keyUsage) {
-        Collection<StsKeyEntry> actualKeys = stsKeyStore.getKeyEntries().values();
+        Collection<StsKeyEntry> actualKeys = stsKeyStore.getEntries().values();
         Collection<StsKeyEntry> copiedKeyEntries = new ArrayList<>(actualKeys);
 
         return copiedKeyEntries.stream()
@@ -193,21 +190,21 @@ public class KeyRotationServiceImpl implements KeyRotationService {
     }
 
     private List<String> generateAndAddMissingKeys(StsKeyStore stsKeyStore) {
-        Collection<StsKeyEntry> actualKeys = stsKeyStore.getKeyEntries().values();
+        Collection<StsKeyEntry> actualKeys = stsKeyStore.getEntries().values();
 
-        List<StsKeyEntry> generatedKeys = generateMissingKeys(actualKeys);
+        List<GeneratedStsEntry> generatedKeys = generateMissingKeys(actualKeys);
         List<String> generatedKeyAliases = new ArrayList<>();
 
-        for(StsKeyEntry generatedKey : generatedKeys) {
-            stsKeyStore.addKey(generatedKey);
-            generatedKeyAliases.add(generatedKey.getAlias());
+        for (GeneratedStsEntry generatedKey : generatedKeys) {
+            stsKeyStore.getView().add(generatedKey.getKey());
+            generatedKeyAliases.add(generatedKey.getEntry().getAlias());
         }
 
         return generatedKeyAliases;
     }
 
-    private List<StsKeyEntry> generateMissingKeys(Collection<StsKeyEntry> actualKeys) {
-        List<StsKeyEntry> generatedKeys = new ArrayList<>();
+    private List<GeneratedStsEntry> generateMissingKeys(Collection<StsKeyEntry> actualKeys) {
+        List<GeneratedStsEntry> generatedKeys = new ArrayList<>();
 
         if(encryptionKeyPairRotationProperties.isEnabled()) {
             generatedKeys.addAll(generateMissingEncryptionKeys(actualKeys));
@@ -222,8 +219,8 @@ public class KeyRotationServiceImpl implements KeyRotationService {
         return generatedKeys;
     }
 
-    private List<StsKeyEntry> generateMissingEncryptionKeys(Collection<StsKeyEntry> actualKeys) {
-        List<StsKeyEntry> generatedKeys = new ArrayList<>();
+    private List<GeneratedStsEntry> generateMissingEncryptionKeys(Collection<StsKeyEntry> actualKeys) {
+        List<GeneratedStsEntry> generatedKeys = new ArrayList<>();
 
         long countOfValidEncryptionKeyPairs = actualKeys.stream()
                 .filter(k -> k.getState() == StsKeyEntry.State.VALID)
@@ -231,15 +228,15 @@ public class KeyRotationServiceImpl implements KeyRotationService {
                 .count();
 
         for(int i = 0; i < encryptionKeyPairRotationProperties.getMinKeys() - countOfValidEncryptionKeyPairs; i++) {
-            StsKeyEntry generatedKeyAlias = generateKey(KeyUsage.Encryption);
+            GeneratedStsEntry generatedKeyAlias = generateKey(KeyUsage.Encryption);
             generatedKeys.add(generatedKeyAlias);
         }
 
         return generatedKeys;
     }
 
-    private List<StsKeyEntry> generateMissingSignatureKeys(Collection<StsKeyEntry> actualKeys) {
-        List<StsKeyEntry> generatedKeys = new ArrayList<>();
+    private List<GeneratedStsEntry> generateMissingSignatureKeys(Collection<StsKeyEntry> actualKeys) {
+        List<GeneratedStsEntry> generatedKeys = new ArrayList<>();
 
         long countOfValidSignatureKeyPairs = actualKeys.stream()
                 .filter(k -> k.getState() == StsKeyEntry.State.VALID)
@@ -247,15 +244,15 @@ public class KeyRotationServiceImpl implements KeyRotationService {
                 .count();
 
         for(int i = 0; i < signatureKeyPairRotationProperties.getMinKeys() - countOfValidSignatureKeyPairs; i++) {
-            StsKeyEntry generatedKeyAlias = generateKey(KeyUsage.Signature);
+            GeneratedStsEntry generatedKeyAlias = generateKey(KeyUsage.Signature);
             generatedKeys.add(generatedKeyAlias);
         }
 
         return generatedKeys;
     }
 
-    private List<StsKeyEntry> generateMissingSecretKeys(Collection<StsKeyEntry> actualKeys) {
-        List<StsKeyEntry> generatedKeys = new ArrayList<>();
+    private List<GeneratedStsEntry> generateMissingSecretKeys(Collection<StsKeyEntry> actualKeys) {
+        List<GeneratedStsEntry> generatedKeys = new ArrayList<>();
 
         long countOfValidSecretKeys = actualKeys.stream()
                 .filter(k -> k.getState() == StsKeyEntry.State.VALID)
@@ -263,7 +260,7 @@ public class KeyRotationServiceImpl implements KeyRotationService {
                 .count();
 
         for(int i = 0; i < secretKeyRotationProperties.getMinKeys() - countOfValidSecretKeys; i++) {
-            StsKeyEntry generatedKeyAlias = generateKey(KeyUsage.SecretKey);
+            GeneratedStsEntry generatedKeyAlias = generateKey(KeyUsage.SecretKey);
             generatedKeys.add(generatedKeyAlias);
         }
 
@@ -272,13 +269,12 @@ public class KeyRotationServiceImpl implements KeyRotationService {
 
     private String removeKey(StsKeyStore keyStore, StsKeyEntry stsKeyEntry) {
         String alias = stsKeyEntry.getAlias();
-        keyStore.removeKey(alias);
-
+        keyStore.getView().removeById(alias);
         return alias;
     }
 
-    private StsKeyEntry generateKey(KeyUsage keyUsage) {
-        StsKeyEntry stsKeyEntry;
+    private GeneratedStsEntry generateKey(KeyUsage keyUsage) {
+        GeneratedStsEntry stsKeyEntry;
 
         if(keyUsage == KeyUsage.Signature) {
             stsKeyEntry = keyStoreGenerator.generateSignatureKeyEntryForInstantUsage();

@@ -60,7 +60,7 @@ public class KeyManagementService implements ServerKeyMapProvider {
         ServerKeysHolder exportedKeys;
 
         if(repository.exists()) {
-            exportedKeys = keyConversionService.export(repository.load().getKeyStore());
+            exportedKeys = keyConversionService.export(repository.load());
         } else {
             exportedKeys = EMPTY_KEYS;
         }
@@ -73,8 +73,8 @@ public class KeyManagementService implements ServerKeyMapProvider {
         if(repository.exists()) {
             StsKeyStore keyStore = repository.load();
 
-            ServerKeysHolder exportedKeys = keyConversionService.export(keyStore.getKeyStore());
-            Map<String, StsKeyEntry> keyEntries = keyStore.getKeyEntries();
+            ServerKeysHolder exportedKeys = keyConversionService.export(keyStore);
+            Map<String, StsKeyEntry> keyEntries = keyStore.getEntries();
 
             List<String> filteredKeyAliases = keyEntries.values().stream()
                     .filter(this::hasUsablePublicKey)
@@ -108,8 +108,8 @@ public class KeyManagementService implements ServerKeyMapProvider {
         if(repository.exists()) {
             StsKeyStore keyStore = repository.load();
 
-            ServerKeysHolder exportedKeys = keyConversionService.export(keyStore.getKeyStore());
-            Map<String, StsKeyEntry> keyEntries = keyStore.getKeyEntries();
+            ServerKeysHolder exportedKeys = keyConversionService.export(keyStore);
+            Map<String, StsKeyEntry> keyEntries = keyStore.getEntries();
 
             List<String> filteredKeyAliases = keyEntries.values().stream()
                     .filter(predicate)

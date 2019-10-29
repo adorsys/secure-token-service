@@ -1,7 +1,12 @@
 package de.adorsys.sts.keymanagement;
 
+import com.google.gson.*;
 import de.adorsys.keymanagement.api.Juggler;
+import de.adorsys.keymanagement.core.metadata.MetadataPersistenceConfig;
+import de.adorsys.keymanagement.core.metadata.WithPersister;
 import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
+import de.adorsys.sts.keymanagement.model.StsKeyEntry;
+import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.CachedKeyStoreRepository;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.*;
@@ -12,8 +17,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 
+import java.lang.reflect.Type;
 import java.security.Security;
 import java.time.Clock;
+import java.time.ZonedDateTime;
 
 @Configuration
 @ComponentScan(
@@ -112,6 +119,34 @@ public class KeyManagementConfiguration {
     Juggler juggler() {
         Security.addProvider(new BouncyCastleProvider());
         return DaggerBCJuggler.builder()
+                .metadataConfig(
+                        MetadataPersistenceConfig.builder()
+                                .metadataClass(StsKeyEntry.class)
+                                .gson(getGson())
+                                .build()
+                )
+                .metadataPersister(new WithPersister())
                 .build();
+    }
+
+    private Gson getGson() {
+        return new GsonBuilder()
+                .registerTypeAdapter(
+                        ZonedDateTime.class,
+                        getZonedDateTimeJsonDeserializer()
+                )
+                .registerTypeAdapter(
+                        ZonedDateTime.class,
+                        getZonedDateTimeJsonSerializer()
+                )
+                .create();
+    }
+
+    private JsonDeserializer<ZonedDateTime> getZonedDateTimeJsonDeserializer() {
+        return (json, type, jsonDeserializationContext) -> ZonedDateTime.parse(json.getAsJsonPrimitive().getAsString());
+    }
+
+    private JsonSerializer<ZonedDateTime> getZonedDateTimeJsonSerializer() {
+        return (time, type, jsonDeserializationContext) -> new JsonPrimitive(time.toString());
     }
 }

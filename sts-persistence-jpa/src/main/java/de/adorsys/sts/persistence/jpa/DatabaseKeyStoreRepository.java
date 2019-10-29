@@ -1,5 +1,6 @@
 package de.adorsys.sts.persistence.jpa;
 
+import de.adorsys.keymanagement.api.Juggler;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
@@ -21,20 +22,21 @@ import java.util.Map;
 @Transactional
 public class DatabaseKeyStoreRepository implements KeyStoreRepository {
 
+    private final Juggler juggler;
     private final JpaKeyStoreRepository keyStoreRepository;
     private final JpaKeyEntryAttributesRepository keyEntryRepository;
-
     private final KeyStoreEntityMapper keyStoreEntityMapper;
-
     private final String keyStoreName;
 
     @Autowired
     public DatabaseKeyStoreRepository(
+            Juggler juggler,
             JpaKeyStoreRepository keyStoreRepository,
             JpaKeyEntryAttributesRepository keyEntryRepository,
             KeyStoreEntityMapper keyStoreEntityMapper,
             KeyManagementProperties keyManagementProperties
     ) {
+        this.juggler = juggler;
         this.keyStoreRepository = keyStoreRepository;
         this.keyEntryRepository = keyEntryRepository;
 
@@ -58,9 +60,9 @@ public class DatabaseKeyStoreRepository implements KeyStoreRepository {
     @Override
     public void save(StsKeyStore keyStore) {
         JpaKeyStore foundKeyStore = keyStoreRepository.findByName(keyStoreName);
-        Map<String, StsKeyEntry> stsKeyEntries = keyStore.getKeyEntries();
+        Map<String, StsKeyEntry> stsKeyEntries = keyStore.getEntries();
 
-        if(foundKeyStore == null) {
+        if (foundKeyStore == null) {
             foundKeyStore = keyStoreEntityMapper.mapToEntity(keyStore);
             JpaKeyStore savedKeyStore = keyStoreRepository.save(foundKeyStore);
 
@@ -71,8 +73,8 @@ public class DatabaseKeyStoreRepository implements KeyStoreRepository {
             Long keyStoreId = foundKeyStore.getId();
             List<JpaKeyEntryAttributes> keyEntries = keyEntryRepository.findAllByKeyStoreId(keyStoreId);
 
-            for(JpaKeyEntryAttributes keyEntry : keyEntries) {
-                if(!stsKeyEntries.containsKey(keyEntry.getAlias())) {
+            for (JpaKeyEntryAttributes keyEntry : keyEntries) {
+                if (!stsKeyEntries.containsKey(keyEntry.getAlias())) {
                     keyEntryRepository.deleteById(keyEntry.getId());
                 }
             }
