@@ -35,25 +35,18 @@ public class KeyManagementService implements ServerKeyMapProvider {
 
     @Override
     public KeyAndJwk randomSecretKey() {
-        //FIXME-cleanup
-        //return getSecretKeys().randomSecretKey();
-        return null;
+        return getSecretKeys().randomSecretKey();
     }
 
     @Override
     public KeyAndJwk randomSignKey() {
-        //FIXME-cleanup
-        //return getPrivateKeys().randomSignKey();
-        return null;
+        return getPrivateKeys().randomSignKey();
     }
 
     @Override
     public Key getKey(String keyId) {
-        //FIXME-cleanup
-        /*StsServerKeyMap serverKeyMap = new StsServerKeyMap(loadKeys().getPrivateKeySet());
-
-        return serverKeyMap.getKey(keyId);*/
-        return null;
+        StsServerKeyMap serverKeyMap = new StsServerKeyMap(loadKeys().getPrivateKeySet());
+        return serverKeyMap.getKey(keyId);
     }
 
     private ServerKeysHolder loadKeys() {
@@ -93,15 +86,11 @@ public class KeyManagementService implements ServerKeyMapProvider {
     }
 
     private StsServerKeyMap getPrivateKeys() {
-        //FIXME-cleanup
-        //return new StsServerKeyMap(getFilteredPrivateKeys(this::hasUsablePrivateKey));
-        return null;
+        return new StsServerKeyMap(getFilteredPrivateKeys(this::hasUsablePrivateKey));
     }
 
     private StsServerKeyMap getSecretKeys() {
-        //FIXME-cleanup
-        //return new StsServerKeyMap(getFilteredPrivateKeys(this::isUsableSecretKey));
-        return null;
+        return new StsServerKeyMap(getFilteredPrivateKeys(this::isUsableSecretKey));
     }
 
     private JWKSet getFilteredPrivateKeys(Predicate<StsKeyEntry> predicate) {

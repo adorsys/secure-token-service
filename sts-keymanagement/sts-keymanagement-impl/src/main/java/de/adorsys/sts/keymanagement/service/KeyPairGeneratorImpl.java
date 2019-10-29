@@ -1,6 +1,7 @@
 package de.adorsys.sts.keymanagement.service;
 
 import de.adorsys.keymanagement.api.Juggler;
+import de.adorsys.keymanagement.api.types.template.generated.Encrypting;
 import de.adorsys.keymanagement.api.types.template.generated.Signing;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyPair;
 
@@ -41,8 +42,8 @@ public class KeyPairGeneratorImpl implements KeyPairGenerator {
     @Override
     public ProvidedKeyPair generateEncryptionKey(String alias, Supplier<char[]> keyPassword) {
         return juggler.generateKeys()
-                .signing(
-                        Signing.with()
+                .encrypting(
+                        Encrypting.with()
                                 .alias(alias)
                                 .algo(keyAlgo)
                                 .keySize(keySize)
