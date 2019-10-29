@@ -19,5 +19,4 @@ public interface StsKeyEntry extends KeyMetadata {
     Long getLegacyInterval();
     KeyState getState();
     KeyUsage getKeyUsage();
-
 }

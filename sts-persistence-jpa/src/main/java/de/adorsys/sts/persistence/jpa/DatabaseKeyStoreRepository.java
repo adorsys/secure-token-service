@@ -1,6 +1,5 @@
 package de.adorsys.sts.persistence.jpa;
 
-import de.adorsys.keymanagement.api.Juggler;
 import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;

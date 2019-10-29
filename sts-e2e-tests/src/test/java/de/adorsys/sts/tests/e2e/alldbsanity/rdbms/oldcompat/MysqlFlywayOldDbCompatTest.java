@@ -3,7 +3,6 @@ package de.adorsys.sts.tests.e2e.alldbsanity.rdbms.oldcompat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.adorsys.sts.keymanagement.KeyStoreInitializationRunner;
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.persistence.jpa.DatabaseKeyStoreRepository;
 import de.adorsys.sts.tests.KeyRotationContext;
@@ -12,7 +11,6 @@ import de.adorsys.sts.tests.config.WithControllableClock;
 import de.adorsys.sts.tests.e2e.alldbsanity.rdbms.BaseJdbcDbTest;
 import de.adorsys.sts.tests.e2e.testcomponents.PopRotationValidator;
 import lombok.SneakyThrows;
-import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +22,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.Instant;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS;
 import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @KeyRotationContext
 @EnableAutoConfiguration(exclude = {EmbeddedMongoAutoConfiguration.class, MongoAutoConfiguration.class})
@@ -65,10 +62,15 @@ class MysqlFlywayOldDbCompatTest extends BaseJdbcDbTest {
                 true
         );
 
-
         validator.testPopRotates();
 
         StsKeyStore newKeyStore = keyStoreRepository.load();
+        // Old valid keys are removed
+        assertThat(newKeyStore.getEntries()).doesNotContainKeys(
+                "sts-secret-server-dev-GC6D4",
+                "sts-secret-server-dev-ba0be913-e46b-416b-b9ba-b8c083fddec8",
+                "sts-secret-server-dev-K5EFK"
+        );
         // Validate that old entries are in `Valid` state now
         JSONAssert.assertEquals(
                 Resource.read("fixture/old-compat/after_rotation_kept.json"),
