@@ -1,22 +1,25 @@
 package de.adorsys.sts.keymanagement.service;
-/* FIXME
+
+
 import com.nitorcreations.junit.runners.NestedRunner;
+import de.adorsys.keymanagement.api.types.entity.KeyEntry;
+import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
+import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyPair;
+import de.adorsys.keymanagement.api.view.EntryView;
+import de.adorsys.keymanagement.api.view.QueryResult;
 import de.adorsys.sts.keymanagement.config.KeyManagementRotationProperties;
-import de.adorsys.sts.keymanagement.model.KeyRotationResult;
-import de.adorsys.sts.keymanagement.model.KeyUsage;
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
-import de.adorsys.sts.keymanagement.model.StsKeyStore;
+import de.adorsys.sts.keymanagement.model.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.security.KeyStore;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,12 +39,15 @@ public class KeyRotationServiceTest {
     KeyRotationService keyRotationService;
 
     @Mock
-    StsKeyStore stsKeyStore;
+    private StsKeyStore stsKeyStore;
 
     @Mock
-    KeyStore keyStore;
+    private EntryView<QueryResult<KeyEntry>> view;
 
-    Map<String, StsKeyEntry> keyEntries;
+    @Mock
+    private UnmodifyableKeystore keyStore;
+
+    private Map<String, StsKeyEntry> keyEntries;
 
     static final String SIGNATURE_KEY_ALIAS = "signature key";
     static final String ENCRYPTION_KEY_ALIAS = "encryption key";
@@ -60,13 +66,22 @@ public class KeyRotationServiceTest {
     KeyStoreGenerator keyStoreGenerator;
 
     @Mock
-    StsKeyEntry generatedEncryptionKeyPair;
+    ProvidedKeyPair providedEncryptionKeyPair;
 
     @Mock
-    StsKeyEntry generatedSignatureKeyPair;
+    ProvidedKeyPair providedSigningKeyPair;
 
     @Mock
-    StsKeyEntry generatedSecretKey;
+    ProvidedKey providedSecretKey;
+
+    @Mock
+    GeneratedStsEntry generatedEncryptionKeyPair;
+
+    @Mock
+    GeneratedStsEntry generatedSignatureKeyPair;
+
+    @Mock
+    GeneratedStsEntry generatedSecretKey;
 
     @Mock
     KeyManagementRotationProperties rotationProperties;
@@ -109,12 +124,22 @@ public class KeyRotationServiceTest {
         when(secretKeyEntry.getNotAfter()).thenReturn(FIXED_DATE_TIME.plusSeconds(1).atZone(ZoneOffset.UTC));
         when(secretKeyEntry.getExpireAt()).thenReturn(FIXED_DATE_TIME.plusSeconds(2).atZone(ZoneOffset.UTC));
 
+        when(generatedSignatureKeyPair.getKey()).thenReturn(providedSigningKeyPair);
+        when(generatedSignatureKeyPair.getEntry()).thenReturn(signatureKeyEntry);
+
+        when(generatedEncryptionKeyPair.getKey()).thenReturn(providedEncryptionKeyPair);
+        when(generatedEncryptionKeyPair.getEntry()).thenReturn(encryptionKeyEntry);
+
+        when(generatedSecretKey.getKey()).thenReturn(providedSecretKey);
+        when(generatedSecretKey.getEntry()).thenReturn(secretKeyEntry);
+
         keyEntries.put(SIGNATURE_KEY_ALIAS, signatureKeyEntry);
         keyEntries.put(ENCRYPTION_KEY_ALIAS, encryptionKeyEntry);
         keyEntries.put(SECRET_KEY_ALIAS, secretKeyEntry);
 
-        when(stsKeyStore.getKeyEntries()).thenReturn(keyEntries);
-        when(stsKeyStore.getKeyStore()).thenReturn(keyStore);
+        when(stsKeyStore.getEntries()).thenReturn(keyEntries);
+        when(stsKeyStore.getKeyStoreCopy()).thenReturn(keyStore);
+        when(stsKeyStore.getView()).thenReturn(view);
 
         when(keyStoreGenerator.generateEncryptionKeyEntryForInstantUsage()).thenReturn(generatedEncryptionKeyPair);
         when(keyStoreGenerator.generateSignatureKeyEntryForInstantUsage()).thenReturn(generatedSignatureKeyPair);
@@ -152,12 +177,12 @@ public class KeyRotationServiceTest {
 
         @Test
         public void shouldGenerateNewKey() throws Exception {
-            verify(stsKeyStore, times(1)).addKey(generatedSignatureKeyPair);
+            verify(view, times(1)).add(providedSigningKeyPair);
         }
 
         @Test
         public void shouldRemoveInvalidKey() throws Exception {
-            verify(stsKeyStore, times(1)).removeKey(SIGNATURE_KEY_ALIAS);
+            verify(view, times(1)).removeById(SIGNATURE_KEY_ALIAS);
         }
 
         @Test
@@ -189,13 +214,13 @@ public class KeyRotationServiceTest {
 
         @Test
         public void shouldGenerateNewKey() throws Exception {
-            verify(stsKeyStore, times(1)).addKey(generatedEncryptionKeyPair);
+            verify(view, times(1)).add(providedEncryptionKeyPair);
         }
 
 
         @Test
         public void shouldRemoveInvalidKey() throws Exception {
-            verify(stsKeyStore, times(1)).removeKey(ENCRYPTION_KEY_ALIAS);
+            verify(view, times(1)).removeById(ENCRYPTION_KEY_ALIAS);
         }
 
         @Test
@@ -227,13 +252,13 @@ public class KeyRotationServiceTest {
 
         @Test
         public void shouldGenerateNewKey() throws Exception {
-            verify(stsKeyStore, times(1)).addKey(generatedSecretKey);
+            verify(view, times(1)).add(providedSecretKey);
         }
 
 
         @Test
         public void shouldRemoveInvalidKey() throws Exception {
-            verify(stsKeyStore, times(1)).removeKey(SECRET_KEY_ALIAS);
+            verify(view, times(1)).removeById(SECRET_KEY_ALIAS);
         }
 
         @Test
@@ -252,4 +277,3 @@ public class KeyRotationServiceTest {
         }
     }
 }
-*/
