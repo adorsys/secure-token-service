@@ -5,10 +5,7 @@ import de.adorsys.keymanagement.api.keystore.KeyStoreView;
 import de.adorsys.keymanagement.api.types.entity.KeyEntry;
 import de.adorsys.keymanagement.api.types.template.NameAndPassword;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyEntry;
-import de.adorsys.sts.keymanagement.model.PasswordCallbackHandler;
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
-import de.adorsys.sts.keymanagement.model.StsKeyStore;
-import de.adorsys.sts.keymanagement.model.UnmodifyableKeystore;
+import de.adorsys.sts.keymanagement.model.*;
 import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
 import de.adorsys.sts.persistence.jpa.entity.JpaKeyEntryAttributes;
 import de.adorsys.sts.persistence.jpa.entity.JpaKeyStore;
@@ -103,7 +100,7 @@ public class KeyStoreEntityMapper {
     }
 
     private StsKeyEntry mapFromEntity(JpaKeyEntryAttributes keyEntryAttributes) {
-        return StsKeyEntry.builder()
+        return StsKeyEntryImpl.builder()
                 .alias(keyEntryAttributes.getAlias())
                 .createdAt(keyEntryAttributes.getCreatedAt())
                 .notBefore(keyEntryAttributes.getNotBefore())

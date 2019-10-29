@@ -5,7 +5,7 @@ import de.adorsys.keymanagement.api.Juggler;
 import de.adorsys.keymanagement.core.metadata.MetadataPersistenceConfig;
 import de.adorsys.keymanagement.core.metadata.WithPersister;
 import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
+import de.adorsys.sts.keymanagement.model.StsKeyEntryImpl;
 import de.adorsys.sts.keymanagement.persistence.CachedKeyStoreRepository;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.*;
@@ -119,7 +119,7 @@ public class KeyManagementConfiguration {
         return DaggerBCJuggler.builder()
                 .metadataConfig(
                         MetadataPersistenceConfig.builder()
-                                .metadataClass(StsKeyEntry.class)
+                                .metadataClass(StsKeyEntryImpl.class)
                                 .gson(getGson())
                                 .build()
                 )

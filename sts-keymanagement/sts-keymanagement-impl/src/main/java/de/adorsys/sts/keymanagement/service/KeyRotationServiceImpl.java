@@ -110,39 +110,39 @@ public class KeyRotationServiceImpl implements KeyRotationService {
         KeyStateUpdates updates = new KeyStateUpdates();
 
         List<StsKeyEntry> keysToBeValid = encryptionKeyEntries.stream()
-                .filter(k -> k.getState() == StsKeyEntry.State.CREATED)
+                .filter(k -> k.getState() == KeyState.CREATED)
                 .filter(k -> k.getNotBefore().isBefore(now))
                 .collect(Collectors.toList());
 
-        for(StsKeyEntry keyEntry : keysToBeValid) {
+        for (StsKeyEntry keyEntry : keysToBeValid) {
             ZonedDateTime notAfter = DateTimeUtils.addMillis(now, keyEntry.getValidityInterval());
 
             keyEntry.setNotAfter(notAfter);
             keyEntry.setExpireAt(DateTimeUtils.addMillis(notAfter, keyEntry.getValidityInterval()));
 
-            keyEntry.setState(StsKeyEntry.State.VALID);
+            keyEntry.setState(KeyState.VALID);
         }
 
         updates.newValidKeys = keysToBeValid;
 
         List<StsKeyEntry> keysToBeLegacy = encryptionKeyEntries.stream()
-                .filter(k -> k.getState() == StsKeyEntry.State.VALID)
+                .filter(k -> k.getState() == KeyState.VALID)
                 .filter(k -> now.isAfter(k.getNotAfter()))
                 .collect(Collectors.toList());
 
-        for(StsKeyEntry keyEntry : keysToBeLegacy) {
-            keyEntry.setState(StsKeyEntry.State.LEGACY);
+        for (StsKeyEntry keyEntry : keysToBeLegacy) {
+            keyEntry.setState(KeyState.LEGACY);
         }
 
         updates.newLegacyKeys = keysToBeLegacy;
 
         List<StsKeyEntry> keysToBeExpired = encryptionKeyEntries.stream()
-                .filter(k -> k.getState() == StsKeyEntry.State.LEGACY)
+                .filter(k -> k.getState() == KeyState.LEGACY)
                 .filter(k -> now.isAfter(k.getExpireAt()))
                 .collect(Collectors.toList());
 
         for(StsKeyEntry keyEntry : keysToBeExpired) {
-            keyEntry.setState(StsKeyEntry.State.EXPIRED);
+            keyEntry.setState(KeyState.EXPIRED);
         }
 
         updates.newExpiredKeys = keysToBeExpired;
@@ -183,7 +183,7 @@ public class KeyRotationServiceImpl implements KeyRotationService {
         Collection<StsKeyEntry> copiedKeyEntries = new ArrayList<>(actualKeys);
 
         return copiedKeyEntries.stream()
-                .filter(k -> k.getState() == StsKeyEntry.State.EXPIRED)
+                .filter(k -> k.getState() == KeyState.EXPIRED)
                 .filter(k -> k.getKeyUsage() == keyUsage)
                 .map(k -> removeKey(stsKeyStore, k))
                 .collect(Collectors.toList());
@@ -223,7 +223,7 @@ public class KeyRotationServiceImpl implements KeyRotationService {
         List<GeneratedStsEntry> generatedKeys = new ArrayList<>();
 
         long countOfValidEncryptionKeyPairs = actualKeys.stream()
-                .filter(k -> k.getState() == StsKeyEntry.State.VALID)
+                .filter(k -> k.getState() == KeyState.VALID)
                 .filter(k -> k.getKeyUsage() == KeyUsage.Encryption)
                 .count();
 
@@ -239,7 +239,7 @@ public class KeyRotationServiceImpl implements KeyRotationService {
         List<GeneratedStsEntry> generatedKeys = new ArrayList<>();
 
         long countOfValidSignatureKeyPairs = actualKeys.stream()
-                .filter(k -> k.getState() == StsKeyEntry.State.VALID)
+                .filter(k -> k.getState() == KeyState.VALID)
                 .filter(k -> k.getKeyUsage() == KeyUsage.Signature)
                 .count();
 
@@ -255,7 +255,7 @@ public class KeyRotationServiceImpl implements KeyRotationService {
         List<GeneratedStsEntry> generatedKeys = new ArrayList<>();
 
         long countOfValidSecretKeys = actualKeys.stream()
-                .filter(k -> k.getState() == StsKeyEntry.State.VALID)
+                .filter(k -> k.getState() == KeyState.VALID)
                 .filter(k -> k.getKeyUsage() == KeyUsage.SecretKey)
                 .count();
 

@@ -4,10 +4,7 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import de.adorsys.sts.common.model.KeyAndJwk;
 import de.adorsys.sts.common.util.ImmutableLists;
-import de.adorsys.sts.keymanagement.model.KeyUsage;
-import de.adorsys.sts.keymanagement.model.ServerKeysHolder;
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
-import de.adorsys.sts.keymanagement.model.StsKeyStore;
+import de.adorsys.sts.keymanagement.model.*;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.util.StsServerKeyMap;
 
@@ -117,16 +114,16 @@ public class KeyManagementService implements ServerKeyMapProvider {
     }
 
     private boolean hasUsablePublicKey(StsKeyEntry stsKeyEntry) {
-        return stsKeyEntry.getKeyUsage() == KeyUsage.Encryption && stsKeyEntry.getState() == StsKeyEntry.State.VALID
-                || stsKeyEntry.getKeyUsage() == KeyUsage.Signature && (stsKeyEntry.getState() == StsKeyEntry.State.VALID || stsKeyEntry.getState() == StsKeyEntry.State.LEGACY);
+        return stsKeyEntry.getKeyUsage() == KeyUsage.Encryption && stsKeyEntry.getState() == KeyState.VALID
+                || stsKeyEntry.getKeyUsage() == KeyUsage.Signature && (stsKeyEntry.getState() == KeyState.VALID || stsKeyEntry.getState() == KeyState.LEGACY);
     }
 
     private boolean hasUsablePrivateKey(StsKeyEntry stsKeyEntry) {
-        return stsKeyEntry.getKeyUsage() == KeyUsage.Signature && stsKeyEntry.getState() == StsKeyEntry.State.VALID
-                || stsKeyEntry.getKeyUsage() == KeyUsage.Encryption && (stsKeyEntry.getState() == StsKeyEntry.State.VALID ||stsKeyEntry.getState() == StsKeyEntry.State.LEGACY);
+        return stsKeyEntry.getKeyUsage() == KeyUsage.Signature && stsKeyEntry.getState() == KeyState.VALID
+                || stsKeyEntry.getKeyUsage() == KeyUsage.Encryption && (stsKeyEntry.getState() == KeyState.VALID ||stsKeyEntry.getState() == KeyState.LEGACY);
     }
 
     private boolean isUsableSecretKey(StsKeyEntry stsKeyEntry) {
-        return stsKeyEntry.getKeyUsage() == KeyUsage.SecretKey && stsKeyEntry.getState() == StsKeyEntry.State.VALID;
+        return stsKeyEntry.getKeyUsage() == KeyUsage.SecretKey && stsKeyEntry.getState() == KeyState.VALID;
     }
 }

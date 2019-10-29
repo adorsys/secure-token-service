@@ -1,0 +1,68 @@
+{
+  "sts-secret-server-dev-GC6D4": {
+    "alias": "sts-secret-server-dev-GC6D4",
+    "createdAt": "2019-10-29T15:28:40Z",
+    "notBefore": "2019-10-29T15:29:40Z",
+    "notAfter": "2019-10-29T15:32:40Z",
+    "expireAt": "2019-10-29T15:33:40Z",
+    "validityInterval": 60000,
+    "legacyInterval": 120000,
+    "state": "VALID",
+    "keyUsage": "Encryption"
+  },
+  "sts-secret-server-dev-ba0be913-e46b-416b-b9ba-b8c083fddec8": {
+    "alias": "sts-secret-server-dev-ba0be913-e46b-416b-b9ba-b8c083fddec8",
+    "createdAt": "2019-10-29T15:28:40Z",
+    "notBefore": "2019-10-29T15:29:40Z",
+    "notAfter": "2019-10-29T15:32:40Z",
+    "expireAt": "2019-10-29T15:33:40Z",
+    "validityInterval": 60000,
+    "legacyInterval": 120000,
+    "state": "VALID",
+    "keyUsage": "Signature"
+  },
+  "sts-secret-server-dev-0451388d-057c-4385-acee-16fe9fcbcf36": {
+    "alias": "sts-secret-server-dev-0451388d-057c-4385-acee-16fe9fcbcf36",
+    "createdAt": "2019-10-29T15:31:40Z",
+    "notBefore": "2019-10-29T15:32:40Z",
+    "notAfter": null,
+    "expireAt": null,
+    "validityInterval": 60000,
+    "legacyInterval": 120000,
+    "state": "CREATED",
+    "keyUsage": "Signature"
+  },
+  "sts-secret-server-dev-W75ZT": {
+    "alias": "sts-secret-server-dev-W75ZT",
+    "createdAt": "2019-10-29T15:31:40Z",
+    "notBefore": "2019-10-29T15:32:40Z",
+    "notAfter": null,
+    "expireAt": null,
+    "validityInterval": 60000,
+    "legacyInterval": 120000,
+    "state": "CREATED",
+    "keyUsage": "SecretKey"
+  },
+  "sts-secret-server-dev-K5EFK": {
+    "alias": "sts-secret-server-dev-K5EFK",
+    "createdAt": "2019-10-29T15:28:40Z",
+    "notBefore": "2019-10-29T15:29:40Z",
+    "notAfter": "2019-10-29T15:32:40Z",
+    "expireAt": "2019-10-29T15:33:40Z",
+    "validityInterval": 60000,
+    "legacyInterval": 120000,
+    "state": "VALID",
+    "keyUsage": "SecretKey"
+  },
+  "sts-secret-server-dev-22QTI": {
+    "alias": "sts-secret-server-dev-22QTI",
+    "createdAt": "2019-10-29T15:31:40Z",
+    "notBefore": "2019-10-29T15:32:40Z",
+    "notAfter": null,
+    "expireAt": null,
+    "validityInterval": 60000,
+    "legacyInterval": 120000,
+    "state": "CREATED",
+    "keyUsage": "Encryption"
+  }
+}

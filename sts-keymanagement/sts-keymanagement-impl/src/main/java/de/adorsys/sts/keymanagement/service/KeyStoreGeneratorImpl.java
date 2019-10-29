@@ -125,7 +125,7 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
         ProvidedKeyPair signatureKeyPair = generateSignKeyPair();
         ZonedDateTime now = now();
 
-        StsKeyEntry entry = StsKeyEntry.builder()
+        StsKeyEntryImpl entry = StsKeyEntryImpl.builder()
                 .alias(signatureKeyPair.generateName())
                 .createdAt(now)
                 .notBefore(now)
@@ -134,7 +134,7 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
                 .notAfter(DateTimeUtils.addMillis(now, signKeyPairsProperties.getValidityInterval()))
                 .expireAt(DateTimeUtils.addMillis(now, signKeyPairsProperties.getLegacyInterval()))
                 .keyUsage(KeyUsage.Signature)
-                .state(StsKeyEntry.State.VALID)
+                .state(KeyState.VALID)
                 .build();
         return new GeneratedStsEntry<>(
                 entry,
@@ -147,14 +147,14 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
         ProvidedKeyPair signatureKeyPair = generateSignKeyPair();
         ZonedDateTime now = now();
 
-        StsKeyEntry entry = StsKeyEntry.builder()
+        StsKeyEntryImpl entry = StsKeyEntryImpl.builder()
                 .alias(signatureKeyPair.generateName())
                 .createdAt(now)
                 .notBefore(notBefore)
                 .validityInterval(signKeyPairsProperties.getValidityInterval())
                 .legacyInterval(signKeyPairsProperties.getLegacyInterval())
                 .keyUsage(KeyUsage.Signature)
-                .state(StsKeyEntry.State.CREATED)
+                .state(KeyState.CREATED)
                 .build();
 
         return new GeneratedStsEntry<>(
@@ -176,7 +176,7 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
         ProvidedKeyPair encryptionKeyPair = generateEncryptionKeyPair();
         ZonedDateTime now = now();
 
-        StsKeyEntry entry = StsKeyEntry.builder()
+        StsKeyEntryImpl entry = StsKeyEntryImpl.builder()
                 .alias(encryptionKeyPair.generateName())
                 .createdAt(now)
                 .notBefore(now)
@@ -185,7 +185,7 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
                 .notAfter(DateTimeUtils.addMillis(now, encKeyPairsProperties.getValidityInterval()))
                 .expireAt(DateTimeUtils.addMillis(now, encKeyPairsProperties.getLegacyInterval()))
                 .keyUsage(KeyUsage.Encryption)
-                .state(StsKeyEntry.State.VALID)
+                .state(KeyState.VALID)
                 .build();
         return new GeneratedStsEntry<>(
                 entry,
@@ -198,14 +198,14 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
         ProvidedKeyPair encryptionKeyPair = generateEncryptionKeyPair();
         ZonedDateTime now = now();
 
-        StsKeyEntry entry = StsKeyEntry.builder()
+        StsKeyEntryImpl entry = StsKeyEntryImpl.builder()
                 .alias(encryptionKeyPair.generateName())
                 .createdAt(now)
                 .notBefore(notBefore)
                 .validityInterval(encKeyPairsProperties.getValidityInterval())
                 .legacyInterval(encKeyPairsProperties.getLegacyInterval())
                 .keyUsage(KeyUsage.Encryption)
-                .state(StsKeyEntry.State.CREATED)
+                .state(KeyState.CREATED)
                 .build();
 
         return new GeneratedStsEntry<>(
@@ -227,7 +227,7 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
         ProvidedKey secretKeyData = generateSecretKey();
         ZonedDateTime now = now();
 
-        StsKeyEntry entry = StsKeyEntry.builder()
+        StsKeyEntryImpl entry = StsKeyEntryImpl.builder()
                 .alias(secretKeyData.generateName())
                 .createdAt(now)
                 .notBefore(now)
@@ -236,7 +236,7 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
                 .notAfter(DateTimeUtils.addMillis(now, secretKeyProperties.getValidityInterval()))
                 .expireAt(DateTimeUtils.addMillis(now, secretKeyProperties.getLegacyInterval()))
                 .keyUsage(KeyUsage.SecretKey)
-                .state(StsKeyEntry.State.VALID)
+                .state(KeyState.VALID)
                 .build();
 
         return new GeneratedStsEntry<>(
@@ -250,14 +250,14 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
         ProvidedKey secretKeyData = generateSecretKey();
         ZonedDateTime now = now();
 
-        StsKeyEntry entry = StsKeyEntry.builder()
+        StsKeyEntryImpl entry = StsKeyEntryImpl.builder()
                 .alias(secretKeyData.generateName())
                 .createdAt(now)
                 .notBefore(notBefore)
                 .validityInterval(secretKeyProperties.getValidityInterval())
                 .legacyInterval(secretKeyProperties.getLegacyInterval())
                 .keyUsage(KeyUsage.SecretKey)
-                .state(StsKeyEntry.State.CREATED)
+                .state(KeyState.CREATED)
                 .build();
 
         return new GeneratedStsEntry<>(

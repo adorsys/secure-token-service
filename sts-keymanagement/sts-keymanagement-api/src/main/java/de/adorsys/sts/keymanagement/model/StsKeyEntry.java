@@ -1,51 +1,23 @@
 package de.adorsys.sts.keymanagement.model;
 
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 import java.time.ZonedDateTime;
 
-@Getter
-@Builder
-@EqualsAndHashCode
-public class StsKeyEntry implements KeyMetadata {
+public interface StsKeyEntry extends KeyMetadata {
 
-    private final String alias;
+    void setState(KeyState state);
+    void setNotAfter(ZonedDateTime notAfter);
+    void setExpireAt(ZonedDateTime expireAt);
 
-    private final ZonedDateTime createdAt;
+    String getAlias();
+    ZonedDateTime getCreatedAt();
+    ZonedDateTime getNotBefore();
+    ZonedDateTime getNotAfter();
+    ZonedDateTime getExpireAt();
+    Long getValidityInterval();
+    Long getLegacyInterval();
+    KeyState getState();
+    KeyUsage getKeyUsage();
 
-    private final ZonedDateTime notBefore;
-
-    private ZonedDateTime notAfter;
-
-    private ZonedDateTime expireAt;
-
-    private final Long validityInterval;
-
-    private final Long legacyInterval;
-
-    private State state;
-
-    private final KeyUsage keyUsage;
-
-    public void setState(State state) {
-        this.state = state;
-    }
-
-    public void setNotAfter(ZonedDateTime notAfter) {
-        this.notAfter = notAfter;
-    }
-
-    public void setExpireAt(ZonedDateTime expireAt) {
-        this.expireAt = expireAt;
-    }
-
-    public enum State {
-        CREATED,
-        VALID,
-        LEGACY,
-        EXPIRED
-    }
 }

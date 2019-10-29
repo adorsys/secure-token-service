@@ -22,7 +22,6 @@ import java.util.Map;
 @Transactional
 public class DatabaseKeyStoreRepository implements KeyStoreRepository {
 
-    private final Juggler juggler;
     private final JpaKeyStoreRepository keyStoreRepository;
     private final JpaKeyEntryAttributesRepository keyEntryRepository;
     private final KeyStoreEntityMapper keyStoreEntityMapper;
@@ -30,13 +29,11 @@ public class DatabaseKeyStoreRepository implements KeyStoreRepository {
 
     @Autowired
     public DatabaseKeyStoreRepository(
-            Juggler juggler,
             JpaKeyStoreRepository keyStoreRepository,
             JpaKeyEntryAttributesRepository keyEntryRepository,
             KeyStoreEntityMapper keyStoreEntityMapper,
             KeyManagementProperties keyManagementProperties
     ) {
-        this.juggler = juggler;
         this.keyStoreRepository = keyStoreRepository;
         this.keyEntryRepository = keyEntryRepository;
 

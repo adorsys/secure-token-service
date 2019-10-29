@@ -1,0 +1,35 @@
+{
+  "sts-secret-server-dev-0451388d-057c-4385-acee-16fe9fcbcf36": {
+    "alias": "sts-secret-server-dev-0451388d-057c-4385-acee-16fe9fcbcf36",
+    "createdAt": "2019-10-29T15:31:40Z",
+    "notBefore": "2019-10-29T15:32:40Z",
+    "notAfter": "2019-10-29T16:34:41Z",
+    "expireAt": "2019-10-29T16:35:41Z",
+    "validityInterval": 60000,
+    "legacyInterval": 120000,
+    "state": "VALID",
+    "keyUsage": "Signature"
+  },
+  "sts-secret-server-dev-W75ZT": {
+    "alias": "sts-secret-server-dev-W75ZT",
+    "createdAt": "2019-10-29T15:31:40Z",
+    "notBefore": "2019-10-29T15:32:40Z",
+    "notAfter": "2019-10-29T16:34:41Z",
+    "expireAt": "2019-10-29T16:35:41Z",
+    "validityInterval": 60000,
+    "legacyInterval": 120000,
+    "state": "VALID",
+    "keyUsage": "SecretKey"
+  },
+  "sts-secret-server-dev-22QTI": {
+    "alias": "sts-secret-server-dev-22QTI",
+    "createdAt": "2019-10-29T15:31:40Z",
+    "notBefore": "2019-10-29T15:32:40Z",
+    "notAfter": "2019-10-29T16:34:41Z",
+    "expireAt": "2019-10-29T16:35:41Z",
+    "validityInterval": 60000,
+    "legacyInterval": 120000,
+    "state": "VALID",
+    "keyUsage": "Encryption"
+  }
+}

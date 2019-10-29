@@ -36,7 +36,7 @@ public class StsKeyStore {
         ResultCollection<KeyEntry> entries = view.all();
         Map<String, StsKeyEntry> result = new HashMap<>();
         for (KeyEntry entry : entries) {
-            result.put(entry.getAlias(), (StsKeyEntry) entry.getMeta());
+            result.put(entry.getAlias(), new ImmutableStsKeyEntry((StsKeyEntry) entry.getMeta()));
         }
 
         return ImmutableMap.copyOf(result);
