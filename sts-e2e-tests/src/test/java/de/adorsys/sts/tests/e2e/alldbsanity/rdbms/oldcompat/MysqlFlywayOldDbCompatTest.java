@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.adorsys.sts.keymanagement.KeyStoreInitializationRunner;
 import de.adorsys.sts.keymanagement.model.KeyState;
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.persistence.jpa.DatabaseKeyStoreRepository;
 import de.adorsys.sts.tests.KeyRotationContext;

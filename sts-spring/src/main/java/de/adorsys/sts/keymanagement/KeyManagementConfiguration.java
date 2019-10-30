@@ -2,7 +2,7 @@ package de.adorsys.sts.keymanagement;
 
 import com.google.gson.*;
 import de.adorsys.keymanagement.api.Juggler;
-import de.adorsys.keymanagement.config.keystore.KeyStoreConfig;
+import de.adorsys.keymanagement.api.config.keystore.KeyStoreConfig;
 import de.adorsys.keymanagement.core.metadata.MetadataPersistenceConfig;
 import de.adorsys.keymanagement.core.metadata.WithPersister;
 import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
@@ -115,10 +115,14 @@ public class KeyManagementConfiguration {
     }
 
     @Bean
-    Juggler juggler() {
+    Juggler juggler(KeyManagementProperties properties) {
         Security.addProvider(new BouncyCastleProvider());
+        String keyStoreType = properties.getKeystore().getType();
         return DaggerBCJuggler.builder()
-                .keyStoreConfig(KeyStoreConfig.builder().type("UBER").build())
+                .keyStoreConfig(KeyStoreConfig.builder()
+                        .type(null == keyStoreType ? "UBER" : keyStoreType)
+                        .build()
+                )
                 .metadataConfig(
                         MetadataPersistenceConfig.builder()
                                 .metadataClass(StsKeyEntryImpl.class)

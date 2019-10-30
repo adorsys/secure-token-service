@@ -4,7 +4,6 @@ import de.adorsys.keymanagement.api.Juggler;
 import de.adorsys.keymanagement.api.types.KeySetTemplate;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyPair;
-import de.adorsys.keymanagement.config.keystore.KeyStoreConfig;
 import de.adorsys.sts.keymanagement.model.*;
 import de.adorsys.sts.keymanagement.util.DateTimeUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -91,7 +90,6 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
         }
 
         KeyStore keyStore = juggler.toKeystore()
-                .withConfig(KeyStoreConfig.builder().type("UBER").build())
                 .generate(
                         juggler.generateKeys().fromTemplate(builder.build()),
                         keyPassHandler::getPassword

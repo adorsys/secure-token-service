@@ -7,9 +7,6 @@ import com.googlecode.cqengine.query.Query;
 import de.adorsys.keymanagement.api.types.ResultCollection;
 import de.adorsys.keymanagement.api.types.entity.KeyAlias;
 import de.adorsys.keymanagement.api.types.entity.KeyEntry;
-import de.adorsys.keymanagement.api.types.template.NameAndPassword;
-import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
-import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyEntry;
 import de.adorsys.keymanagement.api.view.EntryView;
 import de.adorsys.sts.keymanagement.config.KeyManagementRotationProperties;
 import de.adorsys.sts.keymanagement.model.*;
@@ -20,7 +17,6 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.googlecode.cqengine.query.QueryFactory.*;
@@ -36,7 +32,6 @@ public class KeyRotationServiceImpl implements KeyRotationService {
 
     private final KeyStoreGenerator keyStoreGenerator;
     private final Clock clock;
-    private final Supplier<char[]> keyPassword;
     private final KeyManagementRotationProperties.KeyRotationProperties encryptionKeyPairRotationProperties;
     private final KeyManagementRotationProperties.KeyRotationProperties signatureKeyPairRotationProperties;
     private final KeyManagementRotationProperties.KeyRotationProperties secretKeyRotationProperties;
@@ -44,12 +39,10 @@ public class KeyRotationServiceImpl implements KeyRotationService {
     public KeyRotationServiceImpl(
             KeyStoreGenerator keyStoreGenerator,
             Clock clock,
-            KeyManagementProperties.KeyStoreProperties properties,
             KeyManagementRotationProperties rotationProperties
     ) {
         this.keyStoreGenerator = keyStoreGenerator;
         this.clock = clock;
-        this.keyPassword = () -> properties.getPassword().toCharArray();
         this.encryptionKeyPairRotationProperties = rotationProperties.getEncKeyPairs();
         this.signatureKeyPairRotationProperties = rotationProperties.getSignKeyPairs();
         this.secretKeyRotationProperties = rotationProperties.getSecretKeys();
@@ -84,15 +77,12 @@ public class KeyRotationServiceImpl implements KeyRotationService {
                 )
         ).toCollection();
 
-        view.remove(createdToValid);
-        List<ProvidedKeyTemplate> withUpdatedState = createdToValid.stream()
-                .map(it -> ProvidedKeyEntry.builder()
-                        .entry(it.getEntry())
-                        .keyTemplate(new NameAndPassword(it.getAlias(), keyPassword))
-                        .metadata(toValid(now, it))
-                        .build()
-                ).collect(Collectors.toList());
-        view.add(withUpdatedState);
+        view.update(
+                createdToValid.stream()
+                        .map(it -> it.aliasWithMeta(StsKeyEntry.class))
+                        .map(it -> it.toBuilder().metadata(toValid(now, it.getMetadata())).build())
+                        .collect(Collectors.toList())
+        );
 
         List<GeneratedStsEntry> createdKeys = new ArrayList<>();
         for (KeyEntry keyEntry : createdToValid) {
@@ -118,15 +108,12 @@ public class KeyRotationServiceImpl implements KeyRotationService {
                 )
         ).toCollection();
 
-        view.remove(expiredValid);
-        List<ProvidedKeyTemplate> withUpdatedState = expiredValid.stream()
-                .map(it -> ProvidedKeyEntry.builder()
-                        .entry(it.getEntry())
-                        .keyTemplate(new NameAndPassword(it.getAlias(), keyPassword))
-                        .metadata(toLegacy(it))
-                        .build()
-                ).collect(Collectors.toList());
-        view.add(withUpdatedState);
+        view.update(
+                expiredValid.stream()
+                        .map(it -> it.aliasWithMeta(StsKeyEntry.class))
+                        .map(it -> it.toBuilder().metadata(toLegacy(it.getMetadata())).build())
+                        .collect(Collectors.toList())
+        );
     }
 
     private List<String> moveLegacyToExpiredAndDrop(Instant now, EntryView<Query<KeyEntry>> view,
@@ -187,14 +174,12 @@ public class KeyRotationServiceImpl implements KeyRotationService {
         return result;
     }
 
-    private StsKeyEntry toLegacy(KeyEntry orig) {
-        StsKeyEntry entry = (StsKeyEntry) orig.getMeta();
+    private StsKeyEntry toLegacy(StsKeyEntry entry) {
         entry.setState(KeyState.LEGACY);
         return entry;
     }
 
-    private StsKeyEntry toValid(ZonedDateTime now, KeyEntry orig) {
-        StsKeyEntry entry = (StsKeyEntry) orig.getMeta();
+    private StsKeyEntry toValid(ZonedDateTime now, StsKeyEntry entry) {
         entry.setNotAfter(DateTimeUtils.addMillis(now, entry.getValidityInterval()));
         entry.setExpireAt(DateTimeUtils.addMillis(entry.getNotAfter(), entry.getValidityInterval()));
         entry.setState(KeyState.VALID);
@@ -202,19 +187,15 @@ public class KeyRotationServiceImpl implements KeyRotationService {
     }
 
     private GeneratedStsEntry generateKey(KeyUsage keyUsage) {
-        GeneratedStsEntry stsKeyEntry;
-
-        if(keyUsage == KeyUsage.Signature) {
-            stsKeyEntry = keyStoreGenerator.generateSignatureKeyEntryForInstantUsage();
+        if (keyUsage == KeyUsage.Signature) {
+            return keyStoreGenerator.generateSignatureKeyEntryForInstantUsage();
         } else if(keyUsage == KeyUsage.Encryption) {
-            stsKeyEntry = keyStoreGenerator.generateEncryptionKeyEntryForInstantUsage();
+            return keyStoreGenerator.generateEncryptionKeyEntryForInstantUsage();
         } else if(keyUsage == KeyUsage.SecretKey) {
-            stsKeyEntry = keyStoreGenerator.generateSecretKeyEntryForInstantUsage();
-        } else {
-            throw new IllegalArgumentException("Unknown KeyUsage: " + keyUsage);
+            return keyStoreGenerator.generateSecretKeyEntryForInstantUsage();
         }
 
-        return stsKeyEntry;
+        throw new IllegalArgumentException("Unknown KeyUsage: " + keyUsage);
     }
 
     private ZonedDateTime now() {

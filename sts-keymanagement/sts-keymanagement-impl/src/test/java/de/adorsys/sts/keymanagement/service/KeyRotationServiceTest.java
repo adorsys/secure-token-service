@@ -3,14 +3,13 @@ package de.adorsys.sts.keymanagement.service;
 
 import com.nitorcreations.junit.runners.NestedRunner;
 import de.adorsys.keymanagement.api.Juggler;
+import de.adorsys.keymanagement.api.config.keystore.KeyStoreConfig;
 import de.adorsys.keymanagement.api.types.KeySetTemplate;
-import de.adorsys.keymanagement.api.types.entity.KeyEntry;
 import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.generated.Encrypting;
 import de.adorsys.keymanagement.api.types.template.generated.Secret;
 import de.adorsys.keymanagement.api.types.template.generated.Signing;
 import de.adorsys.keymanagement.api.view.EntryView;
-import de.adorsys.keymanagement.config.keystore.KeyStoreConfig;
 import de.adorsys.keymanagement.core.metadata.MetadataPersistenceConfig;
 import de.adorsys.keymanagement.core.metadata.WithPersister;
 import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
@@ -22,21 +21,22 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.security.KeyStore;
 import java.security.Security;
 import java.time.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 @RunWith(NestedRunner.class)
 public class KeyRotationServiceTest {
@@ -78,9 +78,6 @@ public class KeyRotationServiceTest {
     GeneratedStsEntry generatedSecretKey;
 
     @Mock
-    KeyManagementProperties.KeyStoreProperties keyStoreProperties;
-
-    @Mock
     KeyManagementRotationProperties rotationProperties;
 
     @Mock
@@ -91,9 +88,6 @@ public class KeyRotationServiceTest {
 
     @Mock
     KeyManagementRotationProperties.KeyRotationProperties secretKeyRotationProperties;
-
-    @Captor
-    ArgumentCaptor<Collection<KeyEntry>> removed;
 
     ProvidedKeyTemplate genSignatureKeyPair;
     ProvidedKeyTemplate genEncryptionKeyPair;
@@ -200,7 +194,6 @@ public class KeyRotationServiceTest {
         keyRotationService = new KeyRotationServiceImpl(
                 keyStoreGenerator,
                 clock,
-                keyStoreProperties,
                 rotationProperties
         );
     }
