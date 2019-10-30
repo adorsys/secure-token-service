@@ -1,21 +1,42 @@
 package de.adorsys.sts.keymanagement.service;
 
+import com.google.common.collect.Streams;
+import com.googlecode.cqengine.attribute.Attribute;
+import com.googlecode.cqengine.attribute.support.SimpleFunction;
+import com.googlecode.cqengine.query.Query;
+import de.adorsys.keymanagement.api.types.ResultCollection;
+import de.adorsys.keymanagement.api.types.entity.KeyAlias;
+import de.adorsys.keymanagement.api.types.entity.KeyEntry;
+import de.adorsys.keymanagement.api.types.template.NameAndPassword;
+import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
+import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyEntry;
+import de.adorsys.keymanagement.api.view.EntryView;
 import de.adorsys.sts.keymanagement.config.KeyManagementRotationProperties;
 import de.adorsys.sts.keymanagement.model.*;
 import de.adorsys.sts.keymanagement.util.DateTimeUtils;
 
 import java.time.Clock;
+import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import static com.googlecode.cqengine.query.QueryFactory.*;
 
 public class KeyRotationServiceImpl implements KeyRotationService {
 
+    private final SimpleFunction<KeyEntry, StsKeyEntry> STS = it -> ((StsKeyEntry) it.getMeta());
+    private final Attribute<KeyEntry, KeyState> STATE = attribute(it -> STS.apply(it).getState());
+    private final Attribute<KeyEntry, Instant> NOT_BEFORE = attribute(it -> STS.apply(it).getNotBefore().toInstant());
+    private final Attribute<KeyEntry, Instant> NOT_AFTER = attribute(it -> STS.apply(it).getNotAfter().toInstant());
+    private final Attribute<KeyEntry, Instant> EXPIRE_AT = attribute(it -> STS.apply(it).getExpireAt().toInstant());
+    private final Attribute<KeyEntry, KeyUsage> USAGE = attribute(it -> STS.apply(it).getKeyUsage());
+
     private final KeyStoreGenerator keyStoreGenerator;
     private final Clock clock;
+    private final Supplier<char[]> keyPassword;
     private final KeyManagementRotationProperties.KeyRotationProperties encryptionKeyPairRotationProperties;
     private final KeyManagementRotationProperties.KeyRotationProperties signatureKeyPairRotationProperties;
     private final KeyManagementRotationProperties.KeyRotationProperties secretKeyRotationProperties;
@@ -23,11 +44,12 @@ public class KeyRotationServiceImpl implements KeyRotationService {
     public KeyRotationServiceImpl(
             KeyStoreGenerator keyStoreGenerator,
             Clock clock,
+            KeyManagementProperties.KeyStoreProperties properties,
             KeyManagementRotationProperties rotationProperties
     ) {
         this.keyStoreGenerator = keyStoreGenerator;
         this.clock = clock;
-
+        this.keyPassword = () -> properties.getPassword().toCharArray();
         this.encryptionKeyPairRotationProperties = rotationProperties.getEncKeyPairs();
         this.signatureKeyPairRotationProperties = rotationProperties.getSignKeyPairs();
         this.secretKeyRotationProperties = rotationProperties.getSecretKeys();
@@ -35,242 +57,148 @@ public class KeyRotationServiceImpl implements KeyRotationService {
 
     @Override
     public KeyRotationResult rotate(StsKeyStore stsKeyStore) {
-        KeyStateUpdates keyStateUpdates = updateKeyStates(stsKeyStore);
-        List<String> createdFutureKeys = createKeysForFutureUsage(stsKeyStore, keyStateUpdates);
-        List<String> removedKeys = removeExpiredKeys(stsKeyStore);
-        List<String> generatedKeyAliases = generateAndAddMissingKeys(stsKeyStore);
+        ZonedDateTime now = now();
+        EntryView<Query<KeyEntry>> view = (EntryView<Query<KeyEntry>>) stsKeyStore.getView();
+        Map<KeyUsage, Integer> rotationEnabledForWithCount = rotationEnabledForWithCount();
+        Set<KeyUsage> rotationEnabledFor = rotationEnabledForWithCount.keySet();
+
+        List<String> createdFutureKeys = moveCreatedToValidAndReplenish(now, view, rotationEnabledFor);
+        moveValidToLegacy(now.toInstant(), view, rotationEnabledFor);
+        List<String> dropped = moveLegacyToExpiredAndDrop(now.toInstant(), view, rotationEnabledFor);
+        List<String> generatedKeyAliases = generateMissingValid(rotationEnabledForWithCount, view);
 
         return KeyRotationResult.builder()
                 .generatedKeys(generatedKeyAliases)
-                .removedKeys(removedKeys)
+                .removedKeys(dropped)
                 .futureKeys(createdFutureKeys)
                 .build();
     }
 
-    private List<String> createKeysForFutureUsage(StsKeyStore stsKeyStore, KeyStateUpdates keyStateUpdates) {
-        List<String> generatedKeyAliases = new ArrayList<>();
+    private List<String> moveCreatedToValidAndReplenish(ZonedDateTime now, EntryView<Query<KeyEntry>> view,
+                                                        Collection<KeyUsage> rotationEnabledForUsages) {
+        ResultCollection<KeyEntry> createdToValid = view.retrieve(
+                and(
+                        equal(STATE, KeyState.CREATED),
+                        lessThan(NOT_BEFORE, now.toInstant()),
+                        in(USAGE, rotationEnabledForUsages)
+                )
+        ).toCollection();
 
-        for(StsKeyEntry keyEntry : keyStateUpdates.newValidKeys) {
+        view.remove(createdToValid);
+        List<ProvidedKeyTemplate> withUpdatedState = createdToValid.stream()
+                .map(it -> ProvidedKeyEntry.builder()
+                        .entry(it.getEntry())
+                        .keyTemplate(new NameAndPassword(it.getAlias(), keyPassword))
+                        .metadata(toValid(now, it))
+                        .build()
+                ).collect(Collectors.toList());
+        view.add(withUpdatedState);
+
+        List<GeneratedStsEntry> createdKeys = new ArrayList<>();
+        for (KeyEntry keyEntry : createdToValid) {
+            StsKeyEntry original = (StsKeyEntry) keyEntry.getMeta();
             GeneratedStsEntry generatedKeyEntry = keyStoreGenerator.generateKeyEntryForFutureUsage(
-                    keyEntry.getKeyUsage(), keyEntry.getNotAfter()
+                    original.getKeyUsage(), original.getNotAfter()
             );
 
-            stsKeyStore.getView().add(generatedKeyEntry.getKey());
-            generatedKeyAliases.add(generatedKeyEntry.getEntry().getAlias());
+            createdKeys.add(generatedKeyEntry);
         }
+        view.add(createdKeys.stream().map(it -> it.getKey()).collect(Collectors.toList()));
 
-        return generatedKeyAliases;
+        return createdKeys.stream().map(it -> it.getEntry().getAlias()).collect(Collectors.toList());
     }
 
-    private KeyStateUpdates updateKeyStates(StsKeyStore stsKeyStore) {
-        KeyStateUpdates updates = new KeyStateUpdates();
-        ZonedDateTime now = now();
+    private void moveValidToLegacy(Instant now, EntryView<Query<KeyEntry>> view,
+                                   Collection<KeyUsage> rotationEnabledForUsages) {
+        ResultCollection<KeyEntry> expiredValid = view.retrieve(
+                and(
+                        equal(STATE, KeyState.VALID),
+                        lessThan(NOT_AFTER, now),
+                        in(USAGE, rotationEnabledForUsages)
+                )
+        ).toCollection();
 
-        if(encryptionKeyPairRotationProperties.isEnabled()) {
-            KeyStateUpdates keyStateUpdates = updateEncryptionKeyEntryStates(stsKeyStore, now);
-            updates.merge(keyStateUpdates);
-        }
-        if(signatureKeyPairRotationProperties.isEnabled()) {
-            KeyStateUpdates keyStateUpdates = updateSignatureKeyEntryStates(stsKeyStore, now);
-            updates.merge(keyStateUpdates);
-        }
-        if(secretKeyRotationProperties.isEnabled()) {
-            KeyStateUpdates keyStateUpdates = updateSecretKeyEntryStates(stsKeyStore, now);
-            updates.merge(keyStateUpdates);
-        }
-
-        return updates;
+        view.remove(expiredValid);
+        List<ProvidedKeyTemplate> withUpdatedState = expiredValid.stream()
+                .map(it -> ProvidedKeyEntry.builder()
+                        .entry(it.getEntry())
+                        .keyTemplate(new NameAndPassword(it.getAlias(), keyPassword))
+                        .metadata(toLegacy(it))
+                        .build()
+                ).collect(Collectors.toList());
+        view.add(withUpdatedState);
     }
 
-    private KeyStateUpdates updateEncryptionKeyEntryStates(StsKeyStore stsKeyStore, ZonedDateTime now) {
-        List<StsKeyEntry> encryptionKeyEntries = stsKeyStore.getEntries().values().stream()
-                .filter(k -> k.getKeyUsage() == KeyUsage.Encryption)
-                .collect(Collectors.toList());
+    private List<String> moveLegacyToExpiredAndDrop(Instant now, EntryView<Query<KeyEntry>> view,
+                                                    Collection<KeyUsage> rotationEnabledForUsages) {
+        ResultCollection<KeyEntry> legacyExpiredEntries = view.retrieve(
+                and(
+                        equal(STATE, KeyState.LEGACY),
+                        lessThan(EXPIRE_AT, now),
+                        in(USAGE, rotationEnabledForUsages)
+                )
+        ).toCollection();
+        view.remove(legacyExpiredEntries);
 
-        return updateKeyEntryStatesForCollection(now, encryptionKeyEntries);
-    }
+        ResultCollection<KeyEntry> expired = view.retrieve(
+                and(
+                        equal(STATE, KeyState.EXPIRED),
+                        in(USAGE, rotationEnabledForUsages)
+                )
+        ).toCollection();
+        view.remove(expired);
 
-    private KeyStateUpdates updateSignatureKeyEntryStates(StsKeyStore stsKeyStore, ZonedDateTime now) {
-        List<StsKeyEntry> encryptionKeyEntries = stsKeyStore.getEntries().values().stream()
-                .filter(k -> k.getKeyUsage() == KeyUsage.Signature)
-                .collect(Collectors.toList());
-
-        return updateKeyEntryStatesForCollection(now, encryptionKeyEntries);
-    }
-
-    private KeyStateUpdates updateSecretKeyEntryStates(StsKeyStore stsKeyStore, ZonedDateTime now) {
-        List<StsKeyEntry> encryptionKeyEntries = stsKeyStore.getEntries().values().stream()
-                .filter(k -> k.getKeyUsage() == KeyUsage.SecretKey)
-                .collect(Collectors.toList());
-
-        return updateKeyEntryStatesForCollection(now, encryptionKeyEntries);
-    }
-
-    private KeyStateUpdates updateKeyEntryStatesForCollection(ZonedDateTime now, List<StsKeyEntry> encryptionKeyEntries) {
-        KeyStateUpdates updates = new KeyStateUpdates();
-
-        List<StsKeyEntry> keysToBeValid = encryptionKeyEntries.stream()
-                .filter(k -> k.getState() == KeyState.CREATED)
-                .filter(k -> k.getNotBefore().isBefore(now))
-                .collect(Collectors.toList());
-
-        for (StsKeyEntry keyEntry : keysToBeValid) {
-            ZonedDateTime notAfter = DateTimeUtils.addMillis(now, keyEntry.getValidityInterval());
-
-            keyEntry.setNotAfter(notAfter);
-            keyEntry.setExpireAt(DateTimeUtils.addMillis(notAfter, keyEntry.getValidityInterval()));
-
-            keyEntry.setState(KeyState.VALID);
-        }
-
-        updates.newValidKeys = keysToBeValid;
-
-        List<StsKeyEntry> keysToBeLegacy = encryptionKeyEntries.stream()
-                .filter(k -> k.getState() == KeyState.VALID)
-                .filter(k -> now.isAfter(k.getNotAfter()))
-                .collect(Collectors.toList());
-
-        for (StsKeyEntry keyEntry : keysToBeLegacy) {
-            keyEntry.setState(KeyState.LEGACY);
-        }
-
-        updates.newLegacyKeys = keysToBeLegacy;
-
-        List<StsKeyEntry> keysToBeExpired = encryptionKeyEntries.stream()
-                .filter(k -> k.getState() == KeyState.LEGACY)
-                .filter(k -> now.isAfter(k.getExpireAt()))
-                .collect(Collectors.toList());
-
-        for(StsKeyEntry keyEntry : keysToBeExpired) {
-            keyEntry.setState(KeyState.EXPIRED);
-        }
-
-        updates.newExpiredKeys = keysToBeExpired;
-
-        return updates;
-    }
-
-    private static class KeyStateUpdates {
-        public List<StsKeyEntry> newValidKeys = new ArrayList<>();
-        public List<StsKeyEntry> newLegacyKeys = new ArrayList<>();
-        public List<StsKeyEntry> newExpiredKeys = new ArrayList<>();
-
-        public void merge(KeyStateUpdates other) {
-            newValidKeys.addAll(other.newValidKeys);
-            newLegacyKeys.addAll(other.newLegacyKeys);
-            newExpiredKeys.addAll(other.newExpiredKeys);
-        }
-    }
-
-    private List<String> removeExpiredKeys(StsKeyStore stsKeyStore) {
-        List<String> removedKeys = new ArrayList<>();
-
-        if(encryptionKeyPairRotationProperties.isEnabled()) {
-            removedKeys.addAll(removeExpiredKeys(stsKeyStore, KeyUsage.Encryption));
-        }
-        if(signatureKeyPairRotationProperties.isEnabled()) {
-            removedKeys.addAll(removeExpiredKeys(stsKeyStore, KeyUsage.Signature));
-        }
-        if(secretKeyRotationProperties.isEnabled()) {
-            removedKeys.addAll(removeExpiredKeys(stsKeyStore, KeyUsage.SecretKey));
-        }
-
-        return removedKeys;
-    }
-
-    private List<String> removeExpiredKeys(StsKeyStore stsKeyStore, KeyUsage keyUsage) {
-        Collection<StsKeyEntry> actualKeys = stsKeyStore.getEntries().values();
-        Collection<StsKeyEntry> copiedKeyEntries = new ArrayList<>(actualKeys);
-
-        return copiedKeyEntries.stream()
-                .filter(k -> k.getState() == KeyState.EXPIRED)
-                .filter(k -> k.getKeyUsage() == keyUsage)
-                .map(k -> removeKey(stsKeyStore, k))
+        return Streams.concat(legacyExpiredEntries.stream(), expired.stream())
+                .map(KeyAlias::getAlias)
                 .collect(Collectors.toList());
     }
 
-    private List<String> generateAndAddMissingKeys(StsKeyStore stsKeyStore) {
-        Collection<StsKeyEntry> actualKeys = stsKeyStore.getEntries().values();
+    private List<String> generateMissingValid(Map<KeyUsage, Integer> rotationEnabledForWithCount,
+                                              EntryView<Query<KeyEntry>> view) {
+        List<GeneratedStsEntry> generatedMissing = new ArrayList<>();
+        for (Map.Entry<KeyUsage, Integer> toCheck : rotationEnabledForWithCount.entrySet()) {
+            int countValidForUsage = view.retrieve(and(equal(STATE, KeyState.VALID), equal(USAGE, toCheck.getKey())))
+                    .toCollection()
+                    .size();
 
-        List<GeneratedStsEntry> generatedKeys = generateMissingKeys(actualKeys);
-        List<String> generatedKeyAliases = new ArrayList<>();
-
-        for (GeneratedStsEntry generatedKey : generatedKeys) {
-            stsKeyStore.getView().add(generatedKey.getKey());
-            generatedKeyAliases.add(generatedKey.getEntry().getAlias());
+            for (int i = 0; i < toCheck.getValue() - countValidForUsage; ++i) {
+                generatedMissing.add(generateKey(toCheck.getKey()));
+            }
         }
 
-        return generatedKeyAliases;
+        view.add(generatedMissing.stream().map(it -> it.getKey()).collect(Collectors.toList()));
+        return generatedMissing.stream().map(it -> it.getEntry().getAlias()).collect(Collectors.toList());
     }
 
-    private List<GeneratedStsEntry> generateMissingKeys(Collection<StsKeyEntry> actualKeys) {
-        List<GeneratedStsEntry> generatedKeys = new ArrayList<>();
-
-        if(encryptionKeyPairRotationProperties.isEnabled()) {
-            generatedKeys.addAll(generateMissingEncryptionKeys(actualKeys));
-        }
-        if(signatureKeyPairRotationProperties.isEnabled()) {
-            generatedKeys.addAll(generateMissingSignatureKeys(actualKeys));
-        }
-        if(secretKeyRotationProperties.isEnabled()) {
-            generatedKeys.addAll(generateMissingSecretKeys(actualKeys));
+    private Map<KeyUsage, Integer> rotationEnabledForWithCount() {
+        Map<KeyUsage, Integer> result = new HashMap<>();
+        if (encryptionKeyPairRotationProperties.isEnabled()) {
+            result.put(KeyUsage.Encryption, encryptionKeyPairRotationProperties.getMinKeys());
         }
 
-        return generatedKeys;
+        if (signatureKeyPairRotationProperties.isEnabled()) {
+            result.put(KeyUsage.Signature, signatureKeyPairRotationProperties.getMinKeys());
+        }
+
+        if (secretKeyRotationProperties.isEnabled()) {
+            result.put(KeyUsage.SecretKey, secretKeyRotationProperties.getMinKeys());
+        }
+
+        return result;
     }
 
-    private List<GeneratedStsEntry> generateMissingEncryptionKeys(Collection<StsKeyEntry> actualKeys) {
-        List<GeneratedStsEntry> generatedKeys = new ArrayList<>();
-
-        long countOfValidEncryptionKeyPairs = actualKeys.stream()
-                .filter(k -> k.getState() == KeyState.VALID)
-                .filter(k -> k.getKeyUsage() == KeyUsage.Encryption)
-                .count();
-
-        for(int i = 0; i < encryptionKeyPairRotationProperties.getMinKeys() - countOfValidEncryptionKeyPairs; i++) {
-            GeneratedStsEntry generatedKeyAlias = generateKey(KeyUsage.Encryption);
-            generatedKeys.add(generatedKeyAlias);
-        }
-
-        return generatedKeys;
+    private StsKeyEntry toLegacy(KeyEntry orig) {
+        StsKeyEntry entry = (StsKeyEntry) orig.getMeta();
+        entry.setState(KeyState.LEGACY);
+        return entry;
     }
 
-    private List<GeneratedStsEntry> generateMissingSignatureKeys(Collection<StsKeyEntry> actualKeys) {
-        List<GeneratedStsEntry> generatedKeys = new ArrayList<>();
-
-        long countOfValidSignatureKeyPairs = actualKeys.stream()
-                .filter(k -> k.getState() == KeyState.VALID)
-                .filter(k -> k.getKeyUsage() == KeyUsage.Signature)
-                .count();
-
-        for(int i = 0; i < signatureKeyPairRotationProperties.getMinKeys() - countOfValidSignatureKeyPairs; i++) {
-            GeneratedStsEntry generatedKeyAlias = generateKey(KeyUsage.Signature);
-            generatedKeys.add(generatedKeyAlias);
-        }
-
-        return generatedKeys;
-    }
-
-    private List<GeneratedStsEntry> generateMissingSecretKeys(Collection<StsKeyEntry> actualKeys) {
-        List<GeneratedStsEntry> generatedKeys = new ArrayList<>();
-
-        long countOfValidSecretKeys = actualKeys.stream()
-                .filter(k -> k.getState() == KeyState.VALID)
-                .filter(k -> k.getKeyUsage() == KeyUsage.SecretKey)
-                .count();
-
-        for(int i = 0; i < secretKeyRotationProperties.getMinKeys() - countOfValidSecretKeys; i++) {
-            GeneratedStsEntry generatedKeyAlias = generateKey(KeyUsage.SecretKey);
-            generatedKeys.add(generatedKeyAlias);
-        }
-
-        return generatedKeys;
-    }
-
-    private String removeKey(StsKeyStore keyStore, StsKeyEntry stsKeyEntry) {
-        String alias = stsKeyEntry.getAlias();
-        keyStore.getView().removeById(alias);
-        return alias;
+    private StsKeyEntry toValid(ZonedDateTime now, KeyEntry orig) {
+        StsKeyEntry entry = (StsKeyEntry) orig.getMeta();
+        entry.setNotAfter(DateTimeUtils.addMillis(now, entry.getValidityInterval()));
+        entry.setExpireAt(DateTimeUtils.addMillis(entry.getNotAfter(), entry.getValidityInterval()));
+        entry.setState(KeyState.VALID);
+        return entry;
     }
 
     private GeneratedStsEntry generateKey(KeyUsage keyUsage) {

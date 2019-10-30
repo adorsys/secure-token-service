@@ -1,6 +1,7 @@
 package de.adorsys.sts.keyrotation;
 
 import de.adorsys.sts.keymanagement.KeyManagementConfiguration;
+import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
 import de.adorsys.sts.keymanagement.service.KeyRotationService;
 import de.adorsys.sts.keymanagement.service.KeyRotationServiceImpl;
 import de.adorsys.sts.keymanagement.service.KeyStoreGenerator;
@@ -22,11 +23,13 @@ public class KeyRotationConfiguration {
     KeyRotationService keyRotationService(
             Clock clock,
             KeyStoreGenerator keyStoreGenerator,
+            KeyManagementProperties properties,
             KeyRotationManagementConfigurationProperties keyManagementRotationProperties
     ) {
         return new KeyRotationServiceImpl(
                 keyStoreGenerator,
                 clock,
+                properties.getKeystore(),
                 keyManagementRotationProperties
         );
     }

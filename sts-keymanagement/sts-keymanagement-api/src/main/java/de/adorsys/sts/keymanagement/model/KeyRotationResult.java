@@ -10,12 +10,7 @@ import java.util.List;
 @Builder
 public class KeyRotationResult {
 
-    @Builder.Default
-    private List<String> removedKeys = new ArrayList<>();
-
-    @Builder.Default
-    private List<String> futureKeys = new ArrayList<>();
-
-    @Builder.Default
-    private List<String> generatedKeys = new ArrayList<>();
+    private List<String> removedKeys;
+    private List<String> futureKeys;
+    private List<String> generatedKeys;
 }

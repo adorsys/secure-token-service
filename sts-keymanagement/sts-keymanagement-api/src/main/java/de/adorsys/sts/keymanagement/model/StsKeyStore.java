@@ -24,7 +24,7 @@ public class StsKeyStore {
 
     @Getter
     @NonNull
-    private final EntryView<QueryResult<KeyEntry>> view;
+    private final EntryView<?> view;
 
     @Getter
     private ZonedDateTime lastUpdate;

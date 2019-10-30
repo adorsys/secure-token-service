@@ -3,6 +3,8 @@ package de.adorsys.sts.tests.e2e.alldbsanity.rdbms.oldcompat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.adorsys.sts.keymanagement.KeyStoreInitializationRunner;
+import de.adorsys.sts.keymanagement.model.KeyState;
+import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.persistence.jpa.DatabaseKeyStoreRepository;
 import de.adorsys.sts.tests.KeyRotationContext;
@@ -71,6 +73,11 @@ class MysqlFlywayOldDbCompatTest extends BaseJdbcDbTest {
                 "sts-secret-server-dev-ba0be913-e46b-416b-b9ba-b8c083fddec8",
                 "sts-secret-server-dev-K5EFK"
         );
+        // Replenished
+        assertThat(newKeyStore.getEntries().values().stream().filter(it -> it.getState() == KeyState.CREATED))
+                .hasSize(3);
+        assertThat(newKeyStore.getEntries().values().stream().filter(it -> it.getState() == KeyState.VALID))
+                .hasSize(3);
         // Validate that old entries are in `Valid` state now
         JSONAssert.assertEquals(
                 Resource.read("fixture/old-compat/after_rotation_kept.json"),
