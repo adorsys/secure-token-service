@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
@@ -34,8 +35,15 @@ public class PopRotationValidator {
         this.props = props;
     }
 
-    @SneakyThrows
     public void testPopRotates() {
+        testPopRotatesWithClock(clock.instant().plusMillis(
+                props.getKeystore().getKeys().getEncKeyPairs().getLegacyInterval() + TimeUnit.SECONDS.toMillis(60)),
+                false
+        );
+    }
+
+    @SneakyThrows
+    public void testPopRotatesWithClock(Instant newClock, boolean legacyPresent) {
         MvcResult oldResult = mvc.perform(get("/pop"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -44,9 +52,7 @@ public class PopRotationValidator {
                 .read("$.keys[*].kid");
 
         // Expire keys using validity interval
-        clock.setInstant(clock.instant().plusMillis(
-                props.getKeystore().getKeys().getEncKeyPairs().getLegacyInterval() + TimeUnit.SECONDS.toMillis(60))
-        );
+        clock.setInstant(newClock);
         rotationSchedule.scheduledRotation();
 
         MvcResult newResult = mvc.perform(get("/pop"))
@@ -56,6 +62,11 @@ public class PopRotationValidator {
         Collection<String> newIds = JsonPath.parse(newResult.getResponse().getContentAsString())
                 .read("$.keys[*].kid");
 
-        assertThat(newIds).doesNotContainAnyElementsOf(oldKeyIds);
+        if (!legacyPresent) {
+            assertThat(newIds).doesNotContainAnyElementsOf(oldKeyIds);
+        } else {
+            // Only signing allowed
+            assertThat(newIds).containsAnyElementsOf(oldKeyIds);
+        }
     }
 }

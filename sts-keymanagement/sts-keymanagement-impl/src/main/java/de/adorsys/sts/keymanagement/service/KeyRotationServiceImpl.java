@@ -181,7 +181,7 @@ public class KeyRotationServiceImpl implements KeyRotationService {
 
     private StsKeyEntry toValid(ZonedDateTime now, StsKeyEntry entry) {
         entry.setNotAfter(DateTimeUtils.addMillis(now, entry.getValidityInterval()));
-        entry.setExpireAt(DateTimeUtils.addMillis(entry.getNotAfter(), entry.getValidityInterval()));
+        entry.setExpireAt(DateTimeUtils.addMillis(now, entry.getLegacyInterval()));
         entry.setState(KeyState.VALID);
         return entry;
     }
