@@ -4,13 +4,9 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import de.adorsys.sts.common.model.KeyAndJwk;
 import de.adorsys.sts.common.util.ImmutableLists;
-import de.adorsys.sts.cryptoutils.ServerKeyMap;
-import de.adorsys.sts.cryptoutils.ServerKeysHolder;
-import de.adorsys.sts.cryptoutils.StsServerKeyMap;
-import de.adorsys.sts.keymanagement.model.KeyUsage;
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
-import de.adorsys.sts.keymanagement.model.StsKeyStore;
+import de.adorsys.sts.keymanagement.model.*;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
+import de.adorsys.sts.keymanagement.util.StsServerKeyMap;
 
 import java.security.Key;
 import java.util.List;
@@ -35,16 +31,6 @@ public class KeyManagementService implements ServerKeyMapProvider {
     }
 
     @Override
-    public ServerKeyMap getKeyMap() {
-        throw new IllegalStateException("Method not supported");
-    }
-
-    @Override
-    public ServerKeysHolder getServerKeysHolder() {
-        throw new IllegalStateException("Method not supported");
-    }
-
-    @Override
     public KeyAndJwk randomSecretKey() {
         return getSecretKeys().randomSecretKey();
     }
@@ -57,7 +43,6 @@ public class KeyManagementService implements ServerKeyMapProvider {
     @Override
     public Key getKey(String keyId) {
         StsServerKeyMap serverKeyMap = new StsServerKeyMap(loadKeys().getPrivateKeySet());
-
         return serverKeyMap.getKey(keyId);
     }
 
@@ -65,7 +50,7 @@ public class KeyManagementService implements ServerKeyMapProvider {
         ServerKeysHolder exportedKeys;
 
         if(repository.exists()) {
-            exportedKeys = keyConversionService.export(repository.load().getKeyStore());
+            exportedKeys = keyConversionService.export(repository.load());
         } else {
             exportedKeys = EMPTY_KEYS;
         }
@@ -78,8 +63,8 @@ public class KeyManagementService implements ServerKeyMapProvider {
         if(repository.exists()) {
             StsKeyStore keyStore = repository.load();
 
-            ServerKeysHolder exportedKeys = keyConversionService.export(keyStore.getKeyStore());
-            Map<String, StsKeyEntry> keyEntries = keyStore.getKeyEntries();
+            ServerKeysHolder exportedKeys = keyConversionService.export(keyStore);
+            Map<String, StsKeyEntry> keyEntries = keyStore.getEntries();
 
             List<String> filteredKeyAliases = keyEntries.values().stream()
                     .filter(this::hasUsablePublicKey)
@@ -109,8 +94,8 @@ public class KeyManagementService implements ServerKeyMapProvider {
         if(repository.exists()) {
             StsKeyStore keyStore = repository.load();
 
-            ServerKeysHolder exportedKeys = keyConversionService.export(keyStore.getKeyStore());
-            Map<String, StsKeyEntry> keyEntries = keyStore.getKeyEntries();
+            ServerKeysHolder exportedKeys = keyConversionService.export(keyStore);
+            Map<String, StsKeyEntry> keyEntries = keyStore.getEntries();
 
             List<String> filteredKeyAliases = keyEntries.values().stream()
                     .filter(predicate)
@@ -129,16 +114,16 @@ public class KeyManagementService implements ServerKeyMapProvider {
     }
 
     private boolean hasUsablePublicKey(StsKeyEntry stsKeyEntry) {
-        return stsKeyEntry.getKeyUsage() == KeyUsage.Encryption && stsKeyEntry.getState() == StsKeyEntry.State.VALID
-                || stsKeyEntry.getKeyUsage() == KeyUsage.Signature && (stsKeyEntry.getState() == StsKeyEntry.State.VALID || stsKeyEntry.getState() == StsKeyEntry.State.LEGACY);
+        return stsKeyEntry.getKeyUsage() == KeyUsage.Encryption && stsKeyEntry.getState() == KeyState.VALID
+                || stsKeyEntry.getKeyUsage() == KeyUsage.Signature && (stsKeyEntry.getState() == KeyState.VALID || stsKeyEntry.getState() == KeyState.LEGACY);
     }
 
     private boolean hasUsablePrivateKey(StsKeyEntry stsKeyEntry) {
-        return stsKeyEntry.getKeyUsage() == KeyUsage.Signature && stsKeyEntry.getState() == StsKeyEntry.State.VALID
-                || stsKeyEntry.getKeyUsage() == KeyUsage.Encryption && (stsKeyEntry.getState() == StsKeyEntry.State.VALID ||stsKeyEntry.getState() == StsKeyEntry.State.LEGACY);
+        return stsKeyEntry.getKeyUsage() == KeyUsage.Signature && stsKeyEntry.getState() == KeyState.VALID
+                || stsKeyEntry.getKeyUsage() == KeyUsage.Encryption && (stsKeyEntry.getState() == KeyState.VALID ||stsKeyEntry.getState() == KeyState.LEGACY);
     }
 
     private boolean isUsableSecretKey(StsKeyEntry stsKeyEntry) {
-        return stsKeyEntry.getKeyUsage() == KeyUsage.SecretKey && stsKeyEntry.getState() == StsKeyEntry.State.VALID;
+        return stsKeyEntry.getKeyUsage() == KeyUsage.SecretKey && stsKeyEntry.getState() == KeyState.VALID;
     }
 }

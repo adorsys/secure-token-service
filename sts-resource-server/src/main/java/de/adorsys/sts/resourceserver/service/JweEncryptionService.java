@@ -2,7 +2,7 @@ package de.adorsys.sts.resourceserver.service;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.jwk.*;
-import de.adorsys.sts.cryptoutils.JWEEncryptedSelector;
+import de.adorsys.sts.common.encrypter.JWEEncryptedSelector;
 import de.adorsys.sts.resourceserver.exception.NoJwkFoundException;
 
 import java.util.Collections;

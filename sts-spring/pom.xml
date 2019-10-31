@@ -49,6 +49,10 @@
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-simple-encryption</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.adorsys.keymanagement</groupId>
+            <artifactId>juggler-bouncycastle</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>net.javacrumbs.shedlock</groupId>

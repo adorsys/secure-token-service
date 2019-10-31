@@ -1,10 +1,9 @@
 package de.adorsys.sts.keymanagement.service;
 
-import de.adorsys.sts.cryptoutils.ServerKeysHolder;
-
-import java.security.KeyStore;
+import de.adorsys.sts.keymanagement.model.ServerKeysHolder;
+import de.adorsys.sts.keymanagement.model.StsKeyStore;
 
 public interface KeyConversionService {
 
-    ServerKeysHolder export(KeyStore keyStore);
+    ServerKeysHolder export(StsKeyStore keyStore);
 }

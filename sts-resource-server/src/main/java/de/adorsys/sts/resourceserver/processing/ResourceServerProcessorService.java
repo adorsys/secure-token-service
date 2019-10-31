@@ -1,9 +1,9 @@
 package de.adorsys.sts.resourceserver.processing;
 
-import java.util.List;
-
 import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
 import de.adorsys.sts.resourceserver.service.UserDataRepository;
+
+import java.util.List;
 
 public class ResourceServerProcessorService {
 

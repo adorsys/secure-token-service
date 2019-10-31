@@ -38,8 +38,8 @@ class PopControllerJpaTest extends BaseEndpointTest {
                 .andExpect(jsonPath("$.keys.length()").value(2))
                 .andExpect(jsonPath("$.keys[*].use").value(containsInAnyOrder("sig", "enc")))
                 .andExpect(jsonPath("$.keys[*].e").value(containsInAnyOrder("AQAB", "AQAB")))
-                .andExpect(jsonPath("$.keys[0].kid").value(isIn(keyStore.getKeyEntries().keySet())))
-                .andExpect(jsonPath("$.keys[1].kid").value(isIn(keyStore.getKeyEntries().keySet())));
+                .andExpect(jsonPath("$.keys[0].kid").value(isIn(keyStore.getEntries().keySet())))
+                .andExpect(jsonPath("$.keys[1].kid").value(isIn(keyStore.getEntries().keySet())));
 
     }
 }

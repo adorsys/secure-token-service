@@ -20,10 +20,14 @@
             <artifactId>sts-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-crypto-utils</artifactId>
+            <groupId>de.adorsys.keymanagement</groupId>
+            <artifactId>core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -38,7 +42,12 @@
         <dependency>
             <groupId>com.nitorcreations</groupId>
             <artifactId>junit-runners</artifactId>
+            <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>de.adorsys.keymanagement</groupId>
+            <artifactId>juggler-bouncycastle</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
