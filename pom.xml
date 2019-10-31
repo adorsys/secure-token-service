@@ -5,7 +5,7 @@
 
 	<groupId>de.adorsys.sts</groupId>
 	<artifactId>secure-token-service</artifactId>
-	<version>0.30.0-SNAPSHOT</version>
+	<version>0.30.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>SecureTokenService</name>
@@ -54,10 +54,10 @@
 		<schedlock.version>2.5.0</schedlock.version>
 		<springfox-swagger.version>2.9.2</springfox-swagger.version>
 		<lock-persistence.version>0.3.2</lock-persistence.version>
-		<jackson.version>2.9.9</jackson.version>
+		<jackson.version>2.10.0</jackson.version>
 		<bouncycastle.version>1.61</bouncycastle.version>
-		<keycloak.version>6.0.1</keycloak.version>
-		<keycloak-config-cli.version>v0.6.6</keycloak-config-cli.version>
+		<keycloak.version>7.0.0</keycloak.version>
+		<keycloak-config-cli.version>v0.8.0</keycloak-config-cli.version>
 		<surefire.version>2.22.1</surefire.version>
 		<jacoco.version>0.8.4</jacoco.version>
 		<junit.jupiter.version>5.4.1</junit.jupiter.version>
@@ -255,20 +255,9 @@
 				<version>${schedlock.version}</version>
 			</dependency>
 
-
 			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.datatype</groupId>
-				<artifactId>jackson-datatype-jdk8</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.datatype</groupId>
-				<artifactId>jackson-datatype-jsr310</artifactId>
+				<groupId>com.fasterxml.jackson</groupId>
+				<artifactId>jackson-bom</artifactId>
 				<version>${jackson.version}</version>
 			</dependency>
 
