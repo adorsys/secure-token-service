@@ -1,22 +1,36 @@
 package de.adorsys.sts.keymanagement.service;
 
+import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
-import de.adorsys.sts.cryptoutils.KeyConverter;
-import de.adorsys.sts.cryptoutils.ServerKeysHolder;
+import de.adorsys.keymanagement.api.types.ResultCollection;
+import de.adorsys.keymanagement.api.types.entity.KeyEntry;
+import de.adorsys.sts.keymanagement.model.ServerKeysHolder;
+import de.adorsys.sts.keymanagement.model.StsKeyStore;
+import de.adorsys.sts.keymanagement.model.UnmodifyableKeyStoreViewer;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 
 import java.security.KeyStore;
+import java.util.ArrayList;
+import java.util.List;
 
+@RequiredArgsConstructor
 public class KeyConversionServiceImpl implements KeyConversionService {
 
     private final String keyStorePassword;
 
-    public KeyConversionServiceImpl(String keyStorePassword) {
-        this.keyStorePassword = keyStorePassword;
-    }
-
     @Override
-    public ServerKeysHolder export(KeyStore keyStore) {
-        JWKSet privateKeys = KeyConverter.exportPrivateKeys(keyStore, keyStorePassword.toCharArray());
+    @SneakyThrows
+    public ServerKeysHolder export(StsKeyStore keyStore) {
+        KeyStore toParse = new UnmodifyableKeyStoreViewer(keyStore.getKeyStoreCopy()).getKeyStore();
+        // This excludes metadata keys:
+        ResultCollection<KeyEntry> keyEntries = keyStore.getView().all();
+        List<JWK> keys = new ArrayList<>();
+        for (KeyEntry entry : keyEntries) {
+            keys.add(JWK.load(toParse, entry.getAlias(), keyStorePassword.toCharArray()));
+        }
+
+        JWKSet privateKeys = new JWKSet(keys);
         JWKSet publicKeys = privateKeys.toPublicJWKSet();
 
         return new ServerKeysHolder(privateKeys, publicKeys);

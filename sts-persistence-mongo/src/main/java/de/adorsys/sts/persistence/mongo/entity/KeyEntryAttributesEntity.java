@@ -1,7 +1,7 @@
 package de.adorsys.sts.persistence.mongo.entity;
 
+import de.adorsys.sts.keymanagement.model.KeyState;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,7 +23,7 @@ public class KeyEntryAttributesEntity {
     private Long validityInterval;
     private Long legacyInterval;
 
-    private StsKeyEntry.State state;
+    private KeyState state;
 
     private KeyUsage keyUsage;
 }

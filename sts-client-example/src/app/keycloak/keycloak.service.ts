@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {StsClientConfig} from "../env/sts-client-config.service";
 
 import * as Keycloak_ from 'keycloak-js';
+
 export const Keycloak = Keycloak_;
 
 @Injectable()

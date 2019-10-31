@@ -1,7 +1,9 @@
 package de.adorsys.sts.keymanagement.service;
 
+import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
+import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyPair;
+import de.adorsys.sts.keymanagement.model.GeneratedStsEntry;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 
 import java.time.ZonedDateTime;
@@ -10,17 +12,17 @@ public interface KeyStoreGenerator {
 
     StsKeyStore generate();
 
-    StsKeyEntry generateKeyEntryForFutureUsage(KeyUsage keyUsage, ZonedDateTime notBefore);
+    GeneratedStsEntry<ProvidedKey> generateKeyEntryForFutureUsage(KeyUsage keyUsage, ZonedDateTime notBefore);
 
-    StsKeyEntry generateSignatureKeyEntryForInstantUsage();
+    GeneratedStsEntry<ProvidedKeyPair> generateSignatureKeyEntryForInstantUsage();
 
-    StsKeyEntry generateSignatureKeyEntryForFutureUsage(ZonedDateTime notBefore);
+    GeneratedStsEntry<ProvidedKeyPair> generateSignatureKeyEntryForFutureUsage(ZonedDateTime notBefore);
 
-    StsKeyEntry generateEncryptionKeyEntryForInstantUsage();
+    GeneratedStsEntry<ProvidedKeyPair> generateEncryptionKeyEntryForInstantUsage();
 
-    StsKeyEntry generateEncryptionKeyEntryForFutureUsage(ZonedDateTime notBefore);
+    GeneratedStsEntry<ProvidedKeyPair> generateEncryptionKeyEntryForFutureUsage(ZonedDateTime notBefore);
 
-    StsKeyEntry generateSecretKeyEntryForInstantUsage();
+    GeneratedStsEntry<ProvidedKey> generateSecretKeyEntryForInstantUsage();
 
-    StsKeyEntry generateSecretKeyEntryForFutureUsage(ZonedDateTime notBefore);
+    GeneratedStsEntry<ProvidedKey> generateSecretKeyEntryForFutureUsage(ZonedDateTime notBefore);
 }

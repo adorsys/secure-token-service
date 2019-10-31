@@ -1,6 +1,6 @@
 package de.adorsys.sts.secretserver;
 
-import de.adorsys.sts.cryptoutils.ObjectMapperSPI;
+import de.adorsys.sts.common.ObjectMapperSPI;
 import de.adorsys.sts.encryption.EncryptionConfiguration;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.objectmapper.JacksonConfiguration;

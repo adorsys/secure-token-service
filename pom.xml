@@ -51,6 +51,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<spring-boot.version>2.1.4.RELEASE</spring-boot.version>
+		<keystore-management.version>0.0.4</keystore-management.version>
 		<schedlock.version>2.5.0</schedlock.version>
 		<springfox-swagger.version>2.9.2</springfox-swagger.version>
 		<lock-persistence.version>0.3.2</lock-persistence.version>
@@ -81,7 +82,6 @@
 		<module>sts-secret-server</module>
 		<module>sts-secret</module>
 		<module>sts-simple-encryption</module>
-		<module>sts-crypto-utils</module>
 		<module>keycloak-storage-provider</module>
 		<module>sts-e2e-tests</module>
 	</modules>
@@ -182,10 +182,21 @@
 				<artifactId>sts-simple-encryption</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+
 			<dependency>
-				<groupId>de.adorsys.sts</groupId>
-				<artifactId>sts-crypto-utils</artifactId>
-				<version>${project.version}</version>
+				<groupId>de.adorsys.keymanagement</groupId>
+				<artifactId>api</artifactId>
+				<version>${keystore-management.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.keymanagement</groupId>
+				<artifactId>core</artifactId>
+				<version>${keystore-management.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.keymanagement</groupId>
+				<artifactId>juggler-bouncycastle</artifactId>
+				<version>${keystore-management.version}</version>
 			</dependency>
 
 			<dependency>

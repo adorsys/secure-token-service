@@ -1,6 +1,5 @@
 package de.adorsys.sts.resourceserver.service;
 
-import com.sun.media.sound.AiffFileReader;
 import de.adorsys.sts.resourceserver.model.ResourceServer;
 import de.adorsys.sts.resourceserver.model.ResourceServers;
 import de.adorsys.sts.resourceserver.persistence.ResourceServerRepository;

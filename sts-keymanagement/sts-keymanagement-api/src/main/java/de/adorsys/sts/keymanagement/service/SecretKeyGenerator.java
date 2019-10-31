@@ -1,10 +1,10 @@
 package de.adorsys.sts.keymanagement.service;
 
-import de.adorsys.sts.cryptoutils.SecretKeyEntry;
+import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
 
-import javax.security.auth.callback.CallbackHandler;
+import java.util.function.Supplier;
 
 public interface SecretKeyGenerator {
 
-    SecretKeyEntry generate(String alias, CallbackHandler secretKeyPassHandler);
+    ProvidedKey generate(String alias, Supplier<char[]> keyPassword);
 }
