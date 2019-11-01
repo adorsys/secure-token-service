@@ -2,6 +2,7 @@ package de.adorsys.sts.decryption;
 
 import de.adorsys.sts.keymanagement.KeyManagementConfiguration;
 import de.adorsys.sts.keymanagement.service.DecryptionService;
+import de.adorsys.sts.keymanagement.service.DecryptionServiceImpl;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import org.springframework.context.annotation.*;
 
@@ -20,6 +21,6 @@ public class DecryptionConfiguration {
     public DecryptionService decryptionService(
             KeyManagementService keyManagementService
     ) {
-        return new DecryptionService(keyManagementService);
+        return new DecryptionServiceImpl(keyManagementService);
     }
 }

@@ -39,6 +39,8 @@ deploy:
       branch: develop
     repo: adorsys/secure-token-service
 
+after_success:
+  - /bin/bash .travis/codecov_bash.sh
 
 env:
   global:

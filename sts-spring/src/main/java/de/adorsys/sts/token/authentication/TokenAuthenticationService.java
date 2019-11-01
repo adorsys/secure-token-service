@@ -4,7 +4,6 @@ package de.adorsys.sts.token.authentication;
 import com.nimbusds.jwt.JWTClaimsSet;
 import de.adorsys.sts.tokenauth.BearerToken;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

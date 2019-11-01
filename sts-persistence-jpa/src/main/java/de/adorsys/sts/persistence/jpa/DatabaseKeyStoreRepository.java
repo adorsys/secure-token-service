@@ -23,9 +23,7 @@ public class DatabaseKeyStoreRepository implements KeyStoreRepository {
 
     private final JpaKeyStoreRepository keyStoreRepository;
     private final JpaKeyEntryAttributesRepository keyEntryRepository;
-
     private final KeyStoreEntityMapper keyStoreEntityMapper;
-
     private final String keyStoreName;
 
     @Autowired
@@ -58,9 +56,9 @@ public class DatabaseKeyStoreRepository implements KeyStoreRepository {
     @Override
     public void save(StsKeyStore keyStore) {
         JpaKeyStore foundKeyStore = keyStoreRepository.findByName(keyStoreName);
-        Map<String, StsKeyEntry> stsKeyEntries = keyStore.getKeyEntries();
+        Map<String, StsKeyEntry> stsKeyEntries = keyStore.getEntries();
 
-        if(foundKeyStore == null) {
+        if (foundKeyStore == null) {
             foundKeyStore = keyStoreEntityMapper.mapToEntity(keyStore);
             JpaKeyStore savedKeyStore = keyStoreRepository.save(foundKeyStore);
 
@@ -71,8 +69,8 @@ public class DatabaseKeyStoreRepository implements KeyStoreRepository {
             Long keyStoreId = foundKeyStore.getId();
             List<JpaKeyEntryAttributes> keyEntries = keyEntryRepository.findAllByKeyStoreId(keyStoreId);
 
-            for(JpaKeyEntryAttributes keyEntry : keyEntries) {
-                if(!stsKeyEntries.containsKey(keyEntry.getAlias())) {
+            for (JpaKeyEntryAttributes keyEntry : keyEntries) {
+                if (!stsKeyEntries.containsKey(keyEntry.getAlias())) {
                     keyEntryRepository.deleteById(keyEntry.getId());
                 }
             }

@@ -1,7 +1,7 @@
 package de.adorsys.sts.persistence.jpa.entity;
 
+import de.adorsys.sts.keymanagement.model.KeyState;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
-import de.adorsys.sts.keymanagement.model.StsKeyEntry;
 import de.adorsys.sts.persistence.jpa.mapping.ZonedDateTimeConverter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,7 +38,7 @@ public class JpaKeyEntryAttributes {
     private Long legacyInterval;
 
     @Enumerated(EnumType.STRING)
-    private StsKeyEntry.State state;
+    private KeyState state;
 
     @Enumerated(EnumType.STRING)
     private KeyUsage keyUsage;

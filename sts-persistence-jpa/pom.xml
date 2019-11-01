@@ -19,23 +19,16 @@
 
         <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-keymanagement</artifactId>
+            <artifactId>sts-keymanagement-api</artifactId>
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-spring</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>de.adorsys.lock-persistence</groupId>
-            <artifactId>lock-persistence-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.lock-persistence</groupId>
-            <artifactId>lock-persistence-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.lock-persistence</groupId>
-            <artifactId>lock-persistence-mongo</artifactId>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-provider-jdbc-template</artifactId>
         </dependency>
 
         <dependency>
@@ -79,6 +72,7 @@
         <dependency>
             <groupId>com.nitorcreations</groupId>
             <artifactId>junit-runners</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

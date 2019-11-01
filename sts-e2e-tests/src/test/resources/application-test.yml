@@ -1,0 +1,84 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:AZ;INIT=CREATE SCHEMA IF NOT EXISTS sts;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: db_user
+    password: db_user@123
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        default_schema: sts
+    open-in-view: false
+  flyway:
+    enabled: false
+    locations:
+      - classpath:/db/migration/flyway/mysql
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/migration/liquibase/changelog.yml
+    default-schema: sts
+  main:
+    allow-bean-definition-overriding: true
+
+sts:
+  keymanagement:
+    rotation:
+      check-interval: 500000
+      enc-key-pairs:
+        min-keys: 1
+        enabled: true
+      sign-key-pairs:
+        min-keys: 1
+        enabled: true
+      secret-keys:
+        min-keys: 1
+        enabled: true
+    keystore:
+      password: FEDCBA9876543210
+      type: UBER
+      name: sts-secret-server-dev-keystore
+      alias-prefix: sts-secret-server-dev-
+      keys:
+        enc-key-pairs:
+          initial-count: 1
+          algo: RSA
+          sig-algo: SHA256withRSA
+          size: 2048
+          name: Adorsys STS Secret Server DEV
+          validity-interval: 60000
+          legacy-interval: 120000
+        sign-key-pairs:
+          initial-count: 1
+          algo: RSA
+          sig-algo: SHA256withRSA
+          size: 2048
+          name: Adorsys STS Secret Server DEV
+          validity-interval: 60000
+          legacy-interval: 120000
+        secret-keys:
+          initial-count: 1
+          algo: AES
+          size: 256
+          validity-interval: 60000
+          legacy-interval: 120000
+  resource-server-management:
+    resource-retriever:
+      http-connect-timeout: 10000
+      http-read-timeout: 60000
+      http-size-limit: 512000
+      cache:
+        enabled: false
+        maximum-size: 1000
+        expire-after-access: 10
+    resource-servers:
+      - audience: "sts"
+        jwks-url: "http://localhost:8888/pop"
+      - audience: "sts-service-component-example"
+        jwks-url: "http://localhost:8887/pop"
+      - audience: "sts-service-component"
+        jwks-url: "http://sts-service-component:8887/service-component/pop"
+  authservers:
+    - name: test
+      iss-url: "https://your-idp-hostname/auth/realms/your-realm"
+      jwks-url: "https://your-idp-hostname/auth/realms/your-realm/protocol/openid-connect/certs"
+      refresh-interval-seconds: 60
