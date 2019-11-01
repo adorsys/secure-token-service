@@ -20,7 +20,7 @@ The second functionality of STS is the Secret Server.
 ### third purpose
 
 The third functionality is the Token generation. This functionality is 
-less important, befause there exist a lot of frameworks for that.
+less important, because there exist a lot of frameworks for that.
 
 ## example use case
 In the following an example is given to show how components of STS may be used.
@@ -80,7 +80,7 @@ stored in the datacenter 2. The datacenter 2 gets the JWT from the backend serve
 Now, as a second protection (the first is the "registered resource server")
 is to verify that the token really comes from the IDP.
 verify this signature
-the secet server has to get the IDPs public key (classical Auth0).
+the secret server has to get the IDPs public key (classical Auth0).
 Eventually when the token is valid, the secret server returns the
 users secret key corresponding to the users subject of the JWT.
 
@@ -88,7 +88,7 @@ If there is no users secret key for the user yet, the secret server
 generates a new users secret key and stores the key for the users subject.
 And then the new users secret key is returned.
 
-Rather than simply returning the users secet key, the secret server requests the POP of the 
+Rather than simply returning the users secret key, the secret server requests the POP of the 
 datacenter 1 to retrieve a public key to encrypt the returned users secret key.
 With the users secret key the datacenter 1 can en- and deycrypt the data to be stored for the client.
 
