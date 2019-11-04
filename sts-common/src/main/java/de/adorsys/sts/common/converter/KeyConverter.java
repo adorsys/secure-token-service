@@ -16,9 +16,6 @@ import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 
-/**
- * This class is a clone of {@link org.adorsys.jjwk.serverkey.KeyConverter} to avoid hard dependencies to cryptoutils project
- */
 public class KeyConverter {
 
     /**
