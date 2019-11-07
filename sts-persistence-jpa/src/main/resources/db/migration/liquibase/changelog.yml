@@ -1,7 +1,5 @@
 databaseChangeLog:
 - include:
-    file: db/migration/liquibase/changelogs/00-create_schema-sts.yml
-- include:
     file: db/migration/liquibase/changelogs/01-create-hibernate-sequence.yml
 - include:
     file: db/migration/liquibase/changelogs/02-create-table-keystore.yml
@@ -15,3 +13,9 @@ databaseChangeLog:
     file: db/migration/liquibase/changelogs/06-create-table-secret.yml
 - include:
     file: db/migration/liquibase/changelogs/07-enlarge-secret-column_in-table-secret.yml
+- include:
+    file: db/migration/liquibase/changelogs/08-create_table_sts_lock.yml
+- include:
+    file: db/migration/liquibase/changelogs/09-migrate-lock_persistence.yml
+- include:
+    file: db/migration/liquibase/changelogs/10-drop_table_lock_persistance.yml

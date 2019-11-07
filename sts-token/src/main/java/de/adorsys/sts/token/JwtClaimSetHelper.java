@@ -1,16 +1,14 @@
 package de.adorsys.sts.token;
 
+import com.nimbusds.jwt.JWTClaimsSet;
+import de.adorsys.sts.common.ObjectMapperSPI;
+import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import de.adorsys.sts.cryptoutils.ObjectMapperSPI;
-import org.apache.commons.lang3.StringUtils;
-
-import com.nimbusds.jwt.JWTClaimsSet;
-
-import de.adorsys.sts.resourceserver.model.ResourceServerAndSecret;
 
 public class JwtClaimSetHelper {
 

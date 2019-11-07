@@ -1,6 +1,6 @@
 package de.adorsys.sts;
 
-import de.adorsys.sts.cryptoutils.envutils.EnvProperties;
+import de.adorsys.sts.common.util.EnvProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;

@@ -1,6 +1,6 @@
 package de.adorsys.sts.secretserver;
 
-import de.adorsys.sts.cryptoutils.ObjectMapperSPI;
+import de.adorsys.sts.common.ObjectMapperSPI;
 import de.adorsys.sts.encryption.EncryptionConfiguration;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.objectmapper.JacksonConfiguration;
@@ -19,6 +19,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import java.time.Clock;
+
 @Configuration
 @ComponentScan(basePackages = "de.adorsys.sts.secretserver")
 @Import({
@@ -32,12 +34,14 @@ public class SecretServerConfiguration {
     public TokenExchangeService tokenExchangeService(
             TokenExchangeClaimsService tokenExchangeClaimsService,
             KeyManagementService keyManagementService,
-            BearerTokenValidator bearerTokenValidator
+            BearerTokenValidator bearerTokenValidator,
+            Clock clock
     ) {
         TokenExchangeService tokenExchangeService = new JwtTokenExchangeService(
                 tokenExchangeClaimsService,
                 keyManagementService,
-                bearerTokenValidator
+                bearerTokenValidator,
+                clock
         );
 
         return new LoggingTokenExchangeService(tokenExchangeService);

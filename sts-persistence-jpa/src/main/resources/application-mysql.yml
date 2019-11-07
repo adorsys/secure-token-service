@@ -7,7 +7,7 @@ spring:
 
   flyway:
     locations:
-    - db/migration/flyway/mysql
+    - classpath:/db/migration/flyway/mysql
 
   datasource:
     url: jdbc:mysql://localhost:3306/sts

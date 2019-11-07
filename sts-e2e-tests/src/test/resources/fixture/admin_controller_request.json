@@ -1,0 +1,8 @@
+{
+  "endpointUrl" : "http://localhost:8080/multibanking-service",
+  "userSecretClaimName" : "userSecret",
+  "idpServer" : false,
+  "jwksUrl" : "http://localhost:8000/test",
+  "clientId" : "sts-tests",
+  "audience" : "add-example"
+}

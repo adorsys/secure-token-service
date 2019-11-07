@@ -9,7 +9,6 @@ public interface UserDataRepository {
 	 * 
 	 * @param user
 	 * @param password
-	 * @throws KeystoreNotFoundException 
 	 */
 	public void addAccount(String user, String password);
 

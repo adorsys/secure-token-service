@@ -1,13 +1,13 @@
 package de.adorsys.sts.pop;
 
 import com.nimbusds.jose.jwk.JWKSet;
-import de.adorsys.sts.keymanagement.service.KeyManagementService;
+import de.adorsys.sts.keymanagement.service.ServerKeyMapProvider;
 
 public class PopService {
 
-    private final KeyManagementService keyManagementService;
+    private final ServerKeyMapProvider keyManagementService;
 
-    public PopService(KeyManagementService keyManagementService) {
+    public PopService(ServerKeyMapProvider keyManagementService) {
         this.keyManagementService = keyManagementService;
     }
 

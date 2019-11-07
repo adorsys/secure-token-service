@@ -5,7 +5,7 @@
     <parent>
         <artifactId>secure-token-service</artifactId>
         <groupId>de.adorsys.sts</groupId>
-        <version>0.30.0</version>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,17 +14,9 @@
     <dependencies>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-crypto-utils</artifactId>
+            <artifactId>sts-common</artifactId>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>de.adorsys.cryptoutils</groupId>-->
-            <!--<artifactId>encobject</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>de.adorsys.cryptoutils</groupId>-->
-            <!--<artifactId>jjwk</artifactId>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
