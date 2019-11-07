@@ -1,0 +1,27 @@
+{
+  "servers":[
+    {
+      "endpointUrl":null,
+      "userSecretClaimName":null,
+      "idpServer":false,
+      "jwksUrl":"http://localhost:8888/pop",
+      "clientId":null,
+      "audience":"sts"
+    },
+    {
+      "endpointUrl":null,
+      "userSecretClaimName":null,
+      "idpServer":false,
+      "jwksUrl":"http://localhost:8887/pop",
+      "clientId":null,
+      "audience":"sts-service-component-example"
+    },
+    {
+      "endpointUrl":null,
+      "userSecretClaimName":null,
+      "idpServer":false,
+      "jwksUrl":"http://sts-service-component:8887/service-component/pop",
+      "clientId":null,
+      "audience":"sts-service-component"
+    }]
+}

@@ -2,7 +2,7 @@ package de.adorsys.sts.objectmapper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.sts.cryptoutils.ObjectMapperSPI;
+import de.adorsys.sts.common.ObjectMapperSPI;
 
 import java.io.IOException;
 import java.util.Map;

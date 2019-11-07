@@ -5,11 +5,29 @@
 	<parent>
 		<groupId>de.adorsys.sts</groupId>
 		<artifactId>secure-token-service</artifactId>
-		<version>0.30.0</version>
+		<version>0.30.1</version>
 	</parent>
 
 	<artifactId>sts-common</artifactId>
 	<packaging>jar</packaging>
+
+	<dependencies>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+        </dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
@@ -32,6 +50,13 @@
 
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>
@@ -75,11 +100,4 @@
 			</build>
 		</profile>
 	</profiles>
-
-	<dependencies>
-		<dependency>
-			<groupId>com.nimbusds</groupId>
-			<artifactId>nimbus-jose-jwt</artifactId>
-		</dependency>
-	</dependencies>
 </project>

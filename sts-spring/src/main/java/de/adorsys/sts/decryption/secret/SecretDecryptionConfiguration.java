@@ -3,6 +3,7 @@ package de.adorsys.sts.decryption.secret;
 import de.adorsys.sts.decryption.DecryptionConfiguration;
 import de.adorsys.sts.keymanagement.service.DecryptionService;
 import de.adorsys.sts.keymanagement.service.SecretDecryptionService;
+import de.adorsys.sts.keymanagement.service.SecretDecryptionServiceImpl;
 import de.adorsys.sts.keymanagement.service.SecretProvider;
 import org.springframework.context.annotation.*;
 
@@ -22,7 +23,7 @@ public class SecretDecryptionConfiguration {
             DecryptionService decryptionService,
             SecretProvider secretProvider
     ) {
-        return new SecretDecryptionService(
+        return new SecretDecryptionServiceImpl(
                 decryptionService,
                 secretProvider
         );
