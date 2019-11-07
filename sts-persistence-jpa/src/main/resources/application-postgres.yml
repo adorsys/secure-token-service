@@ -3,11 +3,11 @@ spring:
     include: jpa
 
   liquibase:
-    default-schema: public
+    default-schema: sts
 
   flyway:
     locations:
-    - db/migration/flyway/postgres
+    - classpath:/db/migration/flyway/postgres
 
   datasource:
     url: jdbc:postgresql://localhost:5432/sts

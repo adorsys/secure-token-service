@@ -5,7 +5,7 @@
     <parent>
         <artifactId>secure-token-service</artifactId>
         <groupId>de.adorsys.sts</groupId>
-        <version>0.30.0</version>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -26,7 +26,11 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>
-            <artifactId>sts-keymanagement</artifactId>
+            <artifactId>sts-keymanagement-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.sts</groupId>
+            <artifactId>sts-keymanagement-impl</artifactId>
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>

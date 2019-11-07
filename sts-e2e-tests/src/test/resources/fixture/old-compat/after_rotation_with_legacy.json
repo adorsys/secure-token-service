@@ -1,0 +1,68 @@
+{
+  "sts-secret-server-dev-GC6D4": {
+    "state": "LEGACY",
+    "validityInterval": 60000,
+    "keyUsage": "Encryption",
+    "legacyInterval": 120000,
+    "notBefore": "2019-10-29T15:29:40Z",
+    "notAfter": "2019-10-29T15:32:40Z",
+    "expireAt": "2019-10-29T15:33:40Z",
+    "createdAt": "2019-10-29T15:28:40Z",
+    "alias": "sts-secret-server-dev-GC6D4"
+  },
+  "sts-secret-server-dev-ba0be913-e46b-416b-b9ba-b8c083fddec8": {
+    "state": "LEGACY",
+    "validityInterval": 60000,
+    "keyUsage": "Signature",
+    "legacyInterval": 120000,
+    "notBefore": "2019-10-29T15:29:40Z",
+    "notAfter": "2019-10-29T15:32:40Z",
+    "expireAt": "2019-10-29T15:33:40Z",
+    "createdAt": "2019-10-29T15:28:40Z",
+    "alias": "sts-secret-server-dev-ba0be913-e46b-416b-b9ba-b8c083fddec8"
+  },
+  "sts-secret-server-dev-K5EFK": {
+    "state": "LEGACY",
+    "validityInterval": 60000,
+    "keyUsage": "SecretKey",
+    "legacyInterval": 120000,
+    "notBefore": "2019-10-29T15:29:40Z",
+    "notAfter": "2019-10-29T15:32:40Z",
+    "expireAt": "2019-10-29T15:33:40Z",
+    "createdAt": "2019-10-29T15:28:40Z",
+    "alias": "sts-secret-server-dev-K5EFK"
+  },
+  "sts-secret-server-dev-0451388d-057c-4385-acee-16fe9fcbcf36": {
+    "state": "VALID",
+    "validityInterval": 60000,
+    "keyUsage": "Signature",
+    "legacyInterval": 120000,
+    "notBefore": "2019-10-29T15:32:40Z",
+    "notAfter": "2019-10-29T15:33:41Z",
+    "expireAt": "2019-10-29T15:34:41Z",
+    "createdAt": "2019-10-29T15:31:40Z",
+    "alias": "sts-secret-server-dev-0451388d-057c-4385-acee-16fe9fcbcf36"
+  },
+  "sts-secret-server-dev-W75ZT": {
+    "state": "VALID",
+    "validityInterval": 60000,
+    "keyUsage": "SecretKey",
+    "legacyInterval": 120000,
+    "notBefore": "2019-10-29T15:32:40Z",
+    "notAfter": "2019-10-29T15:33:41Z",
+    "expireAt": "2019-10-29T15:34:41Z",
+    "createdAt": "2019-10-29T15:31:40Z",
+    "alias": "sts-secret-server-dev-W75ZT"
+  },
+  "sts-secret-server-dev-22QTI": {
+    "state": "VALID",
+    "validityInterval": 60000,
+    "keyUsage": "Encryption",
+    "legacyInterval": 120000,
+    "notBefore": "2019-10-29T15:32:40Z",
+    "notAfter": "2019-10-29T15:33:41Z",
+    "expireAt": "2019-10-29T15:34:41Z",
+    "createdAt": "2019-10-29T15:31:40Z",
+    "alias": "sts-secret-server-dev-22QTI"
+  }
+}

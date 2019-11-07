@@ -2,7 +2,7 @@ package de.adorsys.sts.simpleencryption;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
-import de.adorsys.sts.cryptoutils.ObjectMapperSPI;
+import de.adorsys.sts.common.ObjectMapperSPI;
 import de.adorsys.sts.simpleencryption.decrypt.JweDecrypter;
 import de.adorsys.sts.simpleencryption.encrypt.JweEncrypter;
 import de.adorsys.sts.simpleencryption.keyprovider.StaticKeyProviderFactory;

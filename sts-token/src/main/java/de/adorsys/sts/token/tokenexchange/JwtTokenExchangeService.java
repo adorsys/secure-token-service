@@ -6,8 +6,8 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import de.adorsys.sts.common.converter.KeyConverter;
 import de.adorsys.sts.common.model.KeyAndJwk;
-import de.adorsys.sts.cryptoutils.KeyConverter;
 import de.adorsys.sts.keymanagement.service.KeyManagementService;
 import de.adorsys.sts.token.InvalidParameterException;
 import de.adorsys.sts.token.MissingParameterException;
@@ -16,21 +16,25 @@ import de.adorsys.sts.tokenauth.BearerToken;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.Clock;
 import java.util.*;
 
 public class JwtTokenExchangeService implements TokenExchangeService {
     private final TokenExchangeClaimsService tokenExchangeClaimsService;
     private final KeyManagementService keyManager;
     private final BearerTokenValidator bearerTokenValidator;
+    private final Clock clock;
 
     public JwtTokenExchangeService(
             TokenExchangeClaimsService tokenExchangeClaimsService,
             KeyManagementService keyManager,
-            BearerTokenValidator bearerTokenValidator
+            BearerTokenValidator bearerTokenValidator,
+            Clock clock
     ) {
         this.tokenExchangeClaimsService = tokenExchangeClaimsService;
         this.keyManager = keyManager;
         this.bearerTokenValidator = bearerTokenValidator;
+        this.clock = clock;
     }
 
     public TokenResponse exchangeToken(TokenExchangeRequest tokenExchange) {
@@ -113,7 +117,7 @@ public class JwtTokenExchangeService implements TokenExchangeService {
         claimSetBuilder = claimSetBuilder.subject(subjectTokenClaims.getSubject())
                 .expirationTime(subjectTokenClaims.getExpirationTime())
                 .issuer(issuer)
-                .issueTime(new Date())
+                .issueTime(new Date(clock.instant().toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
                 .notBeforeTime(subjectTokenClaims.getNotBeforeTime())
                 .claim("typ", "Bearer")
@@ -177,7 +181,7 @@ public class JwtTokenExchangeService implements TokenExchangeService {
         tokenResponse.setAccess_token(signedJWT.serialize());
         tokenResponse.setIssued_token_type(TokenResponse.ISSUED_TOKEN_TYPE_ACCESS_TOKEN);
         tokenResponse.setToken_type(TokenResponse.TOKEN_TYPE_BEARER);
-        int expiresIn = (int) ((jwtClaimsSet.getExpirationTime().getTime() - new Date().getTime()) / 1000);
+        int expiresIn = (int) ((jwtClaimsSet.getExpirationTime().getTime() - new Date(clock.instant().toEpochMilli()).getTime()) / 1000);
         tokenResponse.setExpires_in(expiresIn);
 
         StringJoiner joiner = new StringJoiner(" ");

@@ -1,14 +1,18 @@
 package de.adorsys.sts.keyrotation;
 
-import de.adorsys.lockpersistence.client.LockClient;
+import com.google.common.annotations.VisibleForTesting;
+import de.adorsys.sts.common.lock.LockClient;
+import de.adorsys.sts.keymanagement.model.KeyRotationResult;
 import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
 import de.adorsys.sts.keymanagement.service.KeyRotationService;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +20,6 @@ import java.time.Clock;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class KeyRotationSchedule {
@@ -30,6 +33,10 @@ public class KeyRotationSchedule {
     private final String rotationLockName;
 
     private final Clock clock;
+
+    @Getter
+    @Value("test.value")
+    private String testValue;
 
     @Autowired
     public KeyRotationSchedule(
@@ -53,33 +60,33 @@ public class KeyRotationSchedule {
             fixedDelayString = "${sts.keymanagement.rotation.check-interval:60000}"
     )
     public void scheduledRotation() {
+        lockClient.executeIfOwned(rotationLockName, this::doRotate);
+    }
 
-        lockClient.executeIfOwned(rotationLockName, () -> {
-            if(keyStoreRepository.exists()) {
-                LOG.debug("Perform key rotation...");
+    @VisibleForTesting
+    protected void doRotate() {
+        if (keyStoreRepository.exists()) {
+            LOG.debug("Perform key rotation...");
 
-                performKeyRotation();
+            performKeyRotation();
 
-                LOG.debug("Key rotation finished.");
-            } else {
-                LOG.debug("No key rotation needed. Keystore repository is (still) empty.");
-            }
-        });
+            LOG.debug("Key rotation finished.");
+        } else {
+            LOG.debug("No key rotation needed. Keystore repository is (still) empty.");
+        }
     }
 
     private void performKeyRotation() {
         StsKeyStore keyStore = keyStoreRepository.load();
-        KeyRotationService.KeyRotationResult keyRotationResult = keyRotationService.rotate(keyStore);
+        KeyRotationResult keyRotationResult = keyRotationService.rotate(keyStore);
 
         List<String> removedKeys = keyRotationResult.getRemovedKeys();
         List<String> futureKeys = keyRotationResult.getFutureKeys();
         List<String> generatedKeys = keyRotationResult.getGeneratedKeys();
 
-        if(LOG.isDebugEnabled()) {
-            LOG.debug(removedKeys.size() + " keys removed: [" + removedKeys.stream().collect(Collectors.joining(",")) + "]");
-            LOG.debug(futureKeys.size() + " future keys generated: [" + futureKeys.stream().collect(Collectors.joining(",")) + "]");
-            LOG.debug(generatedKeys.size() + " keys generated: [" + generatedKeys.stream().collect(Collectors.joining(",")) + "]");
-        }
+        LOG.debug("{} keys removed: {}", removedKeys.size(), removedKeys);
+        LOG.debug("{} future keys generated: {}", futureKeys.size(), futureKeys);
+        LOG.debug("{} keys generated: {}", generatedKeys.size(), generatedKeys);
 
         if(removedKeys.size() + futureKeys.size() + generatedKeys.size() > 0) {
             keyStore.setLastUpdate(now());

@@ -1,6 +1,6 @@
 package de.adorsys.sts.keymanagement;
 
-import de.adorsys.lockpersistence.client.LockClient;
+import de.adorsys.sts.common.lock.LockClient;
 import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
 import de.adorsys.sts.keymanagement.service.KeyStoreInitializer;
 import org.slf4j.Logger;

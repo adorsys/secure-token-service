@@ -2,6 +2,7 @@ package de.adorsys.sts.keyrotation;
 
 import de.adorsys.sts.keymanagement.KeyManagementConfiguration;
 import de.adorsys.sts.keymanagement.service.KeyRotationService;
+import de.adorsys.sts.keymanagement.service.KeyRotationServiceImpl;
 import de.adorsys.sts.keymanagement.service.KeyStoreGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,7 +24,7 @@ public class KeyRotationConfiguration {
             KeyStoreGenerator keyStoreGenerator,
             KeyRotationManagementConfigurationProperties keyManagementRotationProperties
     ) {
-        return new KeyRotationService(
+        return new KeyRotationServiceImpl(
                 keyStoreGenerator,
                 clock,
                 keyManagementRotationProperties

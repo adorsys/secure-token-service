@@ -5,7 +5,7 @@
 
 	<groupId>de.adorsys.sts</groupId>
 	<artifactId>secure-token-service</artifactId>
-	<version>0.30.0</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 
 	<name>SecureTokenService</name>
@@ -51,12 +51,18 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<spring-boot.version>2.1.4.RELEASE</spring-boot.version>
+		<keystore-management.version>0.0.4</keystore-management.version>
+		<schedlock.version>2.5.0</schedlock.version>
 		<springfox-swagger.version>2.9.2</springfox-swagger.version>
 		<lock-persistence.version>0.3.2</lock-persistence.version>
 		<jackson.version>2.10.0</jackson.version>
 		<bouncycastle.version>1.61</bouncycastle.version>
 		<keycloak.version>7.0.0</keycloak.version>
 		<keycloak-config-cli.version>v0.8.0</keycloak-config-cli.version>
+		<surefire.version>2.22.1</surefire.version>
+		<jacoco.version>0.8.4</jacoco.version>
+		<junit.jupiter.version>5.4.1</junit.jupiter.version>
+		<testcontainers.version>1.12.1</testcontainers.version>
 		<scmBranch />
 	</properties>
 
@@ -76,8 +82,8 @@
 		<module>sts-secret-server</module>
 		<module>sts-secret</module>
 		<module>sts-simple-encryption</module>
-		<module>sts-crypto-utils</module>
 		<module>keycloak-storage-provider</module>
+		<module>sts-e2e-tests</module>
 	</modules>
 
 	<dependencyManagement>
@@ -143,6 +149,16 @@
 			</dependency>
 			<dependency>
 				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-keymanagement-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
+				<artifactId>sts-keymanagement-impl</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.sts</groupId>
 				<artifactId>sts-spring</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -166,10 +182,21 @@
 				<artifactId>sts-simple-encryption</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+
 			<dependency>
-				<groupId>de.adorsys.sts</groupId>
-				<artifactId>sts-crypto-utils</artifactId>
-				<version>${project.version}</version>
+				<groupId>de.adorsys.keymanagement</groupId>
+				<artifactId>api</artifactId>
+				<version>${keystore-management.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.keymanagement</groupId>
+				<artifactId>core</artifactId>
+				<version>${keystore-management.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.adorsys.keymanagement</groupId>
+				<artifactId>juggler-bouncycastle</artifactId>
+				<version>${keystore-management.version}</version>
 			</dependency>
 
 			<dependency>
@@ -224,19 +251,19 @@
 			</dependency>
 
 			<dependency>
-				<groupId>de.adorsys.lock-persistence</groupId>
-				<artifactId>lock-persistence-jpa</artifactId>
-				<version>${lock-persistence.version}</version>
+				<groupId>net.javacrumbs.shedlock</groupId>
+				<artifactId>shedlock-core</artifactId>
+				<version>${schedlock.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>de.adorsys.lock-persistence</groupId>
-				<artifactId>lock-persistence-mongo</artifactId>
-				<version>${lock-persistence.version}</version>
+				<groupId>net.javacrumbs.shedlock</groupId>
+				<artifactId>shedlock-provider-jdbc-template</artifactId>
+				<version>${schedlock.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>de.adorsys.lock-persistence</groupId>
-				<artifactId>lock-persistence-core</artifactId>
-				<version>${lock-persistence.version}</version>
+				<groupId>net.javacrumbs.shedlock</groupId>
+				<artifactId>shedlock-provider-mongo</artifactId>
+				<version>${schedlock.version}</version>
 			</dependency>
 
 			<dependency>
@@ -299,9 +326,15 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.12</version>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter</artifactId>
+				<version>${junit.jupiter.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>${junit.jupiter.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -310,18 +343,89 @@
 				<version>1.4.4</version>
 				<scope>test</scope>
 			</dependency>
-
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers</artifactId>
+				<version>${testcontainers.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>mysql</artifactId>
+				<version>${testcontainers.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>${testcontainers.version}</version>
+				<scope>test</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report-aggregate</id>
+						<phase>package</phase>
+						<goals>
+							<goal>report-aggregate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<append>true</append>
+					<propertyName>surefireArgLine</propertyName>
+				</configuration>
+			</plugin>
+		</plugins>
+
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-project-info-reports-plugin</artifactId>
 					<version>2.7</version>
+				</plugin>
+				<!-- For Junit5 -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${surefire.version}</version>
+					<configuration>
+						<argLine>${surefireArgLine}</argLine>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco.version}</version>
 				</plugin>
 
 				<!-- Maven Release Build fails if javadoc comments are invalid. http://stackoverflow.com/questions/15886209/maven-is-not-working-in-java-8-when-javadoc-tags-are-incomplete -->
@@ -472,6 +576,8 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<configuration>
+							<!-- Issue caused by JDK-8212233 -->
+							<source>8</source>
 							<additionalparam>-Xdoclint:none</additionalparam>
 						</configuration>
 						<executions>

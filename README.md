@@ -12,6 +12,8 @@ Authentication is the process of identifying and legitimating the subject of aut
 
 Token management solely focuses on managing oAuth tokens and exchanging them like specified in the token exchange working draft (https://tools.ietf.org/html/draft-ietf-oauth-token-exchange-08)
 
+### STS usage example
+[Overview example to show the usage of the STS components.](docs/sts-usage.md)
 ## Development
 
 ### Dependencies

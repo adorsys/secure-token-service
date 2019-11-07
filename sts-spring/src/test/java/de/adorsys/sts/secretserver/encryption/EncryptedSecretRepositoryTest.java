@@ -1,12 +1,13 @@
 package de.adorsys.sts.secretserver.encryption;
 
+import de.adorsys.sts.common.tests.BaseMockitoTest;
 import de.adorsys.sts.objectmapper.JacksonObjectMapper;
 import de.adorsys.sts.secret.Secret;
 import de.adorsys.sts.secret.SecretRepository;
 import de.adorsys.sts.simpleencryption.ObjectEncryption;
 import de.adorsys.sts.simpleencryption.StaticKeyEncryptionFactory;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
 import java.util.Optional;
@@ -15,7 +16,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-public class EncryptedSecretRepositoryTest {
+class EncryptedSecretRepositoryTest extends BaseMockitoTest {
 
     private static final String ALG = "A256GCMKW";
     private static final String ENC = "A256GCM";
@@ -31,10 +32,8 @@ public class EncryptedSecretRepositoryTest {
     @Captor
     ArgumentCaptor<Secret> secretCaptor;
 
-    @Before
-    public void setup() throws Exception {
-        MockitoAnnotations.initMocks(this);
-
+    @BeforeEach
+    void prepare() {
         StaticKeyEncryptionFactory factory = new StaticKeyEncryptionFactory(new JacksonObjectMapper());
         ObjectEncryption objectEncryption = factory.create(ALG, ENC, KEY);
 
@@ -42,7 +41,7 @@ public class EncryptedSecretRepositoryTest {
     }
 
     @Test
-    public void shouldGetDecryptedSecret() throws Exception {
+    void shouldGetDecryptedSecret() {
         encryptedSecretRepository.save(SUBJECT, new Secret(SECRET));
 
         Mockito.verify(mockedRepository, Mockito.times(1)).save(ArgumentMatchers.eq(SUBJECT), secretCaptor.capture());
@@ -56,7 +55,7 @@ public class EncryptedSecretRepositoryTest {
     }
 
     @Test
-    public void shouldGetDecryptedSecretWhenUseTryMethod() throws Exception {
+    void shouldGetDecryptedSecretWhenUseTryMethod() {
         encryptedSecretRepository.save(SUBJECT, new Secret(SECRET));
 
         Mockito.verify(mockedRepository, Mockito.times(1)).save(ArgumentMatchers.eq(SUBJECT), secretCaptor.capture());
