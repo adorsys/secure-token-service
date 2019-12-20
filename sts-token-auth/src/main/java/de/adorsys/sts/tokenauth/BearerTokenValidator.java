@@ -39,7 +39,7 @@ public class BearerTokenValidator {
                     .roles(roles)
                     .build();
         } else {
-            if (logger.isErrorEnabled()) logger.error("Token has no claims");
+            logger.error("Token has no claims");
         }
 
         onInvalidToken(token);
@@ -65,19 +65,19 @@ public class BearerTokenValidator {
     }
 
     protected void onTokenIsNull() {
-        if (logger.isErrorEnabled()) logger.error("token is null");
+        logger.error("token is null");
     }
 
     protected void onAlgorithmIsNone(String token) {
-        if (logger.isErrorEnabled()) logger.error("token without algorithm");
+        logger.error("token without algorithm");
     }
 
     protected void onAuthServerIsNull(String token, String issuer) {
-        if (logger.isErrorEnabled()) logger.error("unknown/invalid issuer");
+        logger.error("unknown/invalid issuer");
     }
 
     protected void onErrorWhileExtractClaims(String token, Throwable e) {
-        if (logger.isErrorEnabled()) logger.error("token parse exception: {}", e.getMessage());
+        logger.error("token parse exception");
     }
 
     private Optional<JWTClaimsSet> extractClaims(String token) {
@@ -93,7 +93,7 @@ public class BearerTokenValidator {
 
             // Check check algorithm
             JWSAlgorithm algorithm = signedJWT.getHeader().getAlgorithm();
-            if(JWSAlgorithm.NONE.equals(algorithm)) {
+            if (JWSAlgorithm.NONE.equals(algorithm)) {
                 onAlgorithmIsNone(token);
                 return jwtClaimsSet;
             }
@@ -102,7 +102,7 @@ public class BearerTokenValidator {
             AuthServer authServer = authServersProvider.get(issuer);
 
             // Accept only registered servers
-            if(authServer == null){
+            if (authServer == null) {
                 onAuthServerIsNull(token, issuer);
                 return jwtClaimsSet;
             }
@@ -113,6 +113,8 @@ public class BearerTokenValidator {
             // and validity time window (bounded by the "iat", "nbf" and "exp" claims)
             ConfigurableJWTProcessor<SecurityContext> jwtProcessor = new DefaultJWTProcessor<>();
             jwtProcessor.setJWSKeySelector(jwsKeySelector);
+            JWTClaimsSetVerifierWithLogs<SecurityContext> claimsVerifier = new JWTClaimsSetVerifierWithLogs<>();
+            jwtProcessor.setJWTClaimsSetVerifier(claimsVerifier);
 
             SecurityContext context = null;
             JWTClaimsSet jwtClaims = jwtProcessor.process(signedJWT, context);
