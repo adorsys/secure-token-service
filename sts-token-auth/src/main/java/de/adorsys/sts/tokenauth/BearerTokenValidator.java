@@ -8,6 +8,8 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class BearerTokenValidator {
+    private final Logger logger = LoggerFactory.getLogger(BearerTokenValidator.class);
     private final AuthServersProvider authServersProvider;
 
     private final KeycloakTokenRolesParser keycloakTokenRolesParser = new KeycloakTokenRolesParser();
@@ -35,6 +38,8 @@ public class BearerTokenValidator {
                     .isValid(true)
                     .roles(roles)
                     .build();
+        } else {
+            if (logger.isErrorEnabled()) logger.error("Token has no claims");
         }
 
         onInvalidToken(token);
@@ -60,15 +65,19 @@ public class BearerTokenValidator {
     }
 
     protected void onTokenIsNull() {
+        if (logger.isErrorEnabled()) logger.error("token is null");
     }
 
     protected void onAlgorithmIsNone(String token) {
+        if (logger.isErrorEnabled()) logger.error("token without algorithm");
     }
 
     protected void onAuthServerIsNull(String token, String issuer) {
+        if (logger.isErrorEnabled()) logger.error("unknown/invalid issuer");
     }
 
     protected void onErrorWhileExtractClaims(String token, Throwable e) {
+        if (logger.isErrorEnabled()) logger.error("token parse exception: {}", e.getMessage());
     }
 
     private Optional<JWTClaimsSet> extractClaims(String token) {
