@@ -8,6 +8,8 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class BearerTokenValidator {
+    private final Logger logger = LoggerFactory.getLogger(BearerTokenValidator.class);
     private final AuthServersProvider authServersProvider;
 
     private final KeycloakTokenRolesParser keycloakTokenRolesParser = new KeycloakTokenRolesParser();
@@ -35,6 +38,8 @@ public class BearerTokenValidator {
                     .isValid(true)
                     .roles(roles)
                     .build();
+        } else {
+            logger.error("Token has no claims");
         }
 
         onInvalidToken(token);
@@ -60,15 +65,19 @@ public class BearerTokenValidator {
     }
 
     protected void onTokenIsNull() {
+        logger.error("token is null");
     }
 
     protected void onAlgorithmIsNone(String token) {
+        logger.error("token without algorithm");
     }
 
     protected void onAuthServerIsNull(String token, String issuer) {
+        logger.error("unknown/invalid issuer");
     }
 
     protected void onErrorWhileExtractClaims(String token, Throwable e) {
+        logger.error("token parse exception");
     }
 
     private Optional<JWTClaimsSet> extractClaims(String token) {
@@ -84,7 +93,7 @@ public class BearerTokenValidator {
 
             // Check check algorithm
             JWSAlgorithm algorithm = signedJWT.getHeader().getAlgorithm();
-            if(JWSAlgorithm.NONE.equals(algorithm)) {
+            if (JWSAlgorithm.NONE.equals(algorithm)) {
                 onAlgorithmIsNone(token);
                 return jwtClaimsSet;
             }
@@ -93,7 +102,7 @@ public class BearerTokenValidator {
             AuthServer authServer = authServersProvider.get(issuer);
 
             // Accept only registered servers
-            if(authServer == null){
+            if (authServer == null) {
                 onAuthServerIsNull(token, issuer);
                 return jwtClaimsSet;
             }
@@ -104,6 +113,8 @@ public class BearerTokenValidator {
             // and validity time window (bounded by the "iat", "nbf" and "exp" claims)
             ConfigurableJWTProcessor<SecurityContext> jwtProcessor = new DefaultJWTProcessor<>();
             jwtProcessor.setJWSKeySelector(jwsKeySelector);
+            JWTClaimsSetVerifierWithLogs<SecurityContext> claimsVerifier = new JWTClaimsSetVerifierWithLogs<>();
+            jwtProcessor.setJWTClaimsSetVerifier(claimsVerifier);
 
             SecurityContext context = null;
             JWTClaimsSet jwtClaims = jwtProcessor.process(signedJWT, context);
