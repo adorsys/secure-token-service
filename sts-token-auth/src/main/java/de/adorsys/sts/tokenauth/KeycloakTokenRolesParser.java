@@ -2,6 +2,8 @@ package de.adorsys.sts.tokenauth;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import net.minidev.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.Collection;
@@ -15,6 +17,8 @@ import java.util.Map;
  *
  */
 public class KeycloakTokenRolesParser {
+	private final Logger logger = LoggerFactory.getLogger(KeycloakTokenRolesParser.class);
+
 	public void parseRoles(JWTClaimsSet claimSet, final List<String> result){		
 		// Realm roles
 		JSONObject objectClaim = readClaim(claimSet, "realm_access"); 
@@ -59,7 +63,7 @@ public class KeycloakTokenRolesParser {
 		try {
 			return claimSet.getJSONObjectClaim(claimName);
 		} catch (ParseException e) {
-			// TODO log exception.
+			logger.warn("{} claim not found or not a JSON Object or Map", claimName);
 			return null;
 		}
 	}
