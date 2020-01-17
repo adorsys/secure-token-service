@@ -39,7 +39,7 @@ public class BearerTokenValidator {
                     .roles(roles)
                     .build();
         } else {
-            logger.error("Token has no claims");
+            logger.debug("Token has no claims");
         }
 
         onInvalidToken(token);
