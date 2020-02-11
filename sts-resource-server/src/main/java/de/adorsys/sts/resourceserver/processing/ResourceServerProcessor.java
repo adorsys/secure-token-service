@@ -21,6 +21,7 @@ import de.adorsys.sts.resourceserver.service.UserDataRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -218,7 +219,8 @@ public class ResourceServerProcessor {
 			String credentialForResourceServer = userCredentials.getCredentialForResourceServer(resourceServer.getResourceServer().getAudience());
 			if(credentialForResourceServer==null){
 				// create one
-				credentialForResourceServer = RandomStringUtils.randomGraph(16);
+				SecureRandom secureRandomInstance = new SecureRandom();
+				credentialForResourceServer = RandomStringUtils.random(16, 33, 126, false, false, null, secureRandomInstance);
 				userCredentials.setCredentialForResourceServer(resourceServer.getResourceServer().getAudience(), credentialForResourceServer);
 				store = true;
 			}
