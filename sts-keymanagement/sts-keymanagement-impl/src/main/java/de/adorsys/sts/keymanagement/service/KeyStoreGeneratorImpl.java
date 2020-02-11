@@ -9,6 +9,7 @@ import de.adorsys.sts.keymanagement.util.DateTimeUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.security.KeyStore;
+import java.security.SecureRandom;
 import java.time.Clock;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -216,9 +217,8 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
     }
 
     private ProvidedKeyPair generateEncryptionKeyPair() {
-        String alias = serverKeyPairAliasPrefix + RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         return encKeyPairGenerator.generateEncryptionKey(
-                alias,
+                getSecureRandomAlias(),
                 keyPassHandler::getPassword
         );
     }
@@ -268,11 +268,16 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
     }
 
     private ProvidedKey generateSecretKey() {
-        String alias = serverKeyPairAliasPrefix + RandomStringUtils.randomAlphanumeric(5).toUpperCase();
         return secretKeyGenerator.generate(
-                alias,
+                getSecureRandomAlias(),
                 keyPassHandler::getPassword
         );
+    }
+
+    private String getSecureRandomAlias() {
+        SecureRandom secureRandomInstance = new SecureRandom();
+        String random = RandomStringUtils.random(5, 0, 0, true, true, null, secureRandomInstance);
+        return serverKeyPairAliasPrefix + random.toUpperCase();
     }
 
     private ZonedDateTime now() {
