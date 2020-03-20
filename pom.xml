@@ -385,14 +385,14 @@
 					</execution>
 					<execution>
 						<id>report</id>
-						<phase>test</phase>
+						<phase>post-integration-test</phase>
 						<goals>
 							<goal>report</goal>
 						</goals>
 					</execution>
 					<execution>
 						<id>report-aggregate</id>
-						<phase>package</phase>
+						<phase>verify</phase>
 						<goals>
 							<goal>report-aggregate</goal>
 						</goals>
