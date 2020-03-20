@@ -40,7 +40,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
         classes = {TestConfiguration.class},
         initializers = {ConfigFileApplicationContextInitializer.class}
 )
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(properties="spring.main.banner-mode=off", webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("IT")
 @DirtiesContext
 public class SecretServerApplicationIT {

@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
  * Endpoint test that assumes we use H2 as backing storage.
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(properties="spring.main.banner-mode=off", webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 public abstract class BaseEndpointTest extends BaseMockitoTest {
