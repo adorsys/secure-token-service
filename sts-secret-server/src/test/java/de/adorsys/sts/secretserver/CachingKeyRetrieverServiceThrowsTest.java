@@ -5,6 +5,7 @@ import de.adorsys.sts.resourceserver.service.CachingKeyRetrieverService;
 import de.adorsys.sts.resourceserver.service.KeyRetrieverService;
 import org.junit.Test;
 
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -22,7 +23,7 @@ public class CachingKeyRetrieverServiceThrowsTest {
             System.out.println("catched exception");
         }
 
-        when(retrieverService.retrieve("aud")).thenReturn(new JWKSet());
+        doReturn(new JWKSet()).when(retrieverService).retrieve("aud");
 
         cachingKeyRetrieverService.retrieve("aud");
     }
