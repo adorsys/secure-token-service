@@ -4,6 +4,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.nimbusds.jose.jwk.JWKSet;
+import de.adorsys.sts.resourceserver.exception.NoJwkFoundException;
 
 import java.util.concurrent.TimeUnit;
 
@@ -21,8 +22,12 @@ public class CachingKeyRetrieverService implements KeyRetrieverService {
                 .expireAfterAccess(expireAfterAccessInMinutes, TimeUnit.MINUTES)
                 .build(new CacheLoader<String, JWKSet>() {
                     @Override
-                    public JWKSet load(String audience) throws Exception {
-                        return keyRetrieverService.retrieve(audience);
+                    public JWKSet load(String audience) {
+                        try {
+                            return keyRetrieverService.retrieve(audience);
+                        } catch (Exception e) {
+                            throw new NoJwkFoundException(e.getMessage());
+                        }
                     }
                 });
     }
