@@ -5,7 +5,7 @@
 
 	<groupId>de.adorsys.sts</groupId>
 	<artifactId>secure-token-service</artifactId>
-	<version>1.0.3</version>
+	<version>1.0.4</version>
 	<packaging>pom</packaging>
 
 	<name>SecureTokenService</name>
@@ -481,6 +481,7 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>buildnumber-maven-plugin</artifactId>
+					<version>1.4</version>
 					<executions>
 						<execution>
 							<phase>validate</phase>
@@ -506,11 +507,6 @@
 					<groupId>io.fabric8</groupId>
 					<artifactId>docker-maven-plugin</artifactId>
 					<version>0.33.0</version>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>buildnumber-maven-plugin</artifactId>
-					<version>1.4</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
