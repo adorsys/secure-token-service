@@ -72,6 +72,7 @@ public class PasswordGrantService {
                 .jwtID(UUID.randomUUID().toString())
                 .notBeforeTime(new Date())
                 .claim("typ", "Bearer")
+                .claim("session_state", UUID.randomUUID().toString())
                 .claim("role", "USER");
 
         List<ResourceServerAndSecret> processedResources = resourceServerProcessorService.processResources(audiences, resources, username, password);
