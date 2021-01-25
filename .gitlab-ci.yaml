@@ -1,0 +1,32 @@
+stages:
+  - build
+  - deploy
+
+cache:
+  paths:
+    - .m2/repository
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+
+  DOCKER_HOST: "tcp://docker:2375"
+  DOCKER_TLS_CERTDIR: ""
+
+Build & Test:
+  stage: build
+  services:
+    - docker:dind
+  image: adorsys/ci-build
+  script:
+    - mvn --settings .travis/settings.xml clean verify -B -V -ntp
+    - cd sts-client-example
+    - npm ci
+    - npm run prod
+
+Deploy:
+  stage: deploy
+  image: adorsys/ci-build
+  script:
+    - mvn --settings .travis/settings.xml package deploy -Prelease -DskipTests -B -U -ntp
+  only:
+    - tags

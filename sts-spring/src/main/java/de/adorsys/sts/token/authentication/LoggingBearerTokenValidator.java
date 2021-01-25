@@ -4,12 +4,13 @@ import de.adorsys.sts.tokenauth.AuthServersProvider;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.time.Clock;
 
 public class LoggingBearerTokenValidator extends BearerTokenValidator {
     private final Logger logger = LoggerFactory.getLogger(LoggingBearerTokenValidator.class);
 
-    public LoggingBearerTokenValidator(AuthServersProvider authServersProvider) {
-        super(authServersProvider);
+    public LoggingBearerTokenValidator(AuthServersProvider authServersProvider, Clock clock) {
+        super(authServersProvider, clock);
     }
 
     @Override
