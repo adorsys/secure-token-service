@@ -20,6 +20,12 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
+logging:
+  level:
+    de.adorsys: 'debug'
+    de.adorsys.sts: 'trace'
+    de.adorsys.sts.keyrotation: 'error'
+
 sts:
   keymanagement:
     rotation:

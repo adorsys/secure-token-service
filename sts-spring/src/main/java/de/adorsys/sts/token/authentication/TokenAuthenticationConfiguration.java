@@ -7,6 +7,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 
+import java.time.Clock;
+
 @Configuration
 @ComponentScan(
         basePackages = {"de.adorsys.sts.token.authentication"},
@@ -18,7 +20,7 @@ import org.springframework.context.annotation.FilterType;
 public class TokenAuthenticationConfiguration {
 
     @Bean
-    BearerTokenValidator bearerTokenValidator(AuthServersProvider authServersProvider) {
-        return new LoggingBearerTokenValidator(authServersProvider);
+    BearerTokenValidator bearerTokenValidator(AuthServersProvider authServersProvider, Clock clock) {
+        return new LoggingBearerTokenValidator(authServersProvider, clock);
     }
 }
