@@ -5,7 +5,7 @@ docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASS
 
 # ----- push sts-example -----
 
-IMAGE_NAME="${STS_EXAMPLE_DOCKER_IMAGE_NAME}:${TRAVIS_TAG}"
+IMAGE_NAME="${STS_EXAMPLE_DOCKER_IMAGE_NAME}:${TAG}"
 LATEST_IMAGE_NAME="${STS_EXAMPLE_DOCKER_IMAGE_NAME}:latest"
 
 docker build -t $IMAGE_NAME ./sts-example
@@ -16,7 +16,7 @@ docker push $LATEST_IMAGE_NAME
 
 # ----- push sts-service-component-example -----
 
-IMAGE_NAME="${STS_SERVICE_COMPONENT_EXAMPLE_DOCKER_IMAGE_NAME}:${TRAVIS_TAG}"
+IMAGE_NAME="${STS_SERVICE_COMPONENT_EXAMPLE_DOCKER_IMAGE_NAME}:${TAG}"
 LATEST_IMAGE_NAME="${STS_SERVICE_COMPONENT_EXAMPLE_DOCKER_IMAGE_NAME}:latest"
 
 docker build -t $IMAGE_NAME ./sts-service-component-example
@@ -27,7 +27,7 @@ docker push $LATEST_IMAGE_NAME
 
 # ----- push sts-client-example -----
 
-IMAGE_NAME="${STS_CLIENT_EXAMPLE_DOCKER_IMAGE_NAME}:${TRAVIS_TAG}"
+IMAGE_NAME="${STS_CLIENT_EXAMPLE_DOCKER_IMAGE_NAME}:${TAG}"
 LATEST_IMAGE_NAME="${STS_CLIENT_EXAMPLE_DOCKER_IMAGE_NAME}:latest"
 
 docker build -t $IMAGE_NAME ./sts-client-example
@@ -38,7 +38,7 @@ docker push $LATEST_IMAGE_NAME
 
 # ----- push sts-secret-server -----
 
-IMAGE_NAME="${STS_SECRET_SERVER_DOCKER_IMAGE_NAME}:${TRAVIS_TAG}"
+IMAGE_NAME="${STS_SECRET_SERVER_DOCKER_IMAGE_NAME}:${TAG}"
 LATEST_IMAGE_NAME="${STS_SECRET_SERVER_DOCKER_IMAGE_NAME}:latest"
 
 docker build -t $IMAGE_NAME ./sts-secret-server
@@ -49,7 +49,7 @@ docker push $LATEST_IMAGE_NAME
 
 # ----- push keycloak-storage-provider -----
 
-IMAGE_NAME="${STS_KEYCLOAK_ADAPTER_DOCKER_IMAGE_NAME}:${TRAVIS_TAG}"
+IMAGE_NAME="${STS_KEYCLOAK_ADAPTER_DOCKER_IMAGE_NAME}:${TAG}"
 LATEST_IMAGE_NAME="${STS_KEYCLOAK_ADAPTER_DOCKER_IMAGE_NAME}:latest"
 
 docker build -t $IMAGE_NAME ./keycloak-storage-provider

@@ -1,0 +1,28 @@
+name: Develop branch build
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  Develop-Branch-Build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Maven build and test
+        run: mvn clean verify -B -V
+
+      - name: Build client
+        run: ./scripts/build_client.sh
+
+      - name: Maven deploy snapshot
+        run: ./scripts/mvn_deploy.sh
+        env:
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          GPG_EXECUTABLE: gpg
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
+          GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}

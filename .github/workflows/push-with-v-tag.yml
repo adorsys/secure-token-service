@@ -1,0 +1,35 @@
+name: Release to Maven Central
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: deploy to Maven
+        run: ./scripts/mvn_deploy.sh
+        env:
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          GPG_EXECUTABLE: gpg
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
+          GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
+
+      - name: Get the tag name
+        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+
+      - name: Push to Dockerhub
+        run: ./scripts/docker_push.sh
+        env:
+          STS_EXAMPLE_DOCKER_IMAGE_NAME: adorsys/sts-example
+          STS_SERVICE_COMPONENT_EXAMPLE_DOCKER_IMAGE_NAME: adorsys/sts-service-component-example
+          STS_CLIENT_EXAMPLE_DOCKER_IMAGE_NAME: adorsys/sts-client-example
+          STS_SECRET_SERVER_DOCKER_IMAGE_NAME: adorsys/sts-secret-server
+          STS_KEYCLOAK_ADAPTER_DOCKER_IMAGE_NAME: adorsys/keycloak-sts-adapter
+          TAG: ${{ env.TAG }}

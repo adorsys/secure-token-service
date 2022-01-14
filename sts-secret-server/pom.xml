@@ -242,6 +242,7 @@
                 <!--this plugin replaces the placeholders within application-IT.yml needed for the integration tests-->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>copy-resources-for-integration-tests</id>
