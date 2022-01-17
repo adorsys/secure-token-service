@@ -1,5 +1,6 @@
 package de.adorsys.sts.token.secretserver;
 
+import com.nimbusds.jose.shaded.json.JSONObject;
 import de.adorsys.sts.keymanagement.service.DecryptionService;
 import de.adorsys.sts.secret.SecretServerClient;
 import de.adorsys.sts.token.api.TokenResponse;
@@ -7,7 +8,6 @@ import de.adorsys.sts.token.tokenexchange.TokenExchangeClient;
 import de.adorsys.sts.token.tokenexchange.TokenExchangeConstants;
 import de.adorsys.sts.tokenauth.BearerToken;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
-import net.minidev.json.JSONObject;
 
 public class TokenExchangeSecretServerClient implements SecretServerClient {
 
@@ -41,7 +41,7 @@ public class TokenExchangeSecretServerClient implements SecretServerClient {
             throw new IllegalArgumentException("Exchanged token is invalid");
         }
 
-        JSONObject claims = bearerToken.getClaims().toJSONObject();
+        JSONObject claims = new JSONObject(bearerToken.getClaims().toJSONObject());
         JSONObject encryptedSecrets = (JSONObject)claims.get(TokenExchangeConstants.SECRETS_CLAIM_KEY);
 
         String decryptedSecretForAudience = encryptedSecrets.get(audience).toString();

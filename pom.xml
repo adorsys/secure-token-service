@@ -60,8 +60,8 @@
 		<keycloak-config-cli.version>v0.8.0</keycloak-config-cli.version>
 		<surefire.version>3.0.0-M4</surefire.version>
 		<jacoco.version>0.8.5</jacoco.version>
-		<testcontainers.version>1.13.0</testcontainers.version>
-		<nimbus-jose-jwt.version>8.10</nimbus-jose-jwt.version>
+		<testcontainers.version>1.16.2</testcontainers.version>
+		<nimbus-jose-jwt.version>9.14</nimbus-jose-jwt.version>
 		<scmBranch />
 	</properties>
 

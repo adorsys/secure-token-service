@@ -1,7 +1,6 @@
 package de.adorsys.sts.tokenauth;
 
 import com.nimbusds.jwt.JWTClaimsSet;
-import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +20,7 @@ public class KeycloakTokenRolesParser {
 
 	public void parseRoles(JWTClaimsSet claimSet, final List<String> result){		
 		// Realm roles
-		JSONObject objectClaim = readClaim(claimSet, "realm_access"); 
+		Map<String, Object> objectClaim = readClaim(claimSet, "realm_access");
 		if(objectClaim!=null){
 			Object roles = objectClaim.get("roles");
 			addRoles(roles, result);
@@ -59,7 +58,7 @@ public class KeycloakTokenRolesParser {
 		}
 	}
 	
-	private JSONObject readClaim(JWTClaimsSet claimSet, String claimName){
+	private Map<String, Object> readClaim(JWTClaimsSet claimSet, String claimName){
 		try {
 			return claimSet.getJSONObjectClaim(claimName);
 		} catch (ParseException e) {
