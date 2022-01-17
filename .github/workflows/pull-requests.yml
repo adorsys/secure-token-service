@@ -1,0 +1,19 @@
+name: Actions on pull requests
+on:
+  pull_request:
+    branches:
+      - develop
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Maven build and test
+        run: mvn clean verify -B -V
+
+      - name: Build client
+        run: ./scripts/build_client.sh
