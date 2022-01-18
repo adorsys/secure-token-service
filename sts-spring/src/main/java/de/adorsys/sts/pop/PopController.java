@@ -1,6 +1,7 @@
 package de.adorsys.sts.pop;
 
 import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.shaded.json.JSONObject;
 import de.adorsys.sts.common.config.TokenResource;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Api(value = "/pop", tags={"Proof of Possession RFC7800"}, description = "Public key distribution endpoint")
+@Api(value = "/pop", tags = {"Proof of Possession RFC7800"}, description = "Public key distribution endpoint")
 @RequestMapping("/pop")
 @TokenResource
 public class PopController {
@@ -32,9 +33,10 @@ public class PopController {
             response = JWKSet.class,
             notes = "Fetches public keys of the target server. Keys are used to encrypt data sent to the server and " +
                     "also send a response encryption key to the server. See RFC7800")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok")})
-    public ResponseEntity<String> getPublicKeys(){
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Ok")})
+    public ResponseEntity<String> getPublicKeys() {
         JWKSet publicKeys = popService.getPublicKeys();
-        return ResponseEntity.ok(publicKeys.toJSONObject().toJSONString());
+        JSONObject jsonObject = new JSONObject(publicKeys.toJSONObject());
+        return ResponseEntity.ok(jsonObject.toJSONString());
     }
 }

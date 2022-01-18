@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,8 +24,11 @@ public class BearerTokenValidator {
     private final KeycloakTokenRolesParser keycloakTokenRolesParser = new KeycloakTokenRolesParser();
     private final StringListRolesParser stringListRolesParser = new StringListRolesParser();
 
-    public BearerTokenValidator(AuthServersProvider authServersProvider) {
+    private final Clock clock;
+
+    public BearerTokenValidator(AuthServersProvider authServersProvider, Clock clock) {
         this.authServersProvider = authServersProvider;
+        this.clock = clock;
     }
 
     public BearerToken extract(String token) {
@@ -113,7 +117,7 @@ public class BearerTokenValidator {
             // and validity time window (bounded by the "iat", "nbf" and "exp" claims)
             ConfigurableJWTProcessor<SecurityContext> jwtProcessor = new DefaultJWTProcessor<>();
             jwtProcessor.setJWSKeySelector(jwsKeySelector);
-            JWTClaimsSetVerifierWithLogs<SecurityContext> claimsVerifier = new JWTClaimsSetVerifierWithLogs<>();
+            JWTClaimsSetVerifierWithLogs<SecurityContext> claimsVerifier = new JWTClaimsSetVerifierWithLogs<>(clock);
             jwtProcessor.setJWTClaimsSetVerifier(claimsVerifier);
 
             SecurityContext context = null;

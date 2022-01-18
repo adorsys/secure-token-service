@@ -5,11 +5,14 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.BadJWTException;
 import com.nimbusds.jwt.proc.JWTClaimsSetVerifier;
 import com.nimbusds.jwt.util.DateUtils;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Clock;
 import java.util.Date;
 
+@RequiredArgsConstructor
 public class JWTClaimsSetVerifierWithLogs<C extends SecurityContext>implements JWTClaimsSetVerifier<C> {
     private final Logger logger = LoggerFactory.getLogger(JWTClaimsSetVerifierWithLogs.class);
 
@@ -17,10 +20,11 @@ public class JWTClaimsSetVerifierWithLogs<C extends SecurityContext>implements J
      * The default maximum acceptable clock skew, in seconds (60).
      */
     private static final int DEFAULT_MAX_CLOCK_SKEW_SECONDS = 60;
+    private final Clock clock;
 
     @Override
     public void verify(JWTClaimsSet claimsSet, SecurityContext context) throws BadJWTException {
-        final Date now = new Date();
+        final Date now = Date.from(clock.instant());
 
         final Date exp = claimsSet.getExpirationTime();
 

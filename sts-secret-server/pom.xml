@@ -5,7 +5,7 @@
     <parent>
         <artifactId>secure-token-service</artifactId>
         <groupId>de.adorsys.sts</groupId>
-        <version>1.0.3</version>
+        <version>1.0.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -242,6 +242,7 @@
                 <!--this plugin replaces the placeholders within application-IT.yml needed for the integration tests-->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>copy-resources-for-integration-tests</id>

@@ -7,12 +7,12 @@ import com.nimbusds.jose.util.JSONObjectUtils;
 import com.nimbusds.jose.util.Resource;
 import com.nimbusds.jose.util.ResourceRetriever;
 import de.adorsys.sts.resourceserver.model.ResourceServer;
-import net.minidev.json.JSONObject;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.Map;
 
 public class ResourceServerInfo {
 	public static final String jwks_url_key = "jwks_url";
@@ -22,7 +22,7 @@ public class ResourceServerInfo {
 	
 	private final ResourceRetriever resourceRetriever;
 
-	private ResourceServer resourceServer;
+	private final ResourceServer resourceServer;
 	
 	public ResourceServerInfo(final ResourceRetriever resourceRetriever, final ResourceServer resourceServer) {
 		if (resourceServer.getEndpointUrl() == null && resourceServer.getJwksUrl()==null) {
@@ -54,7 +54,7 @@ public class ResourceServerInfo {
 		} catch (IOException e) {
 			throw new IllegalStateException("Couldn't retrieve remote metadata: " + e.getMessage(), e);
 		}
-		JSONObject jsonObject;
+		Map<String, Object> jsonObject;
 		try {
 			jsonObject = JSONObjectUtils.parse(res.getContent());
 		} catch (ParseException e) {
@@ -81,7 +81,7 @@ public class ResourceServerInfo {
 		
 	}
 	
-	private RemoteJWKSet<SecurityContext> makeJwkSource(JSONObject jsonObject, String key){
+	private RemoteJWKSet<SecurityContext> makeJwkSource(Map<String, Object> jsonObject, String key){
 		Object jwks_url = jsonObject.get(key);
 		if(jwks_url!=null){
 			try {

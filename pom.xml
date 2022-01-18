@@ -5,7 +5,7 @@
 
 	<groupId>de.adorsys.sts</groupId>
 	<artifactId>secure-token-service</artifactId>
-	<version>1.0.3</version>
+	<version>1.0.5</version>
 	<packaging>pom</packaging>
 
 	<name>SecureTokenService</name>
@@ -60,8 +60,8 @@
 		<keycloak-config-cli.version>v0.8.0</keycloak-config-cli.version>
 		<surefire.version>3.0.0-M4</surefire.version>
 		<jacoco.version>0.8.5</jacoco.version>
-		<testcontainers.version>1.13.0</testcontainers.version>
-		<nimbus-jose-jwt.version>8.10</nimbus-jose-jwt.version>
+		<testcontainers.version>1.16.2</testcontainers.version>
+		<nimbus-jose-jwt.version>9.14</nimbus-jose-jwt.version>
 		<scmBranch />
 	</properties>
 
@@ -481,6 +481,7 @@
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>buildnumber-maven-plugin</artifactId>
+					<version>1.4</version>
 					<executions>
 						<execution>
 							<phase>validate</phase>
@@ -507,11 +508,6 @@
 					<artifactId>docker-maven-plugin</artifactId>
 					<version>0.33.0</version>
 				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>buildnumber-maven-plugin</artifactId>
-					<version>1.4</version>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -524,8 +520,9 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-deploy-plugin</artifactId>
+						<version>2.8.2</version>
 						<configuration>
-							<skip>true</skip>
+							<deployAtEnd>true</deployAtEnd>
 						</configuration>
 					</plugin>
 					<plugin>
@@ -533,19 +530,9 @@
 						<artifactId>nexus-staging-maven-plugin</artifactId>
 						<version>1.6.8</version>
 						<extensions>true</extensions>
-						<executions>
-							<execution>
-								<id>default-deploy</id>
-								<phase>deploy</phase>
-								<goals>
-									<goal>deploy</goal>
-								</goals>
-							</execution>
-						</executions>
 						<configuration>
 							<serverId>sonatype</serverId>
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>true</autoReleaseAfterClose>
 						</configuration>
 					</plugin>
 					<plugin>
@@ -566,6 +553,10 @@
 						<artifactId>maven-gpg-plugin</artifactId>
 						<version>1.6</version>
 						<configuration>
+							<gpgArguments>
+								<arg>--pinentry-mode</arg>
+								<arg>loopback</arg>
+							</gpgArguments>
 						</configuration>
 						<executions>
 							<execution>
@@ -574,6 +565,12 @@
 								<goals>
 									<goal>sign</goal>
 								</goals>
+								<configuration>
+									<gpgArguments>
+										<arg>--pinentry-mode</arg>
+										<arg>loopback</arg>
+									</gpgArguments>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
