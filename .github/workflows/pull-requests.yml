@@ -12,8 +12,10 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
 
-      - name: Maven build and test
-        run: mvn clean verify -B -V
-
-      - name: Build client
-        run: ./scripts/build_client.sh
+      - name: deploy to Maven
+        run: mvn --settings scripts/settings.xml nexus-staging:release -Prelease -DskipTests -B
+        env:
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          GPG_EXECUTABLE: gpg
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
