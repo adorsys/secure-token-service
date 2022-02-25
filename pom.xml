@@ -55,9 +55,9 @@
 		<schedlock.version>4.5.1</schedlock.version>
 		<springfox-swagger.version>2.9.2</springfox-swagger.version>
 		<jackson.version>2.10.3</jackson.version>
-		<bouncycastle.version>1.64</bouncycastle.version>
-		<keycloak.version>7.0.0</keycloak.version>
-		<keycloak-config-cli.version>v0.8.0</keycloak-config-cli.version>
+		<bouncycastle.version>1.67</bouncycastle.version>
+		<keycloak.version>15.1.1</keycloak.version>
+		<keycloak-config-cli.version>v4.6.1</keycloak-config-cli.version>
 		<surefire.version>3.0.0-M4</surefire.version>
 		<jacoco.version>0.8.5</jacoco.version>
 		<testcontainers.version>1.16.2</testcontainers.version>
@@ -281,7 +281,7 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>28.2-jre</version>
+				<version>29.0-jre</version>
 			</dependency>
 
 			<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
@@ -307,7 +307,7 @@
 			<dependency>
 				<groupId>com.h2database</groupId>
 				<artifactId>h2</artifactId>
-				<version>1.4.200</version>
+				<version>2.0.206</version>
 				<scope>runtime</scope>
 			</dependency>
 
