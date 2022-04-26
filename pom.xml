@@ -56,7 +56,7 @@
 		<springfox-swagger.version>2.9.2</springfox-swagger.version>
 		<jackson.version>2.10.3</jackson.version>
 		<bouncycastle.version>1.64</bouncycastle.version>
-		<keycloak.version>7.0.0</keycloak.version>
+		<keycloak.version>18.0.0</keycloak.version>
 		<keycloak-config-cli.version>v0.8.0</keycloak-config-cli.version>
 		<surefire.version>3.0.0-M4</surefire.version>
 		<jacoco.version>0.8.5</jacoco.version>
