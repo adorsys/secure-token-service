@@ -1,14 +1,13 @@
 package de.adorsys.sts.keymanagement;
 
 import de.adorsys.sts.keymanagement.service.KeyManagementProperties;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Component
 @ConfigurationProperties(prefix = "sts.keymanagement")

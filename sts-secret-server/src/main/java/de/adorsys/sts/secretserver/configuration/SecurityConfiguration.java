@@ -2,27 +2,26 @@ package de.adorsys.sts.secretserver.configuration;
 
 import de.adorsys.sts.filter.JWTAuthenticationFilter;
 import de.adorsys.sts.token.authentication.TokenAuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.servlet.Filter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration {
 
-    @Autowired
-    private TokenAuthenticationService tokenAuthenticationService;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    protected SecurityFilterChain securityFilterChain(HttpSecurity http, TokenAuthenticationService tokenAuthenticationService) throws Exception {
         // @formatter:off
         http
                 .cors()
@@ -32,13 +31,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
-                .authorizeRequests()
-                    .antMatchers(HttpMethod.GET, "/pop").permitAll()
-                    .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+                .authorizeHttpRequests()
+                    .requestMatchers(HttpMethod.GET, "/pop").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
                     .anyRequest().authenticated()
         ;
         // @formatter:on
         http.addFilterBefore(new JWTAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
 
     @Bean
@@ -55,9 +55,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new CorsFilter(source);
     }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(
+    @Bean
+    public Filter filter(ObjectPostProcessor processor) throws Exception {
+        WebSecurity web = new WebSecurity(processor);
+        web.ignoring().requestMatchers(
                 "/v2/api-docs",
                 "/swagger-resources",
                 "/swagger-resources/configuration/ui",
@@ -65,5 +66,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/swagger-ui.html",
                 "/webjars/**"
         );
+        return web.build();
     }
 }

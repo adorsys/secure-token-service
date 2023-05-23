@@ -51,15 +51,15 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<spring-boot.version>3.0.6</spring-boot.version>
-		<keystore-management.version>0.0.6</keystore-management.version>
+		<keystore-management.version>0.1.0-SNAPSHOT</keystore-management.version>
 		<schedlock.version>4.5.1</schedlock.version>
 		<springfox-swagger.version>2.9.2</springfox-swagger.version>
-		<jackson.version>2.10.3</jackson.version>
+		<jackson.version>2.14.1</jackson.version>
 		<bouncycastle.version>1.64</bouncycastle.version>
 		<keycloak.version>7.0.0</keycloak.version>
 		<keycloak-config-cli.version>v0.8.0</keycloak-config-cli.version>
 		<surefire.version>3.0.0-M4</surefire.version>
-		<jacoco.version>0.8.5</jacoco.version>
+		<jacoco.version>0.8.8</jacoco.version>
 		<testcontainers.version>1.16.2</testcontainers.version>
 		<nimbus-jose-jwt.version>9.14</nimbus-jose-jwt.version>
 		<scmBranch />

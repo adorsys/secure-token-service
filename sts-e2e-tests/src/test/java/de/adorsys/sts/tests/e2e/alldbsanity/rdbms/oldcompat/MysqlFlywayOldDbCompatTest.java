@@ -18,13 +18,11 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.Instant;
-import java.util.concurrent.TimeUnit;
 
 import static com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS;
 import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
@@ -34,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * This test ensures key rotation functional compatibility with old STS schema.
  */
 @KeyRotationContext
-@EnableAutoConfiguration(exclude = {EmbeddedMongoAutoConfiguration.class, MongoAutoConfiguration.class})
+@EnableAutoConfiguration(exclude = {MongoAutoConfiguration.class})
 @Sql(scripts = {"classpath:fixture/old-compat/key_store.sql", "classpath:fixture/old-compat/key_entry.sql"})
 @ActiveProfiles(profiles = {"jpa", "flyway", "mysql", "test-db-mysql"})
 class MysqlFlywayOldDbCompatTest extends BaseJdbcDbTest {
