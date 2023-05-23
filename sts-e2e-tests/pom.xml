@@ -12,6 +12,7 @@
     <artifactId>sts-e2e-tests</artifactId>
 
     <dependencies>
+
         <dependency>
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-spring</artifactId>
