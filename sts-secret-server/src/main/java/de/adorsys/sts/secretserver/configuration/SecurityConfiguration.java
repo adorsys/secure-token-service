@@ -2,13 +2,12 @@ package de.adorsys.sts.secretserver.configuration;
 
 import de.adorsys.sts.filter.JWTAuthenticationFilter;
 import de.adorsys.sts.token.authentication.TokenAuthenticationService;
-import jakarta.servlet.Filter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -17,6 +16,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfiguration {
 
 
@@ -56,9 +56,8 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public Filter filter(ObjectPostProcessor processor) throws Exception {
-        WebSecurity web = new WebSecurity(processor);
-        web.ignoring().requestMatchers(
+    public WebSecurityCustomizer customize() throws Exception {
+        return (web) -> web.ignoring().requestMatchers(
                 "/v2/api-docs",
                 "/swagger-resources",
                 "/swagger-resources/configuration/ui",
@@ -66,6 +65,5 @@ public class SecurityConfiguration {
                 "/swagger-ui.html",
                 "/webjars/**"
         );
-        return web.build();
     }
 }

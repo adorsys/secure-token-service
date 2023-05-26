@@ -29,10 +29,9 @@
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-spring</artifactId>
         </dependency>
-
         <dependency>
             <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
+            <artifactId>springfox-boot-starter</artifactId>
         </dependency>
     </dependencies>
 
