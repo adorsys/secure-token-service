@@ -14,7 +14,7 @@ import java.time.ZonedDateTime;
 public class JpaKeyStore {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
