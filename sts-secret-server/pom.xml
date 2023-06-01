@@ -92,6 +92,7 @@
                 <!--https://stackoverflow.com/questions/49363222/maven-failsafe-plugin-surefirebooterforkexception-there-was-an-error-in-the-f-->
                 <version>2.18.1</version>
                 <configuration>
+                    <argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>
                     <includes>
                         <include>**/*IT.java</include>
                     </includes>
@@ -127,11 +128,12 @@
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
+                <version>0.43.0</version>
                 <configuration>
                     <images>
                         <image>
                             <alias>it-keycloak</alias>
-                            <name>jboss/keycloak:${keycloak.version}</name>
+                            <name>sleighzy/keycloak:${keycloak.version}-arm64</name>
 
                             <run>
                                 <env>
