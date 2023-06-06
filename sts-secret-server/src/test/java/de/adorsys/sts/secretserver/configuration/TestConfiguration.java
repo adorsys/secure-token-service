@@ -21,4 +21,5 @@ public class TestConfiguration {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
+
 }

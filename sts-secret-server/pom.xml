@@ -11,7 +11,29 @@
 
     <artifactId>sts-secret-server</artifactId>
 
+
+
     <dependencies>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.github.dasniko</groupId>
+            <artifactId>testcontainers-keycloak</artifactId>
+            <version>2.5.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>1.17.6</version>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core -->
         <dependency>
@@ -66,17 +88,11 @@
         </dependency>
 
         <dependency>
-            <groupId>com.nitorcreations</groupId>
-            <artifactId>junit-runners</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
+
+
         <dependency>
             <groupId>eu.codearte.catch-exception</groupId>
             <artifactId>catch-exception</artifactId>
@@ -125,7 +141,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
+<!--            <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>0.43.0</version>
@@ -145,7 +161,7 @@
                                     <exec>
                                         <arg>-b</arg>
                                         <arg>0.0.0.0</arg>
-                                        <arg>--debug</arg>
+                                        <arg>&#45;&#45;debug</arg>
                                     </exec>
                                 </cmd>
                                 <ports>
@@ -255,7 +271,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <!--this plugin replaces the placeholders within application-IT.yml needed for the integration tests-->
                 <groupId>org.apache.maven.plugins</groupId>
