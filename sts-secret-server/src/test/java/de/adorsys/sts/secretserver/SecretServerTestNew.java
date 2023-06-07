@@ -18,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Map;
 
@@ -29,6 +30,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("IT")
 @DirtiesContext
+@Testcontainers
 @ContextConfiguration(
         classes = {TestConfiguration.class},
         initializers = {ConfigDataApplicationContextInitializer.class}
