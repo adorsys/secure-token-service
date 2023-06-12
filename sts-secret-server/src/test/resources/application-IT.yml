@@ -3,9 +3,9 @@ server:
 
 logging:
   level:
-    de.adorsys: 'error'
-    de.adorsys.sts: 'error'
-    de.adorsys.sts.keyrotation: 'error'
+    de.adorsys: 'debug'
+    de.adorsys.sts: 'debug'
+    de.adorsys.sts.keyrotation: 'debug'
 
 spring:
   datasource:
@@ -37,11 +37,12 @@ tests:
     client-id: moped-client
     client-secret: my-special-client-secret
     # the docker.host.ip and host.port placeholder is set by copy-resources-for-integration-tests execution defined in pom.xml
-    access-token-uri: http://localhost:8080/auth/realms/moped/protocol/openid-connect/token
-    user-info-uri: http://localhost:8080/auth/realms/moped/protocol/openid-connect/userinfo
+    access-token-uri: http://localhost:49189/auth/realms/moped/protocol/openid-connect/token
+    user-info-uri: http://localhost:49189/auth/realms/moped/protocol/openid-connect/userinfo
     end-session-endpoint: http://localhost:8080/auth/realms/moped/protocol/openid-connect/logout
     use-secure-cookies: false
-
+keycloak:
+  auth-server-url=http://localhost:8080
 sts:
   secret-server:
     secret-length: 8192

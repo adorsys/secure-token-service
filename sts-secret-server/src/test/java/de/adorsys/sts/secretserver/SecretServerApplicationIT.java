@@ -6,10 +6,12 @@ import de.adorsys.sts.keymanagement.service.DecryptionService;
 import de.adorsys.sts.secretserver.configuration.TestConfiguration;
 import de.adorsys.sts.secretserver.helper.Authentication;
 import de.adorsys.sts.token.api.TokenResponse;
+import de.adorsys.sts.token.authentication.AuthServerConfigurationProperties;
 import de.adorsys.sts.token.tokenexchange.client.RestTokenExchangeClient;
 import de.adorsys.sts.tokenauth.BearerToken;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
 import io.restassured.RestAssured;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,6 +53,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 @ActiveProfiles("IT")
 @DirtiesContext
 @Testcontainers
+@Slf4j
 public class SecretServerApplicationIT {
     private static final String MOPED_CLIENT_AUDIENCE = "moped-client";
 
@@ -72,13 +75,17 @@ public class SecretServerApplicationIT {
     @Autowired
     DecryptionService decryptionService;
 
+    @Autowired
+    AuthServerConfigurationProperties properties;
+
     private RestTokenExchangeClient client;
+
 
     @Container
     public KeycloakContainer keycloak = new KeycloakContainer().withAdminUsername("admin")
             .withProviderClassesFrom("target/classes/")
             .withRealmImportFile("moped.json")
-            .withAdminPassword("admin123");
+            .withAdminPassword("admin123").withContextPath("/auth/");
 
     @BeforeEach
     public void setup() throws Exception {
@@ -87,6 +94,8 @@ public class SecretServerApplicationIT {
         client = new RestTokenExchangeClient(restTemplate);
         RestAssured.baseURI=keycloak.getAuthServerUrl();
         RestAssured.port=keycloak.getHttpPort();
+        properties.getAuthservers().get(0).setIssUrl("http://localhost:" + keycloak.getHttpPort() + "/auth/realms/moped");
+        properties.getAuthservers().get(0).setJwksUrl("http://localhost:"+ keycloak.getHttpPort() + "/auth/realms/moped/protocol/openid-connect/certs");
     }
 
 
@@ -192,6 +201,7 @@ public class SecretServerApplicationIT {
                 .clientSecret("my-special-client-secret")
                 .build();
         AccessTokenResponse response = keycloakAdminClient.tokenManager().getAccessToken();
+        log.info("Access-Token: " + response.getToken());
         return getTokenForAccessToken(response.getToken());
     }
 
