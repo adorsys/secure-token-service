@@ -39,11 +39,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.nitorcreations/junit-runners -->
         <dependency>
             <groupId>com.nitorcreations</groupId>
             <artifactId>junit-runners</artifactId>
+            <version>1.3</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>de.adorsys.keymanagement</groupId>
             <artifactId>juggler-bouncycastle</artifactId>

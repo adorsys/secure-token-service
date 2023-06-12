@@ -31,10 +31,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.nitorcreations</groupId>
-            <artifactId>junit-runners</artifactId>
-        </dependency>
 
     </dependencies>
 </project>

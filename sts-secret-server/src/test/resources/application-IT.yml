@@ -37,9 +37,9 @@ tests:
     client-id: moped-client
     client-secret: my-special-client-secret
     # the docker.host.ip and host.port placeholder is set by copy-resources-for-integration-tests execution defined in pom.xml
-    access-token-uri: http://@docker.host.ip@:@docker.port@/auth/realms/moped/protocol/openid-connect/token
-    user-info-uri: http://@docker.host.ip@:@docker.port@/auth/realms/moped/protocol/openid-connect/userinfo
-    end-session-endpoint: http://@docker.host.ip@:@docker.port@/auth/realms/moped/protocol/openid-connect/logout
+    access-token-uri: http://localhost:8080/auth/realms/moped/protocol/openid-connect/token
+    user-info-uri: http://localhost:8080/auth/realms/moped/protocol/openid-connect/userinfo
+    end-session-endpoint: http://localhost:8080/auth/realms/moped/protocol/openid-connect/logout
     use-secure-cookies: false
 
 sts:
@@ -54,8 +54,8 @@ sts:
   authservers:
     - name: local keycloak
       # the docker.host.ip and host.port placeholder is set by copy-resources-for-integration-tests execution defined in pom.xml
-      iss-url: http://@docker.host.ip@:@docker.port@/auth/realms/moped
-      jwks-url: http://@docker.host.ip@:@docker.port@/auth/realms/moped/protocol/openid-connect/certs
+      iss-url: http://localhost:8080/auth/realms/moped
+      jwks-url: http://localhost:8080/auth/realms/moped/protocol/openid-connect/certs
     - name: local sts secret server
       iss-url:  http://localhost:8885
       jwks-url:  http://localhost:8885/pop

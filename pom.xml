@@ -90,6 +90,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>com.nitorcreations</groupId>
+                <artifactId>junit-runners</artifactId>
+                <version>1.3</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
                 <version>${jackson.version}</version>
