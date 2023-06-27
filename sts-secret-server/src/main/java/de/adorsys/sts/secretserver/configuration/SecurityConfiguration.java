@@ -56,7 +56,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public WebSecurityCustomizer customize() throws Exception {
+    public WebSecurityCustomizer customize() {
         return (web) -> web.ignoring().requestMatchers(
                 "/v2/api-docs",
                 "/swagger-resources",

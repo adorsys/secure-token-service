@@ -1,4 +1,4 @@
-package de.adorsys.sts.secretserver;
+package de.adorsys.sts.x;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
@@ -6,17 +6,22 @@ import de.adorsys.sts.keymanagement.service.DecryptionService;
 import de.adorsys.sts.secretserver.configuration.TestConfiguration;
 import de.adorsys.sts.secretserver.helper.Authentication;
 import de.adorsys.sts.token.api.TokenResponse;
+import de.adorsys.sts.token.tokenexchange.client.RestTokenExchangeClient;
 import de.adorsys.sts.tokenauth.BearerToken;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Container;
 
 import java.util.Map;
@@ -25,8 +30,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-@SpringBootTest(properties="spring.main.banner-mode=off", webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@ExtendWith(SpringExtension.class)
+@SpringBootTest(properties = "spring.main.banner-mode=off", webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("IT")
 @DirtiesContext
 @ContextConfiguration(
@@ -45,12 +49,17 @@ public class SecretServerTestNew {
 
     @Autowired
     DecryptionService decryptionService;
-    @Autowired
-    BearerTokenValidator bearerTokenValidator;
+
     @Autowired
     Authentication authentication;
 
+    @Autowired
+    BearerTokenValidator bearerTokenValidator;
 
+    @Autowired
+    TestRestTemplate restTemplate;
+
+    private RestTokenExchangeClient client;
 
     @Container
     public KeycloakContainer keycloak = new KeycloakContainer().withAdminUsername("admin")
@@ -58,8 +67,16 @@ public class SecretServerTestNew {
             .withRealmImportFile("moped.json")
             .withAdminPassword("datevsb_12345");
 
+    @Before
+    public void setup() {
+        RestTemplate restTemplate = this.restTemplate.getRestTemplate();
+        restTemplate.setErrorHandler(new DefaultResponseErrorHandler());
+
+        client = new RestTokenExchangeClient(restTemplate);
+    }
+
     @Test
-    public void shouldReturnTheSameSecretForSameUser() {
+    void shouldReturnTheSameSecretForSameUser() {
         String firstSecret = getDecryptedSecret(USERNAME_ONE, PASSWORD_ONE);
         String secondSecret = getDecryptedSecret(USERNAME_ONE, PASSWORD_ONE);
 
@@ -87,6 +104,10 @@ public class SecretServerTestNew {
 
     private TokenResponse getSecretServerToken(String username, String password) {
         Authentication.AuthenticationToken authToken = authentication.login(username, password);
-        return null;
+        return getTokenForAccessToken(authToken.getAccessToken());
+    }
+
+    private TokenResponse getTokenForAccessToken(String accessToken) {
+        return client.exchangeToken("/secret-server/token-exchange", MOPED_CLIENT_AUDIENCE, accessToken);
     }
 }

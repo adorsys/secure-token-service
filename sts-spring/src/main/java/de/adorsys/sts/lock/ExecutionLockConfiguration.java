@@ -31,7 +31,6 @@ public class ExecutionLockConfiguration {
     @Bean
     LockClient lockClient(LockProvider lockProvider) {
         LockingTaskExecutor executor = new DefaultLockingTaskExecutor(lockProvider);
-        Instant lockAtMostUntil = Instant.now().plus(expiry);
         return (rotationLockName, toExecute) ->
                 executor.executeWithLock(toExecute, new LockConfiguration(Instant.now(), rotationLockName, expiry, Duration.of(5, ChronoUnit.MILLIS)));
     }
