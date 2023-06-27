@@ -31,10 +31,10 @@ public class SecurityConfiguration {
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
-                .authorizeHttpRequests()
-                    .requestMatchers(HttpMethod.GET, "/pop").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
-                    .anyRequest().authenticated()
+                .authorizeHttpRequests((requests) ->requests.requestMatchers(HttpMethod.GET, "/pop").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+                        .anyRequest().authenticated())
+
         ;
         // @formatter:on
         http.addFilterBefore(new JWTAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class);

@@ -23,6 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Map;
 
@@ -33,6 +34,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 @SpringBootTest(properties = "spring.main.banner-mode=off", webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("IT")
 @DirtiesContext
+@Testcontainers
 @ContextConfiguration(
         classes = {TestConfiguration.class},
         initializers = {ConfigDataApplicationContextInitializer.class}
