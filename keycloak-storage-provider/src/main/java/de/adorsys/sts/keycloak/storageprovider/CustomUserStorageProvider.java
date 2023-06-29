@@ -72,27 +72,6 @@ public class CustomUserStorageProvider implements UserStorageProvider, UserLooku
 
     }
 
-    @Override
-    public UserModel getUserById(String s, RealmModel realmModel) {
-        String username = extractUsernameFromId(s);
-        return getUserByUsername(username, realmModel);
-    }
-
-    @Override
-    public UserModel getUserByUsername(String s, final RealmModel realmModel) {
-        return CustomUser.builder()
-                .session(session)
-                .storageProviderModel(model)
-                .realm(realmModel)
-                .username(s)
-                .build();
-    }
-
-    @Override
-    public UserModel getUserByEmail(String s, RealmModel realmModel) {
-        return null;
-    }
-
     private String extractUsernameFromId(String id) {
         Matcher matcher = PATTERN.matcher(id);
 
@@ -101,5 +80,26 @@ public class CustomUserStorageProvider implements UserStorageProvider, UserLooku
         } else {
             return id;
         }
+    }
+
+    @Override
+    public UserModel getUserById(RealmModel realmModel, String s) {
+        String username = extractUsernameFromId(s);
+        return getUserByUsername(realmModel, username);
+    }
+
+    @Override
+    public UserModel getUserByUsername(RealmModel realmModel, String s) {
+        return (UserModel) CustomUser.builder()
+                .session(session)
+                .storageProviderModel(model)
+                .realm(realmModel)
+                .username(s)
+                .build();
+    }
+
+    @Override
+    public UserModel getUserByEmail(RealmModel realmModel, String s) {
+        return null;
     }
 }

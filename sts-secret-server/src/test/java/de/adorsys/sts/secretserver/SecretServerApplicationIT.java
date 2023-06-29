@@ -16,7 +16,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.representations.AccessTokenResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
@@ -33,6 +32,7 @@ import org.springframework.web.client.RestTemplate;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import static com.googlecode.catchexception.CatchException.catchException;
@@ -80,27 +80,29 @@ public class SecretServerApplicationIT {
 
     private RestTokenExchangeClient client;
 
-
-    @Container
     public KeycloakContainer keycloak = new KeycloakContainer().withAdminUsername("admin")
             .withProviderClassesFrom("target/classes/")
             .withRealmImportFile("moped.json")
             .withAdminPassword("admin123").withContextPath("/auth/");
 
+
     @BeforeEach
-    public void setup() throws Exception {
+    void setup() {
+        keycloak.setPortBindings(Arrays.asList("8080:8080"));
+        keycloak.start();
+
         RestTemplate restTemplate = this.restTemplate.getRestTemplate();
         restTemplate.setErrorHandler(new DefaultResponseErrorHandler());
         client = new RestTokenExchangeClient(restTemplate);
-        RestAssured.baseURI=keycloak.getAuthServerUrl();
-        RestAssured.port=keycloak.getHttpPort();
+        RestAssured.baseURI = keycloak.getAuthServerUrl();
+        RestAssured.port = keycloak.getHttpPort();
         properties.getAuthservers().get(0).setIssUrl("http://localhost:" + keycloak.getHttpPort() + "/auth/realms/moped");
-        properties.getAuthservers().get(0).setJwksUrl("http://localhost:"+ keycloak.getHttpPort() + "/auth/realms/moped/protocol/openid-connect/certs");
+        properties.getAuthservers().get(0).setJwksUrl("http://localhost:" + keycloak.getHttpPort() + "/auth/realms/moped/protocol/openid-connect/certs");
     }
 
 
-        @Test
-    public void shouldReturnTheSameSecretForSameUser() throws Exception {
+    @Test
+    void shouldReturnTheSameSecretForSameUser() throws Exception {
         String firstSecret = getDecryptedSecret(USERNAME_ONE, PASSWORD_ONE);
         String secondSecret = getDecryptedSecret(USERNAME_ONE, PASSWORD_ONE);
 
@@ -108,7 +110,7 @@ public class SecretServerApplicationIT {
     }
 
     //    @Test
-    public void shouldReturnDifferentSecretsForDifferentUsers() throws Exception {
+    void shouldReturnDifferentSecretsForDifferentUsers() throws Exception {
         String firstSecret = getDecryptedSecret(USERNAME_ONE, PASSWORD_ONE);
         String secondSecret = getDecryptedSecret(USERNAME_TWO, PASSWORD_TWO);
 
@@ -116,7 +118,7 @@ public class SecretServerApplicationIT {
     }
 
     //    @Test
-    public void shouldNotReturnTheSameTokenForSameUser() throws Exception {
+    void shouldNotReturnTheSameTokenForSameUser() throws Exception {
         TokenResponse firstTokenResponse = getSecretServerToken(USERNAME_ONE, PASSWORD_ONE);
         assertThat(firstTokenResponse.getAccess_token(), is(notNullValue()));
 
@@ -127,7 +129,7 @@ public class SecretServerApplicationIT {
     }
 
     //    @Test
-    public void shouldNotGetSecretForInvalidAccessToken() throws Exception {
+    void shouldNotGetSecretForInvalidAccessToken() throws Exception {
         final String invalidAccessToken = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJvVjU2Uk9namthbTVzUmVqdjF6b1JVNmY" +
                 "1R3YtUGRTdjN2b1ZfRVY5MmxnIn0.eyJqdGkiOiI5NWY2MzQ4NC04MTk2LTQ2NzYtYjI4Ni1lYjY4YTFmOTZmYTAiLCJleHAiOjE1N" +
                 "TUwNDg5MzIsIm5iZiI6MCwiaWF0IjoxNTU1MDQ4NjMyLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMyODU0L2F1dGgvcmVhbG1zL21" +
@@ -151,7 +153,7 @@ public class SecretServerApplicationIT {
     }
 
     //    @Test
-    public void shouldNotGetSecretForFakeAccessToken() throws Exception {
+    void shouldNotGetSecretForFakeAccessToken() throws Exception {
         final String fakeAccessToken = "my fake access token";
 
         catchException(client).exchangeToken("/secret-server/token-exchange", MOPED_CLIENT_AUDIENCE, fakeAccessToken);
@@ -163,7 +165,7 @@ public class SecretServerApplicationIT {
     }
 
     //    @Test
-    public void shouldGetEmptySecretsForUnknownAudience() throws Exception {
+    void shouldGetEmptySecretsForUnknownAudience() throws Exception {
         Authentication.AuthenticationToken authToken = authentication.login(USERNAME_ONE, PASSWORD_ONE);
 
         TokenResponse secretServerToken = client.exchangeToken("/secret-server/token-exchange", "unknown audience", authToken.getAccessToken());
@@ -192,17 +194,12 @@ public class SecretServerApplicationIT {
     }
 
     private TokenResponse getSecretServerToken(String username, String password) {
-        Keycloak keycloakAdminClient = KeycloakBuilder.builder()
-                .serverUrl(keycloak.getAuthServerUrl())
-                .realm("moped")
-                .clientId("moped-client")
-                .username(username)
-                .password(password)
-                .clientSecret("my-special-client-secret")
-                .build();
-        AccessTokenResponse response = keycloakAdminClient.tokenManager().getAccessToken();
-        log.info("Access-Token: " + response.getToken());
-        return getTokenForAccessToken(response.getToken());
+
+        Keycloak keycloakAdminClient = keycloak.getKeycloakAdminClient();
+        AccessTokenResponse accessToken = keycloakAdminClient.tokenManager().getAccessToken();
+
+        log.info("Access-Token: " + accessToken.getToken());
+        return getTokenForAccessToken(accessToken.getToken());
     }
 
     private TokenResponse getTokenForAccessToken(String accessToken) {

@@ -4,7 +4,7 @@ import de.adorsys.sts.keycloak.util.ImmutableList;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
-import org.keycloak.storage.adapter.AbstractUserAdapter;
+import org.keycloak.storage.adapter.AbstractUserAdapterFederatedStorage;
 
 import java.util.List;
 import java.util.Map;
