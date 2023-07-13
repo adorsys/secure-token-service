@@ -4,19 +4,14 @@ import de.adorsys.sts.keycloak.util.ImmutableList;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
-import org.keycloak.storage.adapter.AbstractUserAdapterFederatedStorage;
+import org.keycloak.storage.adapter.AbstractUserAdapter;
 
 import java.util.List;
-import java.util.Map;
 
 public class CustomUser extends AbstractUserAdapter {
     private static final List<String> EMPTY = new ImmutableList<>();
 
     private final String username;
-
-    private List<String> roles;
-
-    private Map<String, String> secrets;
 
     private CustomUser(
             KeycloakSession session,
@@ -31,22 +26,6 @@ public class CustomUser extends AbstractUserAdapter {
     @Override
     public String getUsername() {
         return username;
-    }
-
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
-    }
-
-    public Map<String, String> getSecrets() {
-        return secrets;
-    }
-
-    public void setSecrets(Map<String, String> secrets) {
-        this.secrets = secrets;
     }
 
     @Override

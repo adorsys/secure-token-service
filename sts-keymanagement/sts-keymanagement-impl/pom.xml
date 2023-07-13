@@ -22,6 +22,7 @@
         <dependency>
             <groupId>de.adorsys.keymanagement</groupId>
             <artifactId>core</artifactId>
+            <version>0.0.7</version>
         </dependency>
 
         <dependency>
@@ -48,6 +49,7 @@
         <dependency>
             <groupId>de.adorsys.keymanagement</groupId>
             <artifactId>juggler-bouncycastle</artifactId>
+            <version>0.0.7</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

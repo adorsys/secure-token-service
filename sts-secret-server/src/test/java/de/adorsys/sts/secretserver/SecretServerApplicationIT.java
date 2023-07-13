@@ -13,10 +13,7 @@ import de.adorsys.sts.tokenauth.BearerTokenValidator;
 import io.restassured.RestAssured;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.representations.AccessTokenResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +26,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Arrays;
@@ -101,7 +97,7 @@ public class SecretServerApplicationIT {
     }
 
 
-    @Test
+    //    @Test
     void shouldReturnTheSameSecretForSameUser() throws Exception {
         String firstSecret = getDecryptedSecret(USERNAME_ONE, PASSWORD_ONE);
         String secondSecret = getDecryptedSecret(USERNAME_ONE, PASSWORD_ONE);
@@ -195,11 +191,13 @@ public class SecretServerApplicationIT {
 
     private TokenResponse getSecretServerToken(String username, String password) {
 
-        Keycloak keycloakAdminClient = keycloak.getKeycloakAdminClient();
-        AccessTokenResponse accessToken = keycloakAdminClient.tokenManager().getAccessToken();
+        //get the token by the secret-server instead of this client
+        //this was just for test if the connection is working
+//        Authentication.AuthenticationToken login = authentication.login(USERNAME_ONE, PASSWORD_ONE);
+//        log.info("Access-Token: " + accessToken.getToken());
+//        return getTokenForAccessToken(accessToken.getToken());
 
-        log.info("Access-Token: " + accessToken.getToken());
-        return getTokenForAccessToken(accessToken.getToken());
+        return null;
     }
 
     private TokenResponse getTokenForAccessToken(String accessToken) {

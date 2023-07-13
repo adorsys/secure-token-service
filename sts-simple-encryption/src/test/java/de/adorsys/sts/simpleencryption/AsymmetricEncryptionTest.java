@@ -3,7 +3,6 @@ package de.adorsys.sts.simpleencryption;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.RSAKey;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,13 +15,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 
 public class AsymmetricEncryptionTest {
 
@@ -43,7 +40,7 @@ public class AsymmetricEncryptionTest {
     }
 
     @Test
-    public void shouldDecryptEncryptedText() throws Exception {
+    public void shouldDecryptEncryptedText() {
         String plainText = "my super secret plain text which needs to be encrypted";
         String encrypted = objectEncryption.encrypt(plainText);
 
@@ -53,7 +50,7 @@ public class AsymmetricEncryptionTest {
     }
 
     @Test
-    public void shouldDecryptEncryptedObject() throws Exception {
+    public void shouldDecryptEncryptedObject() {
         TestObject plainObject = getTestObject();
         String encrypted = objectEncryption.encrypt(plainObject);
 
@@ -74,18 +71,15 @@ public class AsymmetricEncryptionTest {
                 otherKeyPairAsJson
         );
 
-        catchException(decryptionWithWrongKey).decrypt(encrypted);
 
-        Assert.assertThat(caughtException(),
-                allOf(
-                        instanceOf(EncryptionException.class)
-                )
-        );
+        EncryptionException exception = assertThrows(EncryptionException.class, () -> decryptionWithWrongKey.decrypt(encrypted));
+
+        assertNotNull(exception);
     }
 
     @Test
     public void shouldNotDecryptEncryptedObjectWithWrongKey() throws Exception {
-        TestObject plainObject = getTestObject();;
+        TestObject plainObject = getTestObject();
         String encrypted = objectEncryption.encrypt(plainObject);
 
         String otherKeyPairAsJson = createKeyPair();
@@ -95,13 +89,9 @@ public class AsymmetricEncryptionTest {
                 otherKeyPairAsJson
         );
 
-        catchException(decryptionWithWrongKey).decrypt(encrypted, TestObject.class);
+        EncryptionException exception = assertThrows(EncryptionException.class, () -> decryptionWithWrongKey.decrypt(encrypted, TestObject.class));
 
-        Assert.assertThat(caughtException(),
-                allOf(
-                        instanceOf(EncryptionException.class)
-                )
-        );
+        assertNotNull(exception);
     }
 
     private String createKeyPair() throws NoSuchAlgorithmException {
@@ -110,8 +100,8 @@ public class AsymmetricEncryptionTest {
 
         KeyPair keyPair = keyGen.genKeyPair();
 
-        JWK jwk = new RSAKey.Builder((RSAPublicKey)keyPair.getPublic())
-                .privateKey((RSAPrivateKey)keyPair.getPrivate())
+        JWK jwk = new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
+                .privateKey((RSAPrivateKey) keyPair.getPrivate())
                 .keyUse(KeyUse.ENCRYPTION)
                 .keyID(UUID.randomUUID().toString())
                 .build();

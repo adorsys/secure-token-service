@@ -50,8 +50,7 @@ public class CustomUserStorageProvider implements UserStorageProvider, UserLooku
             throw new IllegalStateException("STS login endpoint address is not set but mandatory");
         }
 
-        if (credentialInput instanceof UserCredentialModel) {
-            UserCredentialModel credentialInputModel = (UserCredentialModel) credentialInput;
+        if (credentialInput instanceof UserCredentialModel credentialInputModel) {
             String password = credentialInputModel.getValue();
             List<String> audiences = AuthenticatorUtil.extractAudiences(credentialInputModel);
 
@@ -82,15 +81,16 @@ public class CustomUserStorageProvider implements UserStorageProvider, UserLooku
         }
     }
 
+
     @Override
-    public UserModel getUserById(RealmModel realmModel, String s) {
+    public UserModel getUserById(String s, RealmModel realmModel) {
         String username = extractUsernameFromId(s);
         return getUserByUsername(realmModel, username);
     }
 
     @Override
     public UserModel getUserByUsername(RealmModel realmModel, String s) {
-        return (UserModel) CustomUser.builder()
+        return CustomUser.builder()
                 .session(session)
                 .storageProviderModel(model)
                 .realm(realmModel)
@@ -99,7 +99,17 @@ public class CustomUserStorageProvider implements UserStorageProvider, UserLooku
     }
 
     @Override
+    public UserModel getUserByUsername(String s, RealmModel realmModel) {
+        return null;
+    }
+
+    @Override
     public UserModel getUserByEmail(RealmModel realmModel, String s) {
+        return null;
+    }
+
+    @Override
+    public UserModel getUserByEmail(String s, RealmModel realmModel) {
         return null;
     }
 }

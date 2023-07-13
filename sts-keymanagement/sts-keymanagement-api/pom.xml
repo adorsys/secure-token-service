@@ -15,10 +15,6 @@
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-common</artifactId>
         </dependency>
-        <dependency>
-            <groupId>de.adorsys.keymanagement</groupId>
-            <artifactId>api</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -30,6 +26,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.keymanagement</groupId>
+            <artifactId>api</artifactId>
         </dependency>
 
     </dependencies>
