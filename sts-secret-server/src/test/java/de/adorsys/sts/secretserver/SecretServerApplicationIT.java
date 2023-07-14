@@ -3,7 +3,6 @@ package de.adorsys.sts.secretserver;
 import com.nimbusds.jwt.JWTClaimsSet;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import de.adorsys.sts.keymanagement.service.DecryptionService;
-import de.adorsys.sts.secretserver.configuration.TestConfiguration;
 import de.adorsys.sts.secretserver.helper.Authentication;
 import de.adorsys.sts.token.api.TokenResponse;
 import de.adorsys.sts.token.authentication.AuthServerConfigurationProperties;
@@ -11,21 +10,20 @@ import de.adorsys.sts.token.tokenexchange.client.RestTokenExchangeClient;
 import de.adorsys.sts.tokenauth.BearerToken;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
 import io.restassured.RestAssured;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Arrays;
@@ -40,16 +38,12 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.hamcrest.core.IsNull.notNullValue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(
-        classes = {TestConfiguration.class},
-        initializers = {ConfigDataApplicationContextInitializer.class}
-)
-@SpringBootTest(properties = "spring.main.banner-mode=off", webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(properties = "spring.main.banner-mode=off",
+        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
+        classes = {TestConfiguration.class, SecretServerApplication.class})
 @ActiveProfiles("IT")
 @DirtiesContext
 @Testcontainers
-@Slf4j
 public class SecretServerApplicationIT {
     private static final String MOPED_CLIENT_AUDIENCE = "moped-client";
 
@@ -84,7 +78,7 @@ public class SecretServerApplicationIT {
 
     @BeforeEach
     void setup() {
-        keycloak.setPortBindings(Arrays.asList("8080:8080"));
+        keycloak.setPortBindings(Arrays.asList("9090:8080"));
         keycloak.start();
 
         RestTemplate restTemplate = this.restTemplate.getRestTemplate();
@@ -97,8 +91,8 @@ public class SecretServerApplicationIT {
     }
 
 
-    //    @Test
-    void shouldReturnTheSameSecretForSameUser() throws Exception {
+    @Test
+    void shouldReturnTheSameSecretForSameUser() {
         String firstSecret = getDecryptedSecret(USERNAME_ONE, PASSWORD_ONE);
         String secondSecret = getDecryptedSecret(USERNAME_ONE, PASSWORD_ONE);
 
@@ -191,13 +185,9 @@ public class SecretServerApplicationIT {
 
     private TokenResponse getSecretServerToken(String username, String password) {
 
-        //get the token by the secret-server instead of this client
-        //this was just for test if the connection is working
-//        Authentication.AuthenticationToken login = authentication.login(USERNAME_ONE, PASSWORD_ONE);
-//        log.info("Access-Token: " + accessToken.getToken());
-//        return getTokenForAccessToken(accessToken.getToken());
-
-        return null;
+        Authentication.AuthenticationToken authentication = this.authentication.login(username, password);
+        String accessToken = authentication.getAccessToken();
+        return getTokenForAccessToken(accessToken);
     }
 
     private TokenResponse getTokenForAccessToken(String accessToken) {

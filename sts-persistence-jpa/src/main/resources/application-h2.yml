@@ -3,16 +3,19 @@ spring:
     include: jpa
 
   liquibase:
-    default-schema: public
+    default-schema: false
+    change-log: classpath:db/migration/liquibase/changelog.yml
+    enabled: true
 
   flyway:
     locations:
     - classpath:/db/migration/flyway/h2
+    enabled: false
 
   datasource:
-    url: jdbc:h2:./sts_h2_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:./sts;INIT=CREATE SCHEMA IF NOT EXISTS sts;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
   jpa:
-    generate-ddl: false
+    generate-ddl: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     database-platform: org.hibernate.dialect.H2Dialect

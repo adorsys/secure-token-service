@@ -63,7 +63,7 @@
         <surefire.version>3.0.0-M4</surefire.version>
         <jacoco.version>0.8.8</jacoco.version>
         <testcontainers.version>1.17.6</testcontainers.version>
-        <nimbus-jose-jwt.version>9.14</nimbus-jose-jwt.version>
+        <nimbus-jose-jwt.version>9.31</nimbus-jose-jwt.version>
         <scmBranch/>
     </properties>
 

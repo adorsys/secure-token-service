@@ -1,6 +1,9 @@
 spring:
   jpa:
     open-in-view: false
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
 
   autoconfigure:
     exclude:

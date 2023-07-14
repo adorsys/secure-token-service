@@ -20,19 +20,19 @@ public class DatabaseSecretRepository implements SecretRepository {
 
     @Override
     public Secret get(String subject) {
-        JpaSecret foundSecret = jpaSecretRepository.findBySubject(subject);
+        JpaSecret foundSecret = jpaSecretRepository.findJpaSecretBySubject(subject);
         return mapFromEntity(foundSecret);
     }
 
     @Override
     public Optional<Secret> tryToGet(String subject) {
-        JpaSecret foundSecret = jpaSecretRepository.findBySubject(subject);
+        JpaSecret foundSecret = jpaSecretRepository.findJpaSecretBySubject(subject);
         return Optional.ofNullable(foundSecret).map(this::mapFromEntity);
     }
 
     @Override
     public void save(String subject, Secret secret) {
-        JpaSecret foundSecret = jpaSecretRepository.findBySubject(subject);
+        JpaSecret foundSecret = jpaSecretRepository.findJpaSecretBySubject(subject);
 
         JpaSecret secretToSave;
         if(foundSecret == null) {
