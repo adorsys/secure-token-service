@@ -4,6 +4,8 @@ import de.adorsys.sts.persistence.jpa.entity.JpaSecret;
 import de.adorsys.sts.persistence.jpa.repository.JpaSecretRepository;
 import de.adorsys.sts.secret.Secret;
 import de.adorsys.sts.secret.SecretRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,9 @@ import java.util.Optional;
 @Transactional
 public class DatabaseSecretRepository implements SecretRepository {
     private final JpaSecretRepository jpaSecretRepository;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     public DatabaseSecretRepository(JpaSecretRepository jpaSecretRepository) {
         this.jpaSecretRepository = jpaSecretRepository;

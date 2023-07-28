@@ -5,6 +5,8 @@ import de.adorsys.sts.secret.SecretEncryptionException;
 import de.adorsys.sts.secret.SecretReadException;
 import de.adorsys.sts.secret.SecretRepository;
 import de.adorsys.sts.simpleencryption.ObjectEncryption;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import java.util.Objects;
 import java.util.Optional;

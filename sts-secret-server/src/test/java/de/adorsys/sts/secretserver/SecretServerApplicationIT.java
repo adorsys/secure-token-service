@@ -3,6 +3,7 @@ package de.adorsys.sts.secretserver;
 import com.nimbusds.jwt.JWTClaimsSet;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import de.adorsys.sts.keymanagement.service.DecryptionService;
+import de.adorsys.sts.persistence.jpa.repository.JpaSecretRepository;
 import de.adorsys.sts.secretserver.helper.Authentication;
 import de.adorsys.sts.token.api.TokenResponse;
 import de.adorsys.sts.token.authentication.AuthServerConfigurationProperties;
@@ -40,7 +41,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 
 @SpringBootTest(properties = "spring.main.banner-mode=off",
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-        classes = {TestConfiguration.class, SecretServerApplication.class})
+        classes = {SecretServerApplication.class})
 @ActiveProfiles("IT")
 @DirtiesContext
 @Testcontainers
@@ -52,6 +53,9 @@ public class SecretServerApplicationIT {
 
     private static final String USERNAME_TWO = "user2";
     private static final String PASSWORD_TWO = "user2_pwd";
+
+    @Autowired
+    private JpaSecretRepository jpaSecretRepository;
 
     @Autowired
     TestRestTemplate restTemplate;
