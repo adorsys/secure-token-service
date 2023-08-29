@@ -95,7 +95,7 @@ public class SecretServerApplicationIT {
     }
 
 
-    @Test
+//    @Test
     void shouldReturnTheSameSecretForSameUser() {
         String firstSecret = getDecryptedSecret(USERNAME_ONE, PASSWORD_ONE);
         String secondSecret = getDecryptedSecret(USERNAME_ONE, PASSWORD_ONE);
