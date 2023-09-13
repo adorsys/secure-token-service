@@ -3,11 +3,11 @@ package de.adorsys.sts.persistence.jpa.entity;
 import de.adorsys.sts.keymanagement.model.KeyState;
 import de.adorsys.sts.keymanagement.model.KeyUsage;
 import de.adorsys.sts.persistence.jpa.mapping.ZonedDateTimeConverter;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.time.ZonedDateTime;
 
 @Getter
@@ -18,7 +18,7 @@ import java.time.ZonedDateTime;
 public class JpaKeyEntryAttributes {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long keyStoreId;

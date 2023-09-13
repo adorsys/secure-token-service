@@ -3,7 +3,6 @@ package de.adorsys.sts.simpleencryption;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,13 +13,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 
 
 public class SymmetricEncryptionTest {
@@ -44,7 +41,7 @@ public class SymmetricEncryptionTest {
     }
 
     @Test
-    public void shouldDecryptEncryptedText() throws Exception {
+    public void shouldDecryptEncryptedText() {
         String plainText = "my super secret plain text which needs to be encrypted";
         String encrypted = objectEncryption.encrypt(plainText);
 
@@ -54,7 +51,7 @@ public class SymmetricEncryptionTest {
     }
 
     @Test
-    public void shouldDecryptEncryptedObject() throws Exception {
+    public void shouldDecryptEncryptedObject() {
         TestObject plainObject = getTestObject();
         String encrypted = objectEncryption.encrypt(plainObject);
 
@@ -74,19 +71,14 @@ public class SymmetricEncryptionTest {
                 A_256_GCM_ENCRYPTION_METHOD_NAME,
                 otherSecretKeyAsJson
         );
+        EncryptionException exception = assertThrows(EncryptionException.class, () -> decryptionWithWrongKey.decrypt(encrypted));
 
-        catchException(decryptionWithWrongKey).decrypt(encrypted);
-
-        Assert.assertThat(caughtException(),
-                allOf(
-                        instanceOf(EncryptionException.class)
-                )
-        );
+        assertNotNull(exception);
     }
 
     @Test
     public void shouldNotDecryptEncryptedObjectWithWrongKey() throws Exception {
-        TestObject plainObject = getTestObject();;
+        TestObject plainObject = getTestObject();
         String encrypted = objectEncryption.encrypt(plainObject);
 
         String otherSecretKeyAsJson = createSecretKey();
@@ -96,13 +88,9 @@ public class SymmetricEncryptionTest {
                 otherSecretKeyAsJson
         );
 
-        catchException(decryptionWithWrongKey).decrypt(encrypted, TestObject.class);
+        EncryptionException exception = assertThrows(EncryptionException.class, () -> decryptionWithWrongKey.decrypt(encrypted, TestObject.class));
 
-        Assert.assertThat(caughtException(),
-                allOf(
-                        instanceOf(EncryptionException.class)
-                )
-        );
+        assertNotNull(exception);
     }
 
     private String createSecretKey() throws NoSuchAlgorithmException {

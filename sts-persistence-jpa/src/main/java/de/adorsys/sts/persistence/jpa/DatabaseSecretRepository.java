@@ -4,6 +4,8 @@ import de.adorsys.sts.persistence.jpa.entity.JpaSecret;
 import de.adorsys.sts.persistence.jpa.repository.JpaSecretRepository;
 import de.adorsys.sts.secret.Secret;
 import de.adorsys.sts.secret.SecretRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,25 +16,28 @@ import java.util.Optional;
 public class DatabaseSecretRepository implements SecretRepository {
     private final JpaSecretRepository jpaSecretRepository;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
     public DatabaseSecretRepository(JpaSecretRepository jpaSecretRepository) {
         this.jpaSecretRepository = jpaSecretRepository;
     }
 
     @Override
     public Secret get(String subject) {
-        JpaSecret foundSecret = jpaSecretRepository.findBySubject(subject);
+        JpaSecret foundSecret = jpaSecretRepository.findJpaSecretBySubject(subject);
         return mapFromEntity(foundSecret);
     }
 
     @Override
     public Optional<Secret> tryToGet(String subject) {
-        JpaSecret foundSecret = jpaSecretRepository.findBySubject(subject);
+        JpaSecret foundSecret = jpaSecretRepository.findJpaSecretBySubject(subject);
         return Optional.ofNullable(foundSecret).map(this::mapFromEntity);
     }
 
     @Override
     public void save(String subject, Secret secret) {
-        JpaSecret foundSecret = jpaSecretRepository.findBySubject(subject);
+        JpaSecret foundSecret = jpaSecretRepository.findJpaSecretBySubject(subject);
 
         JpaSecret secretToSave;
         if(foundSecret == null) {

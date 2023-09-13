@@ -50,8 +50,7 @@ public class CustomUserStorageProvider implements UserStorageProvider, UserLooku
             throw new IllegalStateException("STS login endpoint address is not set but mandatory");
         }
 
-        if (credentialInput instanceof UserCredentialModel) {
-            UserCredentialModel credentialInputModel = (UserCredentialModel) credentialInput;
+        if (credentialInput instanceof UserCredentialModel credentialInputModel) {
             String password = credentialInputModel.getValue();
             List<String> audiences = AuthenticatorUtil.extractAudiences(credentialInputModel);
 
@@ -72,14 +71,25 @@ public class CustomUserStorageProvider implements UserStorageProvider, UserLooku
 
     }
 
+    private String extractUsernameFromId(String id) {
+        Matcher matcher = PATTERN.matcher(id);
+
+        if (matcher.matches()) {
+            return matcher.group(1);
+        } else {
+            return id;
+        }
+    }
+
+
     @Override
     public UserModel getUserById(String s, RealmModel realmModel) {
         String username = extractUsernameFromId(s);
-        return getUserByUsername(username, realmModel);
+        return getUserByUsername(realmModel, username);
     }
 
     @Override
-    public UserModel getUserByUsername(String s, final RealmModel realmModel) {
+    public UserModel getUserByUsername(RealmModel realmModel, String s) {
         return CustomUser.builder()
                 .session(session)
                 .storageProviderModel(model)
@@ -89,17 +99,17 @@ public class CustomUserStorageProvider implements UserStorageProvider, UserLooku
     }
 
     @Override
-    public UserModel getUserByEmail(String s, RealmModel realmModel) {
+    public UserModel getUserByUsername(String s, RealmModel realmModel) {
         return null;
     }
 
-    private String extractUsernameFromId(String id) {
-        Matcher matcher = PATTERN.matcher(id);
+    @Override
+    public UserModel getUserByEmail(RealmModel realmModel, String s) {
+        return null;
+    }
 
-        if (matcher.matches()) {
-            return matcher.group(1);
-        } else {
-            return id;
-        }
+    @Override
+    public UserModel getUserByEmail(String s, RealmModel realmModel) {
+        return null;
     }
 }

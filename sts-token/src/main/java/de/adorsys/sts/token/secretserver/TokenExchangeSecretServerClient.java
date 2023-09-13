@@ -1,6 +1,8 @@
 package de.adorsys.sts.token.secretserver;
 
-import com.nimbusds.jose.shaded.json.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.sts.keymanagement.service.DecryptionService;
 import de.adorsys.sts.secret.SecretServerClient;
 import de.adorsys.sts.token.api.TokenResponse;
@@ -37,14 +39,23 @@ public class TokenExchangeSecretServerClient implements SecretServerClient {
         String exchangedAccessToken = tokenResponse.getAccess_token();
         BearerToken bearerToken = bearerTokenValidator.extract(exchangedAccessToken);
 
-        if(!bearerToken.isValid()) {
+        if (!bearerToken.isValid()) {
             throw new IllegalArgumentException("Exchanged token is invalid");
         }
 
-        JSONObject claims = new JSONObject(bearerToken.getClaims().toJSONObject());
-        JSONObject encryptedSecrets = (JSONObject)claims.get(TokenExchangeConstants.SECRETS_CLAIM_KEY);
 
-        String decryptedSecretForAudience = encryptedSecrets.get(audience).toString();
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode claims = null;
+
+        try {
+            claims = mapper.readTree(bearerToken.getClaims().toJSONObject().toString());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        JsonNode encryptedSecrets = claims.get(TokenExchangeConstants.SECRETS_CLAIM_KEY);
+
+        String decryptedSecretForAudience = encryptedSecrets.get(audience).asText();
 
         return decryptionService.decrypt(decryptedSecretForAudience);
     }

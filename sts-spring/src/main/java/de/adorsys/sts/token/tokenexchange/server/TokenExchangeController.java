@@ -17,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class TokenExchangeController {
 
@@ -38,7 +38,6 @@ public class TokenExchangeController {
                     name = "grant_type",
                     value = "Indicates that a token exchange is being performed.",
                     required = true,
-                    allowMultiple = false,
                     example = TokenExchangeConstants.TOKEN_EXCHANGE_OAUTH_GRANT_TYPE,
                     defaultValue = TokenExchangeConstants.TOKEN_EXCHANGE_OAUTH_GRANT_TYPE)
             @RequestParam(
@@ -49,7 +48,6 @@ public class TokenExchangeController {
             @ApiParam(
                     name = "resource",
                     value = "Indicates the physical location of the target service or resource where the client intends to use the requested security token.  This enables the authorization server to apply policy as appropriate for the target, such as determining the type and content of the token to be issued or if and how the token is to be encrypted.",
-                    required = false,
                     allowMultiple = true,
                     example = "http://localhost:8080/multibanking-service")
             @RequestParam(name = "resource", required = false) String[] resources,
@@ -57,7 +55,6 @@ public class TokenExchangeController {
             @ApiParam(
                     name = "audience",
                     value = "The logical name of the target service where the client intends to use the requested security token.  This serves a purpose similar to the resource parameter, but with the client providing a logical name rather than a physical location.",
-                    required = false,
                     allowMultiple = true,
                     example = "http://localhost:8080/multibanking-service")
             @RequestParam(name = "audience", required = false) String[] audiences,
@@ -65,7 +62,6 @@ public class TokenExchangeController {
             @ApiParam(
                     name = "scope",
                     value = "A list of space-delimited, case-sensitive strings that allow the client to specify the desired scope of the requested security token in the context of the service or resource where the token will be used.",
-                    required = false,
                     allowMultiple = false,
                     example = "user banking")
             @RequestParam(name = "scope", required = false) String scope,
