@@ -1,13 +1,13 @@
 package de.adorsys.sts.keyrotation;
 
 import de.adorsys.sts.keymanagement.config.KeyManagementRotationProperties;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 @Component
 @ConfigurationProperties(prefix = "sts.keymanagement.rotation")

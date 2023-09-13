@@ -6,38 +6,42 @@ services:
     environment:
       KEYCLOAK_PASSWORD: admin123
       KEYCLOAK_USER: admin
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin123
     ports:
       - "8080:8080"
       - "8787:8787"
     command:
-      - "-b"
-      - "0.0.0.0"
-      - "--debug"
+      - "start-dev"
     networks:
       - sts_network
   post_process:
-    image: adorsys/keycloak-config-cli:v0.6.6-6.0.1
+    image: adorsys/keycloak-config-cli:5.7.0-21.1.1
     volumes:
-      - ./keycloak-config/dev:/tmp/keycloak-config-cli/configs
+      - ./keycloak-config/dev:/config
     environment:
-      - KEYCLOAK_URL=http://keycloak:8080/auth
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin123
-      - WAIT_TIME_IN_SECONDS=120
-      - SPRING_PROFILES_INCLUDE=debug
+      KEYCLOAK_PASSWORD: admin123
+      KEYCLOAK_USER: admin
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_ADMIN : admin
+      KEYCLOAK_ADMIN_PASSWORD : admin123
+      WAIT_TIME_IN_SECONDS : 120
+      SPRING_PROFILES_INCLUDE : debug
     command: config-cli
     networks:
       - sts_network
+
   sts-mongo:
-    image: mongo:3.6.5
+    image: mongo:6.0.8
     container_name: sts_mongo
     environment:
       MONGO_INITDB_DATABASE: sts
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
       - "./.docker/sts-mongo:/data/db"
     ports:
       - 27017:27017
-    command: --smallfiles
     networks:
       - sts_network
 

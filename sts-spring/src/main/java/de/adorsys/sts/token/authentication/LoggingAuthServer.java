@@ -26,13 +26,5 @@ public class LoggingAuthServer extends AuthServer {
     @Override
     protected void onJsonWebKeySetRetrieved(List<JWK> jwks) {
         super.onJsonWebKeySetRetrieved(jwks);
-
-        if(LOG.isDebugEnabled()) {
-            try {
-                LOG.debug("Retrieved remote JWKS: {}", objectMapper.writeValueAsString(jwks));
-            } catch (JsonProcessingException e) {
-                LOG.debug("Retrieved remote JWKS: <unable to log JWKS>", e);
-            }
-        }
     }
 }

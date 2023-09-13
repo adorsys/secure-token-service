@@ -1,7 +1,9 @@
 package de.adorsys.sts.pop;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.shaded.json.JSONObject;
 import de.adorsys.sts.common.config.TokenResource;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +38,15 @@ public class PopController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Ok")})
     public ResponseEntity<String> getPublicKeys() {
         JWKSet publicKeys = popService.getPublicKeys();
-        JSONObject jsonObject = new JSONObject(publicKeys.toJSONObject());
-        return ResponseEntity.ok(jsonObject.toJSONString());
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonObject = null;
+        try {
+            jsonObject = mapper.readTree(publicKeys.toJSONObject().toString());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+// return response entity
+        return ResponseEntity.ok(jsonObject.toString());
     }
 }

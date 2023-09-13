@@ -1,9 +1,9 @@
 package de.adorsys.sts.persistence.jpa.entity;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
 
 @Getter
 @Setter
@@ -13,7 +13,7 @@ public class JpaSecret {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private int id;
 
     private String subject;
 
