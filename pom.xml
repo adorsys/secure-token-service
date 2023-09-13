@@ -565,6 +565,7 @@
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>3.0.1</version>
                         <configuration>
+                                <keyname>opensource@adorsys.de</keyname>
                             <gpgArguments>
                                 <arg>--pinentry-mode</arg>
                                 <arg>loopback</arg>
