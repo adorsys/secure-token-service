@@ -195,12 +195,6 @@
                             <goal>build-info</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>repackage</id>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
                 </executions>
             </plugin>
             <plugin>

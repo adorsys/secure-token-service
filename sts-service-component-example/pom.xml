@@ -43,11 +43,6 @@
                             <classifier>exec</classifier>
                         </configuration>
                     </execution>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
                 </executions>
             </plugin>
         </plugins>
