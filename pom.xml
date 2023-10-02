@@ -5,14 +5,12 @@
 
     <groupId>de.adorsys.sts</groupId>
     <artifactId>secure-token-service</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <packaging>pom</packaging>
 
     <name>SecureTokenService</name>
     <url>https://github.com/adorsys/secure-token-service</url>
     <description>SecureTokenService modules</description>
-
-
 
     <licenses>
         <license>
@@ -84,7 +82,7 @@
         <module>sts-secret</module>
         <module>sts-simple-encryption</module>
         <module>keycloak-storage-provider</module>
-<!--        <module>sts-e2e-tests</module>-->
+        <!--        <module>sts-e2e-tests</module>-->
     </modules>
 
     <dependencyManagement>
@@ -565,7 +563,7 @@
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>3.0.1</version>
                         <configuration>
-                                <keyname>opensource@adorsys.de</keyname>
+                            <keyname>opensource@adorsys.de</keyname>
                             <gpgArguments>
                                 <arg>--pinentry-mode</arg>
                                 <arg>loopback</arg>
@@ -603,6 +601,11 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>versions-maven-plugin</artifactId>
+                        <version>2.14.2</version>
                     </plugin>
                 </plugins>
             </build>
