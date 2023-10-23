@@ -1,7 +1,4 @@
 spring:
-  profiles:
-    include: jpa
-
   liquibase:
     default-schema: false
     change-log: classpath:db/migration/liquibase/changelog.yml

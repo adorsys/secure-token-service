@@ -1,7 +1,4 @@
 spring:
-  profiles:
-    include: jpa
-
   liquibase:
     default-schema: sts
 
@@ -14,4 +11,3 @@ spring:
   jpa:
     show-sql: false
     database-platform: org.hibernate.dialect.PostgreSQL94Dialect
-    properties.hibernate.temp.use_jdbc_metadata_defaults: false
