@@ -25,6 +25,11 @@
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-persistence-mongo</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>8.0.0.Final</version> <!-- Use the latest version -->
+        </dependency>
     </dependencies>
 
     <build>
@@ -32,7 +37,7 @@
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>    spring-boot-maven-plugin</artifactId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <executions>
                     <execution>
