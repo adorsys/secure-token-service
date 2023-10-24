@@ -36,7 +36,10 @@
                 <version>${spring-boot.version}</version>
                 <executions>
                     <execution>
-                        <id>repackage</id>
+                        <id>fat-jar</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
                         <configuration>
                             <classifier>exec</classifier>
                         </configuration>

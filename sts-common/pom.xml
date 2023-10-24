@@ -94,6 +94,17 @@
 						<configuration>
 							<jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=10022</jvmArguments>
 						</configuration>
+						<executions>
+							<execution>
+								<id>fat-jar</id>
+								<goals>
+									<goal>repackage</goal>
+								</goals>
+								<configuration>
+									<classifier>exec</classifier>
+								</configuration>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>
