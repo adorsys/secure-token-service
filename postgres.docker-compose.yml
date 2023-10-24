@@ -45,7 +45,7 @@ services:
       - SPRING_PROFILES_INCLUDE=debug
     command: config-cli
   sts-db:
-    image: postgres:9.6-alpine
+    image: postgres:latest
     container_name: sts_db
     environment:
       POSTGRES_USER: db_user
@@ -55,8 +55,8 @@ services:
       - "./.docker/sts-db/postgres:/var/lib/postgresql/data"
     ports:
       - 5432:5432
-    networks:
-      - sts_network
+#    networks:
+#      - sts_network
   sts:
     build: ./sts-example
     image: "local/sts-example:latest"

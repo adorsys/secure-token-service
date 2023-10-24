@@ -21,6 +21,13 @@ spring:
     default-schema: public
 
 sts:
+  secret-server-client:
+    audience: moped-client
+    secret-server-uri: http://localhost:8885/secret-server/token-exchange
+    cache:
+      enabled: true
+      maximum-size: 1000
+      expire-after-access: 10
   resource-server-management:
     resource-retriever:
       http-connect-timeout: 10000
