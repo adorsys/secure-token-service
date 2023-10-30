@@ -5,7 +5,7 @@
 
     <groupId>de.adorsys.sts</groupId>
     <artifactId>secure-token-service</artifactId>
-    <version>1.1.5</version>
+    <version>1.1.6</version>
     <packaging>pom</packaging>
 
     <name>SecureTokenService</name>
@@ -52,7 +52,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>3.0.6</spring-boot.version>
-        <keystore-management.version>0.0.8</keystore-management.version>
+        <keystore-management.version>0.0.9</keystore-management.version>
         <shedlock.version>5.3.0</shedlock.version>
         <springfox-swagger.version>3.0.0</springfox-swagger.version>
         <jackson.version>2.15.1</jackson.version>
@@ -544,7 +544,10 @@
                         <configuration>
                             <serverId>sonatype</serverId>
                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                            <skipStagingRepositoryClose>true</skipStagingRepositoryClose>
+                            <keepStagingRepositoryOnFailure>true</keepStagingRepositoryOnFailure>
+                            <stagingProgressTimeoutMinutes>10</stagingProgressTimeoutMinutes>
                         </configuration>
                     </plugin>
                     <plugin>
