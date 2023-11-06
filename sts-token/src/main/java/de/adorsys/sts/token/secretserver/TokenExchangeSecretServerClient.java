@@ -1,6 +1,5 @@
 package de.adorsys.sts.token.secretserver;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.sts.keymanagement.service.DecryptionService;
@@ -10,6 +9,8 @@ import de.adorsys.sts.token.tokenexchange.TokenExchangeClient;
 import de.adorsys.sts.token.tokenexchange.TokenExchangeConstants;
 import de.adorsys.sts.tokenauth.BearerToken;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
+
+import java.util.Map;
 
 public class TokenExchangeSecretServerClient implements SecretServerClient {
 
@@ -43,15 +44,10 @@ public class TokenExchangeSecretServerClient implements SecretServerClient {
             throw new IllegalArgumentException("Exchanged token is invalid");
         }
 
-
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode claims = null;
 
-        try {
-            claims = mapper.readTree(bearerToken.getClaims().toJSONObject().toString());
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        Map<String, Object> jsonObject = bearerToken.getClaims().toJSONObject();
+        JsonNode claims = mapper.convertValue(jsonObject, JsonNode.class);
 
         JsonNode encryptedSecrets = claims.get(TokenExchangeConstants.SECRETS_CLAIM_KEY);
 
