@@ -1,27 +1,28 @@
 package de.adorsys.sts.tokenauth;
 
 import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.KeySourceException;
 import com.nimbusds.jose.jwk.*;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.jwk.source.RemoteJWKSet;
 import com.nimbusds.jose.proc.SecurityContext;
-import org.apache.commons.lang3.time.DateUtils;
+import lombok.Getter;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Key;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AuthServer {
+    @Getter
     private String name;
-    private String issUrl;
-    private String jwksUrl;
+    @Getter
+    private final String issUrl;
+    private final String jwksUrl;
     private int refreshIntervalSeconds = 600;
 
-    private Date refreshExp = null;
-    private JWKSource<SecurityContext> jwkSource = null;
+    private final ConcurrentHashMap<String, JWK> jwkCache = new ConcurrentHashMap<>();
+    private long lastCacheUpdate = 0;
 
     public AuthServer(String name, String issUrl, String jwksUrl) {
         super();
@@ -38,30 +39,37 @@ public class AuthServer {
         this.refreshIntervalSeconds = refreshIntervalSeconds;
     }
 
-    public Key getJWK(String keyID) throws JsonWebKeyRetrievalException {
-        Date now = new Date();
-        if (refreshExp == null || now.after(refreshExp)) {
-            refreshExp = DateUtils.addSeconds(now, refreshIntervalSeconds);
-
-            try {
-                jwkSource = new RemoteJWKSet<>(new URL(this.jwksUrl));
-            } catch (MalformedURLException e) {
-                throw new JsonWebKeyRetrievalException(e);
-            }
-        }
-        JWKSelector jwkSelector = new JWKSelector(new JWKMatcher.Builder().keyID(keyID).build());
-
-        List<JWK> list;
+    private void updateJwkCache() throws JsonWebKeyRetrievalException {
         try {
-            list = jwkSource.get(jwkSelector, null);
-            onJsonWebKeySetRetrieved(list);
-        } catch (KeySourceException e) {
+            JWKSource<SecurityContext> jwkSource = new RemoteJWKSet<>(new URL(this.jwksUrl));
+            List<JWK> jwks = jwkSource.get(new JWKSelector(new JWKMatcher.Builder().build()), null);
+            onJsonWebKeySetRetrieved(jwks);
+
+            // Update the cache
+            jwkCache.clear();
+            for (JWK jwk : jwks) {
+                jwkCache.put(jwk.getKeyID(), jwk);
+            }
+            lastCacheUpdate = new Date().getTime();
+        } catch (Exception e) {
             throw new JsonWebKeyRetrievalException(e);
         }
+    }
 
-        if (list.isEmpty()) throw new JsonWebKeyRetrievalException("Unable to retrieve keys: received JWKSet is empty");
+    public Key getJWK(String keyID) throws JsonWebKeyRetrievalException {
+        Date now = new Date();
+        long currentTime = now.getTime();
 
-        JWK jwk = list.iterator().next();
+        // Check if the cache is still valid
+        if (currentTime - lastCacheUpdate > refreshIntervalSeconds * 1000L || jwkCache.isEmpty()) {
+            updateJwkCache();
+        }
+
+        JWK jwk = jwkCache.get(keyID);
+        if (jwk == null) {
+            throw new JsonWebKeyRetrievalException("Key with ID " + keyID + " not found in cache");
+        }
+
         if (jwk instanceof RSAKey) {
             try {
                 return ((RSAKey) jwk).toPublicKey();
@@ -75,42 +83,14 @@ public class AuthServer {
         }
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getIssUrl() {
-        return issUrl;
-    }
-
-    public void setIssUrl(String issUrl) {
-        this.issUrl = issUrl;
-    }
-
-    public String getJwksUrl() {
-        return jwksUrl;
-    }
-
-    public void setJwksUrl(String jwksUrl) {
-        this.jwksUrl = jwksUrl;
-    }
-
-    public int getRefreshIntervalSeconds() {
-        return refreshIntervalSeconds;
-    }
-
-    public void setRefreshIntervalSeconds(int refreshIntervalSeconds) {
-        this.refreshIntervalSeconds = refreshIntervalSeconds;
     }
 
     protected void onJsonWebKeySetRetrieved(List<JWK> jwks) {
     }
 
-    public class JsonWebKeyRetrievalException extends RuntimeException {
+    public static class JsonWebKeyRetrievalException extends RuntimeException {
         public JsonWebKeyRetrievalException(Throwable cause) {
             super(cause);
         }
