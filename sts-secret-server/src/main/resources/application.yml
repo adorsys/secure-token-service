@@ -26,6 +26,11 @@ spring:
       - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
       - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
 
+cors:
+  allowedOrigins: "*"
+  allowedHeaders: "*"
+  allowedMethods: GET,POST,PUT,DELETE
+
 sts:
   secret:
     secret-length: 2048

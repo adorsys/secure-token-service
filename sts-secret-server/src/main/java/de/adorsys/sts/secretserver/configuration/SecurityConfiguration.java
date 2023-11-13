@@ -15,6 +15,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -42,18 +44,19 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public CorsFilter corsFilter() {
+    public CorsFilter corsFilter(CorsProperties corsProperties) {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
+        Arrays.stream(corsProperties.getAllowedOrigins()).forEach(config::addAllowedOrigin);
+        config.addAllowedHeader(corsProperties.getAllowedHeaders());
+        Arrays.stream(corsProperties.getAllowedMethods()).forEach(config::addAllowedMethod);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
 
         return new CorsFilter(source);
     }
+
 
     @Bean
     public WebSecurityCustomizer customize() {
