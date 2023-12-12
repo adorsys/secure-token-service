@@ -15,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
@@ -23,8 +22,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Arrays;
@@ -95,7 +92,7 @@ public class SecretServerApplicationIT {
     }
 
 
-//    @Test
+    @Test
     void shouldReturnTheSameSecretForSameUser() {
         String firstSecret = getDecryptedSecret(USERNAME_ONE, PASSWORD_ONE);
         String secondSecret = getDecryptedSecret(USERNAME_ONE, PASSWORD_ONE);
@@ -103,7 +100,7 @@ public class SecretServerApplicationIT {
         assertThat(firstSecret, is(equalTo(secondSecret)));
     }
 
-    //    @Test
+    @Test
     void shouldReturnDifferentSecretsForDifferentUsers() throws Exception {
         String firstSecret = getDecryptedSecret(USERNAME_ONE, PASSWORD_ONE);
         String secondSecret = getDecryptedSecret(USERNAME_TWO, PASSWORD_TWO);
@@ -111,7 +108,7 @@ public class SecretServerApplicationIT {
         assertThat(firstSecret, is(not(equalTo(secondSecret))));
     }
 
-    //    @Test
+    @Test
     void shouldNotReturnTheSameTokenForSameUser() throws Exception {
         TokenResponse firstTokenResponse = getSecretServerToken(USERNAME_ONE, PASSWORD_ONE);
         assertThat(firstTokenResponse.getAccess_token(), is(notNullValue()));
@@ -122,7 +119,7 @@ public class SecretServerApplicationIT {
         assertThat(firstTokenResponse, is(not(equalTo(secondTokenResponse))));
     }
 
-    //    @Test
+        @Test
     void shouldNotGetSecretForInvalidAccessToken() throws Exception {
         final String invalidAccessToken = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJvVjU2Uk9namthbTVzUmVqdjF6b1JVNmY" +
                 "1R3YtUGRTdjN2b1ZfRVY5MmxnIn0.eyJqdGkiOiI5NWY2MzQ4NC04MTk2LTQ2NzYtYjI4Ni1lYjY4YTFmOTZmYTAiLCJleHAiOjE1N" +
@@ -158,7 +155,7 @@ public class SecretServerApplicationIT {
         assertThat(((HttpClientErrorException) caughtException).getStatusCode(), is(equalTo(HttpStatus.FORBIDDEN)));
     }
 
-    //    @Test
+    @Test
     void shouldGetEmptySecretsForUnknownAudience() throws Exception {
         Authentication.AuthenticationToken authToken = authentication.login(USERNAME_ONE, PASSWORD_ONE);
 

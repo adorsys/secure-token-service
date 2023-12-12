@@ -3,9 +3,12 @@ package de.adorsys.sts.tokenauth;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.*;
 import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.jwk.source.RemoteJWKSet;
+import com.nimbusds.jose.jwk.source.JWKSourceBuilder;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
 import java.security.Key;
@@ -13,35 +16,40 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 public class AuthServer {
+    @Setter
     @Getter
     private String name;
     @Getter
     private final String issUrl;
     private final String jwksUrl;
-    private int refreshIntervalSeconds = 600;
+    private final int refreshIntervalSeconds;
 
-    private final ConcurrentHashMap<String, JWK> jwkCache = new ConcurrentHashMap<>();
-    private long lastCacheUpdate = 0;
+    @Setter
+    JWKSource<SecurityContext> jwkSource;
+
+    final ConcurrentHashMap<String, JWK> jwkCache = new ConcurrentHashMap<>();
+    long lastCacheUpdate = 0;
 
     public AuthServer(String name, String issUrl, String jwksUrl) {
-        super();
-        this.name = name;
-        this.issUrl = issUrl;
-        this.jwksUrl = jwksUrl;
+        this(name, issUrl, jwksUrl, 600);
     }
 
+    @SneakyThrows
     public AuthServer(String name, String issUrl, String jwksUrl, int refreshIntervalSeconds) {
         super();
         this.name = name;
         this.issUrl = issUrl;
         this.jwksUrl = jwksUrl;
         this.refreshIntervalSeconds = refreshIntervalSeconds;
+
+        jwkSource = JWKSourceBuilder.create(new URL(this.jwksUrl)).build();
     }
 
     private void updateJwkCache() throws JsonWebKeyRetrievalException {
         try {
-            JWKSource<SecurityContext> jwkSource = new RemoteJWKSet<>(new URL(this.jwksUrl));
+
             List<JWK> jwks = jwkSource.get(new JWKSelector(new JWKMatcher.Builder().build()), null);
             onJsonWebKeySetRetrieved(jwks);
 
@@ -83,11 +91,8 @@ public class AuthServer {
         }
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     protected void onJsonWebKeySetRetrieved(List<JWK> jwks) {
+        log.info("Retrieved {} keys from {}", jwks.size(), jwksUrl);
     }
 
     public static class JsonWebKeyRetrievalException extends RuntimeException {

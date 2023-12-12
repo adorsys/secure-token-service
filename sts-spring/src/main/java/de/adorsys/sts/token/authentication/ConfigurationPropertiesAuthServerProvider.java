@@ -55,8 +55,7 @@ public class ConfigurationPropertiesAuthServerProvider implements AuthServersPro
                 properties.getName(),
                 properties.getIssUrl(),
                 properties.getJwksUrl(),
-                properties.getRefreshIntervalSeconds(),
-                objectMapper
+                properties.getRefreshIntervalSeconds()
         );
     }
 }

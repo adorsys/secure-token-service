@@ -12,8 +12,8 @@ import lombok.Setter;
 public class JpaSecret {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String subject;
 
