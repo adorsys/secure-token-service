@@ -2,6 +2,7 @@ package de.adorsys.sts.secretserver.configuration;
 
 import de.adorsys.sts.filter.JWTAuthenticationFilter;
 import de.adorsys.sts.token.authentication.TokenAuthenticationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,6 +23,9 @@ import java.util.Arrays;
 public class SecurityConfiguration {
 
 
+    @Autowired
+    private CorsProperties corsProperties;
+
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http, TokenAuthenticationService tokenAuthenticationService) throws Exception {
         // @formatter:off
@@ -40,11 +44,16 @@ public class SecurityConfiguration {
         ;
         // @formatter:on
         http.addFilterBefore(new JWTAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class);
+
+        if (corsProperties.isDisbaled()) {
+            http.cors().disable();
+        }
+
         return http.build();
     }
 
     @Bean
-    public CorsFilter corsFilter(CorsProperties corsProperties) {
+    public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         Arrays.stream(corsProperties.getAllowedOrigins()).forEach(config::addAllowedOrigin);

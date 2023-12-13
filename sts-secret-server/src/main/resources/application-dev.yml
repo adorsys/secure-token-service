@@ -12,6 +12,7 @@ spring:
     show-sql: false
 
 cors:
+  disabled: false
   allowedOrigins: "*"
   allowedHeaders: "*"
   allowedMethods: GET,POST,PUT,DELETE

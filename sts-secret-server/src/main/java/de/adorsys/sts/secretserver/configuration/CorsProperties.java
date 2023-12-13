@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "cors")
 @Data
 public class CorsProperties {
+
+    private boolean disbaled;
     private String[] allowedOrigins;
     private String allowedHeaders;
     private String[] allowedMethods;

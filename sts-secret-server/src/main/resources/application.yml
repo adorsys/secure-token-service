@@ -27,6 +27,7 @@ spring:
       - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
 
 cors:
+  disabled: false
   allowedOrigins: "*"
   allowedHeaders: "*"
   allowedMethods: GET,POST,PUT,DELETE
