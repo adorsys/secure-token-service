@@ -10,4 +10,4 @@ spring:
     url: jdbc:postgresql://localhost:5432/sts
   jpa:
     show-sql: false
-    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
