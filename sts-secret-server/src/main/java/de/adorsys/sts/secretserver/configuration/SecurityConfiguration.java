@@ -28,26 +28,29 @@ public class SecurityConfiguration {
 
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http, TokenAuthenticationService tokenAuthenticationService) throws Exception {
-        // @formatter:off
-        http
-                .cors()
-                    .and()
-                .csrf()
-                    .disable()
-                .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and()
-                .authorizeHttpRequests((requests) ->requests.requestMatchers(HttpMethod.GET, "/pop").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
-                        .anyRequest().authenticated())
-
-        ;
-        // @formatter:on
-        http.addFilterBefore(new JWTAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class);
-
         if (corsProperties.isDisbaled()) {
             http.cors().disable();
+        } else {
+            http.cors().configurationSource(request -> {
+                CorsConfiguration corsConfiguration = new CorsConfiguration();
+                corsConfiguration.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins()));
+                corsConfiguration.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods()));
+                corsConfiguration.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders()));
+                return corsConfiguration;
+            });
         }
+
+        http.csrf()
+                .disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeHttpRequests((requests) -> requests.requestMatchers(HttpMethod.GET, "/pop").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+                        .anyRequest().authenticated());
+
+
+        http.addFilterBefore(new JWTAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -57,7 +60,7 @@ public class SecurityConfiguration {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         Arrays.stream(corsProperties.getAllowedOrigins()).forEach(config::addAllowedOrigin);
-        config.addAllowedHeader(corsProperties.getAllowedHeaders());
+        Arrays.asList(corsProperties.getAllowedHeaders()).forEach(config::addAllowedHeader);
         Arrays.stream(corsProperties.getAllowedMethods()).forEach(config::addAllowedMethod);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
