@@ -6,12 +6,19 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
+      - name: Step 1 - Checkout repository code
+        uses: actions/checkout@v4
 
-      - name: deploy to Maven
+      - name: Step 2 - Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Step 3 - deploy to Maven
         run: ./scripts/mvn_deploy.sh
         env:
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
