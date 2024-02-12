@@ -10,13 +10,14 @@ spring:
     password: db_user@123
   jpa:
     show-sql: false
+    open-in-view: false
     properties:
       hibernate:
         default_schema: sts
   flyway:
     enabled: false
     locations:
-    - db/migration/flyway/h2
+      - db/migration/flyway/h2
   liquibase:
     enabled: true
     change-log: classpath:/db/migration/liquibase/changelog.yml
@@ -26,10 +27,11 @@ spring:
       - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
       - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
 
+#Example values, do not use for production
 cors:
   disabled: false
-  allowedOrigins: "*"
-  allowedHeaders: "*"
+  allowedOrigins: localhost:8080, localhost:8081
+  allowedHeaders: Content-Type,Authorization,Accept,Origin,Referer,User-Agent
   allowedMethods: GET,POST,PUT,DELETE
 
 sts:

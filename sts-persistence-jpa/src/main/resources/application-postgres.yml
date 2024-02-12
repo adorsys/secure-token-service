@@ -1,7 +1,6 @@
 spring:
   liquibase:
     default-schema: sts
-
   flyway:
     locations:
     - classpath:/db/migration/flyway/postgres
@@ -10,4 +9,5 @@ spring:
     url: jdbc:postgresql://localhost:5432/sts
   jpa:
     show-sql: false
-    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false

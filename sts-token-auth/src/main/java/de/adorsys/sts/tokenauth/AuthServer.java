@@ -95,7 +95,7 @@ public class AuthServer {
         log.info("Retrieved {} keys from {}", jwks.size(), jwksUrl);
     }
 
-    public static class JsonWebKeyRetrievalException extends RuntimeException {
+    protected static class JsonWebKeyRetrievalException extends RuntimeException {
         public JsonWebKeyRetrievalException(Throwable cause) {
             super(cause);
         }

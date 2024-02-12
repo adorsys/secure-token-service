@@ -11,6 +11,6 @@ public class CorsProperties {
 
     private boolean disbaled;
     private String[] allowedOrigins;
-    private String allowedHeaders;
+    private String[] allowedHeaders;
     private String[] allowedMethods;
 }
