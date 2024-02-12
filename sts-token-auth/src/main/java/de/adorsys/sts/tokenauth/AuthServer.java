@@ -48,6 +48,8 @@ public class AuthServer {
     }
 
     private void updateJwkCache() throws JsonWebKeyRetrievalException {
+        log.debug("Thread entering updateJwkCache: " + Thread.currentThread().getId());
+
         try {
 
             List<JWK> jwks = jwkSource.get(new JWKSelector(new JWKMatcher.Builder().build()), null);
@@ -62,31 +64,44 @@ public class AuthServer {
         } catch (Exception e) {
             throw new JsonWebKeyRetrievalException(e);
         }
+
+        log.debug("Thread leaving updateJwkCache: " + Thread.currentThread().getId());
     }
 
     public Key getJWK(String keyID) throws JsonWebKeyRetrievalException {
+        log.debug("Thread entering getJWK: {}", Thread.currentThread().getId());
+
         Date now = new Date();
         long currentTime = now.getTime();
 
         // Check if the cache is still valid
         if (currentTime - lastCacheUpdate > refreshIntervalSeconds * 1000L || jwkCache.isEmpty()) {
+            log.debug("Cache is invalid or empty, updating the cache...");
             updateJwkCache();
+            log.debug("Cache updated successfully");
         }
 
         JWK jwk = jwkCache.get(keyID);
         if (jwk == null) {
+            log.error("Key with ID {} not found in cache", keyID);
             throw new JsonWebKeyRetrievalException("Key with ID " + keyID + " not found in cache");
         }
 
+        log.debug("JWK for key ID {} found in cache", keyID);
+
         if (jwk instanceof RSAKey) {
             try {
+                log.debug("JWK is instance of RSAKey");
                 return ((RSAKey) jwk).toPublicKey();
             } catch (JOSEException e) {
+                log.error("Error while converting RSAKey to public key", e);
                 throw new JsonWebKeyRetrievalException(e);
             }
         } else if (jwk instanceof SecretJWK) {
+            log.debug("JWK is instance of SecretJWK");
             return ((SecretJWK) jwk).toSecretKey();
         } else {
+            log.error("Unknown key type {}", jwk.getClass());
             throw new JsonWebKeyRetrievalException("unknown key type " + jwk.getClass());
         }
     }
