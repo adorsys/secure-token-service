@@ -17,15 +17,10 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 @EnableResourceServerInitialization
 @EnableEncryption
 @EnablePOP
-@EnableKeyRotation
+//@EnableKeyRotation
 @EnableTokenAuthentication
 @EnableSecretServerClient
 public class StsConfiguration {
-
-    @Bean
-    public TaskScheduler taskExecutor() {
-        return new ConcurrentTaskScheduler();
-    }
 
     @Bean
     ResourceServerRepository resourceServerRepository() {

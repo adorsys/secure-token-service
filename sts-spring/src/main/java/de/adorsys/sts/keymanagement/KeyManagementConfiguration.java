@@ -10,6 +10,7 @@ import de.adorsys.sts.keymanagement.model.StsKeyEntryImpl;
 import de.adorsys.sts.keymanagement.persistence.CachedKeyStoreRepository;
 import de.adorsys.sts.keymanagement.persistence.KeyStoreRepository;
 import de.adorsys.sts.keymanagement.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +30,7 @@ import java.time.ZonedDateTime;
                 type = FilterType.REGEX
         )
 )
+@Slf4j
 public class KeyManagementConfiguration {
 
     @Bean
@@ -41,6 +43,7 @@ public class KeyManagementConfiguration {
 
     @Bean(name = "cached")
     KeyStoreRepository cachedKeyStoreRepository(KeyStoreRepository keyStoreRepository) {
+        log.debug("Creating 'cached' KeyStoreRepository bean...");
         return new CachedKeyStoreRepository(keyStoreRepository);
     }
 

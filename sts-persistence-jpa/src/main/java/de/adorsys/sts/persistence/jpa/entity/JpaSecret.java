@@ -12,8 +12,9 @@ import lombok.Setter;
 public class JpaSecret {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @SequenceGenerator(name = "secret_seq", sequenceName = "secret_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "secret_seq")
+    private Long id;
 
     private String subject;
 

@@ -11,6 +11,12 @@ spring:
   jpa:
     show-sql: false
 
+cors:
+  disabled: false
+  allowedOrigins: "*"
+  allowedHeaders: "*"
+  allowedMethods: GET,POST,PUT,DELETE
+
 sts:
   secret-server:
     secret-length: 8192

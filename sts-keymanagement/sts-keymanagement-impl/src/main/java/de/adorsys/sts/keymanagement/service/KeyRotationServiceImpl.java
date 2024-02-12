@@ -2,8 +2,10 @@ package de.adorsys.sts.keymanagement.service;
 
 import com.google.common.collect.Streams;
 import com.googlecode.cqengine.attribute.Attribute;
+import com.googlecode.cqengine.attribute.SimpleAttribute;
 import com.googlecode.cqengine.attribute.support.SimpleFunction;
 import com.googlecode.cqengine.query.Query;
+import com.googlecode.cqengine.query.option.QueryOptions;
 import de.adorsys.keymanagement.api.types.ResultCollection;
 import de.adorsys.keymanagement.api.types.entity.KeyAlias;
 import de.adorsys.keymanagement.api.types.entity.KeyEntry;
@@ -24,11 +26,42 @@ import static com.googlecode.cqengine.query.QueryFactory.*;
 public class KeyRotationServiceImpl implements KeyRotationService {
 
     private final SimpleFunction<KeyEntry, StsKeyEntry> STS = it -> ((StsKeyEntry) it.getMeta());
-    private final Attribute<KeyEntry, KeyState> STATE = attribute(it -> STS.apply(it).getState());
-    private final Attribute<KeyEntry, Instant> NOT_BEFORE = attribute(it -> STS.apply(it).getNotBefore().toInstant());
-    private final Attribute<KeyEntry, Instant> NOT_AFTER = attribute(it -> STS.apply(it).getNotAfter().toInstant());
-    private final Attribute<KeyEntry, Instant> EXPIRE_AT = attribute(it -> STS.apply(it).getExpireAt().toInstant());
-    private final Attribute<KeyEntry, KeyUsage> USAGE = attribute(it -> STS.apply(it).getKeyUsage());
+
+    private final Attribute<KeyEntry, KeyState> STATE = new SimpleAttribute<>() {
+        @Override
+        public KeyState getValue(KeyEntry o, QueryOptions queryOptions) {
+            return STS.apply(o).getState();
+        }
+    };
+
+    private final Attribute<KeyEntry, Instant> NOT_BEFORE = new SimpleAttribute<>() {
+        @Override
+        public Instant getValue(KeyEntry o, QueryOptions queryOptions) {
+            return STS.apply(o).getNotBefore().toInstant();
+        }
+    };
+
+    private final Attribute<KeyEntry, Instant> NOT_AFTER = new SimpleAttribute<>() {
+        @Override
+        public Instant getValue(KeyEntry o, QueryOptions queryOptions) {
+            return STS.apply(o).getNotAfter().toInstant();
+        }
+    };
+
+    private final Attribute<KeyEntry, Instant> EXPIRE_AT = new SimpleAttribute<>() {
+        @Override
+        public Instant getValue(KeyEntry o, QueryOptions queryOptions) {
+            return STS.apply(o).getExpireAt().toInstant();
+        }
+    };
+
+    private final Attribute<KeyEntry, KeyUsage> USAGE = new SimpleAttribute<>() {
+        @Override
+        public KeyUsage getValue(KeyEntry o, QueryOptions queryOptions) {
+            return STS.apply(o).getKeyUsage();
+        }
+    };
+
 
     private final KeyStoreGenerator keyStoreGenerator;
     private final Clock clock;

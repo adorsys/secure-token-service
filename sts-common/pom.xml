@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>de.adorsys.sts</groupId>
 		<artifactId>secure-token-service</artifactId>
-		<version>1.1.0</version>
+		<version>1.1.20</version>
 	</parent>
 
 	<artifactId>sts-common</artifactId>
@@ -94,6 +94,17 @@
 						<configuration>
 							<jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=10022</jvmArguments>
 						</configuration>
+						<executions>
+							<execution>
+								<id>fat-jar</id>
+								<goals>
+									<goal>repackage</goal>
+								</goals>
+								<configuration>
+									<classifier>exec</classifier>
+								</configuration>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>

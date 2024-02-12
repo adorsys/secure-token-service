@@ -1,4 +1,8 @@
 spring:
+  config:
+    activate:
+      on-cloud-platform: "kubernetes"
+      on-profile: "postgres | mysql | h2"
   jpa:
     open-in-view: false
     hibernate:

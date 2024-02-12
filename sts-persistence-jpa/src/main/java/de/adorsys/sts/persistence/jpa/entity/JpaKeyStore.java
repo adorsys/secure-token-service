@@ -14,7 +14,8 @@ import java.time.ZonedDateTime;
 public class JpaKeyStore {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "key_store_seq", sequenceName = "key_store_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "key_store_seq")
     private Long id;
 
     private String name;

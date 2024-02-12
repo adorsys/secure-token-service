@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @Api(value = "/pop", tags = {"Proof of Possession RFC7800"}, description = "Public key distribution endpoint")
 @RequestMapping("/pop")
@@ -38,15 +40,11 @@ public class PopController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Ok")})
     public ResponseEntity<String> getPublicKeys() {
         JWKSet publicKeys = popService.getPublicKeys();
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonObject = null;
-        try {
-            jsonObject = mapper.readTree(publicKeys.toJSONObject().toString());
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
 
-// return response entity
-        return ResponseEntity.ok(jsonObject.toString());
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> jsonObject = publicKeys.toJSONObject();
+        JsonNode jsonNode = mapper.convertValue(jsonObject, JsonNode.class);
+
+        return ResponseEntity.ok(jsonNode.toString());
     }
 }
