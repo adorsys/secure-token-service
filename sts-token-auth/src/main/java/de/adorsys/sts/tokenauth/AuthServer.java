@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 
 import java.net.URL;
 import java.security.Key;
@@ -68,6 +70,8 @@ public class AuthServer {
         log.debug("Thread leaving updateJwkCache: " + Thread.currentThread().getId());
     }
 
+    @Retryable(maxAttempts = 2, backoff = @Backoff(delay = 1000, multiplier = 2), retryFor =
+            {JsonWebKeyNotFoundException.class}, noRetryFor = {JsonWebKeyRetrievalException.class})
     public Key getJWK(String keyID) throws JsonWebKeyRetrievalException {
         log.debug("Thread entering getJWK: {}", Thread.currentThread().getId());
 
@@ -84,7 +88,9 @@ public class AuthServer {
         JWK jwk = jwkCache.get(keyID);
         if (jwk == null) {
             log.error("Key with ID {} not found in cache", keyID);
-            throw new JsonWebKeyRetrievalException("Key with ID " + keyID + " not found in cache");
+            //Update cache and try again
+            updateJwkCache();
+            throw new JsonWebKeyNotFoundException("Key with ID " + keyID + " not found in cache");
         }
 
         log.debug("JWK for key ID {} found in cache", keyID);
@@ -116,6 +122,12 @@ public class AuthServer {
         }
 
         public JsonWebKeyRetrievalException(String message) {
+            super(message);
+        }
+    }
+
+    protected static class JsonWebKeyNotFoundException extends RuntimeException {
+        public JsonWebKeyNotFoundException(String message) {
             super(message);
         }
     }
