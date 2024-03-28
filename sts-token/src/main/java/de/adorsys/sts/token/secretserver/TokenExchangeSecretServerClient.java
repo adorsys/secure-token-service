@@ -20,23 +20,27 @@ public class TokenExchangeSecretServerClient implements SecretServerClient {
     private final BearerTokenValidator bearerTokenValidator;
     private final DecryptionService decryptionService;
 
+    private final Map<String, String> customHeaders;
+
     public TokenExchangeSecretServerClient(
             String audience,
             String secretServerUri,
             TokenExchangeClient tokenExchangeClient,
             BearerTokenValidator bearerTokenValidator,
-            DecryptionService decryptionService
+            DecryptionService decryptionService,
+            Map<String, String> customHeaders
     ) {
         this.audience = audience;
         this.secretServerUri = secretServerUri;
         this.tokenExchangeClient = tokenExchangeClient;
         this.bearerTokenValidator = bearerTokenValidator;
         this.decryptionService = decryptionService;
+        this.customHeaders = customHeaders;
     }
 
     @Override
     public String getSecret(String token) {
-        TokenResponse tokenResponse = tokenExchangeClient.exchangeToken(secretServerUri, audience, token);
+        TokenResponse tokenResponse = tokenExchangeClient.exchangeToken(secretServerUri, audience, token, customHeaders);
         String exchangedAccessToken = tokenResponse.getAccess_token();
         BearerToken bearerToken = bearerTokenValidator.extract(exchangedAccessToken);
 

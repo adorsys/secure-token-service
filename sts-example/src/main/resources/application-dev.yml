@@ -19,6 +19,9 @@ sts:
       enabled: true
       maximum-size: 1000
       expire-after-access: 10
+    custom-headers:
+      client-id: 42
+      client-secret: secret
   authservers:
   - name: local keycloak
     iss-url : http://localhost:8080/auth/realms/moped

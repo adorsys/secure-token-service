@@ -2,38 +2,37 @@ package de.adorsys.sts.token.api;
 
 
 import de.adorsys.sts.token.tokenexchange.TokenExchangeConstants;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description="Carries the response of a token request", value="TokenResponse" )
-public class TokenResponse  {
+@Schema(description = "Carries the response of a token request")
+public class TokenResponse {
     public static final String TOKEN_EXCHANGE_GRANT_TYPE = TokenExchangeConstants.TOKEN_EXCHANGE_OAUTH_GRANT_TYPE;
-    public static final String PASSWORD_GRANT_TYPE="password";
-    public static final String ISSUED_TOKEN_TYPE_ACCESS_TOKEN="urn:ietf:params:oauth:token-type:access_token";
-    public static final String ISSUED_TOKEN_TYPE_REFRESH_TOKEN="urn:ietf:params:oauth:grant-type:refresh_token";
+    public static final String PASSWORD_GRANT_TYPE = "password";
+    public static final String ISSUED_TOKEN_TYPE_ACCESS_TOKEN = "urn:ietf:params:oauth:token-type:access_token";
+    public static final String ISSUED_TOKEN_TYPE_REFRESH_TOKEN = "urn:ietf:params:oauth:grant-type:refresh_token";
     public static final String TOKEN_TYPE_BEARER = "Bearer";
 
-    @ApiModelProperty(value = "The security token issued by the authorization server in response to the token exchange request.", required=true, example="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNYXhNdXN0ZXJtYW4iLCJyb2xlIjoiVVNFUiIsImV4cCI6MTQ5NTM5MTAxM30.mN9eFMnEuYgh_KCULI8Gpm1X49wWaA67Ps1M7EFV0BQ")
+    @Schema(description = "The security token issued by the authorization server in response to the token exchange request.", requiredMode = Schema.RequiredMode.REQUIRED, example = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNYXhNdXN0ZXJtYW4iLCJyb2xlIjoiVVNFUiIsImV4cCI6MTQ5NTM5MTAxM30.mN9eFMnEuYgh_KCULI8Gpm1X49wWaA67Ps1M7EFV0BQ")
     private String access_token;
 
-    @ApiModelProperty(value = "An identifier for the representation of the issued security token. Can be urn:ietf:params:oauth:token-type:access_token or urn:ietf:params:oauth:token-type:refresh_token",
-            required=true, example="urn:ietf:params:oauth:token-type:access_token")
+    @Schema(description = "An identifier for the representation of the issued security token. Can be urn:ietf:params:oauth:token-type:access_token or urn:ietf:params:oauth:token-type:refresh_token",
+            requiredMode = Schema.RequiredMode.REQUIRED, example = "urn:ietf:params:oauth:token-type:access_token")
     private String issued_token_type;
 
-    @ApiModelProperty(value = "It provides the client with information about how to utilize the access token to access protected resources.  For example, a value of Bearer",
-            required=true, example="Bearer")
+    @Schema(description = "It provides the client with information about how to utilize the access token to access protected resources.  For example, a value of Bearer",
+            requiredMode = Schema.RequiredMode.REQUIRED, example = "Bearer")
     private String token_type;
 
-    @ApiModelProperty(value = "The validity lifetime, in seconds, of the token issued by the authorization server. For example, the value 1800 denotes that the token will expire in thirty minutes from the time the response was generated.",
-            required=false, example="1800")
+    @Schema(description = "The validity lifetime, in seconds, of the token issued by the authorization server. For example, the value 1800 denotes that the token will expire in thirty minutes from the time the response was generated.",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "1800")
     public int expires_in;
 
-    @ApiModelProperty(value = "OPTIONAL, if the scope of the issued security token is identical to the scope requested by the client; otherwise, REQUIRED.",
-            required=false, example="user banking")
+    @Schema(description = "OPTIONAL, if the scope of the issued security token is identical to the scope requested by the client; otherwise, REQUIRED.",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "user banking")
     private String scope;
 
-    @ApiModelProperty(value = "The security token issued by the authorization server in response to the token exchange request. In this case the issued_token_type wil be urn:ietf:params:oauth:token-type:refresh_token.",
-            required=true, example="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNYXhNdXN0ZXJtYW4iLCJyb2xlIjoiVVNFUiIsImV4cCI6MTQ5NTM5MTAxM30.mN9eFMnEuYgh_KCULI8Gpm1X49wWaA67Ps1M7EFV0BQ")
+    @Schema(description = "The security token issued by the authorization server in response to the token exchange request. In this case the issued_token_type wil be urn:ietf:params:oauth:token-type:refresh_token.",
+            requiredMode = Schema.RequiredMode.REQUIRED, example = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNYXhNdXN0ZXJtYW4iLCJyb2xlIjoiVVNFUiIsImV4cCI6MTQ5NTM5MTAxM30.mN9eFMnEuYgh_KCULI8Gpm1X49wWaA67Ps1M7EFV0BQ")
     private String refresh_token;
 
     public String getAccess_token() {

@@ -54,7 +54,8 @@
         <spring-boot.version>3.0.6</spring-boot.version>
         <keystore-management.version>0.0.10</keystore-management.version>
         <shedlock.version>5.3.0</shedlock.version>
-        <springfox-swagger.version>3.0.0</springfox-swagger.version>
+        <openapi.version>2.4.0</openapi.version>
+        <swagger-annotations.version>2.2.20</swagger-annotations.version>
         <jackson.version>2.15.1</jackson.version>
         <jackson-databind.version>2.15.1</jackson-databind.version>
         <bouncycastle.version>1.64</bouncycastle.version>
@@ -134,9 +135,14 @@
             </dependency>
 
             <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-boot-starter</artifactId>
-                <version>${springfox-swagger.version}</version>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${openapi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations-jakarta</artifactId>
+                <version>${swagger-annotations.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.adorsys.sts</groupId>
@@ -295,13 +301,6 @@
                 <groupId>net.javacrumbs.shedlock</groupId>
                 <artifactId>shedlock-provider-mongo</artifactId>
                 <version>${shedlock.version}</version>
-            </dependency>
-
-            <!-- https://mvnrepository.com/artifact/io.swagger/swagger-annotations -->
-            <dependency>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-annotations</artifactId>
-                <version>1.6.0</version>
             </dependency>
 
             <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
