@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 
 public class LoggingTokenExchangeClient implements TokenExchangeClient {
     private static final Logger logger = LoggerFactory.getLogger(LoggingTokenExchangeClient.class);
@@ -14,6 +15,28 @@ public class LoggingTokenExchangeClient implements TokenExchangeClient {
 
     public LoggingTokenExchangeClient(TokenExchangeClient tokenExchangeClient) {
         this.decoratedTokenExchangeClient = tokenExchangeClient;
+    }
+
+    @Override
+    public TokenResponse exchangeToken(String uri, List<String> audiences, String accessToken, Map<String, String> customHeaders) {
+        if(logger.isTraceEnabled()) logger.trace("exchangeToken for audiences start...");
+
+        TokenResponse tokenResponse = decoratedTokenExchangeClient.exchangeToken(uri, audiences, accessToken, customHeaders);
+
+        if(logger.isTraceEnabled()) logger.trace("exchangeToken for audiences finish.");
+
+        return tokenResponse;
+    }
+
+    @Override
+    public TokenResponse exchangeToken(String uri, String audiences, String accessToken, Map<String, String> customHeaders) {
+        if(logger.isTraceEnabled()) logger.trace("exchangeToken for audiences start...");
+
+        TokenResponse tokenResponse = decoratedTokenExchangeClient.exchangeToken(uri, audiences, accessToken, customHeaders);
+
+        if(logger.isTraceEnabled()) logger.trace("exchangeToken for audiences finish.");
+
+        return tokenResponse;
     }
 
     @Override
