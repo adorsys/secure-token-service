@@ -5,17 +5,20 @@ import de.adorsys.sts.common.config.AdminResource;
 import de.adorsys.sts.resourceserver.model.ResourceServer;
 import de.adorsys.sts.resourceserver.model.ResourceServers;
 import de.adorsys.sts.resourceserver.service.ResourceServerService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Api(value = "/admin", tags = {"Admin Endpoint"}, description = "Admin Endpoint")
+@Tag(name = "Admin Endpoint", description = "Admin Endpoint")
 @RequestMapping("/admin")
 @AdminResource
 public class AdminController {
@@ -28,16 +31,20 @@ public class AdminController {
     }
 
     @GetMapping(path = "/resourceServer", produces = {MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value = "Returns the list of resource servers", response = ResourceServers.class, notes = "Fetches and returns resource server descriptions.")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "Ok")})
+    @Operation(
+            summary = "Returns the list of resource servers",
+            responses = {@ApiResponse(responseCode = "200", description = "Ok")},
+            description = "Fetches and returns resource server descriptions."
+    )
     public ResponseEntity<ResourceServers> loadResourceServers() {
         ResourceServers servers = resourceServerService.getAll();
         return ResponseEntity.ok(servers);
     }
 
     @PostMapping(path = "/resourceServer", produces = {MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value = "Adds a resource server", response = ResourceServers.class)
-    @ApiResponses(value = {@ApiResponse(code = 201, message = "No content")})
+    @Operation(summary = "Adds a resource server", responses = {
+            @ApiResponse(responseCode = "201", description = "No content")
+    })
     public ResponseEntity addResourceServers(@RequestBody ResourceServer resourceServer) {
         resourceServerService.create(resourceServer);
         return ResponseEntity.noContent().build();
