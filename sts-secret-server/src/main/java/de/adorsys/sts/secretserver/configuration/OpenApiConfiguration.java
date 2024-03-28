@@ -11,6 +11,6 @@ public class OpenApiConfiguration {
     @Bean
     public OpenAPI api() {
         return new OpenAPI()
-                .info(new Info().title("sts"));
+                .info(new Info().title("Secure-Token-Service"));
     }
 }
