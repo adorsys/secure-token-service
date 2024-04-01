@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -32,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * This test ensures key rotation functional compatibility with old STS schema.
  */
 @KeyRotationContext
-@EnableAutoConfiguration(exclude = {MongoAutoConfiguration.class})
+@EnableAutoConfiguration
 @Sql(scripts = {"classpath:fixture/old-compat/key_store.sql", "classpath:fixture/old-compat/key_entry.sql"})
 @ActiveProfiles(profiles = {"jpa", "flyway", "mysql", "test-db-mysql"})
 class MysqlFlywayOldDbCompatTest extends BaseJdbcDbTest {

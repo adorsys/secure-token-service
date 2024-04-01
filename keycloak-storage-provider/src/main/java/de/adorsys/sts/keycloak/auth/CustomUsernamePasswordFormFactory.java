@@ -1,6 +1,5 @@
 package de.adorsys.sts.keycloak.auth;
 
-import org.keycloak.OAuth2Constants;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.authentication.authenticators.browser.UsernamePasswordForm;
 import org.keycloak.authentication.authenticators.browser.UsernamePasswordFormFactory;
@@ -14,13 +13,6 @@ public class CustomUsernamePasswordFormFactory extends UsernamePasswordFormFacto
     @Override
     public Authenticator create(KeycloakSession session) {
         return SINGLETON;
-    }
-
-    @Override
-    public Authenticator createDisplay(KeycloakSession session, String displayType) {
-        if (displayType == null) return SINGLETON;
-        if (!OAuth2Constants.DISPLAY_CONSOLE.equalsIgnoreCase(displayType)) return null;
-        return UsernamePasswordFormFactory.SINGLETON;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package de.adorsys.sts.tests.e2e.testcomponents;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
 import de.adorsys.sts.token.authentication.LoggingAuthServer;
 
@@ -8,8 +7,8 @@ import java.security.Key;
 
 public class AuthServerTestable extends LoggingAuthServer {
 
-    public AuthServerTestable(String name, String issUrl, String jwksUrl, ObjectMapper objectMapper) {
-        super(name, issUrl, jwksUrl, objectMapper);
+    public AuthServerTestable(String name, String issUrl, String jwksUrl, int refreshIntervalSeconds) {
+        super(name, issUrl, jwksUrl, refreshIntervalSeconds);
     }
 
     @Override

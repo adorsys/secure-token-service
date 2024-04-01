@@ -1,6 +1,5 @@
 package de.adorsys.sts.tests.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.sts.common.ObjectMapperSPI;
 import de.adorsys.sts.objectmapper.JacksonConfiguration;
 import de.adorsys.sts.resourceserver.persistence.InMemoryResourceServerRepository;
@@ -23,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 
 @EnableTokenExchangeServer
 @Import({
@@ -73,12 +73,11 @@ public class WithTokenExchangeConfig {
 
     @Autowired
     AuthServerConfigurationProperties authServerConfigurationProperties;
-    @Autowired
-    ObjectMapper objectMapper;
 
     @Bean
+    @Primary
     AuthServersProvider authServersProvider() {
-        return new AuthServersProviderTestable(authServerConfigurationProperties, objectMapper);
+        return new AuthServersProviderTestable(authServerConfigurationProperties);
     }
 
     @Bean

@@ -12,8 +12,6 @@
     <url>https://github.com/adorsys/secure-token-service</url>
     <description>SecureTokenService modules</description>
 
-
-
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
@@ -51,7 +49,7 @@
         <maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring-boot.version>3.0.6</spring-boot.version>
+        <spring-boot.version>3.2.3</spring-boot.version>
         <keystore-management.version>0.0.10</keystore-management.version>
         <shedlock.version>5.3.0</shedlock.version>
         <openapi.version>2.4.0</openapi.version>
@@ -59,11 +57,15 @@
         <jackson.version>2.15.1</jackson.version>
         <jackson-databind.version>2.15.1</jackson-databind.version>
         <bouncycastle.version>1.64</bouncycastle.version>
-        <keycloak.version>16.1.0</keycloak.version>
-        <keycloak-config-cli.version>v4.6.1</keycloak-config-cli.version>
+        <keycloak.version>22.0.4</keycloak.version>
         <surefire.version>3.0.0-M4</surefire.version>
         <jacoco.version>0.8.8</jacoco.version>
-        <testcontainers.version>1.17.6</testcontainers.version>
+        <testcontainers.version>1.19.7</testcontainers.version>
+        <flyway.version>10.10.0</flyway.version>
+        <postgres.version>42.7.2</postgres.version>
+        <h2.version>1.4.200</h2.version>
+        <mockito.version>5.11.0</mockito.version>
+        <catch-exception.version>1.4.6</catch-exception.version>
         <nimbus-jose-jwt.version>9.31</nimbus-jose-jwt.version>
         <scmBranch/>
         <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
@@ -93,17 +95,11 @@
         <module>sts-secret</module>
         <module>sts-simple-encryption</module>
         <module>keycloak-storage-provider</module>
-<!--        <module>sts-e2e-tests</module>-->
+        <module>sts-e2e-tests</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>com.nitorcreations</groupId>
-                <artifactId>junit-runners</artifactId>
-                <version>1.3</version>
-                <scope>test</scope>
-            </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
@@ -266,6 +262,12 @@
                 <version>${keycloak.version}</version>
                 <scope>provided</scope>
             </dependency>
+            <dependency>
+                <groupId>org.keycloak</groupId>
+                <artifactId>keycloak-model-legacy</artifactId>
+                <version>${keycloak.version}</version>
+                <scope>provided</scope>
+            </dependency>
 
             <dependency>
                 <groupId>com.nimbusds</groupId>
@@ -314,19 +316,31 @@
             <dependency>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-core</artifactId>
-                <version>6.2.4</version>
+                <version>${flyway.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-database-postgresql</artifactId>
+                <version>${flyway.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-mysql</artifactId>
+                <version>${flyway.version}</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.2.10</version>
+                <version>${postgres.version}</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
-                <version>1.4.200</version>
+                <version>${h2.version}</version>
                 <scope>runtime</scope>
             </dependency>
 
@@ -334,13 +348,13 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>3.3.0</version>
+                <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>eu.codearte.catch-exception</groupId>
                 <artifactId>catch-exception</artifactId>
-                <version>1.4.6</version>
+                <version>${catch-exception.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -384,8 +398,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -518,13 +530,6 @@
                     <groupId>org.projectlombok</groupId>
                     <artifactId>lombok-maven-plugin</artifactId>
                     <version>1.18.20.0</version>
-                </plugin>
-
-                <!-- https://mvnrepository.com/artifact/io.fabric8/docker-maven-plugin -->
-                <plugin>
-                    <groupId>io.fabric8</groupId>
-                    <artifactId>docker-maven-plugin</artifactId>
-                    <version>0.33.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>

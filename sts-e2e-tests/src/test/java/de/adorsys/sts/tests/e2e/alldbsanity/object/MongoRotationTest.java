@@ -8,12 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @KeyRotationContext
 @EnableMongoPersistence
 @EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
 @ActiveProfiles(profiles = {"mongo"})
+@SpringBootTest(properties = "de.flapdoodle.mongodb.embedded.version=5.0.5")
 class MongoRotationTest extends BaseSpringTest {
 
     @Autowired

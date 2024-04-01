@@ -61,7 +61,6 @@
         <dependency>
             <groupId>de.adorsys.keymanagement</groupId>
             <artifactId>juggler-bouncycastle</artifactId>
-            <version>0.0.10</version>
         </dependency>
 
         <dependency>

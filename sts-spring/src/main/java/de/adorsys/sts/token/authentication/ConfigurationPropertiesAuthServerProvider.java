@@ -1,9 +1,8 @@
 package de.adorsys.sts.token.authentication;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.sts.tokenauth.AuthServer;
 import de.adorsys.sts.tokenauth.AuthServersProvider;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,22 +11,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class ConfigurationPropertiesAuthServerProvider implements AuthServersProvider {
 
     private final AuthServerConfigurationProperties authServerConfigurationProperties;
-    private final ObjectMapper objectMapper;
 
     private Map<String, AuthServer> authServers;
-
-    @Autowired
-    public ConfigurationPropertiesAuthServerProvider(
-            AuthServerConfigurationProperties authServerConfigurationProperties,
-            ObjectMapper objectMapper
-    ) {
-        this.authServerConfigurationProperties = authServerConfigurationProperties;
-        this.objectMapper = objectMapper;
-    }
-
 
     @Override
     public Map<String, AuthServer> getAll() {

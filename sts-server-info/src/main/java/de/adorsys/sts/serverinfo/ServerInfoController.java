@@ -4,7 +4,6 @@ package de.adorsys.sts.serverinfo;
 import de.adorsys.sts.admin.EnableAdmin;
 import de.adorsys.sts.pop.EnablePOP;
 import de.adorsys.sts.token.tokenexchange.server.EnableTokenExchangeServer;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -57,8 +56,8 @@ public class ServerInfoController {
             serverInfoResponse.setToken_exchange(urlBase + "/token");
         }
 
-        if (isConfigurationEnabled(OpenAPIDefinition.class)) {
-            serverInfoResponse.setApi_docs_url(urlBase + "/api-docs/index.html");
+        if (isConfigurationEnabled(Tag.class)) {
+            serverInfoResponse.setApi_docs_url(urlBase + "/v3/api-docs");
         }
 
         return ResponseEntity.ok(serverInfoResponse);

@@ -7,13 +7,16 @@ import org.mockito.MockitoAnnotations;
 
 public abstract class BaseMockitoTest {
 
+    private AutoCloseable closeable;
+
     @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
     }
 
     @AfterEach
-    public void validate() {
+    public void validate() throws Exception {
         Mockito.validateMockitoUsage();
+        closeable.close();
     }
 }

@@ -1,28 +1,23 @@
 package de.adorsys.sts.tests.e2e.testcomponents;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.sts.token.authentication.AuthServerConfigurationProperties;
 import de.adorsys.sts.token.authentication.ConfigurationPropertiesAuthServerProvider;
 import de.adorsys.sts.tokenauth.AuthServer;
 import de.adorsys.sts.tokenauth.AuthServersProvider;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Component
 public class AuthServersProviderTestable extends ConfigurationPropertiesAuthServerProvider implements AuthServersProvider {
 
     private Map<String, AuthServer> authServers;
-    private AuthServerConfigurationProperties authServerConfigurationProperties;
-    private ObjectMapper objectMapper;
+    private final AuthServerConfigurationProperties authServerConfigurationProperties;
 
-    public AuthServersProviderTestable(AuthServerConfigurationProperties authServerConfigurationProperties, ObjectMapper objectMapper) {
-        super(authServerConfigurationProperties, objectMapper);
+    public AuthServersProviderTestable(AuthServerConfigurationProperties authServerConfigurationProperties) {
+        super(authServerConfigurationProperties);
         this.authServerConfigurationProperties = authServerConfigurationProperties;
-        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -51,7 +46,7 @@ public class AuthServersProviderTestable extends ConfigurationPropertiesAuthServ
                 properties.getName(),
                 properties.getIssUrl(),
                 properties.getJwksUrl(),
-                objectMapper
+                properties.getRefreshIntervalSeconds()
         );
     }
 }
