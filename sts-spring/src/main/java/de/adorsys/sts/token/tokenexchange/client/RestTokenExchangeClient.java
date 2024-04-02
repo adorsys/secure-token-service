@@ -4,6 +4,7 @@ import de.adorsys.sts.common.util.ImmutableLists;
 import de.adorsys.sts.token.api.TokenResponse;
 import de.adorsys.sts.token.tokenexchange.TokenExchangeClient;
 import de.adorsys.sts.token.tokenexchange.TokenExchangeConstants;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -12,23 +13,22 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+@RequiredArgsConstructor
 public class RestTokenExchangeClient implements TokenExchangeClient {
 
     private final RestTemplate restTemplate;
 
-    public RestTokenExchangeClient(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-
-    public TokenResponse exchangeToken(String uri, List<String> audiences, String accessToken) {
+    public TokenResponse exchangeToken(String uri, List<String> audiences, String accessToken, Map<String, String> customHeaders) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-Type", "application/x-www-form-urlencoded");
         headers.add("Accept", "*/*");
         headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-
+        customHeaders.forEach(headers::add);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.addAll("audience", audiences);
@@ -44,6 +44,14 @@ public class RestTokenExchangeClient implements TokenExchangeClient {
         );
 
         return response.getBody();
+    }
+
+    public TokenResponse exchangeToken(String uri, String audiences, String accessToken, Map<String, String> customHeaders) {
+        return exchangeToken(uri, ImmutableLists.of(audiences), accessToken, customHeaders);
+    }
+
+    public TokenResponse exchangeToken(String uri, List<String> audiences, String accessToken) {
+        return exchangeToken(uri, audiences, accessToken, Collections.emptyMap());
     }
 
     public TokenResponse exchangeToken(String uri, String audience, String accessToken) {
