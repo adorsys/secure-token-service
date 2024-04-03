@@ -149,7 +149,7 @@ class SecretServerApplicationTest {
         assertThat(((HttpClientErrorException) caughtException).getStatusCode(), is(equalTo(HttpStatus.FORBIDDEN)));
     }
 
-    //    @Test
+    @Test
     void shouldNotGetSecretForFakeAccessToken() throws Exception {
         final String fakeAccessToken = "my fake access token";
 
