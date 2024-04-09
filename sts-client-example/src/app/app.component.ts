@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {KeycloakService} from "./keycloak/keycloak.service";
-import {KeycloakHttp} from "./keycloak/keycloak.http";
-import 'rxjs/add/operator/map';
-import {StsClientConfig} from "./env/sts-client-config.service";
+import {KeycloakService} from './keycloak/keycloak.service';
+import {KeycloakHttp} from './keycloak/keycloak.http';
+import 'rxjs';
+import {StsClientConfig} from './env/sts-client-config.service';
 
 @Component({
   selector: 'app-root',

@@ -1,5 +1,5 @@
-import {Injectable} from "@angular/core";
-import {StsClientConfig} from "../env/sts-client-config.service";
+import {Injectable} from '@angular/core';
+import {StsClientConfig} from '../env/sts-client-config.service';
 
 import * as Keycloak_ from 'keycloak-js';
 
@@ -17,9 +17,9 @@ export class KeycloakService {
 
   public init(): void {
     const keycloak = Keycloak({
-      "url": this.clientConfig.getKeycloakAuthUrl(),
-      "realm": this.clientConfig.getKeycloakRealm(),
-      "clientId": this.clientConfig.getKeycloakClientId()
+      'url': this.clientConfig.getKeycloakAuthUrl(),
+      'realm': this.clientConfig.getKeycloakRealm(),
+      'clientId': this.clientConfig.getKeycloakClientId()
     });
 
     keycloak.onTokenExpired = this.onTokenExpired;
