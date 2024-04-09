@@ -7,6 +7,6 @@ spring:
     - classpath:/db/migration/flyway/mysql
 
   datasource:
-    url: jdbc:mysql://localhost:3306/sts
+    url: jdbc:mysql://localhost:3306/sts?serverTimezone=UTC
   jpa:
-    database-platform: org.hibernate.dialect.MySQLInnoDBDialect
+    database-platform: org.hibernate.dialect.MySQLDialect

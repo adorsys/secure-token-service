@@ -1,7 +1,6 @@
 package de.adorsys.sts.keymanagement.service;
 
 
-import com.nitorcreations.junit.runners.NestedRunner;
 import de.adorsys.keymanagement.api.Juggler;
 import de.adorsys.keymanagement.api.config.keystore.KeyStoreConfig;
 import de.adorsys.keymanagement.api.types.KeySetTemplate;
@@ -14,19 +13,31 @@ import de.adorsys.keymanagement.core.metadata.MetadataPersistenceConfig;
 import de.adorsys.keymanagement.core.metadata.WithPersister;
 import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
 import de.adorsys.sts.keymanagement.config.KeyManagementRotationProperties;
-import de.adorsys.sts.keymanagement.model.*;
+import de.adorsys.sts.keymanagement.model.GeneratedStsEntry;
+import de.adorsys.sts.keymanagement.model.KeyRotationResult;
+import de.adorsys.sts.keymanagement.model.KeyState;
+import de.adorsys.sts.keymanagement.model.KeyUsage;
+import de.adorsys.sts.keymanagement.model.StsKeyEntry;
+import de.adorsys.sts.keymanagement.model.StsKeyStore;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.security.KeyStore;
 import java.security.Security;
-import java.time.*;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +49,7 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-@RunWith(NestedRunner.class)
+@ExtendWith(SpringExtension.class)
 public class KeyRotationServiceTest {
 
     private static final String PASSWRD = "password!";
@@ -93,12 +104,14 @@ public class KeyRotationServiceTest {
     ProvidedKeyTemplate genEncryptionKeyPair;
     ProvidedKeyTemplate genSecretKey;
 
+    private AutoCloseable closeable;
+
     final Clock clock = Clock.fixed(FIXED_DATE_TIME.atZone(FIXED_ZONE_ID).toInstant(), FIXED_ZONE_ID);
 
-    @Before
-    public void setup() throws Exception {
+    @BeforeEach
+    public void setup() {
         Security.addProvider(new BouncyCastleProvider());
-        MockitoAnnotations.initMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
 
         Juggler juggler = DaggerBCJuggler.builder()
                 .keyStoreConfig(KeyStoreConfig.builder().type("UBER").build())
@@ -198,11 +211,17 @@ public class KeyRotationServiceTest {
         );
     }
 
-    public class KeyStoreWithExpiredSignatureKeyPair {
+    @AfterEach
+    public void close() throws Exception {
+        closeable.close();
+    }
+
+    @Nested
+    class KeyStoreWithExpiredSignatureKeyPair {
 
         private KeyRotationResult keyRotationResult;
 
-        @Before
+        @BeforeEach
         public void setup() throws Exception {
             when(signatureKeyEntry.getState()).thenReturn(KeyState.EXPIRED);
 
@@ -210,7 +229,7 @@ public class KeyRotationServiceTest {
         }
 
         @Test
-        public void shouldReturnRemovedKeyAliases() {
+        void shouldReturnRemovedKeyAliases() {
             List<String> removedKeys = keyRotationResult.getRemovedKeys();
 
             assertThat(removedKeys, hasSize(1));
@@ -218,18 +237,19 @@ public class KeyRotationServiceTest {
         }
 
         @Test
-        public void shouldReturnGeneratedKeyAliases() {
+        void shouldReturnGeneratedKeyAliases() {
             List<String> generatedKeys = keyRotationResult.getGeneratedKeys();
 
             assertThat(generatedKeys, hasSize(1));
         }
     }
 
-    public class KeyStoreWithExpiredEncryptionKeyPair {
+    @Nested
+    class KeyStoreWithExpiredEncryptionKeyPair {
 
         private KeyRotationResult keyRotationResult;
 
-        @Before
+        @BeforeEach
         public void setup() throws Exception {
             when(encryptionKeyEntry.getState()).thenReturn(KeyState.EXPIRED);
 
@@ -237,7 +257,7 @@ public class KeyRotationServiceTest {
         }
 
         @Test
-        public void shouldReturnRemovedKeyAliases() {
+        void shouldReturnRemovedKeyAliases() {
             List<String> removedKeys = keyRotationResult.getRemovedKeys();
 
             assertThat(removedKeys, hasSize(1));
@@ -245,18 +265,19 @@ public class KeyRotationServiceTest {
         }
 
         @Test
-        public void shouldReturnGeneratedKeyAliases() {
+        void shouldReturnGeneratedKeyAliases() {
             List<String> generatedKeys = keyRotationResult.getGeneratedKeys();
 
             assertThat(generatedKeys, hasSize(1));
         }
     }
 
-    public class KeyStoreWithExpiredSecretKey {
+    @Nested
+    class KeyStoreWithExpiredSecretKey {
 
         private KeyRotationResult keyRotationResult;
 
-        @Before
+        @BeforeEach
         public void setup() throws Exception {
             when(secretKeyEntry.getState()).thenReturn(KeyState.EXPIRED);
 
@@ -264,7 +285,7 @@ public class KeyRotationServiceTest {
         }
 
         @Test
-        public void shouldReturnRemovedKeyAliases() {
+        void shouldReturnRemovedKeyAliases() {
             List<String> removedKeys = keyRotationResult.getRemovedKeys();
 
             assertThat(removedKeys, hasSize(1));
@@ -272,7 +293,7 @@ public class KeyRotationServiceTest {
         }
 
         @Test
-        public void shouldReturnGeneratedKeyAliases() {
+        void shouldReturnGeneratedKeyAliases() {
             List<String> generatedKeys = keyRotationResult.getGeneratedKeys();
 
             assertThat(generatedKeys, hasSize(1));

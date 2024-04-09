@@ -6,11 +6,10 @@ import de.adorsys.sts.tests.e2e.testcomponents.PopRotationValidator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 
 @KeyRotationContext
-@EnableAutoConfiguration(exclude = MongoAutoConfiguration.class)
+@EnableAutoConfiguration
 @ActiveProfiles(profiles = {"jpa", "liquibase", "mysql", "test-db-mysql"})
 class MysqlLiquibaseRotationTest extends BaseJdbcDbTest {
 

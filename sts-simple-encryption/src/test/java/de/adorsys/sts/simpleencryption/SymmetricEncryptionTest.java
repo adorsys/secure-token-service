@@ -3,8 +3,8 @@ package de.adorsys.sts.simpleencryption;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -13,14 +13,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
-public class SymmetricEncryptionTest {
+class SymmetricEncryptionTest {
 
     private static final String A_256_GCMKW_ALGORITHM_NAME = "A256GCMKW";
     private static final String A_256_GCM_ENCRYPTION_METHOD_NAME = "A256GCM";
@@ -28,7 +25,7 @@ public class SymmetricEncryptionTest {
     private StaticKeyEncryptionFactory encryptionFactory;
     private ObjectEncryption objectEncryption;
 
-    @Before
+    @BeforeEach
     public void setup() throws Exception {
         encryptionFactory = new StaticKeyEncryptionFactory(new JacksonObjectMapper());
         String secretKeyAsJson = createSecretKey();
@@ -41,27 +38,27 @@ public class SymmetricEncryptionTest {
     }
 
     @Test
-    public void shouldDecryptEncryptedText() {
+    void shouldDecryptEncryptedText() {
         String plainText = "my super secret plain text which needs to be encrypted";
         String encrypted = objectEncryption.encrypt(plainText);
 
         String decrypted = objectEncryption.decrypt(encrypted);
 
-        assertThat(decrypted, is(equalTo(plainText)));
+        assertThat(decrypted).isEqualTo(plainText);
     }
 
     @Test
-    public void shouldDecryptEncryptedObject() {
+    void shouldDecryptEncryptedObject() {
         TestObject plainObject = getTestObject();
         String encrypted = objectEncryption.encrypt(plainObject);
 
         TestObject decrypted = objectEncryption.decrypt(encrypted, TestObject.class);
 
-        assertThat(decrypted, is(equalTo(plainObject)));
+        assertThat(decrypted).isEqualTo(plainObject);
     }
 
     @Test
-    public void shouldNotDecryptEncryptedTextWithWrongKey() throws Exception {
+    void shouldNotDecryptEncryptedTextWithWrongKey() throws Exception {
         String plainText = "my super secret plain text which needs to be encrypted";
         String encrypted = objectEncryption.encrypt(plainText);
 
@@ -77,7 +74,7 @@ public class SymmetricEncryptionTest {
     }
 
     @Test
-    public void shouldNotDecryptEncryptedObjectWithWrongKey() throws Exception {
+    void shouldNotDecryptEncryptedObjectWithWrongKey() throws Exception {
         TestObject plainObject = getTestObject();
         String encrypted = objectEncryption.encrypt(plainObject);
 

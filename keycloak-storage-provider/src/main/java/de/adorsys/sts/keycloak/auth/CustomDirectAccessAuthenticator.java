@@ -2,14 +2,12 @@ package de.adorsys.sts.keycloak.auth;
 
 import de.adorsys.sts.keycloak.AuthenticatorUtil;
 import de.adorsys.sts.keycloak.Constants;
+import jakarta.ws.rs.core.Response;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.authenticators.directgrant.ValidatePassword;
-import org.keycloak.credential.CredentialInput;
 import org.keycloak.models.UserCredentialModel;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import java.util.Optional;
 
 public class CustomDirectAccessAuthenticator extends ValidatePassword {
@@ -33,13 +31,12 @@ public class CustomDirectAccessAuthenticator extends ValidatePassword {
         Optional<String> scope = AuthenticatorUtil.readScope(context);
         scope.ifPresent(s -> credentialModel.setNote(Constants.CUSTOM_SCOPE_NOTE_KEY, s));
 
-        boolean valid = context.getSession().userCredentialManager().isValid(context.getRealm(), context.getUser(),
-                new CredentialInput[]{credentialModel});
+        boolean valid = context.getUser().credentialManager().isValid(credentialModel);
 
         if (!valid) {
             context.getEvent().user(context.getUser());
             context.getEvent().error("invalid_user_credentials");
-            Response challengeResponse = this.errorResponse(Status.UNAUTHORIZED.getStatusCode(), "invalid_grant",
+            Response challengeResponse = this.errorResponse(Response.Status.UNAUTHORIZED.getStatusCode(), "invalid_grant",
                     "Invalid user credentials");
             context.failure(AuthenticationFlowError.INVALID_USER, challengeResponse);
         } else {
