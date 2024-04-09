@@ -1,9 +1,7 @@
 import {Injectable} from '@angular/core';
 import {StsClientConfig} from '../env/sts-client-config.service';
+import Keycloak from 'keycloak-js';
 
-import * as Keycloak_ from 'keycloak-js';
-
-export const Keycloak = Keycloak_;
 
 @Injectable()
 export class KeycloakService {
@@ -16,24 +14,24 @@ export class KeycloakService {
   }
 
   public init(): void {
-    const keycloak = Keycloak({
-      'url': this.clientConfig.getKeycloakAuthUrl(),
-      'realm': this.clientConfig.getKeycloakRealm(),
-      'clientId': this.clientConfig.getKeycloakClientId()
+    const keycloak = new Keycloak({
+      url: this.clientConfig.getKeycloakAuthUrl(),
+      realm: this.clientConfig.getKeycloakRealm(),
+      clientId: this.clientConfig.getKeycloakClientId()
     });
 
     keycloak.onTokenExpired = this.onTokenExpired;
     keycloak.loginRequired = true;
 
-    keycloak.init({flow: 'implicit'})
-      .success(authenticated => {
-        this.initSuccess = true;
-        this.isAuthenticated = authenticated;
-      })
-      .error(e => {
-        this.initSuccess = false;
-        console.log(e);
-      });
+    keycloak.init({
+      flow: 'implicit'
+    }).then(authenticated => {
+      console.log('on success' + authenticated);
+      this.isAuthenticated = authenticated;
+      this.initSuccess = authenticated;
+    }).catch(err => {
+      console.log('on error' + err);
+    });
 
     this.keycloak = keycloak;
   }
