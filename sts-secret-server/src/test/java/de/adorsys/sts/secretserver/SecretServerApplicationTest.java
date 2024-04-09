@@ -162,7 +162,7 @@ class SecretServerApplicationTest {
     }
 
     @Test
-    void shouldGetEmptySecretsForUnknownAudience() throws Exception {
+    void shouldGetEmptySecretsForUnknownAudience() {
         Authentication.AuthenticationToken authToken = authentication.login(USERNAME_ONE, PASSWORD_ONE);
 
         TokenResponse secretServerToken = client.exchangeToken("/secret-server/token-exchange", "unknown audience", authToken.getAccessToken());

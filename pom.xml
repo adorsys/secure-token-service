@@ -49,7 +49,7 @@
         <maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring-boot.version>3.2.3</spring-boot.version>
+        <spring-boot.version>3.2.4</spring-boot.version>
         <keystore-management.version>0.0.10</keystore-management.version>
         <shedlock.version>5.3.0</shedlock.version>
         <openapi.version>2.4.0</openapi.version>
@@ -62,11 +62,11 @@
         <jacoco.version>0.8.8</jacoco.version>
         <testcontainers.version>1.19.7</testcontainers.version>
         <flyway.version>10.10.0</flyway.version>
-        <postgres.version>42.7.2</postgres.version>
-        <h2.version>1.4.200</h2.version>
+        <postgres.version>42.7.3</postgres.version>
+        <h2.version>2.2.224</h2.version>
         <mockito.version>5.11.0</mockito.version>
         <catch-exception.version>1.4.6</catch-exception.version>
-        <nimbus-jose-jwt.version>9.31</nimbus-jose-jwt.version>
+        <nimbus-jose-jwt.version>9.37.3</nimbus-jose-jwt.version>
         <scmBranch/>
         <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
         <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
