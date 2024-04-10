@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.adorsys.sts</groupId>
         <artifactId>secure-token-service</artifactId>
-        <version>1.1.22</version>
+        <version>1.1.23</version>
     </parent>
 
     <artifactId>keycloak-storage-provider</artifactId>
@@ -27,6 +27,10 @@
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-services</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-model-legacy</artifactId>
         </dependency>
     </dependencies>
 

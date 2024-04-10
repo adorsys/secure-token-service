@@ -3,41 +3,29 @@ server:
 
 logging:
   level:
-    de.adorsys: 'debug'
-    de.adorsys.sts: 'debug'
-    de.adorsys.sts.keyrotation: 'debug'
+    de.adorsys: 'error'
+    de.adorsys.sts: 'error'
+    de.adorsys.sts.keyrotation: 'error'
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/sts
+    url: jdbc:h2:mem:AZ;INIT=CREATE SCHEMA IF NOT EXISTS sts;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;NON_KEYWORDS=VALUE
     username: db_user
     password: db_user@123
   jpa:
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
-        ddl-auto: create
-        default_schema: public
+        default_schema: sts
     open-in-view: false
   flyway:
     enabled: false
-    url: jdbc:postgresql:localhost:5432/sts
-    user: db_user
-    password: db_user@123
     locations:
-      - classpath:db/migration/flyway/postgres/
-      - classpath:/db/migration/flyway/postgres
-      - classpath:/db/migration/flyway/postgres/
-    create-schemas: true
-    fail-on-missing-locations: false
+      - db/migration/flyway/h2
   liquibase:
     enabled: true
-    change-log: classpath:db/migration/liquibase/changelog.yml
+    change-log: classpath:/db/migration/liquibase/changelog.yml
     default-schema: public
-    url: jdbc:postgresql://localhost:5432/sts
-    user: db_user
-    password: db_user@123
-    liquibase-schema: public
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
@@ -53,8 +41,7 @@ tests:
     user-info-uri: http://localhost:9090/auth/realms/moped/protocol/openid-connect/userinfo
     end-session-endpoint: http://localhost:9090/auth/realms/moped/protocol/openid-connect/logout
     use-secure-cookies: false
-keycloak:
-  auth-server-url: http://localhost:8080
+
 sts:
   secret-server:
     secret-length: 8192

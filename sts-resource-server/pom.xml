@@ -5,7 +5,7 @@
     <parent>
         <artifactId>secure-token-service</artifactId>
         <groupId>de.adorsys.sts</groupId>
-        <version>1.1.22</version>
+        <version>1.1.23</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -35,8 +35,8 @@
         </dependency>
 
         <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

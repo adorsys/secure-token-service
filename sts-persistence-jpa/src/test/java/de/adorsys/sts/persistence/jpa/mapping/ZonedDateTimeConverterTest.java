@@ -1,27 +1,25 @@
 package de.adorsys.sts.persistence.jpa.mapping;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class ZonedDateTimeConverterTest {
+class ZonedDateTimeConverterTest {
 
     private ZonedDateTimeConverter converter;
 
-    @Before
-    public void setup() throws Exception {
+    @BeforeEach
+    public void setup() {
       converter = new ZonedDateTimeConverter();
     }
 
     @Test
-    public void should() throws Exception {
+    void should() {
 
         ZonedDateTime zonedDateTime = ZonedDateTime.of(2017, 2, 7, 11, 16, 22, 333, ZoneOffset.UTC);
         Timestamp timestamp = converter.convertToDatabaseColumn(zonedDateTime);
@@ -29,10 +27,10 @@ public class ZonedDateTimeConverterTest {
         long timeMillis = timestamp.getTime();
         long zonedDateTimeMillis = zonedDateTime.toInstant().toEpochMilli();
 
-        assertThat(timeMillis, is(equalTo(zonedDateTimeMillis)));
+        assertThat(timeMillis).isEqualTo(zonedDateTimeMillis);
 
         ZonedDateTime backConvertedZonedDateTime = converter.convertToEntityAttribute(timestamp);
-        assertThat(backConvertedZonedDateTime.toInstant().toEpochMilli(), is(equalTo(zonedDateTimeMillis)));
+        assertThat(backConvertedZonedDateTime.toInstant().toEpochMilli()).isEqualTo(zonedDateTimeMillis);
     }
 
 }

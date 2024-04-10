@@ -48,6 +48,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests((requests) -> requests
                         // Erlauben Sie den Zugriff auf Swagger-Dokumentation und UI-Ressourcen
                         .requestMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/api/auth/**", "/api/test/**").permitAll()
                         .requestMatchers("/cloudfoundryapplication/**").permitAll()
                         // Erlauben Sie den Zugriff auf andere spezifische Endpunkte
                         .requestMatchers(HttpMethod.GET, "/pop").permitAll()

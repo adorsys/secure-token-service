@@ -6,11 +6,11 @@ import de.adorsys.sts.keycloak.rest.CustomRestClient;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.credential.CredentialInput;
 import org.keycloak.credential.CredentialInputValidator;
-import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserCredentialModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.models.credential.PasswordCredentialModel;
 import org.keycloak.storage.UserStorageProvider;
 import org.keycloak.storage.user.UserLookupProvider;
 
@@ -32,12 +32,12 @@ public class CustomUserStorageProvider implements UserStorageProvider, UserLooku
 
     @Override
     public boolean supportsCredentialType(String s) {
-        return CredentialModel.PASSWORD.equals(s);
+        return PasswordCredentialModel.TYPE.equals(s);
     }
 
     @Override
     public boolean isConfiguredFor(RealmModel realmModel, UserModel userModel, String s) {
-        return CredentialModel.PASSWORD.equals(s);
+        return PasswordCredentialModel.TYPE.equals(s);
     }
 
     @Override
@@ -83,9 +83,9 @@ public class CustomUserStorageProvider implements UserStorageProvider, UserLooku
 
 
     @Override
-    public UserModel getUserById(String s, RealmModel realmModel) {
-        String username = extractUsernameFromId(s);
-        return getUserByUsername(realmModel, username);
+    public UserModel getUserById(RealmModel realm, String id) {
+        String username = extractUsernameFromId(id);
+        return getUserByUsername(realm, username);
     }
 
     @Override
@@ -99,17 +99,7 @@ public class CustomUserStorageProvider implements UserStorageProvider, UserLooku
     }
 
     @Override
-    public UserModel getUserByUsername(String s, RealmModel realmModel) {
-        return null;
-    }
-
-    @Override
     public UserModel getUserByEmail(RealmModel realmModel, String s) {
-        return null;
-    }
-
-    @Override
-    public UserModel getUserByEmail(String s, RealmModel realmModel) {
         return null;
     }
 }

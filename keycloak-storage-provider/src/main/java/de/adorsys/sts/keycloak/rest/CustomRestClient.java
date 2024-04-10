@@ -1,18 +1,14 @@
 package de.adorsys.sts.keycloak.rest;
 
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Response;
 import org.apache.http.HttpStatus;
 import org.keycloak.services.ServicesLogger;
 
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Map;
-
 
 public class CustomRestClient {
-    private static final GenericType<Map<String, String>> RESPONSE_GENERIC_TYPE = new GenericType<>(Map.class);
 
     public static String loadUserSecrets(
             String url,

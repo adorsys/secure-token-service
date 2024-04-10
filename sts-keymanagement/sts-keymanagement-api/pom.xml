@@ -5,7 +5,7 @@
     <parent>
         <artifactId>sts-keymanagement</artifactId>
         <groupId>de.adorsys.sts</groupId>
-        <version>1.1.22</version>
+        <version>1.1.23</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -30,7 +30,6 @@
         <dependency>
             <groupId>de.adorsys.keymanagement</groupId>
             <artifactId>api</artifactId>
-            <version>0.0.9</version>
         </dependency>
 
     </dependencies>
