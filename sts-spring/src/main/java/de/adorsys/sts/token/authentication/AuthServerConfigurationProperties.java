@@ -1,5 +1,7 @@
 package de.adorsys.sts.token.authentication;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -22,42 +24,13 @@ public class AuthServerConfigurationProperties {
         this.authservers = authservers;
     }
 
+    @Getter
+    @Setter
     public static class AuthServerProperties {
         private String name;
         private String issUrl;
         private String jwksUrl;
         private Integer refreshIntervalSeconds = 600;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getIssUrl() {
-            return issUrl;
-        }
-
-        public void setIssUrl(String issUrl) {
-            this.issUrl = issUrl;
-        }
-
-        public String getJwksUrl() {
-            return jwksUrl;
-        }
-
-        public void setJwksUrl(String jwksUrl) {
-            this.jwksUrl = jwksUrl;
-        }
-
-        public Integer getRefreshIntervalSeconds() {
-            return refreshIntervalSeconds;
-        }
-
-        public void setRefreshIntervalSeconds(Integer refreshIntervalSeconds) {
-            this.refreshIntervalSeconds = refreshIntervalSeconds;
-        }
+        private String keyCloakUrl;
     }
 }
