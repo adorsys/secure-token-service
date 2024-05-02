@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASS
+echo "$DOCKERHUB_PASS" | docker login -u $DOCKERHUB_USER --password-stdin
 
 # ----- push sts-example -----
 
