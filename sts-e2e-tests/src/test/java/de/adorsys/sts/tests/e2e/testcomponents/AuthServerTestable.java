@@ -7,8 +7,8 @@ import java.security.Key;
 
 public class AuthServerTestable extends LoggingAuthServer {
 
-    public AuthServerTestable(String name, String issUrl, String jwksUrl, int refreshIntervalSeconds) {
-        super(name, issUrl, jwksUrl, refreshIntervalSeconds);
+    public AuthServerTestable(String name, String issUrl, String jwksUrl, int refreshIntervalSeconds, String keyCloakUrl) {
+        super(name, issUrl, jwksUrl, refreshIntervalSeconds, keyCloakUrl);
     }
 
     @Override

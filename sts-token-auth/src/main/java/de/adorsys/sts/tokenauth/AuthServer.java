@@ -1,6 +1,7 @@
 package de.adorsys.sts.tokenauth;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.KeySourceException;
 import com.nimbusds.jose.jwk.*;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.jwk.source.JWKSourceBuilder;
@@ -10,7 +11,11 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.security.Key;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +30,7 @@ public class AuthServer {
     private final String issUrl;
     private final String jwksUrl;
     private final int refreshIntervalSeconds;
+    private final String keyCloakUrl;
 
     @Setter
     JWKSource<SecurityContext> jwkSource;
@@ -32,17 +38,18 @@ public class AuthServer {
     final ConcurrentHashMap<String, JWK> jwkCache = new ConcurrentHashMap<>();
     long lastCacheUpdate = 0;
 
-    public AuthServer(String name, String issUrl, String jwksUrl) {
-        this(name, issUrl, jwksUrl, 600);
+    public AuthServer(String name, String issUrl, String jwksUrl, String keyCloakUrl) {
+        this(name, issUrl, jwksUrl, 600, keyCloakUrl);
     }
 
     @SneakyThrows
-    public AuthServer(String name, String issUrl, String jwksUrl, int refreshIntervalSeconds) {
+    public AuthServer(String name, String issUrl, String jwksUrl, int refreshIntervalSeconds, String keyCloakUrl) {
         super();
         this.name = name;
         this.issUrl = issUrl;
         this.jwksUrl = jwksUrl;
         this.refreshIntervalSeconds = refreshIntervalSeconds;
+        this.keyCloakUrl = keyCloakUrl;
 
         jwkSource = JWKSourceBuilder.create(new URL(this.jwksUrl)).build();
     }
@@ -51,6 +58,12 @@ public class AuthServer {
         log.debug("Thread entering updateJwkCache: " + Thread.currentThread().getId());
 
         try {
+            if (keyCloakUrl != null) {
+                HttpClient httpClient = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(keyCloakUrl)).build();
+                HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                log.info("Checking keycloak availability: " + response.statusCode());
+            }
 
             List<JWK> jwks = jwkSource.get(new JWKSelector(new JWKMatcher.Builder().build()), null);
             onJsonWebKeySetRetrieved(jwks);
@@ -61,6 +74,8 @@ public class AuthServer {
                 jwkCache.put(jwk.getKeyID(), jwk);
             }
             lastCacheUpdate = new Date().getTime();
+        } catch (KeySourceException e) {
+            log.warn("couldn't update jwk cache: ", e);
         } catch (Exception e) {
             throw new JsonWebKeyRetrievalException(e);
         }

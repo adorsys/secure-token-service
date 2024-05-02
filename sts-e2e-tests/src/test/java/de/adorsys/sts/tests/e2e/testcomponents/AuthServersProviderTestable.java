@@ -46,7 +46,8 @@ public class AuthServersProviderTestable extends ConfigurationPropertiesAuthServ
                 properties.getName(),
                 properties.getIssUrl(),
                 properties.getJwksUrl(),
-                properties.getRefreshIntervalSeconds()
+                properties.getRefreshIntervalSeconds(),
+                properties.getKeyCloakUrl()
         );
     }
 }
