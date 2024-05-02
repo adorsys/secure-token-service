@@ -11,6 +11,8 @@ name: Release
 jobs:
   release_workflow:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Step 1 - Checkout repository code
         uses: actions/checkout@v4
