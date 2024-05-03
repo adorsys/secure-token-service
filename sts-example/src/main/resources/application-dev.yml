@@ -26,9 +26,11 @@ sts:
   - name: local keycloak
     iss-url : http://localhost:8080/auth/realms/moped
     jwks-url: http://localhost:8080/auth/realms/moped/protocol/openid-connect/certs
+    key-cloak-url: http://localhost:8080/auth/realms/moped
   - name: secret-server
     iss-url : http://localhost:8885
     jwks-url: http://localhost:8885/pop
+    key-cloak-url: http://localhost:8085/realms/moped
   resource-servers:
   - audience: sts
     jwks-url: http://localhost:8888/pop

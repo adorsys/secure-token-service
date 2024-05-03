@@ -18,7 +18,10 @@ import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -29,7 +32,7 @@ class AuthServerTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        authServer = new AuthServer("TestServer", "https://example.com/iss", "https://example.com/jwks", 10);
+        authServer = new AuthServer("TestServer", "https://example.com/iss", "https://example.com/jwks", 10, null);
         mockRemoteJWKSet = Mockito.mock(RemoteJWKSet.class);
         JWK jwk = new RSAKey.Builder(new Base64URL("n"), new Base64URL("e")).keyID("testKey").build();
         when(mockRemoteJWKSet.get(any(JWKSelector.class), any(SecurityContext.class))).thenReturn(Collections.singletonList(jwk));
@@ -52,7 +55,7 @@ class AuthServerTest {
         RSAKey rsaKey = new RSAKey.Builder((RSAPublicKey) keyPair.getPublic()).keyID("testKey").build();
 
         // Configure your AuthServer instance
-        AuthServer authServer = new AuthServer("TestServer", "https://example.com/iss", "https://example.com/jwks");
+        AuthServer authServer = new AuthServer("TestServer", "https://example.com/iss", "https://example.com/jwks", null);
         authServer.setJwkSource(mockJwkSource); // Inject the mock
 
         // Mock the JWKSource and configure it to return the mock RSAKey
@@ -82,7 +85,7 @@ class AuthServerTest {
         Mockito.when(mockJwkSource.get(any(), any())).thenReturn(Collections.singletonList(rsaKey));
 
         // Inject the mock JWKSource into your AuthServer
-        AuthServer authServer = new AuthServer("TestServer", "https://example.com/iss", "https://example.com/jwks");
+        AuthServer authServer = new AuthServer("TestServer", "https://example.com/iss", "https://example.com/jwks", null);
         // Assuming you have a method to set the JWKSource
         authServer.setJwkSource(mockJwkSource);
         // Now you can test your method

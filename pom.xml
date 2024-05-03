@@ -5,7 +5,7 @@
 
     <groupId>de.adorsys.sts</groupId>
     <artifactId>secure-token-service</artifactId>
-    <version>1.1.23</version>
+    <version>1.1.24</version>
     <packaging>pom</packaging>
 
     <name>SecureTokenService</name>
@@ -49,14 +49,13 @@
         <maven.build-timestamp>${maven.build.timestamp}</maven.build-timestamp>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring-boot.version>3.2.4</spring-boot.version>
-        <keystore-management.version>0.0.10</keystore-management.version>
+        <spring-boot.version>3.2.5</spring-boot.version>
+        <keystore-management.version>0.0.11</keystore-management.version>
         <shedlock.version>5.3.0</shedlock.version>
         <openapi.version>2.4.0</openapi.version>
         <swagger-annotations.version>2.2.20</swagger-annotations.version>
         <jackson.version>2.15.1</jackson.version>
         <jackson-databind.version>2.15.1</jackson-databind.version>
-        <bouncycastle.version>1.64</bouncycastle.version>
         <keycloak.version>22.0.4</keycloak.version>
         <surefire.version>3.0.0-M4</surefire.version>
         <jacoco.version>0.8.8</jacoco.version>
@@ -273,20 +272,6 @@
                 <groupId>com.nimbusds</groupId>
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>${nimbus-jose-jwt.version}</version>
-            </dependency>
-
-            <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15on</artifactId>
-                <version>${bouncycastle.version}</version>
-            </dependency>
-
-            <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk15on -->
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcpkix-jdk15on</artifactId>
-                <version>${bouncycastle.version}</version>
             </dependency>
 
             <dependency>
