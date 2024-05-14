@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
@@ -66,6 +67,6 @@ public class SecretServerClientConfiguration {
     @Component
     @ConfigurationProperties(prefix = "sts.secret-server-client")
     public static class CustomHeadersProperties {
-        private Map<String, String> customHeaders;
+        private Map<String, String> customHeaders = new HashMap<>();
     }
 }
