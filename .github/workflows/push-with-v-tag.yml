@@ -40,3 +40,5 @@ jobs:
           STS_SECRET_SERVER_DOCKER_IMAGE_NAME: adorsys/sts-secret-server
           STS_KEYCLOAK_ADAPTER_DOCKER_IMAGE_NAME: adorsys/keycloak-sts-adapter
           TAG: ${{ env.TAG }}
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASSWORD }}
