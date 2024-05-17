@@ -134,9 +134,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <!--https://stackoverflow.com/questions/49363222/maven-failsafe-plugin-surefirebooterforkexception-there-was-an-error-in-the-f-->
-                <version>2.22.0</version>
+                <version>${failsafe.version}</version>
                 <configuration>
-                    <argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>
                     <includes>
                         <include>**/*IT.java</include>
                     </includes>
