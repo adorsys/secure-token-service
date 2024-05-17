@@ -21,10 +21,10 @@ jobs:
       - name: Step 3 - Build & Test
         run: mvn clean verify -ntp
 
-      - name: Step 5 - Build client
+      - name: Step 4 - Build client
         run: ./scripts/build_client.sh
 
-      - name: Maven deploy snapshot
+      - name: Step 5 - Maven deploy snapshot
         run: ./scripts/mvn_deploy.sh
         env:
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
@@ -33,3 +33,9 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
           GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
+
+      - name: Step 6 - Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true

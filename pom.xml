@@ -58,7 +58,7 @@
         <jackson-databind.version>2.15.1</jackson-databind.version>
         <keycloak.version>22.0.4</keycloak.version>
         <surefire.version>3.0.0-M4</surefire.version>
-        <jacoco.version>0.8.8</jacoco.version>
+        <jacoco.version>0.8.12</jacoco.version>
         <testcontainers.version>1.19.7</testcontainers.version>
         <flyway.version>10.10.0</flyway.version>
         <postgres.version>42.7.3</postgres.version>
