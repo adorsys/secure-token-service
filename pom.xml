@@ -57,14 +57,15 @@
         <jackson.version>2.15.1</jackson.version>
         <jackson-databind.version>2.15.1</jackson-databind.version>
         <keycloak.version>22.0.4</keycloak.version>
-        <surefire.version>3.0.0-M4</surefire.version>
-        <jacoco.version>0.8.8</jacoco.version>
+        <surefire.version>3.2.5</surefire.version>
+        <failsafe.version>3.2.5</failsafe.version>
+        <jacoco.version>0.8.12</jacoco.version>
         <testcontainers.version>1.19.7</testcontainers.version>
         <flyway.version>10.10.0</flyway.version>
         <postgres.version>42.7.3</postgres.version>
         <h2.version>2.2.224</h2.version>
-        <mockito.version>5.11.0</mockito.version>
-        <catch-exception.version>1.4.6</catch-exception.version>
+        <mockito.version>5.12.0</mockito.version>
+        <catch-exception.version>2.0</catch-exception.version>
         <nimbus-jose-jwt.version>9.37.3</nimbus-jose-jwt.version>
         <scmBranch/>
         <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>

@@ -141,7 +141,7 @@ class SecretServerApplicationTest {
                 "20qD2QfgDoA0CpOZCQzMe9WoIfo8L-g4099--XouFyMWRU8VyVsx_73ekNKPUmWvuNIxeF3PBk9KGs7ABUnv_6n8A-KqzYTyA4y0gU" +
                 "8E9mgIuWpDmQ2FROf1Gd-2it9k3tvr83k7N1dMvg";
 
-        catchException(client).exchangeToken("/secret-server/token-exchange", MOPED_CLIENT_AUDIENCE, invalidAccessToken);
+        catchException(() -> client.exchangeToken("/secret-server/token-exchange", MOPED_CLIENT_AUDIENCE, invalidAccessToken));
 
         Exception caughtException = caughtException();
 
@@ -153,7 +153,7 @@ class SecretServerApplicationTest {
     void shouldNotGetSecretForFakeAccessToken() throws Exception {
         final String fakeAccessToken = "my fake access token";
 
-        catchException(client).exchangeToken("/secret-server/token-exchange", MOPED_CLIENT_AUDIENCE, fakeAccessToken);
+        catchException(() -> client.exchangeToken("/secret-server/token-exchange", MOPED_CLIENT_AUDIENCE, fakeAccessToken));
 
         Exception caughtException = caughtException();
 

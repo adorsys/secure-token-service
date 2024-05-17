@@ -1,4 +1,6 @@
-# secure-token-service [![Build Status](https://travis-ci.com/adorsys/secure-token-service.svg?branch=master)](https://travis-ci.com/adorsys/secure-token-service)
+[![codecov](https://codecov.io/gh/adorsys/secure-token-service/branch/develop/graph/badge.svg)](https://codecov.io/gh/adorsys/secure-token-service)
+
+# secure-token-service
 
 This an implementation of the secure token service as specified in the token exchange working draft https://tools.ietf.org/html/draft-ietf-oauth-token-exchange-08. 
 
