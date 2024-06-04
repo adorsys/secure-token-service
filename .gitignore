@@ -38,5 +38,3 @@ src/main/resources/.~lock.sts_login_data.xls#
 .docker/
 
 sts_h2_db.*.db
-
-/sts-client-example/package-lock.json

@@ -6,7 +6,8 @@ on:
       - master
 
 jobs:
-  build:
+  build_java:
+    name: Build & Test backend
     runs-on: ubuntu-latest
     steps:
       - name: Step 1 - Checkout repository code
@@ -22,11 +23,23 @@ jobs:
       - name: Step 3 - Build & Test
         run: mvn clean verify -ntp
 
-      - name: Step 4 - Build client
-        run: ./scripts/build_client.sh
-
-      - name: Step 5 - Upload coverage reports to Codecov
+      - name: Step 4 - Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
+
+  build_angular:
+    name: Build & Test frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Step 1 - Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Step 2 - setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+      - run: npm run prod
