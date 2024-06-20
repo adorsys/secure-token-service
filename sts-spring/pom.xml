@@ -9,6 +9,10 @@
 
     <artifactId>sts-spring</artifactId>
 
+    <properties>
+        <openapigenerator.version>7.6.0</openapigenerator.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -90,5 +94,81 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapigenerator.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/api.yml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <generateApiTests>false</generateApiTests>
+                            <apiPackage>de.adorsys.sts.token.api</apiPackage>
+                            <modelPackage>de.adorsys.sts.token.model</modelPackage>
+                            <configOptions>
+                                <library>spring-boot</library>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <interfaceOnly>true</interfaceOnly>
+                                <useTags>true</useTags>
+                                <dateLibrary>java8</dateLibrary>
+                                <java8>true</java8>
+                                <openApiNullable>false</openApiNullable>
+                                <sortParamsByRequiredFlag>false</sortParamsByRequiredFlag>
+                                <useJakartaEe>true</useJakartaEe>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>io.swagger.codegen.v3</groupId>-->
+<!--                <artifactId>swagger-codegen-maven-plugin</artifactId>-->
+<!--                <version>3.0.57</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>bankSearch</id>-->
+<!--                        <goals>-->
+<!--                            <goal>generate</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <inputSpec>${project.basedir}/src/main/resources/api.yml</inputSpec>-->
+<!--                            <language>spring</language>-->
+<!--                            <output>${project.build.directory}/generated-sources/open-api/</output>-->
+<!--                            <generateApiTests>false</generateApiTests>-->
+<!--                            <generateModelTests>false</generateModelTests>-->
+<!--                            <configOptions>-->
+<!--                                <sourceFolder>src/main/java</sourceFolder>-->
+<!--                                <modelPackage>de.adorsys.sts.token.model</modelPackage>-->
+<!--                                <apiPackage>de.adorsys.sts.token.api</apiPackage>-->
+<!--                                <interfaceOnly>true</interfaceOnly>-->
+<!--                                <skipOverwrite>true</skipOverwrite>-->
+<!--                                <dateLibrary>java8</dateLibrary>-->
+<!--                                <java8>true</java8>-->
+<!--                                <useTags>true</useTags>-->
+<!--                                <defaultInterfaces>false</defaultInterfaces>-->
+<!--                                <implicitHeaders>false</implicitHeaders>-->
+<!--                                <library>spring-boot</library>-->
+<!--                                <swaggerDocketConfig>false</swaggerDocketConfig>-->
+<!--                                <jakarta>true</jakarta>-->
+<!--                            </configOptions>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+        </plugins>
+    </build>
 </project>

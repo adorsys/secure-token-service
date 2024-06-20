@@ -1,6 +1,7 @@
 package de.adorsys.sts.token.tokenexchange.server;
 
 import de.adorsys.sts.common.config.TokenResource;
+import de.adorsys.sts.token.tokenexchange.TokenExchangeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,4 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class TokenExchangeRestController extends TokenExchangeController {
 
     public static final String DEFAULT_PATH = "/token/token-exchange";
+
+    public TokenExchangeRestController(TokenExchangeService tokenExchangeService) {
+        super(tokenExchangeService);
+    }
 }
