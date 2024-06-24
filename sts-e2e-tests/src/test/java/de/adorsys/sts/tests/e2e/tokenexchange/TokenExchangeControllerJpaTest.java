@@ -7,7 +7,6 @@ import de.adorsys.sts.tests.config.WithControllableClock;
 import de.adorsys.sts.tests.config.WithTokenExchangeConfig;
 import de.adorsys.sts.tests.config.WithoutWebSecurityConfig;
 import de.adorsys.sts.token.tokenexchange.TokenExchangeConstants;
-import de.adorsys.sts.token.tokenexchange.server.TokenExchangeRestController;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ class TokenExchangeControllerJpaTest extends BaseEndpointTest {
 
         clock.setInstant(Instant.ofEpochMilli(1516239022000L));
 
-        mvc.perform(post(TokenExchangeRestController.DEFAULT_PATH)
+        mvc.perform(post("/token/token-exchange")
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                         .param("grant_type", TokenExchangeConstants.TOKEN_EXCHANGE_OAUTH_GRANT_TYPE)
