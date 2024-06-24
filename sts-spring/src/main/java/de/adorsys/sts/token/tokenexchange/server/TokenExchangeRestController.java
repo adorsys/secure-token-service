@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Tag(name = "Token Exchange", description = "Token exchange, token degradation endpoint")
 @TokenResource
-@RequestMapping(path = TokenExchangeRestController.DEFAULT_PATH)
+@RequestMapping(path = "/token/token-exchange")
 public class TokenExchangeRestController extends TokenExchangeController {
-
-    public static final String DEFAULT_PATH = "/token/token-exchange";
 
     public TokenExchangeRestController(TokenExchangeService tokenExchangeService) {
         super(tokenExchangeService);
