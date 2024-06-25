@@ -75,7 +75,10 @@
         <buildnumber-maven-plugin.version>3.2.0</buildnumber-maven-plugin.version>
         <maven-deploy-plugin.version>3.1.2</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
-        <maven-javadoc-plugin.version>3.6.0</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <lombok.version>1.18.32</lombok.version>
+        <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
     </properties>
 
     <modules>
@@ -466,8 +469,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
-
+                    <version>${maven-compiler-plugin.version}</version>
                 </plugin>
 
                 <plugin>
@@ -515,7 +517,7 @@
                 <plugin>
                     <groupId>org.projectlombok</groupId>
                     <artifactId>lombok-maven-plugin</artifactId>
-                    <version>1.18.20.0</version>
+                    <version>${lombok-maven-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -575,12 +577,33 @@
                         </executions>
                     </plugin>
                     <plugin>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok-maven-plugin</artifactId>
+                        <version>${lombok-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>delombok</goal>
+                                </goals>
+                                <configuration>
+                                    <addOutputDirectory>false</addOutputDirectory>
+                                    <sourceDirectory>src/main/java</sourceDirectory>
+                                    <outputDirectory>
+                                        ${project.build.directory}/delombok
+                                    </outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>${maven-javadoc-plugin.version}</version>
                         <configuration>
                             <source>17</source>
                             <doclint>none</doclint>
+                            <sourcepath>target/generated-sources/delombok</sourcepath>
                         </configuration>
                         <executions>
                             <execution>
