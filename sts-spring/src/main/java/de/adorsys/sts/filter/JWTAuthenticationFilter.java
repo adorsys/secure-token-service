@@ -1,31 +1,29 @@
 package de.adorsys.sts.filter;
 
 import de.adorsys.sts.token.authentication.TokenAuthenticationService;
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.servlet.http.HttpServletResponse;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-public class JWTAuthenticationFilter extends GenericFilterBean {
-    private static final Logger logger = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
+@Slf4j
+@RequiredArgsConstructor
+public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
-    private TokenAuthenticationService tokenAuthenticationService;
-
-    public JWTAuthenticationFilter(TokenAuthenticationService tokenAuthenticationService) {
-        this.tokenAuthenticationService = tokenAuthenticationService;
-    }
+    private final TokenAuthenticationService tokenAuthenticationService;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
-            throws IOException, ServletException {
+    public void doFilterInternal(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain)
+            throws ServletException, IOException {
         if (logger.isTraceEnabled()) logger.trace("doFilter start");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -33,7 +31,7 @@ public class JWTAuthenticationFilter extends GenericFilterBean {
             if (logger.isDebugEnabled())
                 logger.debug("Authentication is null. Try to get authentication from request...");
 
-            authentication = tokenAuthenticationService.getAuthentication((HttpServletRequest) request);
+            authentication = tokenAuthenticationService.getAuthentication(request);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 

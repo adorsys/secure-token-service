@@ -34,6 +34,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.POST,
                         "/login"
                 ).permitAll()
+                .requestMatchers("/error").permitAll()
                 .anyRequest().authenticated()
         ;
 
