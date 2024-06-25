@@ -589,9 +589,7 @@
                                 <configuration>
                                     <addOutputDirectory>false</addOutputDirectory>
                                     <sourceDirectory>src/main/java</sourceDirectory>
-                                    <outputDirectory>
-                                        ${project.build.directory}/delombok
-                                    </outputDirectory>
+                                    <outputDirectory>${project.build.directory}/delombok</outputDirectory>
                                 </configuration>
                             </execution>
                         </executions>
@@ -603,7 +601,7 @@
                         <configuration>
                             <source>17</source>
                             <doclint>none</doclint>
-                            <sourcepath>target/generated-sources/delombok</sourcepath>
+                            <sourcepath>${project.build.directory}/delombok</sourcepath>
                         </configuration>
                         <executions>
                             <execution>
