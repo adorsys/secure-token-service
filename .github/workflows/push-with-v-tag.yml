@@ -31,17 +31,17 @@ jobs:
       - name: Step 4 - Build client
         run: ./scripts/build_client.sh
 
-      - name: Get the tag name
-        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          path: |
+            ${{ github.workspace }}/**/*.jar
+            ${{ github.workspace }}/**/Dockerfile
+          overwrite: true
+          if-no-files-found: error
 
-      - name: Push to Dockerhub
-        run: ./scripts/docker_push.sh
-        env:
-          STS_EXAMPLE_DOCKER_IMAGE_NAME: adorsys/sts-example
-          STS_SERVICE_COMPONENT_EXAMPLE_DOCKER_IMAGE_NAME: adorsys/sts-service-component-example
-          STS_CLIENT_EXAMPLE_DOCKER_IMAGE_NAME: adorsys/sts-client-example
-          STS_SECRET_SERVER_DOCKER_IMAGE_NAME: adorsys/sts-secret-server
-          STS_KEYCLOAK_ADAPTER_DOCKER_IMAGE_NAME: adorsys/keycloak-sts-adapter
-          TAG: ${{ env.TAG }}
-          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASSWORD }}
+  dockerhub:
+    needs: build
+    uses: ./.github/workflows/dockerhub.yml
+    secrets: inherit
