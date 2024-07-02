@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.adorsys.sts</groupId>
         <artifactId>secure-token-service</artifactId>
-        <version>1.1.28-SNAPSHOT</version>
+        <version>1.1.28</version>
     </parent>
 
     <artifactId>keycloak-storage-provider</artifactId>
