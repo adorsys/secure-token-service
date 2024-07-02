@@ -32,9 +32,15 @@ jobs:
   build_angular:
     name: Build & Test frontend
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./sts-client-example
     steps:
       - name: Step 1 - Checkout repository code
         uses: actions/checkout@v4
+        with:
+          sparse-checkout: 'sts-client-example'
+          sparse-checkout-cone-mode: false
 
       - name: Step 2 - setup node
         uses: actions/setup-node@v4
@@ -42,4 +48,5 @@ jobs:
           node-version: 20
 
       - run: npm ci
+
       - run: npm run prod
