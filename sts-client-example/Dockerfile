@@ -1,10 +1,6 @@
 # https://github.com/adorsys/dockerhub-pipeline-images/tree/master/nginx
 # https://hub.docker.com/r/adorsys/nginx/
-FROM adorsys/nginx
+FROM adorsys/nginx:ubi
 
-COPY ./dist/ /opt/app-root/src/
-COPY ./docker/root /
-
-ENTRYPOINT ["/entrypoint.sh"]
-
-CMD ["/usr/libexec/s2i/run"]
+COPY ./dist/ .
+COPY docker/create_env.json.sh /docker-entrypoint.d/

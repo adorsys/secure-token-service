@@ -1,10 +1,9 @@
-import {Injectable} from '@angular/core';
-import {AppConfig} from './app-config';
+import { Injectable } from '@angular/core';
+import { AppConfig } from './app-config';
 
 @Injectable()
 export class StsClientConfig {
-
-  constructor(private appConfig: AppConfig) { }
+  constructor(private appConfig: AppConfig) {}
 
   public getKeycloakAuthUrl(): string {
     return this.appConfig.getValue('NG_KEYCLOAK_AUTH_URL');

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FILE_NAME=/opt/app-root/src/env.json
+FILE_NAME=/usr/share/nginx/html/env.json
 
 echo '{' > ${FILE_NAME}
 
@@ -17,5 +17,3 @@ done < <(env)
 truncate -s -2 ${FILE_NAME}
 
 echo -e "\n}" >> ${FILE_NAME}
-
-exec /docker-entrypoint.sh "$@"
