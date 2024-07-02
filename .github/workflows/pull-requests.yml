@@ -35,6 +35,8 @@ jobs:
     steps:
       - name: Step 1 - Checkout repository code
         uses: actions/checkout@v4
+        with:
+          path: sts-client-example
 
       - name: Step 2 - setup node
         uses: actions/setup-node@v4
@@ -42,4 +44,5 @@ jobs:
           node-version: 20
 
       - run: npm ci
+
       - run: npm run prod
