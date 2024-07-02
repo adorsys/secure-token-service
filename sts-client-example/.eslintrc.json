@@ -1,0 +1,56 @@
+{
+  "root": true,
+  "ignorePatterns": [
+    "projects/**/*"
+  ],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "parserOptions": {
+        "project": [
+          "tsconfig.json",
+          "e2e/tsconfig.json"
+        ],
+        "createDefaultProgram": true
+      },
+      "extends": [
+        "plugin:@angular-eslint/recommended",
+        "eslint:recommended",
+        "plugin:@stylistic/recommended-extends",
+        "plugin:prettier/recommended"
+      ],
+      "env": {
+        "es2022": true,
+        "node": true,
+        "browser": true
+      },
+      "rules": {
+        "@stylistic/no-non-null-assertion": "off",
+        "@stylistic/no-explicit-any": "off",
+        "@stylistic/semi": ["error", "always"],
+        "@stylistic/comma-dangle": ["error", "never"],
+        "@stylistic/arrow-parens": ["error", "as-needed"],
+        "@stylistic/member-delimiter-style": [
+          "error",
+          {
+            "multiline": {
+              "delimiter": "semi", // 'none' or 'semi' or 'comma'
+              "requireLast": true
+            },
+            "singleline": {
+              "delimiter": "semi", // 'semi' or 'comma'
+              "requireLast": false
+            },
+            "multilineDetection": "brackets"
+          }
+        ],
+        "no-unused-vars": "off"
+      }
+    },
+    {
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended", "plugin:prettier/recommended"],
+      "rules": {}
+    }
+  ]
+}
