@@ -1,4 +1,4 @@
-FROM adorsys/java:8
+FROM adorsys/java:17
 
 WORKDIR /opt/
 COPY ./target/sts-example.jar .
