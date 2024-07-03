@@ -3,4 +3,4 @@
 FROM adorsys/nginx:ubi
 
 COPY ./dist/ .
-COPY docker/create_env.json.sh /docker-entrypoint.d/
+COPY ./docker/create_env.json.sh /docker-entrypoint.d/

@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build_java:
+  build-java:
     name: Build & Test backend
     runs-on: ubuntu-latest
     steps:
@@ -29,24 +29,6 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
 
-  build_angular:
-    name: Build & Test frontend
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./sts-client-example
-    steps:
-      - name: Step 1 - Checkout repository code
-        uses: actions/checkout@v4
-        with:
-          sparse-checkout: 'sts-client-example'
-          sparse-checkout-cone-mode: false
-
-      - name: Step 2 - setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - run: npm ci
-
-      - run: npm run prod
+  build-frontend:
+    uses: ./.github/workflows/frontend.yml
+    secrets: inherit
