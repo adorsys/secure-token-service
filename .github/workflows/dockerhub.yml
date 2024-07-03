@@ -24,12 +24,20 @@ jobs:
         with:
           name: artifacts
 
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: sts-client-example
+
 #      TODO delete this step after successful testing
       - name: Display structure of downloaded files
         run: ls -R
 
       - name: Get the tag name
-        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+        # temporarily
+#        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+        run: echo "TAG=v1.1.28" >> $GITHUB_ENV
 
       - name: Build and push 'sts-example' docker image
         uses: docker/build-push-action@v6
@@ -74,7 +82,7 @@ jobs:
       - name: Build and push 'keycloak-sts-adapter' docker image
         uses: docker/build-push-action@v6
         with:
-          context: ./keycloak-sts-adapter
+          context: ./keycloak-storage-provider
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |

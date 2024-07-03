@@ -29,8 +29,9 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: artifacts
+          name: dist
           path: |
-            ${{ github.workspace }}/**/dist
+            ${{ github.workspace }}/sts-client-example/dist
+            ${{ github.workspace }}/sts-client-example/docker/create_env.json.sh
           overwrite: false
           if-no-files-found: error
