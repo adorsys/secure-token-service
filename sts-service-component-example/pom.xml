@@ -35,13 +35,9 @@
                 <version>${spring-boot.version}</version>
                 <executions>
                     <execution>
-                        <id>fat-jar</id>
                         <goals>
                             <goal>repackage</goal>
                         </goals>
-                        <configuration>
-                            <classifier>exec</classifier>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
