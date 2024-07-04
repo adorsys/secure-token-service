@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -8,10 +7,8 @@
         <version>1.1.28-SNAPSHOT</version>
     </parent>
 
-
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sts-secret-server</artifactId>
-
 
     <dependencies>
 
@@ -133,7 +130,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <!--https://stackoverflow.com/questions/49363222/maven-failsafe-plugin-surefirebooterforkexception-there-was-an-error-in-the-f-->
                 <version>${failsafe.version}</version>
                 <configuration>
                     <includes>
@@ -161,18 +157,17 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>fat-jar</id>
+                        <id>repackage</id>
                         <goals>
                             <goal>repackage</goal>
                         </goals>
                         <configuration>
-                            <classifier>exec</classifier>
+                            <mainClass>de.adorsys.sts.secretserver.SecretServerApplication</mainClass>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
-                <!--this plugin replaces the placeholders within application-IT.yml needed for the integration tests-->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.2.0</version>
