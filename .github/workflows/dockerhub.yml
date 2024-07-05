@@ -45,6 +45,7 @@ jobs:
           context: ./sts-example
           platforms: linux/amd64,linux/arm64
           push: true
+          provenance: false
           tags: |
             adorsys/sts-example:${{ env.TAG }}
             adorsys/sts-example:latest
@@ -55,6 +56,7 @@ jobs:
           context: ./sts-service-component-example
           platforms: linux/amd64,linux/arm64
           push: true
+          provenance: false
           tags: |
             adorsys/sts-service-component-example:${{ env.TAG }}
             adorsys/sts-service-component-example:latest
@@ -65,6 +67,7 @@ jobs:
           context: ./sts-client-example
           platforms: linux/amd64,linux/arm64
           push: true
+          provenance: false
           tags: |
             adorsys/sts-client-example:${{ env.TAG }}
             adorsys/sts-client-example:latest
@@ -75,6 +78,7 @@ jobs:
           context: ./sts-secret-server
           platforms: linux/amd64,linux/arm64
           push: true
+          provenance: false
           tags: |
             adorsys/sts-secret-server:${{ env.TAG }}
             adorsys/sts-secret-server:latest
@@ -85,6 +89,7 @@ jobs:
           context: ./keycloak-storage-provider
           platforms: linux/amd64,linux/arm64
           push: true
+          provenance: false
           tags: |
             adorsys/keycloak-sts-adapter:${{ env.TAG }}
             adorsys/keycloak-sts-adapter:latest
