@@ -35,9 +35,7 @@ jobs:
         run: ls -R
 
       - name: Get the tag name
-        # temporarily
-#        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
-        run: echo "TAG=v1.1.29" >> $GITHUB_ENV
+        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
       - name: Build and push 'sts-example' docker image
         uses: docker/build-push-action@v6

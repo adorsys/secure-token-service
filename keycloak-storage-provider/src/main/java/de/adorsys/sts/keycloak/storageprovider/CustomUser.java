@@ -2,12 +2,14 @@ package de.adorsys.sts.keycloak.storageprovider;
 
 import de.adorsys.sts.keycloak.util.ImmutableList;
 import org.keycloak.component.ComponentModel;
+import org.keycloak.credential.LegacyUserCredentialManager;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.SubjectCredentialManager;
 import org.keycloak.storage.adapter.AbstractUserAdapter;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public class CustomUser extends AbstractUserAdapter {
     private static final List<String> EMPTY = new ImmutableList<>();
@@ -31,12 +33,12 @@ public class CustomUser extends AbstractUserAdapter {
 
     @Override
     public SubjectCredentialManager credentialManager() {
-        return this.credentialManager();
+        return new LegacyUserCredentialManager(session, realm, this);
     }
 
     @Override
-    public List<String> getAttribute(String name) {
-        return EMPTY;
+    public Stream<String> getAttributeStream(String name) {
+        return EMPTY.stream();
     }
 
     public static Builder builder() {

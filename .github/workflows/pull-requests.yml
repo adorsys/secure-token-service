@@ -42,9 +42,3 @@ jobs:
   build-frontend:
     uses: ./.github/workflows/frontend.yml
     secrets: inherit
-
-  # temporarily
-  dockerhub:
-    needs: [ build-java, build-frontend ]
-    uses: ./.github/workflows/dockerhub.yml
-    secrets: inherit
