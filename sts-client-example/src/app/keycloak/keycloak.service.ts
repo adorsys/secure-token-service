@@ -22,14 +22,14 @@ export class KeycloakService {
     keycloak.loginRequired = true;
 
     keycloak
-      .init({ flow: 'implicit' })
+      .init({ onLoad: 'login-required' })
       .then(authenticated => {
-        console.log('on success' + authenticated);
+        console.log('keycloak.init on success: authenticated=' + authenticated);
         this.isAuthenticated = authenticated;
         this.initSuccess = authenticated;
       })
       .catch(err => {
-        console.log('on error' + err);
+        console.log('keycloak.init on error: ' + err);
       });
 
     this.keycloak = keycloak;

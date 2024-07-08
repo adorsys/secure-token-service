@@ -159,7 +159,7 @@
             "${stsLoginUrl}"
           ],
           "stsLoginUrl": [
-            "http://localhost:8888/login"
+            "http://host.docker.internal:8887/login"
           ],
           "evictionHour": [
             "0"

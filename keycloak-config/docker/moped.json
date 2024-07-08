@@ -39,7 +39,7 @@
         },
         {
           "authenticator": "auth-otp-form",
-          "requirement": "OPTIONAL",
+          "requirement": "ALTERNATIVE",
           "priority": 1,
           "userSetupAllowed": false,
           "authenticatorFlow": false
