@@ -159,7 +159,7 @@
             "${stsLoginUrl}"
           ],
           "stsLoginUrl": [
-            "http://sts:8888/login"
+            "$(login.url)"
           ],
           "evictionHour": [
             "0"
