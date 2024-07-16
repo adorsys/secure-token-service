@@ -1,33 +1,33 @@
-version: '3.1'
 services:
   keycloak:
     build: ./keycloak-storage-provider
     image: "local/keycloak-sts-adapter:latest"
     environment:
-      KEYCLOAK_PASSWORD: admin123
-      KEYCLOAK_USER: admin
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin123
+      DEBUG: 'true'
+      DEBUG_PORT: '*:8787'
     ports:
-      - "8080:8080"
+      - "8180:8180"
       - "8787:8787"
     command:
-      - "start-dev"
+      - "start-dev --http-port 8180"
     networks:
       - sts_network
+
   post_process:
     image: adorsys/keycloak-config-cli:5.12.0-22.0.4
     volumes:
-      - ./keycloak-config/dev:/config
+      - ./keycloak-config:/config
     environment:
       KEYCLOAK_PASSWORD: admin123
       KEYCLOAK_USER: admin
-      KEYCLOAK_URL: http://keycloak:8080/
-      KEYCLOAK_ADMIN : admin
-      KEYCLOAK_ADMIN_PASSWORD : admin123
+      KEYCLOAK_URL: http://keycloak:8180/
       KEYCLOAK_AVAILABILITYCHECK_ENABLED: true
       IMPORT_FILES_LOCATIONS: /config/*
-      SPRING_PROFILES_INCLUDE : debug
+      SPRING_PROFILES_INCLUDE: debug
+      IMPORT_VARSUBSTITUTION_ENABLED: true
+      LOGIN_URL: http://host.docker.internal:8887/login # ip address of host accessible from within container (for example 172.17.0.1)
     command: config-cli
     networks:
       - sts_network
@@ -40,7 +40,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
-      - mongodata:/data/db"
+      - mongodata:/data/db
     ports:
       - 27017:27017
     networks:

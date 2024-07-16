@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  envJson: "env.json"
+  envJson: 'env.json'
 };

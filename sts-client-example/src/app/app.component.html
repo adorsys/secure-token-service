@@ -8,7 +8,7 @@
       </div>
 
       <div *ngIf="isLoggedIn">
-        <h3>Secret claims: {{getSecretClaims()}}</h3>
+        <h3>Secret claims: {{ getSecretClaims() }}</h3>
 
         <button (click)="logout()">Sign Out</button>
       </div>
@@ -16,13 +16,9 @@
       <button (click)="getSampleData()">GET sample data</button>
       <button (click)="getSecret()">GET secret</button>
 
-      <div>
-        {{sampleData | json }}
-      </div>
+      <div>{{ sampleData | json }}</div>
     </div>
 
-    <div *ngIf="!initSuccess">
-      Initialization failed!
-    </div>
+    <div *ngIf="!initSuccess">Initialization failed!</div>
   </div>
 </div>

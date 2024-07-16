@@ -1,4 +1,3 @@
-version: '3.1'
 services:
   keycloak:
     image: adorsys/keycloak-sts-adapter:latest

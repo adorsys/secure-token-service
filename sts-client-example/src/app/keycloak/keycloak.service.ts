@@ -1,9 +1,6 @@
-import {Injectable} from "@angular/core";
-import {StsClientConfig} from "../env/sts-client-config.service";
-
-import * as Keycloak_ from 'keycloak-js';
-
-export const Keycloak = Keycloak_;
+import { Injectable } from '@angular/core';
+import { StsClientConfig } from '../env/sts-client-config.service';
+import Keycloak from 'keycloak-js';
 
 @Injectable()
 export class KeycloakService {
@@ -12,27 +9,27 @@ export class KeycloakService {
   public initSuccess: boolean;
   public isAuthenticated: boolean;
 
-  constructor(private clientConfig: StsClientConfig) {
-  }
+  constructor(private clientConfig: StsClientConfig) {}
 
   public init(): void {
-    const keycloak = Keycloak({
-      "url": this.clientConfig.getKeycloakAuthUrl(),
-      "realm": this.clientConfig.getKeycloakRealm(),
-      "clientId": this.clientConfig.getKeycloakClientId()
+    const keycloak = new Keycloak({
+      url: this.clientConfig.getKeycloakAuthUrl(),
+      realm: this.clientConfig.getKeycloakRealm(),
+      clientId: this.clientConfig.getKeycloakClientId()
     });
 
     keycloak.onTokenExpired = this.onTokenExpired;
     keycloak.loginRequired = true;
 
-    keycloak.init({flow: 'implicit'})
-      .success(authenticated => {
-        this.initSuccess = true;
+    keycloak
+      .init({ onLoad: 'login-required' })
+      .then(authenticated => {
+        console.log('keycloak.init on success: authenticated=' + authenticated);
         this.isAuthenticated = authenticated;
+        this.initSuccess = authenticated;
       })
-      .error(e => {
-        this.initSuccess = false;
-        console.log(e);
+      .catch(err => {
+        console.log('keycloak.init on error: ' + err);
       });
 
     this.keycloak = keycloak;
@@ -43,7 +40,7 @@ export class KeycloakService {
   }
 
   login() {
-    this.keycloak.login({scope: this.clientConfig.getKeycloakScope()});
+    this.keycloak.login({ scope: this.clientConfig.getKeycloakScope() });
   }
 
   logout() {

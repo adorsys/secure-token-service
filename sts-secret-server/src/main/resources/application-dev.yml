@@ -28,8 +28,8 @@ sts:
       key: "{\"kty\":\"oct\",\"kid\":\"63efe27c-6e37-464d-bd6a-1a7640888f62\",\"k\":\"7KmFL-k9Sib6Llt4CZnwHfxjIfAgbAbOdwbemIGhO6U\",\"alg\":\"A256GCM\"}"
   authservers:
   - name: local keycloak
-    iss-url : http://localhost:8080/auth/realms/moped
-    jwks-url: http://localhost:8080/auth/realms/moped/protocol/openid-connect/certs
+    iss-url : http://localhost:8180/realms/moped
+    jwks-url: http://localhost:8180/realms/moped/protocol/openid-connect/certs
   resource-server-management:
     resource-retriever:
       http-connect-timeout: 10000

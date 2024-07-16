@@ -21,9 +21,6 @@ jobs:
       - name: Step 3 - Build & Test
         run: mvn clean verify -ntp
 
-      - name: Step 4 - Build client
-        run: ./scripts/build_client.sh
-
       - name: Step 5 - Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         with:
@@ -39,3 +36,7 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
           GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
+
+  build-frontend:
+    uses: ./.github/workflows/frontend.yml
+    secrets: inherit
