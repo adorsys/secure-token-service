@@ -14,7 +14,6 @@
         <dependency>
             <groupId>de.adorsys.sts</groupId>
             <artifactId>sts-resource-server</artifactId>
-            <version>1.0.5</version>
         </dependency>
         <dependency>
             <groupId>de.adorsys.sts</groupId>

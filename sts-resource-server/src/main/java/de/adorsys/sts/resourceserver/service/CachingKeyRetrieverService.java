@@ -19,12 +19,7 @@ public class CachingKeyRetrieverService implements KeyRetrieverService {
         jwkSets = CacheBuilder.newBuilder()
                 .maximumSize(maximumSize)
                 .expireAfterAccess(expireAfterAccessInMinutes, TimeUnit.MINUTES)
-                .build(new CacheLoader<String, JWKSet>() {
-                    @Override
-                    public JWKSet load(String audience) throws Exception {
-                        return keyRetrieverService.retrieve(audience);
-                    }
-                });
+                .build(CacheLoader.from(keyRetrieverService::retrieve));
     }
 
     @Override
