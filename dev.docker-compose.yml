@@ -11,12 +11,13 @@ services:
       - "8180:8180"
       - "8787:8787"
     command:
-      - "start-dev --http-port 8180"
+      - "start-dev"
+      - "--http-port=8180"
     networks:
       - sts_network
 
   post_process:
-    image: adorsys/keycloak-config-cli:5.12.0-22.0.4
+    image: adorsys/keycloak-config-cli:6.1.5-25.0.1
     volumes:
       - ./keycloak-config:/config
     environment:

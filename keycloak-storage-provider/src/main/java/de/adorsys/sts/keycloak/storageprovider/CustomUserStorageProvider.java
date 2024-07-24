@@ -2,6 +2,7 @@ package de.adorsys.sts.keycloak.storageprovider;
 
 import de.adorsys.sts.keycloak.AuthenticatorUtil;
 import de.adorsys.sts.keycloak.Constants;
+import de.adorsys.sts.keycloak.rest.CustomAuthenticationException;
 import de.adorsys.sts.keycloak.rest.CustomRestClient;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.credential.CredentialInput;
@@ -14,6 +15,7 @@ import org.keycloak.models.credential.PasswordCredentialModel;
 import org.keycloak.storage.UserStorageProvider;
 import org.keycloak.storage.user.UserLookupProvider;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,7 +56,12 @@ public class CustomUserStorageProvider implements UserStorageProvider, UserLooku
             String password = credentialInputModel.getValue();
             List<String> audiences = AuthenticatorUtil.extractAudiences(credentialInputModel);
 
-            String secrets = CustomRestClient.loadUserSecrets(url, userModel.getUsername(), password, audiences);
+            String secrets;
+            try {
+                secrets = CustomRestClient.loadUserSecrets(session, url, userModel.getUsername(), password, audiences);
+            } catch (IOException e) {
+                throw new CustomAuthenticationException(e.getMessage());
+            }
 
             isValid = secrets != null;
 

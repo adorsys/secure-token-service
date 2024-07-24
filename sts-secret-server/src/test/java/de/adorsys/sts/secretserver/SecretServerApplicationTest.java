@@ -69,7 +69,7 @@ class SecretServerApplicationTest {
     private RestTokenExchangeClient client;
 
     @Container
-    public static KeycloakContainer keycloak = new KeycloakContainer("quay.io/keycloak/keycloak:22.0.4")
+    public static KeycloakContainer keycloak = new KeycloakContainer("quay.io/keycloak/keycloak:25.0.2")
             .withAdminUsername("admin")
             .withAdminPassword("admin123")
             .withProviderClassesFrom("target/classes/")

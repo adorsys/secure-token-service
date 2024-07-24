@@ -2,46 +2,50 @@ services:
   keycloak:
     image: adorsys/keycloak-sts-adapter:latest
     environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin123
+      DEBUG: 'true'
+      DEBUG_PORT: '*:8787'
+    ports:
+      - "8180:8180"
+      - "8787:8787"
+    command:
+      - "start-dev"
+      - "--http-port=8180"
+    networks:
+      - sts_network
+
+  post_process:
+    image: adorsys/keycloak-config-cli:6.1.5-25.0.1
+    volumes:
+      - ./keycloak-config:/config
+    environment:
       KEYCLOAK_PASSWORD: admin123
       KEYCLOAK_USER: admin
-    ports:
-      - "8080:8080"
-      - "8787:8787"
-    volumes:
-      - "./.docker/keycloak/data:/opt/jboss/keycloak/standalone/data"
-    networks:
-      - sts_network
-    command:
-      - "-b"
-      - "0.0.0.0"
-      - "--debug"
-  post_process:
-    image: adorsys/keycloak-config-cli:v0.6.6-6.0.1
-    depends_on:
-      - keycloak
-    networks:
-      - sts_network
-    volumes:
-      - ./keycloak-config/docker:/tmp/keycloak-config-cli/configs
-    environment:
-      - KEYCLOAK_URL=http://keycloak:8080/auth
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin123
-      - WAIT_TIME_IN_SECONDS=300
-      - SPRING_PROFILES_INCLUDE=debug
+      KEYCLOAK_URL: http://keycloak:8180/
+      KEYCLOAK_AVAILABILITYCHECK_ENABLED: true
+      IMPORT_FILES_LOCATIONS: /config/*
+      SPRING_PROFILES_INCLUDE: debug
+      IMPORT_VARSUBSTITUTION_ENABLED: true
+      LOGIN_URL: http://host.docker.internal:8887/login # ip address of host accessible from within container (for example 172.17.0.1)
     command: config-cli
+    networks:
+      - sts_network
+
   sts-mongo:
-    image: mongo:3.6.5
+    image: mongo:7.0.7
     container_name: sts_mongo
     environment:
       MONGO_INITDB_DATABASE: sts
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
-      - "./.docker/sts-mongo:/data/db"
+      - mongodata:/data/db
     ports:
       - 27017:27017
-    command: --smallfiles
     networks:
       - sts_network
+
   sts:
     image: adorsys/sts-example:latest
     networks:
@@ -71,6 +75,7 @@ services:
       - sts_resource-server-management_resource-servers_1_jwks-url=http://sts-service-component:8887/pop
     ports:
       - "8888:8888"
+
   sts-service-component:
     image: adorsys/sts-service-component-example:latest
     ports:
@@ -86,6 +91,7 @@ services:
       - sts_authservers_0_jwks-url=http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs
     networks:
       - sts_network
+
   sts-service-component_2:
     image: adorsys/sts-service-component-example:latest
     ports:
@@ -101,6 +107,7 @@ services:
       - sts_authservers_0_jwks-url=http://keycloak:8080/auth/realms/moped/protocol/openid-connect/certs
     networks:
       - sts_network
+
   sts-client:
     image: adorsys/sts-client-example:latest
     environment:
@@ -114,6 +121,7 @@ services:
       - sts_network
     ports:
       - 8090:8080
+
   sts-secret-server:
     image: adorsys/sts-secret-server:latest
     networks:
@@ -141,6 +149,9 @@ services:
       - sts_keymanagement_keystore_password=NiPae6AiOoto2Eeyaode9LeeOhngi4Ao
     ports:
       - "8885:8080"
+
+volumes:
+  mongodata:
 
 networks:
   sts_network:

@@ -1,38 +1,36 @@
 package de.adorsys.sts.keycloak.rest;
 
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.Response;
 import org.apache.http.HttpStatus;
+import org.keycloak.broker.provider.util.SimpleHttp;
+import org.keycloak.models.KeycloakSession;
 import org.keycloak.services.ServicesLogger;
 
+import java.io.IOException;
 import java.util.List;
 
 public class CustomRestClient {
 
     public static String loadUserSecrets(
+            KeycloakSession session,
             String url,
             String username,
             String password,
             List<String> audiences
-    ) throws CustomAuthenticationException {
+    ) throws IOException {
+
         CustomLoginRequest loginRequest = CustomLoginRequest.builder()
                 .username(username)
                 .password(password)
                 .audiences(audiences)
                 .build();
 
-        Response res = ClientBuilder.newBuilder()
-                .build()
-                .target(url)
-                .request()
-                .post(Entity.json(loginRequest));
+        SimpleHttp.Response res = SimpleHttp.doPost(url, session).json(loginRequest).asResponse();
 
         int status = res.getStatus();
         if (status == HttpStatus.SC_OK) {
-            return res.readEntity(String.class);
+            return res.asString();
         } else {
-            ServicesLogger.LOGGER.debug("Cannot load secrets for user: " + username + "; status: " + status + "; reason: " + res.getStatusInfo().getReasonPhrase());
+            ServicesLogger.LOGGER.debug("Cannot load secrets for user: " + username + "; status: " + status + "; reason: " + res.asString());
         }
 
         return null;

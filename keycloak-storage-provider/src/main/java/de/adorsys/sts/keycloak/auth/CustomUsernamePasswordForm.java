@@ -9,6 +9,7 @@ import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.authenticators.browser.UsernamePasswordForm;
 import org.keycloak.credential.CredentialInput;
 import org.keycloak.events.Errors;
+import org.keycloak.models.RequiredActionProviderModel;
 import org.keycloak.models.UserCredentialModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -47,6 +48,11 @@ public class CustomUsernamePasswordForm extends UsernamePasswordForm {
             Object note = credentialModel.getNote(Constants.CUSTOM_USER_SECRET_NOTE_KEY);
             if (note != null) {
                 context.getAuthenticationSession().setUserSessionNote(Constants.CUSTOM_USER_SECRET_NOTE_KEY, note.toString());
+
+                // after update to keycloak 25, verify profile enabled by default, but doesn't work correcly with custom provider
+                // ("Update Account Information" form appears after login and doesn't submit). So disable this action.
+                RequiredActionProviderModel requiredActionVerifyProfile = context.getRealm().getRequiredActionProviderByAlias("VERIFY_PROFILE");
+                requiredActionVerifyProfile.setEnabled(false);
             }
 
             return true;
