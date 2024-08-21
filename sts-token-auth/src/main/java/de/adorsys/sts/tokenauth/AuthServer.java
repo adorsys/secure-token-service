@@ -68,6 +68,11 @@ public class AuthServer {
             List<JWK> jwks = jwkSource.get(new JWKSelector(new JWKMatcher.Builder().build()), null);
             onJsonWebKeySetRetrieved(jwks);
 
+            if (jwks.isEmpty()) {
+                log.error("No keys found in JWK set");
+                throw new JsonWebKeyRetrievalException("No keys found in JWK set");
+            }
+
             // Update the cache
             jwkCache.clear();
             for (JWK jwk : jwks) {
@@ -97,9 +102,16 @@ public class AuthServer {
         }
 
         JWK jwk = jwkCache.get(keyID);
+
         if (jwk == null) {
-            log.error("Key with ID {} not found in cache", keyID);
-            throw new JsonWebKeyRetrievalException("Key with ID " + keyID + " not found in cache");
+            log.warn("Key with ID {} not found in cache, updating the cache...", keyID);
+            updateJwkCache();
+            jwk = jwkCache.get(keyID);
+
+            if (jwk == null) {
+                log.error("Key with ID {} not found in cache", keyID);
+                throw new JsonWebKeyRetrievalException("Key with ID " + keyID + " not found in cache");
+            }
         }
 
         log.debug("JWK for key ID {} found in cache", keyID);
