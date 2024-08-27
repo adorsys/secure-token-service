@@ -161,10 +161,13 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>repackage</id>
+                        <id>fat-jar</id>
                         <goals>
                             <goal>repackage</goal>
                         </goals>
+                        <configuration>
+                            <classifier>exec</classifier>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
