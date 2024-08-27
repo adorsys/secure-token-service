@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>de.adorsys.sts</groupId>
 		<artifactId>secure-token-service</artifactId>
-		<version>1.2.2</version>
+		<version>1.2.3-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>sts-common</artifactId>
