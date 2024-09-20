@@ -11,9 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Clock;
 import java.util.Date;
+import java.util.Map;
 
 @RequiredArgsConstructor
-public class JWTClaimsSetVerifierWithLogs<C extends SecurityContext>implements JWTClaimsSetVerifier<C> {
+public class JWTClaimsSetVerifierWithLogs<C extends SecurityContext> implements JWTClaimsSetVerifier<C> {
     private final Logger logger = LoggerFactory.getLogger(JWTClaimsSetVerifierWithLogs.class);
 
     /**
@@ -28,9 +29,12 @@ public class JWTClaimsSetVerifierWithLogs<C extends SecurityContext>implements J
 
         final Date exp = claimsSet.getExpirationTime();
 
+        Map<String, Object> claimSet = claimsSet.toPayload().toJSONObject();
+
         if (exp != null && !DateUtils.isAfter(exp, now, DEFAULT_MAX_CLOCK_SKEW_SECONDS)) {
             String msg = "Expired JWT";
-            logger.error(msg);
+            logger.error("{}: expiration time: {} now: {}", msg, exp, now);
+            logger.error("JWT claims: {}", claimSet);
             throw new BadJWTException(msg);
         }
 
@@ -38,7 +42,8 @@ public class JWTClaimsSetVerifierWithLogs<C extends SecurityContext>implements J
 
         if (nbf != null && !DateUtils.isBefore(nbf, now, DEFAULT_MAX_CLOCK_SKEW_SECONDS)) {
             String msg = "JWT before use time";
-            logger.error(msg);
+            logger.error("{}: not before time: {} now: {}", msg, nbf, now);
+            logger.error("JWT claims: {}", claimSet);
             throw new BadJWTException(msg);
         }
     }
