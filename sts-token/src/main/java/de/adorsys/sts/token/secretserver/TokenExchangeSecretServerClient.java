@@ -11,6 +11,7 @@ import de.adorsys.sts.token.tokenexchange.TokenExchangeConstants;
 import de.adorsys.sts.tokenauth.BearerToken;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class TokenExchangeSecretServerClient implements SecretServerClient {
@@ -34,8 +35,12 @@ public class TokenExchangeSecretServerClient implements SecretServerClient {
     }
 
     @Override
-    public String getSecret(String token) {
-        TokenResponse tokenResponse = tokenExchangeClient.exchangeToken(secretServerUri, audience, token, customHeaders);
+    public String getSecret(String token, Map<String, String> additionalHeaders) {
+
+        HashMap<String, String> headers = new HashMap<>(customHeaders);
+        headers.putAll(additionalHeaders);
+
+        TokenResponse tokenResponse = tokenExchangeClient.exchangeToken(secretServerUri, audience, token, headers);
         String exchangedAccessToken = tokenResponse.getAccess_token();
         BearerToken bearerToken = null;
         try {

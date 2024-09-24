@@ -4,6 +4,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class CachingSecretServerClient implements SecretServerClient {
@@ -27,7 +28,7 @@ public class CachingSecretServerClient implements SecretServerClient {
     }
 
     @Override
-    public String getSecret(String token) {
+    public String getSecret(String token, Map<String, String> headers) {
         return secrets.getUnchecked(token);
     }
 }
