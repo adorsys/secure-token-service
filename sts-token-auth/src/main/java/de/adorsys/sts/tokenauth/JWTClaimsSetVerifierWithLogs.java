@@ -8,9 +8,12 @@ import com.nimbusds.jwt.util.DateUtils;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.time.Clock;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class JWTClaimsSetVerifierWithLogs<C extends SecurityContext> implements JWTClaimsSetVerifier<C> {
@@ -27,10 +30,14 @@ public class JWTClaimsSetVerifierWithLogs<C extends SecurityContext> implements 
         final Date now = Date.from(clock.instant());
 
         final Date exp = claimsSet.getExpirationTime();
+        MDC.put("sub", claimsSet.getSubject());
+        MDC.put("iss-at", claimsSet.getIssueTime().toInstant().toString());
+        MDC.put("token-id", claimsSet.getJWTID());
 
         if (exp != null && !DateUtils.isAfter(exp, now, DEFAULT_MAX_CLOCK_SKEW_SECONDS)) {
             String msg = "Expired JWT - expiration time claim (exp) is not after the current time";
             logger.error("{}: expiration time: {} now: {}", msg, exp, now);
+
             throw new BadJWTException(msg);
         }
 
