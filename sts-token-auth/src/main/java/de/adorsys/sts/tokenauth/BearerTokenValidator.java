@@ -31,7 +31,7 @@ public class BearerTokenValidator {
         this.clock = clock;
     }
 
-    public BearerToken extract(String token) {
+    public BearerToken extract(String token) throws BadJOSEException {
         Optional<JWTClaimsSet> jwtClaimsSet = extractClaims(token);
         if(jwtClaimsSet.isPresent()) {
             List<String> roles = extractRoles(jwtClaimsSet.get());
@@ -84,7 +84,7 @@ public class BearerTokenValidator {
         logger.error("token parse exception");
     }
 
-    private Optional<JWTClaimsSet> extractClaims(String token) {
+    private Optional<JWTClaimsSet> extractClaims(String token) throws BadJOSEException {
         Optional<JWTClaimsSet> jwtClaimsSet = Optional.empty();
 
         if(token == null) {
@@ -124,7 +124,7 @@ public class BearerTokenValidator {
             JWTClaimsSet jwtClaims = jwtProcessor.process(signedJWT, context);
 
             jwtClaimsSet = Optional.of(jwtClaims);
-        } catch (ParseException | BadJOSEException | JOSEException e) {
+        } catch (ParseException  | JOSEException e) {
             onErrorWhileExtractClaims(token, e);
             return jwtClaimsSet;
         }

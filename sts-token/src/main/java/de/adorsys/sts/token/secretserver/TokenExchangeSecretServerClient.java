@@ -2,6 +2,7 @@ package de.adorsys.sts.token.secretserver;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jose.proc.BadJOSEException;
 import de.adorsys.sts.keymanagement.service.DecryptionService;
 import de.adorsys.sts.secret.SecretServerClient;
 import de.adorsys.sts.token.api.TokenResponse;
@@ -22,14 +23,8 @@ public class TokenExchangeSecretServerClient implements SecretServerClient {
 
     private final Map<String, String> customHeaders;
 
-    public TokenExchangeSecretServerClient(
-            String audience,
-            String secretServerUri,
-            TokenExchangeClient tokenExchangeClient,
-            BearerTokenValidator bearerTokenValidator,
-            DecryptionService decryptionService,
-            Map<String, String> customHeaders
-    ) {
+    public TokenExchangeSecretServerClient(String audience, String secretServerUri, TokenExchangeClient tokenExchangeClient,
+            BearerTokenValidator bearerTokenValidator, DecryptionService decryptionService, Map<String, String> customHeaders) {
         this.audience = audience;
         this.secretServerUri = secretServerUri;
         this.tokenExchangeClient = tokenExchangeClient;
@@ -42,10 +37,15 @@ public class TokenExchangeSecretServerClient implements SecretServerClient {
     public String getSecret(String token) {
         TokenResponse tokenResponse = tokenExchangeClient.exchangeToken(secretServerUri, audience, token, customHeaders);
         String exchangedAccessToken = tokenResponse.getAccess_token();
-        BearerToken bearerToken = bearerTokenValidator.extract(exchangedAccessToken);
+        BearerToken bearerToken = null;
+        try {
+            bearerToken = bearerTokenValidator.extract(exchangedAccessToken);
 
-        if (!bearerToken.isValid()) {
-            throw new IllegalArgumentException("Exchanged token is invalid");
+            if (!bearerToken.isValid()) {
+                throw new IllegalArgumentException("Exchanged token is invalid");
+            }
+        } catch (BadJOSEException e) {
+            throw new IllegalStateException("Bearer token is invalid", e);
         }
 
         ObjectMapper mapper = new ObjectMapper();

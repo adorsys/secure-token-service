@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Clock;
 import java.util.Date;
-import java.util.Map;
 
 @RequiredArgsConstructor
 public class JWTClaimsSetVerifierWithLogs<C extends SecurityContext> implements JWTClaimsSetVerifier<C> {
@@ -29,21 +28,17 @@ public class JWTClaimsSetVerifierWithLogs<C extends SecurityContext> implements 
 
         final Date exp = claimsSet.getExpirationTime();
 
-        Map<String, Object> claimSet = claimsSet.toPayload().toJSONObject();
-
         if (exp != null && !DateUtils.isAfter(exp, now, DEFAULT_MAX_CLOCK_SKEW_SECONDS)) {
-            String msg = "Expired JWT";
+            String msg = "Expired JWT - expiration time claim (exp) is not after the current time";
             logger.error("{}: expiration time: {} now: {}", msg, exp, now);
-            logger.error("JWT claims: {}", claimSet);
             throw new BadJWTException(msg);
         }
 
         final Date nbf = claimsSet.getNotBeforeTime();
 
         if (nbf != null && !DateUtils.isBefore(nbf, now, DEFAULT_MAX_CLOCK_SKEW_SECONDS)) {
-            String msg = "JWT before use time";
+            String msg = "JWT before use time- not before claim (nbf) is after the current time";
             logger.error("{}: not before time: {} now: {}", msg, nbf, now);
-            logger.error("JWT claims: {}", claimSet);
             throw new BadJWTException(msg);
         }
     }

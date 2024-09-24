@@ -1,5 +1,6 @@
 package de.adorsys.sts.token.tokenexchange.server;
 
+import com.nimbusds.jose.proc.BadJOSEException;
 import de.adorsys.sts.ResponseUtils;
 import de.adorsys.sts.token.InvalidParameterException;
 import de.adorsys.sts.token.MissingParameterException;
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -53,6 +55,8 @@ public class TokenExchangeController {
             errorMessage = e.getMessage();
             ResponseEntity<Object> errorData = ResponseUtils.invalidParam(e.getMessage());
             return ResponseEntity.badRequest().body(errorData);
+        } catch (BadJOSEException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).header("source", "sts").body(e.getMessage());
         } finally {
             if (log.isTraceEnabled()) log.trace("POST tokenExchange finished: {}", errorMessage);
         }

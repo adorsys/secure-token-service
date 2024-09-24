@@ -4,6 +4,7 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.proc.BadJOSEException;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import de.adorsys.sts.common.converter.KeyConverter;
@@ -37,7 +38,7 @@ public class JwtTokenExchangeService implements TokenExchangeService {
         this.clock = clock;
     }
 
-    public TokenResponse exchangeToken(TokenExchangeRequest tokenExchange) {
+    public TokenResponse exchangeToken(TokenExchangeRequest tokenExchange) throws BadJOSEException {
         return exchangeToken(
                 tokenExchange.getGrantType(),
                 tokenExchange.getResources(),
@@ -63,8 +64,7 @@ public class JwtTokenExchangeService implements TokenExchangeService {
             String scope,
             String requested_token_type,
             String[] audiences
-    )
-            throws InvalidParameterException, MissingParameterException, TokenValidationException {
+    ) throws InvalidParameterException, MissingParameterException, TokenValidationException, BadJOSEException {
         // Validate input parameters.
         if (!StringUtils.equals(TokenExchangeConstants.TOKEN_EXCHANGE_OAUTH_GRANT_TYPE, grant_type)) {
             throw new InvalidParameterException("Request parameter grant_type is missing or does not carry the value urn:ietf:params:oauth:grant-type:token-exchange. See https://tools.ietf.org/html/draft-ietf-oauth-token-exchange-08#section-2.1");

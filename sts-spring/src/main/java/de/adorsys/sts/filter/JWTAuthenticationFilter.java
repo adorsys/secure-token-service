@@ -1,5 +1,6 @@
 package de.adorsys.sts.filter;
 
+import com.nimbusds.jose.proc.BadJOSEException;
 import de.adorsys.sts.token.authentication.TokenAuthenticationService;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
@@ -31,7 +32,12 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             if (logger.isDebugEnabled())
                 logger.debug("Authentication is null. Try to get authentication from request...");
 
-            authentication = tokenAuthenticationService.getAuthentication(request);
+            try {
+                authentication = tokenAuthenticationService.getAuthentication(request);
+            } catch (BadJOSEException e) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized");
+            }
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
