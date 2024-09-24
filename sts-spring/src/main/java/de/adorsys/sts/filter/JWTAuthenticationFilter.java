@@ -35,7 +35,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             try {
                 authentication = tokenAuthenticationService.getAuthentication(request);
             } catch (BadJOSEException e) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized");
+                response.setHeader("X-B3-TraceId", request.getHeader("X-B3-TraceId"));
+                response.setHeader("X-B3-SpanId", request.getHeader("X-B3-SpanId"));
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid token - Token expired");
             }
 
             SecurityContextHolder.getContext().setAuthentication(authentication);

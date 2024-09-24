@@ -11,6 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,7 +49,8 @@ class JWTClaimsSetVerifierWithLogsTest {
 
     @Test
     public void testVerify_throwsBadJWTException_whenJWTIsNotBeforeNow() {
-        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder().notBeforeTime(new Date(System.currentTimeMillis() + 60000)).build();
+        JWTClaimsSet claimsSet =
+                new JWTClaimsSet.Builder().notBeforeTime(new Date(System.currentTimeMillis() + 600000000)).issueTime(new Date()).build();
         when(clock.instant()).thenReturn(Instant.now());
         assertThrows(BadJWTException.class, () -> {
             underTest.verify(claimsSet, null);
