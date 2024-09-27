@@ -12,7 +12,7 @@
     <artifactId>keycloak-storage-provider</artifactId>
 
     <properties>
-        <keycloak.version>25.0.2</keycloak.version>
+        <keycloak.version>25.0.6</keycloak.version>
         <resteasy-client.version>6.2.7.Final</resteasy-client.version>
         <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
     </properties>
