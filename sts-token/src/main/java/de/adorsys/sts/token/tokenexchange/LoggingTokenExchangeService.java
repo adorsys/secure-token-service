@@ -1,5 +1,6 @@
 package de.adorsys.sts.token.tokenexchange;
 
+import com.nimbusds.jose.proc.BadJOSEException;
 import de.adorsys.sts.token.api.TokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ public class LoggingTokenExchangeService implements TokenExchangeService {
     }
 
     @Override
-    public TokenResponse exchangeToken(TokenExchangeRequest tokenExchange) {
+    public TokenResponse exchangeToken(TokenExchangeRequest tokenExchange) throws BadJOSEException {
         if(logger.isTraceEnabled()) logger.trace("exchangeToken started...");
 
         TokenResponse tokenResponse = decoratedTokenExchangeService.exchangeToken(tokenExchange);

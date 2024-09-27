@@ -1,5 +1,6 @@
 package de.adorsys.sts.token.tokenexchange.server;
 
+import com.nimbusds.jose.proc.BadJOSEException;
 import de.adorsys.sts.ResponseUtils;
 import de.adorsys.sts.token.InvalidParameterException;
 import de.adorsys.sts.token.MissingParameterException;
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,13 +31,14 @@ public class TokenExchangeController {
 
     private final TokenExchangeService tokenExchangeService;
 
-    @PostMapping(consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(consumes = { MediaType.APPLICATION_FORM_URLENCODED_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     @Operation(summary = "Exchange Token", description = "Create an access or refresh token given a valide subject token.", responses = {
             @ApiResponse(responseCode = "200", description = "Ok", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TokenResponse.class))),
-            @ApiResponse(responseCode = "400", description = "Bad request", headers = @Header(name = "error", description = "invalid request"))
-    })
-    public ResponseEntity<Object> tokenExchange(@RequestBody @ModelAttribute TokenRequestForm tokenRequestForm, HttpServletRequest servletRequest) {
-        if (log.isTraceEnabled()) log.trace("POST tokenExchange started...");
+            @ApiResponse(responseCode = "400", description = "Bad request", headers = @Header(name = "error", description = "invalid request")) })
+    public ResponseEntity<Object> tokenExchange(@RequestBody @ModelAttribute TokenRequestForm tokenRequestForm,
+            HttpServletRequest servletRequest) {
+        if (log.isTraceEnabled())
+            log.trace("POST tokenExchange started...");
 
         TokenExchangeRequest tokenExchange = getTokenExchangeRequest(tokenRequestForm, servletRequest);
 
@@ -53,23 +56,21 @@ public class TokenExchangeController {
             errorMessage = e.getMessage();
             ResponseEntity<Object> errorData = ResponseUtils.invalidParam(e.getMessage());
             return ResponseEntity.badRequest().body(errorData);
+        } catch (BadJOSEException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).header("source", "sts")
+                    .header("X-B3-TraceId", servletRequest.getHeader("X-B3-TraceId"))
+                    .header("X-B3-SpanId", servletRequest.getHeader("X-B3-SpanId")).body(e.getMessage());
         } finally {
-            if (log.isTraceEnabled()) log.trace("POST tokenExchange finished: {}", errorMessage);
+            if (log.isTraceEnabled())
+                log.trace("POST tokenExchange finished: {}", errorMessage);
         }
     }
 
     private static TokenExchangeRequest getTokenExchangeRequest(TokenRequestForm tokenRequestForm, HttpServletRequest servletRequest) {
-        return TokenExchangeRequest.builder()
-                .grantType(tokenRequestForm.getGrantType())
-                .resources(tokenRequestForm.getResources())
-                .subjectToken(tokenRequestForm.getSubjectToken())
-                .subjectTokenType(tokenRequestForm.getSubjectTokenType())
-                .actorToken(tokenRequestForm.getActorToken())
-                .actorTokenType(tokenRequestForm.getActorTokenType())
-                .issuer(ResponseUtils.getIssuer(servletRequest))
-                .scope(tokenRequestForm.getScope())
-                .requestedTokenType(tokenRequestForm.getRequestedTokenType())
-                .audiences(tokenRequestForm.getAudiences())
-                .build();
+        return TokenExchangeRequest.builder().grantType(tokenRequestForm.getGrantType()).resources(tokenRequestForm.getResources())
+                .subjectToken(tokenRequestForm.getSubjectToken()).subjectTokenType(tokenRequestForm.getSubjectTokenType())
+                .actorToken(tokenRequestForm.getActorToken()).actorTokenType(tokenRequestForm.getActorTokenType())
+                .issuer(ResponseUtils.getIssuer(servletRequest)).scope(tokenRequestForm.getScope())
+                .requestedTokenType(tokenRequestForm.getRequestedTokenType()).audiences(tokenRequestForm.getAudiences()).build();
     }
 }

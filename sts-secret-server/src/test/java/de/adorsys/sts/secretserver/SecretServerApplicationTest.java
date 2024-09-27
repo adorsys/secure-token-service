@@ -1,5 +1,6 @@
 package de.adorsys.sts.secretserver;
 
+import com.nimbusds.jose.proc.BadJOSEException;
 import com.nimbusds.jwt.JWTClaimsSet;
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import de.adorsys.sts.keymanagement.service.DecryptionService;
@@ -99,7 +100,7 @@ class SecretServerApplicationTest {
     }
 
     @Test
-    void shouldReturnTheSameSecretForSameUser() {
+    void shouldReturnTheSameSecretForSameUser() throws BadJOSEException {
         String firstSecret = getDecryptedSecret(USERNAME_ONE, PASSWORD_ONE);
         String secondSecret = getDecryptedSecret(USERNAME_ONE, PASSWORD_ONE);
 
@@ -115,7 +116,7 @@ class SecretServerApplicationTest {
     }
 
     @Test
-    void shouldNotReturnTheSameTokenForSameUser() throws Exception {
+    void shouldNotReturnTheSameTokenForSameUser() {
         TokenResponse firstTokenResponse = getSecretServerToken(USERNAME_ONE, PASSWORD_ONE);
         assertThat(firstTokenResponse.getAccess_token(), is(notNullValue()));
 
@@ -126,7 +127,7 @@ class SecretServerApplicationTest {
     }
 
     @Test
-    void shouldNotGetSecretForInvalidAccessToken() throws Exception {
+    void shouldNotGetSecretForInvalidAccessToken() {
         final String invalidAccessToken = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJvVjU2Uk9namthbTVzUmVqdjF6b1JVNmY" +
                 "1R3YtUGRTdjN2b1ZfRVY5MmxnIn0.eyJqdGkiOiI5NWY2MzQ4NC04MTk2LTQ2NzYtYjI4Ni1lYjY4YTFmOTZmYTAiLCJleHAiOjE1N" +
                 "TUwNDg5MzIsIm5iZiI6MCwiaWF0IjoxNTU1MDQ4NjMyLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMyODU0L2F1dGgvcmVhbG1zL21" +
@@ -150,7 +151,7 @@ class SecretServerApplicationTest {
     }
 
     @Test
-    void shouldNotGetSecretForFakeAccessToken() throws Exception {
+    void shouldNotGetSecretForFakeAccessToken() {
         final String fakeAccessToken = "my fake access token";
 
         catchException(() -> client.exchangeToken("/secret-server/token-exchange", MOPED_CLIENT_AUDIENCE, fakeAccessToken));
@@ -162,7 +163,7 @@ class SecretServerApplicationTest {
     }
 
     @Test
-    void shouldGetEmptySecretsForUnknownAudience() {
+    void shouldGetEmptySecretsForUnknownAudience() throws BadJOSEException {
         Authentication.AuthenticationToken authToken = authentication.login(USERNAME_ONE, PASSWORD_ONE);
 
         TokenResponse secretServerToken = client.exchangeToken("/secret-server/token-exchange", "unknown audience", authToken.getAccessToken());
@@ -171,17 +172,17 @@ class SecretServerApplicationTest {
         assertThat(secrets.size(), is(equalTo(0)));
     }
 
-    private String getDecryptedSecret(String username, String password) {
+    private String getDecryptedSecret(String username, String password) throws BadJOSEException {
         TokenResponse secretServerToken = getSecretServerToken(username, password);
         return extractSecretFromToken(secretServerToken.getAccess_token());
     }
 
-    private String extractSecretFromToken(String secretServerAccessToken) {
+    private String extractSecretFromToken(String secretServerAccessToken) throws BadJOSEException {
         Map<String, String> secrets = extractSecretsFromToken(secretServerAccessToken);
         return decryptionService.decrypt(secrets.get(MOPED_CLIENT_AUDIENCE));
     }
 
-    private Map<String, String> extractSecretsFromToken(String secretServerAccessToken) {
+    private Map<String, String> extractSecretsFromToken(String secretServerAccessToken) throws BadJOSEException {
         BearerToken exchangedToken = bearerTokenValidator.extract(secretServerAccessToken);
         JWTClaimsSet claims = exchangedToken.getClaims();
 

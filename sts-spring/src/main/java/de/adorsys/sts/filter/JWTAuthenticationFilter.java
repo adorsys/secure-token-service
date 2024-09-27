@@ -1,5 +1,6 @@
 package de.adorsys.sts.filter;
 
+import com.nimbusds.jose.proc.BadJOSEException;
 import de.adorsys.sts.token.authentication.TokenAuthenticationService;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
@@ -31,7 +32,14 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             if (logger.isDebugEnabled())
                 logger.debug("Authentication is null. Try to get authentication from request...");
 
-            authentication = tokenAuthenticationService.getAuthentication(request);
+            try {
+                authentication = tokenAuthenticationService.getAuthentication(request);
+            } catch (BadJOSEException e) {
+                response.setHeader("X-B3-TraceId", request.getHeader("X-B3-TraceId"));
+                response.setHeader("X-B3-SpanId", request.getHeader("X-B3-SpanId"));
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid token - Token expired");
+            }
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 

@@ -1,6 +1,6 @@
 package de.adorsys.sts.token.authentication;
 
-
+import com.nimbusds.jose.proc.BadJOSEException;
 import com.nimbusds.jwt.JWTClaimsSet;
 import de.adorsys.sts.tokenauth.BearerToken;
 import de.adorsys.sts.tokenauth.BearerTokenValidator;
@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,16 +32,18 @@ public class TokenAuthenticationService {
         this.bearerTokenValidator = bearerTokenValidator;
     }
 
-    public Authentication getAuthentication(HttpServletRequest request) {
+    public Authentication getAuthentication(HttpServletRequest request) throws BadJOSEException {
         String headerValue = request.getHeader(HEADER_KEY);
-        if(StringUtils.isBlank(headerValue)) {
-            if(logger.isDebugEnabled()) logger.debug("Header value '{}' is blank.", HEADER_KEY);
+        if (StringUtils.isBlank(headerValue)) {
+            if (logger.isDebugEnabled())
+                logger.debug("Header value '{}' is blank.", HEADER_KEY);
             return null;
         }
 
         // Accepts only Bearer token
-        if(!StringUtils.startsWithIgnoreCase(headerValue, TOKEN_PREFIX)) {
-            if(logger.isDebugEnabled()) logger.debug("Header value does not start with '{}'.", TOKEN_PREFIX);
+        if (!StringUtils.startsWithIgnoreCase(headerValue, TOKEN_PREFIX)) {
+            if (logger.isDebugEnabled())
+                logger.debug("Header value does not start with '{}'.", TOKEN_PREFIX);
             return null;
         }
 
@@ -50,7 +53,8 @@ public class TokenAuthenticationService {
         BearerToken bearerToken = bearerTokenValidator.extract(strippedToken);
 
         if (!bearerToken.isValid()) {
-            if(logger.isDebugEnabled()) logger.debug("Token is not valid.");
+            if (logger.isDebugEnabled())
+                logger.debug("Token is not valid.");
             return null;
         }
 
