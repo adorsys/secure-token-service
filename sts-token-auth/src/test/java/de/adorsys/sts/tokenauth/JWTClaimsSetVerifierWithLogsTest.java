@@ -37,7 +37,7 @@ class JWTClaimsSetVerifierWithLogsTest {
     @Test
     public void testVerify_throwsBadJWTException_whenJWTIsExpired() {
         Date exp = new Date(System.currentTimeMillis() - 60000);
-        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder().expirationTime(exp).build();
+        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder().expirationTime(exp).issueTime(new Date()).build();
         when(clock.instant()).thenReturn(Instant.now());
         assertThrows(BadJWTException.class, () -> {
             underTest.verify(claimsSet, null);
@@ -47,7 +47,7 @@ class JWTClaimsSetVerifierWithLogsTest {
     @Test
     public void testVerify_throwsBadJWTException_whenJWTIsNotBeforeNow() {
         Date nbf = new Date(System.currentTimeMillis() + 61000);
-        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder().notBeforeTime(nbf).build();
+        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder().notBeforeTime(nbf).issueTime(new Date()).build();
         when(clock.instant()).thenReturn(Instant.now());
         assertThrows(BadJWTException.class, () -> {
             underTest.verify(claimsSet, null);
